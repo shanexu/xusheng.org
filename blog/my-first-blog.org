@@ -1,0 +1,12 @@
+#+TITLE:       My First Blog
+#+AUTHOR:      Shane Xu
+#+EMAIL:       shane@192.168.8.7
+#+DATE:        2016-03-04 Fri
+#+URI:         /blog/%y/%m/%d/my-first-blog
+#+KEYWORDS:    <TODO: insert your keywords here>
+#+TAGS:        Life
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: <TODO: insert your description here>
+
+这是我的第一篇使用org-page写的博客。事实上，我甚至对org-mode也只是一知半解。
