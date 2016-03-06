@@ -1,0 +1,14 @@
+#+TITLE:       Everyman sleep睡眠计划
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2016-03-07 Mon
+#+URI:         /blog/%y/%m/%d/everyman-sleep睡眠计划
+#+KEYWORDS:    Life, Sleep
+#+TAGS:        Life, Sleep
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: 人生苦短
+
+今年的冬天好长好长。
+
+在我目前为止的人生的二十多个春秋里，我从未如此地抱怨过，冬天为何还不离去。
