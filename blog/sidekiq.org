@@ -1,0 +1,60 @@
+#+TITLE:       Sidekiq原理
+#+AUTHOR:      Shane Xu
+#+EMAIL:       shane@192.168.8.7
+#+DATE:        2016-04-16 Sat
+#+URI:         /blog/%y/%m/%d/sidekiq原理
+#+KEYWORDS:    sidekiq
+#+TAGS:        ruby, programming
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: <TODO: insert your description here>
+
+第一次接触Sidekiq是在前年吧。那时候，为了帮朋友定制一个论坛系统，我选了discourse，然而终究因为它不支持IE8，最后我们放弃了，这是后话。但是这个过程中，我重新拾起了荒废多年的ruby（我好像从来都没有正经学习过ruby），同时我也接触到了一个ruby的后台任务框架——Sidekiq（Simple, efficient background processing for Ruby.）。我那时就是简单的看了看文档和配置，觉得能用就行了。后来，因为自己想着什么时候用scala搞一个后台任务框架，就想什么时候看看Sidekiq的源代码。结果这一念想，过了一年多才得以实现。
+
+#+name: dot-eg-table
+| a | Hello  |
+| b | World! |
+
+is passed to a source code block that is responsible for producing
+valid =dot= code 
+
+#+name: make-dot
+#+BEGIN_SRC emacs-lisp :var table=dot-eg-table :results output :exports none
+  (mapcar #'(lambda (x)
+              (princ (format "%s [label =\"%s\", shape = \"box\"];\n"
+                             (first x) (second x)))) table)
+              (princ (format "%s -- %s;\n" (first (first table)) (first (second table))))
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+,#+name: make-dot
+,#+BEGIN_SRC emacs-lisp :var table=dot-eg-table :results output :exports none
+  (mapcar #'(lambda (x)
+              (princ (format "%s [label =\"%s\", shape = \"box\"];\n"
+                             (first x) (second x)))) table)
+              (princ (format "%s -- %s;\n" (first (first table)) (first (second table))))
+,#+END_SRC
+#+END_EXAMPLE
+
+and this is chained to a =dot= source code block 
+
+#+BEGIN_EXAMPLE
+,#+BEGIN_SRC dot :file images/test-dot.png :var input=make-dot :exports results
+graph {
+ $input
+}
+,#+END_SRC
+#+END_EXAMPLE
+
+that wraps the input in a =graph{}= command to produce the following
+graphic output
+
+#+BEGIN_SRC dot :file images/test-dot.png :var input=make-dot :exports results
+graph {
+ $input
+}
+#+END_SRC
+
+#+RESULTS:
+file:images/test-dot.png
+
