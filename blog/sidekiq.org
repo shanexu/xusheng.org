@@ -11,50 +11,203 @@
 
 第一次接触Sidekiq是在前年吧。那时候，为了帮朋友定制一个论坛系统，我选了discourse，然而终究因为它不支持IE8，最后我们放弃了，这是后话。但是这个过程中，我重新拾起了荒废多年的ruby（我好像从来都没有正经学习过ruby），同时我也接触到了一个ruby的后台任务框架——Sidekiq（Simple, efficient background processing for Ruby.）。我那时就是简单的看了看文档和配置，觉得能用就行了。后来，因为自己想着什么时候用scala搞一个后台任务框架，就想什么时候看看Sidekiq的源代码。结果这一念想，过了一年多才得以实现。
 
-#+name: dot-eg-table
-| a | Hello  |
-| b | World! |
+首先，我们从Sidekiq的源代码中examples目录下的por.rb（plain old ruby）这个例子。
+#+BEGIN_SRC ruby
+require 'sidekiq'
 
-is passed to a source code block that is responsible for producing
-valid =dot= code 
+# If your client is single-threaded, we just need a single connection in our Redis connection pool
+Sidekiq.configure_client do |config|
+  config.redis = { :namespace => 'x', :size => 1 }
+end
 
-#+name: make-dot
-#+BEGIN_SRC emacs-lisp :var table=dot-eg-table :results output :exports none
-  (mapcar #'(lambda (x)
-              (princ (format "%s [label =\"%s\", shape = \"box\"];\n"
-                             (first x) (second x)))) table)
-              (princ (format "%s -- %s;\n" (first (first table)) (first (second table))))
+# Sidekiq server is multi-threaded so our Redis connection pool size defaults to concurrency (-c)
+Sidekiq.configure_server do |config|
+  config.redis = { :namespace => 'x' }
+end
+
+# Start up sidekiq via
+# ./bin/sidekiq -r ./examples/por.rb
+# and then you can open up an IRB session like so:
+# irb -r ./examples/por.rb
+# where you can then say
+# PlainOldRuby.perform_async "like a dog", 3
+#
+class PlainOldRuby
+  include Sidekiq::Worker
+
+  def perform(how_hard="super hard", how_long=1)
+    sleep how_long
+    puts "Workin' #{how_hard}"
+  end
+end
 #+END_SRC
+我们撇开前面两段配置Sidekiq的代码，直接看第21行的 =include Sidekiq::Worker= ，在加了这一行代码之后 =PlainOldRuby= 才会有 =perform_async= ， =perform_in= ， =perform_at= 这三个方法。我们来具体看下 =perform_async= 方法。
+#+BEGIN_SRC ruby
+def perform_async(*args)
+  client_push('class' => self, 'args' => args)
+end
 
-#+BEGIN_EXAMPLE
-,#+name: make-dot
-,#+BEGIN_SRC emacs-lisp :var table=dot-eg-table :results output :exports none
-  (mapcar #'(lambda (x)
-              (princ (format "%s [label =\"%s\", shape = \"box\"];\n"
-                             (first x) (second x)))) table)
-              (princ (format "%s -- %s;\n" (first (first table)) (first (second table))))
-,#+END_SRC
-#+END_EXAMPLE
+def client_push(item) # :nodoc:
+  pool = Thread.current[:sidekiq_via_pool] || get_sidekiq_options['pool'] || Sidekiq.redis_pool
+  hash = if Thread.current[:sidekiq_worker_set]
+    x, Thread.current[:sidekiq_worker_set] = Thread.current[:sidekiq_worker_set], nil
+    x.stringify_keys.merge(item.stringify_keys)
+  else
+    item.stringify_keys
+  end
+  Sidekiq::Client.new(pool).push(hash)
+end
+#+END_SRC
+在执行 =perform_async= 的时候，实际上是将传入的参数打包后，再在 =client_push= 方法中，序列化成string后通过 =Sidekiq::Client= 的 =push= 方法发送出去。我们再来看 =Sidekiq::Client= 中的 =push= 方法。
+#+BEGIN_SRC ruby
+##
+# The main method used to push a job to Redis.  Accepts a number of options:
+#
+#   queue - the named queue to use, default 'default'
+#   class - the worker class to call, required
+#   args - an array of simple arguments to the perform method, must be JSON-serializable
+#   retry - whether to retry this job if it fails, default true or an integer number of retries
+#   backtrace - whether to save any error backtrace, default false
+#
+# All options must be strings, not symbols.  NB: because we are serializing to JSON, all
+# symbols in 'args' will be converted to strings.  Note that +backtrace: true+ can take quite a bit of
+# space in Redis; a large volume of failing jobs can start Redis swapping if you aren't careful.
+#
+# Returns a unique Job ID.  If middleware stops the job, nil will be returned instead.
+#
+# Example:
+#   push('queue' => 'my_queue', 'class' => MyWorker, 'args' => ['foo', 1, :bat => 'bar'])
+#
+def push(item)
+  normed = normalize_item(item)
+  payload = process_single(item['class'], normed)
 
-and this is chained to a =dot= source code block 
+  if payload
+    raw_push([payload])
+    payload['jid']
+  end
+end
 
-#+BEGIN_EXAMPLE
-,#+BEGIN_SRC dot :file images/test-dot.png :var input=make-dot :exports results
-graph {
- $input
-}
-,#+END_SRC
-#+END_EXAMPLE
+def raw_push(payloads)
+  @redis_pool.with do |conn|
+    conn.multi do
+      atomic_push(conn, payloads)
+    end
+  end
+  true
+end
 
-that wraps the input in a =graph{}= command to produce the following
-graphic output
+def atomic_push(conn, payloads)
+  if payloads.first['at']
+    conn.zadd('schedule'.freeze, payloads.map do |hash|
+      at = hash.delete('at'.freeze).to_s
+      [at, Sidekiq.dump_json(hash)]
+    end)
+  else
+    q = payloads.first['queue']
+    now = Time.now.to_f
+    to_push = payloads.map do |entry|
+      entry['enqueued_at'.freeze] = now
+      Sidekiq.dump_json(entry)
+    end
+    conn.sadd('queues'.freeze, q)
+    conn.lpush("queue:#{q}", to_push)
+  end
+end
 
-#+BEGIN_SRC dot :file images/test-dot.png :var input=make-dot :exports results
-graph {
- $input
+def process_single(worker_class, item)
+  queue = item['queue']
+
+  middleware.invoke(worker_class, item, queue, @redis_pool) do
+    item
+  end
+end
+
+##
+# Define client-side middleware:
+#
+#   client = Sidekiq::Client.new
+#   client.middleware do |chain|
+#     chain.use MyClientMiddleware
+#   end
+#   client.push('class' => 'SomeWorker', 'args' => [1,2,3])
+#
+# All client instances default to the globally-defined
+# Sidekiq.client_middleware but you can change as necessary.
+#
+def middleware(&block)
+  @chain ||= Sidekiq.client_middleware
+  if block_given?
+    @chain = @chain.dup
+    yield @chain
+  end
+  @chain
+end
+#+END_SRC
+这里首先读一下注释。然后来看 =process_single= ，这个方法里面作重要的莫过于 =middleware.invoke= 这里的代码。 =middleware= 是什么？如果你有node.js的[[http://expressjs.com/][express]]或者别的框架的开发经验的话，或者直接从字面意思上来看的话可能就会马上理解。 =push= 方法中有判断 =payload= 是否为空的代码，如果为空那么这个任务也就不执行了。而 =payload= 是否为空就是取决于一系列的 =Middleware= 的作用。我们再来看看 =raw_push= 方法。这个方法从 =pool= 中获取了一个连接，并且打开了一个redis的multi命令的上下文，然后交给了 =atomic_push= 方法。在 =atomic_push= 方法则将提交过来的任务分成两类，一种是简单的异步任务，它是由调用 =perform_async= 产生的，一种是定时任务，它是由调用 =perform_in= 或者 =perform_at= 产生的，分别用不同的逻辑添加到redis中，这里就不再分析了。至此Sidekiq中提交任务到redis中的过程分析结束。
+
+现在任务已经添加到redis中，那么谁来又是在什么时候执行这些任务的呢？
+
+我们首先来看一下 =Sidekiq::Manager= 类。我这里只摘出 =initialize= 和 =start= 方法。
+#+BEGIN_SRC ruby
+def initialize(options={})
+  logger.debug { options.inspect }
+  @options = options
+  @count = options[:concurrency] || 25
+  raise ArgumentError, "Concurrency of #{@count} is not supported" if @count < 1
+
+  @done = false
+  @workers = Set.new
+  @count.times do
+    @workers << Processor.new(self)
+  end
+  @plock = Mutex.new
+end
+
+def start
+  @workers.each do |x|
+    x.start
+  end
+end
+#+END_SRC
+=start= 方法其实就是遍历 =@wrokers= 中的 =Sidekiq::Processor= 实例，调用其 =start= 方法。我们来看看 =Sidekiq::Processor= 中的部分代码。我这里只摘出了 =initialize= 方法。
+#+BEGIN_SRC ruby
+def initialize(mgr)
+  @mgr = mgr
+  @down = false
+  @done = false
+  @job = nil
+  @thread = nil
+  @strategy = (mgr.options[:fetch] || Sidekiq::BasicFetch).new(mgr.options)
+end
+#+END_SRC
+在 =Processor= 启动之后，也就是调用了 =start= 方法之后， =Processor= 会通过@strategy的 =retrieve_work= 方法从redis中获取任务。再来看一下 =Sidekiq::BasicFetch= 类中的 =retrieve_work= 方法。
+#+BEGIN_SRC ruby
+def retrieve_work
+  work = Sidekiq.redis { |conn| conn.brpop(*queues_cmd) }
+  UnitOfWork.new(*work) if work
+end
+#+END_SRC
+可以看到这里调用了redis的 =brpop= 命令。这是我第一次接触这个命令，说实话虽然用redis也有一段时间了，但是这个[[http://redis.io/commands/brpop][BRPOP]]命令是第一次看见。所以我就去查了下官方文档。
+#+BEGIN_QUOTE
+BRPOP is a blocking list pop primitive. It is the blocking version of RPOP because it blocks the connection when there are no elements to pop from any of the given lists. An element is popped from the tail of the first list that is non-empty, with the given keys being checked in the order that they are given.
+#+END_QUOTE
+BRPOP就是RPOP的阻塞版本，当list为空的时候，这个命令就一直阻塞直到超时。当我读完BRPOP的文档之后，我对Sidekiq的原理也基本明了了。
+
+下面的图片和文章内容无关，只是为了验证org-mode中可以画图。
+#+BEGIN_SRC dot :file other-dot.png :exports results
+digraph {
+  main [shape=box];
+  main -> parse [weight=8];
+  parse -> execute;
+  main -> init [style=dotted];
+  main -> cleanup;
+  execute -> { make_string; printf}
+  init -> make_string;
+  edge [color=red];
+  main -> printf [style=bold,label="100 times"];
+  make_string [label="make a\nstring"];
+  node [shape=box,style=filled,color=".7 .3 1.0"];
+  execute -> compare;
 }
 #+END_SRC
-
-#+RESULTS:
-file:images/test-dot.png
-
