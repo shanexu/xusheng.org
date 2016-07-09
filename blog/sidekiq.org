@@ -1,8 +1,8 @@
 #+TITLE:       Sidekiq原理
 #+AUTHOR:      Shane Xu
-#+EMAIL:       shane@192.168.8.7
+#+EMAIL:       xusheng0711@gmail.com
 #+DATE:        2016-04-16 Sat
-#+URI:         /blog/%y/%m/%d/sidekiq原理
+#+URI:         /blog/%y/%m/%d/sidekiq
 #+KEYWORDS:    sidekiq
 #+TAGS:        ruby, programming
 #+LANGUAGE:    en
@@ -12,7 +12,7 @@
 第一次接触Sidekiq是在前年吧。那时候，为了帮朋友定制一个论坛系统，我选了discourse，然而终究因为它不支持IE8，最后我们放弃了，这是后话。但是这个过程中，我重新拾起了荒废多年的ruby（我好像从来都没有正经学习过ruby），同时我也接触到了一个ruby的后台任务框架——Sidekiq（Simple, efficient background processing for Ruby.）。我那时就是简单的看了看文档和配置，觉得能用就行了。后来，因为自己想着什么时候用scala搞一个后台任务框架，就想什么时候看看Sidekiq的源代码。结果这一念想，过了一年多才得以实现。
 
 首先，我们从Sidekiq的源代码中examples目录下的por.rb（plain old ruby）这个例子。
-#+BEGIN_SRC ruby
+#+BEGIN_SRC ruby -n
 require 'sidekiq'
 
 # If your client is single-threaded, we just need a single connection in our Redis connection pool
@@ -42,7 +42,7 @@ class PlainOldRuby
 end
 #+END_SRC
 我们撇开前面两段配置Sidekiq的代码，直接看第21行的 =include Sidekiq::Worker= ，在加了这一行代码之后 =PlainOldRuby= 才会有 =perform_async= ， =perform_in= ， =perform_at= 这三个方法。我们来具体看下 =perform_async= 方法。
-#+BEGIN_SRC ruby
+#+BEGIN_SRC ruby -n
 def perform_async(*args)
   client_push('class' => self, 'args' => args)
 end
@@ -59,7 +59,7 @@ def client_push(item) # :nodoc:
 end
 #+END_SRC
 在执行 =perform_async= 的时候，实际上是将传入的参数打包后，再在 =client_push= 方法中，序列化成string后通过 =Sidekiq::Client= 的 =push= 方法发送出去。我们再来看 =Sidekiq::Client= 中的 =push= 方法。
-#+BEGIN_SRC ruby
+#+BEGIN_SRC ruby -n
 ##
 # The main method used to push a job to Redis.  Accepts a number of options:
 #
@@ -149,7 +149,7 @@ end
 现在任务已经添加到redis中，那么谁来又是在什么时候执行这些任务的呢？
 
 我们首先来看一下 =Sidekiq::Manager= 类。我这里只摘出 =initialize= 和 =start= 方法。
-#+BEGIN_SRC ruby
+#+BEGIN_SRC ruby -n
 def initialize(options={})
   logger.debug { options.inspect }
   @options = options
@@ -171,7 +171,7 @@ def start
 end
 #+END_SRC
 =start= 方法其实就是遍历 =@wrokers= 中的 =Sidekiq::Processor= 实例，调用其 =start= 方法。我们来看看 =Sidekiq::Processor= 中的部分代码。我这里只摘出了 =initialize= 方法。
-#+BEGIN_SRC ruby
+#+BEGIN_SRC ruby -n
 def initialize(mgr)
   @mgr = mgr
   @down = false
@@ -182,7 +182,7 @@ def initialize(mgr)
 end
 #+END_SRC
 在 =Processor= 启动之后，也就是调用了 =start= 方法之后， =Processor= 会通过@strategy的 =retrieve_work= 方法从redis中获取任务。再来看一下 =Sidekiq::BasicFetch= 类中的 =retrieve_work= 方法。
-#+BEGIN_SRC ruby
+#+BEGIN_SRC ruby -n
 def retrieve_work
   work = Sidekiq.redis { |conn| conn.brpop(*queues_cmd) }
   UnitOfWork.new(*work) if work
@@ -194,20 +194,3 @@ BRPOP is a blocking list pop primitive. It is the blocking version of RPOP becau
 #+END_QUOTE
 BRPOP就是RPOP的阻塞版本，当list为空的时候，这个命令就一直阻塞直到超时。当我读完BRPOP的文档之后，我对Sidekiq的原理也基本明了了。
 
-下面的图片和文章内容无关，只是为了验证org-mode中可以画图。
-#+BEGIN_SRC dot :file other-dot.png :exports results
-digraph {
-  main [shape=box];
-  main -> parse [weight=8];
-  parse -> execute;
-  main -> init [style=dotted];
-  main -> cleanup;
-  execute -> { make_string; printf}
-  init -> make_string;
-  edge [color=red];
-  main -> printf [style=bold,label="100 times"];
-  make_string [label="make a\nstring"];
-  node [shape=box,style=filled,color=".7 .3 1.0"];
-  execute -> compare;
-}
-#+END_SRC

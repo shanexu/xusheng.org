@@ -1,6 +1,6 @@
 #+TITLE:       My First Blog
 #+AUTHOR:      Shane Xu
-#+EMAIL:       xusheng0711@gmail
+#+EMAIL:       xusheng0711@gmail.com
 #+DATE:        2016-03-04 Fri
 #+URI:         /blog/%y/%m/%d/my-first-blog
 #+KEYWORDS:    <TODO: insert your keywords here>

@@ -2,7 +2,7 @@
 #+AUTHOR:      Shane Xu
 #+EMAIL:       xusheng0711@gmail.com
 #+DATE:        2016-03-07 Mon
-#+URI:         /blog/%y/%m/%d/everyman-sleep睡眠计划
+#+URI:         /blog/%y/%m/%d/everyman-sleep-schedule-plain
 #+KEYWORDS:    Life, Sleep
 #+TAGS:        Life, Sleep
 #+LANGUAGE:    en
