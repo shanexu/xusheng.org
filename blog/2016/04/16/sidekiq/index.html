@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>Sidekiq原理 - Shane Xu&#39;s Home</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Shane Xu" />
+    <meta name="description" content="&lt;TODO: insert your description here&gt;" />
+    <meta name="keywords" content="sidekiq" />
+    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/extra.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css"/>
+  </head>
+
+  <body>
+    <div>
+      <header class="masthead">
+        <h1 class="settitle">Shane Xu&#39;s Home</h1>
+        <blockquote>你所说的曙光究竟是什么意思</blockquote>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="xusheng.org">
+        </form>
+        <img class="avatar" src="https://avatars1.githubusercontent.com/u/1257453" />
+      </header>
+    </div>
+    <div class="node nav">
+      <ul>
+          <li><a href="/blog/">Blog</a></li>
+        <li><a href="/tags/">Tags</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="https://github.com/shanexu">GitHub</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+      </ul>
+      <hr/>
+    </div>
+
+
+<h3 class="section">Sidekiq原理</h3>
+<p>
+第一次接触Sidekiq是在前年吧。那时候，为了帮朋友定制一个论坛系统，我选了discourse，然而终究因为它不支持IE8，最后我们放弃了，这是后话。但是这个过程中，我重新拾起了荒废多年的ruby（我好像从来都没有正经学习过ruby），同时我也接触到了一个ruby的后台任务框架——Sidekiq（Simple, efficient background processing for Ruby.）。我那时就是简单的看了看文档和配置，觉得能用就行了。后来，因为自己想着什么时候用scala搞一个后台任务框架，就想什么时候看看Sidekiq的源代码。结果这一念想，过了一年多才得以实现。
+</p>
+
+<p>
+首先，我们从Sidekiq的源代码中examples目录下的por.rb（plain old ruby）这个例子。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span class="linenr"> 1: </span>require 'sidekiq'
+<span class="linenr"> 2: </span>
+<span class="linenr"> 3: </span># If your client is single-threaded, we just need a single connection in our Redis connection pool
+<span class="linenr"> 4: </span>Sidekiq.configure_client do |config|
+<span class="linenr"> 5: </span>  config.redis = { :namespace =&gt; 'x', :size =&gt; 1 }
+<span class="linenr"> 6: </span>end
+<span class="linenr"> 7: </span>
+<span class="linenr"> 8: </span># Sidekiq server is multi-threaded so our Redis connection pool size defaults to concurrency (-c)
+<span class="linenr"> 9: </span>Sidekiq.configure_server do |config|
+<span class="linenr">10: </span>  config.redis = { :namespace =&gt; 'x' }
+<span class="linenr">11: </span>end
+<span class="linenr">12: </span>
+<span class="linenr">13: </span># Start up sidekiq via
+<span class="linenr">14: </span># ./bin/sidekiq -r ./examples/por.rb
+<span class="linenr">15: </span># and then you can open up an IRB session like so:
+<span class="linenr">16: </span># irb -r ./examples/por.rb
+<span class="linenr">17: </span># where you can then say
+<span class="linenr">18: </span># PlainOldRuby.perform_async "like a dog", 3
+<span class="linenr">19: </span>#
+<span class="linenr">20: </span>class PlainOldRuby
+<span class="linenr">21: </span>  include Sidekiq::Worker
+<span class="linenr">22: </span>
+<span class="linenr">23: </span>  def perform(how_hard="super hard", how_long=1)
+<span class="linenr">24: </span>    sleep how_long
+<span class="linenr">25: </span>    puts "Workin' #{how_hard}"
+<span class="linenr">26: </span>  end
+<span class="linenr">27: </span>end
+</pre>
+</div>
+<p>
+我们撇开前面两段配置Sidekiq的代码，直接看第21行的 <code>include Sidekiq::Worker</code> ，在加了这一行代码之后 <code>PlainOldRuby</code> 才会有 <code>perform_async</code> ， <code>perform_in</code> ， <code>perform_at</code> 这三个方法。我们来具体看下 <code>perform_async</code> 方法。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span class="linenr"> 1: </span>def perform_async(*args)
+<span class="linenr"> 2: </span>  client_push('class' =&gt; self, 'args' =&gt; args)
+<span class="linenr"> 3: </span>end
+<span class="linenr"> 4: </span>
+<span class="linenr"> 5: </span>def client_push(item) # :nodoc:
+<span class="linenr"> 6: </span>  pool = Thread.current[:sidekiq_via_pool] || get_sidekiq_options['pool'] || Sidekiq.redis_pool
+<span class="linenr"> 7: </span>  hash = if Thread.current[:sidekiq_worker_set]
+<span class="linenr"> 8: </span>    x, Thread.current[:sidekiq_worker_set] = Thread.current[:sidekiq_worker_set], nil
+<span class="linenr"> 9: </span>    x.stringify_keys.merge(item.stringify_keys)
+<span class="linenr">10: </span>  else
+<span class="linenr">11: </span>    item.stringify_keys
+<span class="linenr">12: </span>  end
+<span class="linenr">13: </span>  Sidekiq::Client.new(pool).push(hash)
+<span class="linenr">14: </span>end
+</pre>
+</div>
+<p>
+在执行 <code>perform_async</code> 的时候，实际上是将传入的参数打包后，再在 <code>client_push</code> 方法中，序列化成string后通过 <code>Sidekiq::Client</code> 的 <code>push</code> 方法发送出去。我们再来看 <code>Sidekiq::Client</code> 中的 <code>push</code> 方法。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span class="linenr"> 1: </span>##
+<span class="linenr"> 2: </span># The main method used to push a job to Redis.  Accepts a number of options:
+<span class="linenr"> 3: </span>#
+<span class="linenr"> 4: </span>#   queue - the named queue to use, default 'default'
+<span class="linenr"> 5: </span>#   class - the worker class to call, required
+<span class="linenr"> 6: </span>#   args - an array of simple arguments to the perform method, must be JSON-serializable
+<span class="linenr"> 7: </span>#   retry - whether to retry this job if it fails, default true or an integer number of retries
+<span class="linenr"> 8: </span>#   backtrace - whether to save any error backtrace, default false
+<span class="linenr"> 9: </span>#
+<span class="linenr">10: </span># All options must be strings, not symbols.  NB: because we are serializing to JSON, all
+<span class="linenr">11: </span># symbols in 'args' will be converted to strings.  Note that +backtrace: true+ can take quite a bit of
+<span class="linenr">12: </span># space in Redis; a large volume of failing jobs can start Redis swapping if you aren't careful.
+<span class="linenr">13: </span>#
+<span class="linenr">14: </span># Returns a unique Job ID.  If middleware stops the job, nil will be returned instead.
+<span class="linenr">15: </span>#
+<span class="linenr">16: </span># Example:
+<span class="linenr">17: </span>#   push('queue' =&gt; 'my_queue', 'class' =&gt; MyWorker, 'args' =&gt; ['foo', 1, :bat =&gt; 'bar'])
+<span class="linenr">18: </span>#
+<span class="linenr">19: </span>def push(item)
+<span class="linenr">20: </span>  normed = normalize_item(item)
+<span class="linenr">21: </span>  payload = process_single(item['class'], normed)
+<span class="linenr">22: </span>
+<span class="linenr">23: </span>  if payload
+<span class="linenr">24: </span>    raw_push([payload])
+<span class="linenr">25: </span>    payload['jid']
+<span class="linenr">26: </span>  end
+<span class="linenr">27: </span>end
+<span class="linenr">28: </span>
+<span class="linenr">29: </span>def raw_push(payloads)
+<span class="linenr">30: </span>  @redis_pool.with do |conn|
+<span class="linenr">31: </span>    conn.multi do
+<span class="linenr">32: </span>      atomic_push(conn, payloads)
+<span class="linenr">33: </span>    end
+<span class="linenr">34: </span>  end
+<span class="linenr">35: </span>  true
+<span class="linenr">36: </span>end
+<span class="linenr">37: </span>
+<span class="linenr">38: </span>def atomic_push(conn, payloads)
+<span class="linenr">39: </span>  if payloads.first['at']
+<span class="linenr">40: </span>    conn.zadd('schedule'.freeze, payloads.map do |hash|
+<span class="linenr">41: </span>      at = hash.delete('at'.freeze).to_s
+<span class="linenr">42: </span>      [at, Sidekiq.dump_json(hash)]
+<span class="linenr">43: </span>    end)
+<span class="linenr">44: </span>  else
+<span class="linenr">45: </span>    q = payloads.first['queue']
+<span class="linenr">46: </span>    now = Time.now.to_f
+<span class="linenr">47: </span>    to_push = payloads.map do |entry|
+<span class="linenr">48: </span>      entry['enqueued_at'.freeze] = now
+<span class="linenr">49: </span>      Sidekiq.dump_json(entry)
+<span class="linenr">50: </span>    end
+<span class="linenr">51: </span>    conn.sadd('queues'.freeze, q)
+<span class="linenr">52: </span>    conn.lpush("queue:#{q}", to_push)
+<span class="linenr">53: </span>  end
+<span class="linenr">54: </span>end
+<span class="linenr">55: </span>
+<span class="linenr">56: </span>def process_single(worker_class, item)
+<span class="linenr">57: </span>  queue = item['queue']
+<span class="linenr">58: </span>
+<span class="linenr">59: </span>  middleware.invoke(worker_class, item, queue, @redis_pool) do
+<span class="linenr">60: </span>    item
+<span class="linenr">61: </span>  end
+<span class="linenr">62: </span>end
+<span class="linenr">63: </span>
+<span class="linenr">64: </span>##
+<span class="linenr">65: </span># Define client-side middleware:
+<span class="linenr">66: </span>#
+<span class="linenr">67: </span>#   client = Sidekiq::Client.new
+<span class="linenr">68: </span>#   client.middleware do |chain|
+<span class="linenr">69: </span>#     chain.use MyClientMiddleware
+<span class="linenr">70: </span>#   end
+<span class="linenr">71: </span>#   client.push('class' =&gt; 'SomeWorker', 'args' =&gt; [1,2,3])
+<span class="linenr">72: </span>#
+<span class="linenr">73: </span># All client instances default to the globally-defined
+<span class="linenr">74: </span># Sidekiq.client_middleware but you can change as necessary.
+<span class="linenr">75: </span>#
+<span class="linenr">76: </span>def middleware(&amp;block)
+<span class="linenr">77: </span>  @chain ||= Sidekiq.client_middleware
+<span class="linenr">78: </span>  if block_given?
+<span class="linenr">79: </span>    @chain = @chain.dup
+<span class="linenr">80: </span>    yield @chain
+<span class="linenr">81: </span>  end
+<span class="linenr">82: </span>  @chain
+<span class="linenr">83: </span>end
+</pre>
+</div>
+<p>
+这里首先读一下注释。然后来看 <code>process_single</code> ，这个方法里面作重要的莫过于 <code>middleware.invoke</code> 这里的代码。 <code>middleware</code> 是什么？如果你有node.js的<a href="http://expressjs.com/">express</a>或者别的框架的开发经验的话，或者直接从字面意思上来看的话可能就会马上理解。 <code>push</code> 方法中有判断 <code>payload</code> 是否为空的代码，如果为空那么这个任务也就不执行了。而 <code>payload</code> 是否为空就是取决于一系列的 <code>Middleware</code> 的作用。我们再来看看 <code>raw_push</code> 方法。这个方法从 <code>pool</code> 中获取了一个连接，并且打开了一个redis的multi命令的上下文，然后交给了 <code>atomic_push</code> 方法。在 <code>atomic_push</code> 方法则将提交过来的任务分成两类，一种是简单的异步任务，它是由调用 <code>perform_async</code> 产生的，一种是定时任务，它是由调用 <code>perform_in</code> 或者 <code>perform_at</code> 产生的，分别用不同的逻辑添加到redis中，这里就不再分析了。至此Sidekiq中提交任务到redis中的过程分析结束。
+</p>
+
+<p>
+现在任务已经添加到redis中，那么谁来又是在什么时候执行这些任务的呢？
+</p>
+
+<p>
+我们首先来看一下 <code>Sidekiq::Manager</code> 类。我这里只摘出 <code>initialize</code> 和 <code>start</code> 方法。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span class="linenr"> 1: </span>def initialize(options={})
+<span class="linenr"> 2: </span>  logger.debug { options.inspect }
+<span class="linenr"> 3: </span>  @options = options
+<span class="linenr"> 4: </span>  @count = options[:concurrency] || 25
+<span class="linenr"> 5: </span>  raise ArgumentError, "Concurrency of #{@count} is not supported" if @count &lt; 1
+<span class="linenr"> 6: </span>
+<span class="linenr"> 7: </span>  @done = false
+<span class="linenr"> 8: </span>  @workers = Set.new
+<span class="linenr"> 9: </span>  @count.times do
+<span class="linenr">10: </span>    @workers &lt;&lt; Processor.new(self)
+<span class="linenr">11: </span>  end
+<span class="linenr">12: </span>  @plock = Mutex.new
+<span class="linenr">13: </span>end
+<span class="linenr">14: </span>
+<span class="linenr">15: </span>def start
+<span class="linenr">16: </span>  @workers.each do |x|
+<span class="linenr">17: </span>    x.start
+<span class="linenr">18: </span>  end
+<span class="linenr">19: </span>end
+</pre>
+</div>
+<p>
+<code>start</code> 方法其实就是遍历 <code>@wrokers</code> 中的 <code>Sidekiq::Processor</code> 实例，调用其 <code>start</code> 方法。我们来看看 <code>Sidekiq::Processor</code> 中的部分代码。我这里只摘出了 <code>initialize</code> 方法。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span class="linenr">1: </span>def initialize(mgr)
+<span class="linenr">2: </span>  @mgr = mgr
+<span class="linenr">3: </span>  @down = false
+<span class="linenr">4: </span>  @done = false
+<span class="linenr">5: </span>  @job = nil
+<span class="linenr">6: </span>  @thread = nil
+<span class="linenr">7: </span>  @strategy = (mgr.options[:fetch] || Sidekiq::BasicFetch).new(mgr.options)
+<span class="linenr">8: </span>end
+</pre>
+</div>
+<p>
+在 <code>Processor</code> 启动之后，也就是调用了 <code>start</code> 方法之后， <code>Processor</code> 会通过@strategy的 <code>retrieve_work</code> 方法从redis中获取任务。再来看一下 <code>Sidekiq::BasicFetch</code> 类中的 <code>retrieve_work</code> 方法。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span class="linenr">1: </span>def retrieve_work
+<span class="linenr">2: </span>  work = Sidekiq.redis { |conn| conn.brpop(*queues_cmd) }
+<span class="linenr">3: </span>  UnitOfWork.new(*work) if work
+<span class="linenr">4: </span>end
+</pre>
+</div>
+<p>
+可以看到这里调用了redis的 <code>brpop</code> 命令。这是我第一次接触这个命令，说实话虽然用redis也有一段时间了，但是这个<a href="http://redis.io/commands/brpop">BRPOP</a>命令是第一次看见。所以我就去查了下官方文档。
+</p>
+<blockquote>
+<p>
+BRPOP is a blocking list pop primitive. It is the blocking version of RPOP because it blocks the connection when there are no elements to pop from any of the given lists. An element is popped from the tail of the first list that is non-empty, with the given keys being checked in the order that they are given.
+</p>
+</blockquote>
+<p>
+BRPOP就是RPOP的阻塞版本，当list为空的时候，这个命令就一直阻塞直到超时。当我读完BRPOP的文档之后，我对Sidekiq的原理也基本明了了。
+</p>
+
+
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2016-04-16</span>
+        <span title="last modification date" class="post-info">2016-07-09</span>
+        <span title="tags" class="post-info"><a href="/tags/ruby/">ruby</a>, <a href="/tags/programming/">programming</a></span>
+        <span title="author" class="post-info">Shane Xu</span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2016/04/16/sidekiq";
+          var disqus_url = "http://xusheng.org/blog/2016/04/16/sidekiq";
+          var disqus_shortname = 'shanexu';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="/media/js/prettify.js"></script>
+      <!-- <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+      <script src="/media/js/main.js"></script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-74684473-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.x (<a href="http://orgmode.org">Org mode</a> 8.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">Shane Xu</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>
