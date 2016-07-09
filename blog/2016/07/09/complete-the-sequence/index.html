@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>Complete the Sequence! - Shane Xu&#39;s Home</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Shane Xu" />
+    <meta name="description" content="A solution for CMPLS" />
+    <meta name="keywords" content="spoj, algorithm" />
+    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/extra.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css"/>
+  </head>
+
+  <body>
+    <div>
+      <header class="masthead">
+        <h1 class="settitle">Shane Xu&#39;s Home</h1>
+        <blockquote>你所说的曙光究竟是什么意思</blockquote>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="xusheng.org">
+        </form>
+        <img class="avatar" src="https://avatars1.githubusercontent.com/u/1257453" />
+      </header>
+    </div>
+    <div class="node nav">
+      <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/media/">Media</a></li>
+        <li><a href="/tags/">Tags</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="https://github.com/shanexu">GitHub</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+      </ul>
+      <hr/>
+    </div>
+
+
+<h3 class="section">Complete the Sequence!</h3>
+<p>
+今年四月份的时候，我开始重新学起了Haskell。按照往年的惯例，开始在<a href="http://www.spoj.com/"> SPOJ </a>上刷题（严格来说不能叫刷，以我卑微的算法能力，一天能做掉一道题目已经是万幸了）。其实，我主要是把以前用别的语言做过的题目，再用Haskell做一遍。其中，有一道题 <a href="http://www.spoj.com/problems/CMPLS/">CMPLS - Complete the Sequence!</a> 虽然，不是很难，但是其解题过程着实有趣，尤其是用Haskell的时候。
+</p>
+
+<p>
+题目的大概意思是给定一个数列P(n)以及前S项目, 求这个数列的后C项。其中数列的通项公式可表示为:
+</p>
+
+\begin{equation}
+P(n)=a_D.n^D+a_{D-1}.n^{D-1}+...+a_1.n+a_0
+\end{equation}
+
+<p>
+上一次做这道题目的时候，我还在学ruby也就是6年前的样子。我重新翻看自己的解法的时候简直生不如死。代码是这样的。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span class="linenr"> 1: </span>class Array
+<span class="linenr"> 2: </span>  def const? n
+<span class="linenr"> 3: </span>    1.upto(n) do |i|
+<span class="linenr"> 4: </span>      return false if self[i]!=first
+<span class="linenr"> 5: </span>    end
+<span class="linenr"> 6: </span>    return true
+<span class="linenr"> 7: </span>  end
+<span class="linenr"> 8: </span>  def diff! n
+<span class="linenr"> 9: </span>    0.upto(n-1) do |i|
+<span class="linenr">10: </span>      self[i]=self[i+1]-self[i]
+<span class="linenr">11: </span>    end
+<span class="linenr">12: </span>  end
+<span class="linenr">13: </span>  def computer n
+<span class="linenr">14: </span>    return Array.new(n,first) if const? size-1
+<span class="linenr">15: </span>    count=size-1
+<span class="linenr">16: </span>    while true
+<span class="linenr">17: </span>      diff!count
+<span class="linenr">18: </span>      count-=1
+<span class="linenr">19: </span>      break if const?count
+<span class="linenr">20: </span>    end
+<span class="linenr">21: </span>    n.times.inject(Array.new(n)) do |res,j|
+<span class="linenr">22: </span>      count.upto(size-2) do |i|
+<span class="linenr">23: </span>        self[i+1]+=self[i]
+<span class="linenr">24: </span>      end
+<span class="linenr">25: </span>      res[j]=last
+<span class="linenr">26: </span>      res
+<span class="linenr">27: </span>    end
+<span class="linenr">28: </span>  end
+<span class="linenr">29: </span>end
+<span class="linenr">30: </span>
+<span class="linenr">31: </span>ss= gets.to_i.times.inject([]) do |s,j|
+<span class="linenr">32: </span>  n=gets.split[1].to_i
+<span class="linenr">33: </span>  s&lt;&lt;gets.split.map{|s| s.to_i}.computer(n).join(" ")
+<span class="linenr">34: </span>end
+<span class="linenr">35: </span>
+<span class="linenr">36: </span>puts ss
+</pre>
+</div>
+
+<p>
+在经过一段时间的读码之后，我开始有了一点思路。举个例子，输入序列是：1, 8, 27, 64, 125。也就是正整数的立方的数列。 \(P(n)=n^3\) 。后一个数减去前一个数得到一个新数列7, 19, 37, 61。继续做前面的操作，获得数列12, 18, 24。继续操作，获得数列6, 6。终于我们得到了一个常数列。回看一下，倒数第二个数列是等差数列其通项公式为 \(P(n)=6+6n\) 。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text"> 1  8 27 64 125
+ 7 19 37 61
+12 18 24
+ 6  6
+</pre>
+</div>
+
+<p>
+我把原来的数列命名为 \(A(n)\) ，相邻两项的差的数列设为 \(D(n)\) 。则有定义很容易得到以下结论:
+</p>
+
+\begin{equation}
+A(n)=A(n-1)+D(n-1)
+\end{equation}
+
+<p>
+而经过刚刚的操作我们发现似乎经过操作之后，最后能得到一个常数列。其实这点很好证明。假设 \(A(n)\) 的通项公式的最高次幂为 \(x\) ，那么相邻两数相减就可以把这个最高次幂消去，于是 \(D(n)\) 的通项公式就是最高次为 \(x-1\) 的多项式。如此操作下去就能将 \(n\) 的次方消去，最后剩下常数了。然后，在从常数列算出等差数列，从等差数列继续推算出高次数列。上面的ruby代码就是这两个过程。我这里把这两个过程分别叫做seeds和series。seeds算出从原始数列到各个差数列的首项，而series则反向从差数列推算出原始数列。这次我用Haskell来解这道题目。
+首先解决几个小问题。在Haskell中，如何表示一个常数列。这个很简单，在GHC.List包中有一个函数repeat :: a -&gt; [a]，比如repeat 1, 就是1,1,1,1...常数列。由于Haskell的懒惰特性，repeat 1不会立即求值，只有等到需要的时候才会求值，比如take 10 (repeat 1)，这个表达式只会求出数列的前10项，因为从第11项开始数列暂时不被使用，所以停止求值。然而我觉得使用repeat函数并不过瘾。可以用下面的表达式定义常数列。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell">ones :: [Int]
+ones = 1 : ones
+</pre>
+</div>
+
+<p>
+等差数列如何表示
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell">odds :: [Int]
+odds = 1 : map (+2) odds
+
+-- or
+
+odds = let twos = 2 : twos
+       in 1 : zipWith (+) odds twos
+</pre>
+</div>
+
+<p>
+第一种方法比较直白，用语言来表述就是，后一项等于前一项加2。而第二种表达看上去有些啰嗦，我也用语言解释一下，twos是一个常数列，odds数列的每一项等于其前一项和在twos数列对应的项的和。把twos数列当成差数列，那么odds数列就是原数列。也就是说:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell">dn :: [Int]
+dn = undefined
+
+an :: [Int]
+an = a1 : zipWith (+) an dn
+</pre>
+</div>
+
+<p>
+有了这个两个表达式，就可以写seeds和series函数了。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell">{-# OPTIONS_GHC -optc-O2 #-}
+
+import Control.Monad
+
+series :: [Int] -&gt; [Int]
+series [x]    = let s = x : s in s
+series (x:xs) = let s = x : zipWith (+) (series xs) s in s
+
+seeds :: [Int] -&gt; [Int]
+seeds xs@(x:ts) = if all (==x) ts
+                  then [x]
+                  else x : seeds (zipWith (-) ts xs)
+
+cmpls :: Int -&gt; Int -&gt; [Int] -&gt; [Int]
+cmpls s c = take c . drop s . series . seeds
+
+solveProblems :: [String] -&gt; IO ()
+solveProblems = foldM_ f []
+  where f []     l = return . map read . words $ l
+        f [s, c] l = putStrLn (unwords . map show $ cmpls s c (map read . words $ l))
+                     &gt;&gt; return []
+
+main :: IO ()
+main = getContents &gt;&gt;= solveProblems . tail . lines
+</pre>
+</div>
+
+
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2016-07-09</span>
+        <span title="last modification date" class="post-info">2016-07-09</span>
+        <span title="tags" class="post-info"><a href="/tags/spoj/">spoj</a>, <a href="/tags/algorithm/">algorithm</a>, <a href="/tags/haskell/">haskell</a></span>
+        <span title="author" class="post-info">Shane Xu</span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2016/07/09/complete-the-sequence";
+          var disqus_url = "http://xusheng.org/blog/2016/07/09/complete-the-sequence";
+          var disqus_shortname = 'shanexu';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="/media/js/prettify.js"></script>
+      <script src="http://xusheng.org/cdn/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="/media/js/main.js"></script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-74684473-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.x (<a href="http://orgmode.org">Org mode</a> 8.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">Shane Xu</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>
