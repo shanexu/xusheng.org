@@ -3,9 +3,9 @@
   <channel>
     <title>Shane Xu&#39;s Home</title>
     <link>http://xusheng.org/</link>
-    <description>你所说的曙光究竟是什么意思</description>
-    <pubDate>Sat, 09 Jul 2016 16:47:19 CST</pubDate>
-    <lastBuildDate>Sat, 09 Jul 2016 16:47:19 CST</lastBuildDate>
+    <description>Life is too short for so much sorrows.</description>
+    <pubDate>Sat, 09 Jul 2016 22:07:40 CST</pubDate>
+    <lastBuildDate>Sat, 09 Jul 2016 22:07:40 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
     <item>
@@ -14,6 +14,13 @@
       <description><![CDATA[人生苦短]]></description>
       <pubDate>2016-07-09</pubDate>
       <guid>http://xusheng.org/blog/2016/03/07/everyman-sleep-schedule-plain</guid>
+    </item>
+    <item>
+      <title>安装旧版本的influxdb</title>
+      <link>http://xusheng.org/blog/2016/07/09/install-legacy-influxdb</link>
+      <description><![CDATA[install legacy version of influxdb]]></description>
+      <pubDate>2016-07-09</pubDate>
+      <guid>http://xusheng.org/blog/2016/07/09/install-legacy-influxdb</guid>
     </item>
     <item>
       <title>My First Blog</title>
