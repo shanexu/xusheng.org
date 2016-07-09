@@ -11,7 +11,7 @@
 
 因为工作需要，所以接触了influxdb，而工作中用的 [[https://influxdata.com/][influxdb]] 的版本则是0.10.2的版本，官方只提供了最新稳定版的下载。看了官网的角角落落，也没有找到明显的下载地方，那就只有自己编译了。以下内容基本都是influxdb源码中CONTRIBUTING.md中的内容。
 
-* 安装 go
+* 安装 Go
 InfluxDB 0.10.2需要Go 1.4.3。目前Go的稳定版已经跑到1.6.2了。和很多语言一样（例如 node的nvm, ruby的rvm），Go也出现了版本管理工具 [[https://github.com/moovweb/gvm][gvm]] 。可以用下面命令安装gvm
 #+BEGIN_SRC sh
 bash < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
@@ -26,13 +26,14 @@ gvm use go1.4.3 --default #可以不设置为default, 下次使用时需要执�
 
 * 安装版本控制系统
 Go能够通过版本控制系统引入远端的包，目前influxdb只依赖于 =git= 和 =mercurial=
-** [[http://git-scm.com/book/en/Getting-Started-Installing-Git][Install Git]]
-** [[http://mercurial.selenic.com/wiki/Download][Install Mercurial]]
+** 安装 [[http://git-scm.com/book/en/Getting-Started-Installing-Git][Git]]
 #+BEGIN_SRC sh
 brew install git
+#+END_SRC
+** 安装 [[http://mercurial.selenic.com/wiki/Download][Mercurial]]
+#+BEGIN_SRC sh
 brew install mercurial
 #+END_SRC
-
 * 下载源代码
 设置项目结构并从仓库中获取代码：
 #+BEGIN_SRC sh
@@ -68,4 +69,17 @@ go get -t ./...
 #+BEGIN_SRC sh
 go clean ./...
 go install ./...
+#+END_SRC
+二进制可执行文件将被安装在 =$GOPATH/bin= 。InfluxDB的Server端的可执行文件的名字为 =influxd= ， 而 =influx= 则是influxdb的文本界面客户端。
+可以通过添加编译flag来设置编译出来的二进制文件的版本号和commit号：
+#+BEGIN_SRC sh
+-ldflags="-X main.version=$VERSION -X main.branch=$BRANCH -X main.commit=$COMMIT -X main.buildTime=$TIME"
+#+END_SRC
+
+* 启动 InfluxDB
+正常情况下，直接运行influxd就可以启动influxdb了。通过命令生成配置文件，修改后，在启动参数中加入 =-config filepath= 参数，就可以以指定配置文件启动influxdb。
+#+BEGIN_SRC sh
+$GOPATH/bin/influxd config > influxd.conf
+vim influxd.conf # 修改配置文件
+$GOPATH/bin/influxd -config influxd.conf
 #+END_SRC
