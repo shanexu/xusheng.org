@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>安装旧版本的influxdb - Shane Xu&#39;s Home</title>
+    <title>安装旧版本的 influxdb - Shane Xu&#39;s Home</title>
     <meta charset="utf-8" />
     <meta name="author" content="Shane Xu" />
     <meta name="description" content="install legacy version of influxdb" />
@@ -34,16 +34,16 @@
     </div>
 
 
-<h3 class="section">安装旧版本的influxdb</h3>
+<h3 class="section">安装旧版本的 influxdb</h3>
 <p>
-因为工作需要，所以接触了influxdb，而工作中用的 <a href="https://influxdata.com/">influxdb</a> 的版本则是0.10.2的版本，官方只提供了最新稳定版的下载。看了官网的角角落落，也没有找到明显的下载地方，那就只有自己编译了。以下内容基本都是influxdb源码中CONTRIBUTING.md中的内容。
+因为工作需要，所以接触了 influxdb，而工作中用的 <a href="https://influxdata.com/">influxdb</a> 的版本则是 0.10.2 的版本，官方只提供了最新稳定版的下载。看了官网的角角落落，也没有找到明显的下载地方，那就只有自己编译了。以下内容基本都是 influxdb 源码中 CONTRIBUTING.md 中的内容。
 </p>
 
 <div id="outline-container-orgheadline1" class="outline-2">
 <h2 id="orgheadline1">安装 Go</h2>
 <div class="outline-text-2" id="text-orgheadline1">
 <p>
-InfluxDB 0.10.2需要Go 1.4.3。目前Go的稳定版已经跑到1.6.2了。和很多语言一样（例如 node的nvm, ruby的rvm），Go也出现了版本管理工具 <a href="https://github.com/moovweb/gvm">gvm</a> 。可以用下面命令安装gvm
+InfluxDB 0.10.2 需要 Go 1.4.3。目前 Go 的稳定版已经跑到 1.6.2 了。和很多语言一样（例如 node 的 nvm, ruby 的 rvm），Go 也出现了版本管理工具 <a href="https://github.com/moovweb/gvm">gvm</a> 。可以用下面命令安装 gvm
 </p>
 <div class="org-src-container">
 
@@ -51,14 +51,13 @@ InfluxDB 0.10.2需要Go 1.4.3。目前Go的稳定版已经跑到1.6.2了。和�
 </pre>
 </div>
 <p>
-如果使用zsh的话就把bash替换成zsh。
-然后安装Go。
+如果使用 zsh 的话就把 bash 替换成 zsh。然后安装 Go。
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">gvm install go1.4.2 -B #mac可能需要先安装go1.4.2的binary版本
+<pre class="src src-sh">gvm install go1.4.2 -B #mac 可能需要先安装 go1.4.2 的 binary 版本
 gvm install go1.4.3
-gvm use go1.4.3 --default #可以不设置为default, 下次使用时需要执行这条命令
+gvm use go1.4.3 --default #可以不设置为 default, 下次使用时需要执行这条命令
 </pre>
 </div>
 </div>
@@ -68,7 +67,7 @@ gvm use go1.4.3 --default #可以不设置为default, 下次使用时需要执�
 <h2 id="orgheadline2">安装版本控制系统</h2>
 <div class="outline-text-2" id="text-orgheadline2">
 <p>
-Go能够通过版本控制系统引入远端的包，目前influxdb只依赖于 <code>git</code> 和 <code>mercurial</code>
+Go 能够通过版本控制系统引入远端的包，目前 influxdb 只依赖于 <code>git</code> 和 <code>mercurial</code>
 </p>
 </div>
 <div id="outline-container-orgheadline3" class="outline-3">
@@ -109,7 +108,7 @@ git checkout v0.10.2
 </pre>
 </div>
 <p>
-保持 <code>$GOPATH/src/github.com/influxdb</code> 这样的目录结构是必要，因为这样才能保证Go import能够正常工作。
+保持 <code>$GOPATH/src/github.com/influxdb</code> 这样的目录结构是必要，因为这样才能保证 Go import 能够正常工作。
 </p>
 </div>
 </div>
@@ -118,7 +117,7 @@ git checkout v0.10.2
 <h2 id="orgheadline6">编译和测试</h2>
 <div class="outline-text-2" id="text-orgheadline6">
 <p>
-确保Go已经正确安装，然后执行以下命令。可能需要翻墙。
+确保 Go 已经正确安装，然后执行以下命令。可能需要翻墙。
 </p>
 <div class="org-src-container">
 
@@ -127,8 +126,7 @@ go get -t ./...
 </pre>
 </div>
 <p>
-第二条命令会扫描当前目录下的所有go源代码，从中找到import并从远端下载到本地。
-在这个过程中可能会碰到编译出错的问题，比如：
+第二条命令会扫描当前目录下的所有 go 源代码，从中找到 import 并从远端下载到本地。在这个过程中可能会碰到编译出错的问题，比如：
 </p>
 <div class="org-src-container">
 
@@ -137,7 +135,7 @@ tsdb/engine/tsm1/int.go:271: cannot use d.values (type []uint64) as type *[240]u
 </pre>
 </div>
 <p>
-类型不一致问题，可能是现在用来编译influxdb的第三方库的版本和当时的不一样，因为go get命令只会从代码仓库中检出最新的master，所以我们要检出历史版本。
+类型不一致问题，可能是现在用来编译 influxdb 的第三方库的版本和当时的不一样，因为 go get 命令只会从代码仓库中检出最新的 master，所以我们要检出历史版本。
 </p>
 <div class="org-src-container">
 
@@ -157,8 +155,7 @@ go install ./...
 </pre>
 </div>
 <p>
-二进制可执行文件将被安装在 <code>$GOPATH/bin</code> 。InfluxDB的Server端的可执行文件的名字为 <code>influxd</code> ， 而 <code>influx</code> 则是influxdb的文本界面客户端。
-可以通过添加编译flag来设置编译出来的二进制文件的版本号和commit号：
+二进制可执行文件将被安装在 <code>$GOPATH/bin</code> 。InfluxDB 的 Server 端的可执行文件的名字为 <code>influxd</code> ， 而 <code>influx</code> 则是 influxdb 的文本界面客户端。可以通过添加编译 flag 来设置编译出来的二进制文件的版本号和 commit 号：
 </p>
 <div class="org-src-container">
 
@@ -172,7 +169,7 @@ go install ./...
 <h2 id="orgheadline7">启动 InfluxDB</h2>
 <div class="outline-text-2" id="text-orgheadline7">
 <p>
-正常情况下，直接运行influxd就可以启动influxdb了。通过命令生成配置文件，修改后，在启动参数中加入 <code>-config filepath</code> 参数，就可以以指定配置文件启动influxdb。
+正常情况下，直接运行 influxd 就可以启动 influxdb 了。通过命令生成配置文件，修改后，在启动参数中加入 <code>-config filepath</code> 参数，就可以以指定配置文件启动 influxdb。
 </p>
 <div class="org-src-container">
 
@@ -188,7 +185,7 @@ $GOPATH/bin/influxd -config influxd.conf
     <div>
       <div class="post-meta">
         <span title="post date" class="post-info">2016-07-09</span>
-        <span title="last modification date" class="post-info">2016-07-09</span>
+        <span title="last modification date" class="post-info">2016-07-10</span>
         <span title="tags" class="post-info"><a href="/tags/influxdb/">influxdb</a>, <a href="/tags/go/">go</a></span>
         <span title="author" class="post-info">Shane Xu</span>
       </div>
