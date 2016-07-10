@@ -1,4 +1,4 @@
-#+TITLE:       安装旧版本的influxdb
+#+TITLE:       安装旧版本的 influxdb
 #+AUTHOR:      Shane Xu
 #+EMAIL:       xusheng0711@gmail.com
 #+DATE:        2016-07-09 Sat
@@ -9,23 +9,23 @@
 #+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
 #+DESCRIPTION: install legacy version of influxdb
 
-因为工作需要，所以接触了influxdb，而工作中用的 [[https://influxdata.com/][influxdb]] 的版本则是0.10.2的版本，官方只提供了最新稳定版的下载。看了官网的角角落落，也没有找到明显的下载地方，那就只有自己编译了。以下内容基本都是influxdb源码中CONTRIBUTING.md中的内容。
+因为工作需要，所以接触了 influxdb，而工作中用的 [[https://influxdata.com/][influxdb]] 的版本则是 0.10.2 的版本，官方只提供了最新稳定版的下载。看了官网的角角落落，也没有找到明显的下载地方，那就只有自己编译了。以下内容基本都是 influxdb 源码中 CONTRIBUTING.md 中的内容。
 
 * 安装 Go
-InfluxDB 0.10.2需要Go 1.4.3。目前Go的稳定版已经跑到1.6.2了。和很多语言一样（例如 node的nvm, ruby的rvm），Go也出现了版本管理工具 [[https://github.com/moovweb/gvm][gvm]] 。可以用下面命令安装gvm
+InfluxDB 0.10.2 需要 Go 1.4.3。目前 Go 的稳定版已经跑到 1.6.2 了。和很多语言一样（例如 node 的 nvm, ruby 的 rvm），Go 也出现了版本管理工具 [[https://github.com/moovweb/gvm][gvm]] 。可以用下面命令安装 gvm
 #+BEGIN_SRC sh
 bash < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
 #+END_SRC
-如果使用zsh的话就把bash替换成zsh。
-然后安装Go。
+如果使用 zsh 的话就把 bash 替换成 zsh。
+然后安装 Go。
 #+BEGIN_SRC sh
-gvm install go1.4.2 -B #mac可能需要先安装go1.4.2的binary版本
+gvm install go1.4.2 -B #mac 可能需要先安装 go1.4.2 的 binary 版本
 gvm install go1.4.3
-gvm use go1.4.3 --default #可以不设置为default, 下次使用时需要执行这条命令
+gvm use go1.4.3 --default #可以不设置为 default, 下次使用时需要执行这条命令
 #+END_SRC
 
 * 安装版本控制系统
-Go能够通过版本控制系统引入远端的包，目前influxdb只依赖于 =git= 和 =mercurial=
+Go 能够通过版本控制系统引入远端的包，目前 influxdb 只依赖于 =git= 和 =mercurial=
 ** 安装 [[http://git-scm.com/book/en/Getting-Started-Installing-Git][Git]]
 #+BEGIN_SRC sh
 brew install git
@@ -44,21 +44,21 @@ cd $GOPATH/src/github.com/influxdb
 git clone https://github.com/influxdata/influxdb.git
 git checkout v0.10.2
 #+END_SRC
-保持 =$GOPATH/src/github.com/influxdb= 这样的目录结构是必要，因为这样才能保证Go import能够正常工作。
+保持 =$GOPATH/src/github.com/influxdb= 这样的目录结构是必要，因为这样才能保证 Go import 能够正常工作。
 
 * 编译和测试
-确保Go已经正确安装，然后执行以下命令。可能需要翻墙。
+确保 Go 已经正确安装，然后执行以下命令。可能需要翻墙。
 #+BEGIN_SRC sh
 cd $GOPATH/src/github.com/influxdb/influxdb
 go get -t ./...
 #+END_SRC
-第二条命令会扫描当前目录下的所有go源代码，从中找到import并从远端下载到本地。
+第二条命令会扫描当前目录下的所有 go 源代码，从中找到 import 并从远端下载到本地。
 在这个过程中可能会碰到编译出错的问题，比如：
 #+BEGIN_SRC sh
 # github.com/influxdb/influxdb/tsdb/engine/tsm1                                   
 tsdb/engine/tsm1/int.go:271: cannot use d.values (type []uint64) as type *[240]uint64 in argument to simple8b.Decode
 #+END_SRC
-类型不一致问题，可能是现在用来编译influxdb的第三方库的版本和当时的不一样，因为go get命令只会从代码仓库中检出最新的master，所以我们要检出历史版本。
+类型不一致问题，可能是现在用来编译 influxdb 的第三方库的版本和当时的不一样，因为 go get 命令只会从代码仓库中检出最新的 master，所以我们要检出历史版本。
 #+BEGIN_SRC sh
 cd $GOPATH/src/github.com/jwilder/encoding/simple8b
 git checkout 07d88d4f35eec497617bee0c7bfe651a796dae13
@@ -70,14 +70,14 @@ go get -t ./...
 go clean ./...
 go install ./...
 #+END_SRC
-二进制可执行文件将被安装在 =$GOPATH/bin= 。InfluxDB的Server端的可执行文件的名字为 =influxd= ， 而 =influx= 则是influxdb的文本界面客户端。
-可以通过添加编译flag来设置编译出来的二进制文件的版本号和commit号：
+二进制可执行文件将被安装在 =$GOPATH/bin= 。InfluxDB 的 Server 端的可执行文件的名字为 =influxd= ， 而 =influx= 则是 influxdb 的文本界面客户端。
+可以通过添加编译 flag 来设置编译出来的二进制文件的版本号和 commit 号：
 #+BEGIN_SRC sh
 -ldflags="-X main.version=$VERSION -X main.branch=$BRANCH -X main.commit=$COMMIT -X main.buildTime=$TIME"
 #+END_SRC
 
 * 启动 InfluxDB
-正常情况下，直接运行influxd就可以启动influxdb了。通过命令生成配置文件，修改后，在启动参数中加入 =-config filepath= 参数，就可以以指定配置文件启动influxdb。
+正常情况下，直接运行 influxd 就可以启动 influxdb 了。通过命令生成配置文件，修改后，在启动参数中加入 =-config filepath= 参数，就可以以指定配置文件启动 influxdb。
 #+BEGIN_SRC sh
 $GOPATH/bin/influxd config > influxd.conf
 vim influxd.conf # 修改配置文件
