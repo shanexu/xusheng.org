@@ -1,7 +1,7 @@
 #+TITLE:       袭击图书馆
 #+AUTHOR:      Shane Xu
 #+EMAIL:       xusheng0711@gmail.com
-#+DATE:        2016-07-11 Sat
+#+DATE:        2007-03-24 Sat
 #+URI:         /blog/%y/%m/%d/xi-ji-tu-shu-guan
 #+KEYWORDS:    图书馆
 #+TAGS:        小说
