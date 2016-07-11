@@ -4,10 +4,17 @@
     <title>Shane Xu&#39;s Home</title>
     <link>http://xusheng.org/</link>
     <description>Life is too short for so much sorrows.</description>
-    <pubDate>Sun, 10 Jul 2016 13:57:39 CST</pubDate>
-    <lastBuildDate>Sun, 10 Jul 2016 13:57:39 CST</lastBuildDate>
+    <pubDate>Mon, 11 Jul 2016 08:28:02 CST</pubDate>
+    <lastBuildDate>Mon, 11 Jul 2016 08:28:02 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
+    <item>
+      <title>纸夫妻</title>
+      <link>http://xusheng.org/blog/2007/03/18/zhi-fu-qi</link>
+      <description><![CDATA[纸夫妻]]></description>
+      <pubDate>2016-07-11</pubDate>
+      <guid>http://xusheng.org/blog/2007/03/18/zhi-fu-qi</guid>
+    </item>
     <item>
       <title>安装旧版本的 influxdb</title>
       <link>http://xusheng.org/blog/2016/07/09/install-legacy-influxdb</link>
