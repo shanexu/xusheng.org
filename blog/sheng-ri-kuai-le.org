@@ -1,0 +1,24 @@
+#+TITLE:       生日快乐
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2016-07-11
+#+URI:         /blog/%y/%m/%d/sheng-ri-kuai-le
+#+KEYWORDS:    生日快乐
+#+TAGS:        小说
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: 生日快乐四则
+
+很久以前，我还是一个文艺青年，向往着可以有天把自己的酸文发表出去。
+
+很久以前，我还是一个喜欢在晚上九点开着台灯，奋笔疾书的傻瓜。
+
+很久以前，我还喜欢着一个女孩。
+
+很久以前，我还会把自己的酸文，打印出来，当做礼物送给女孩。
+
+很久以前，我还热爱着生活。
+
+很久以前，……
+
+很久以前，有一对 [[http://xusheng.org/blog/2007/03/18/zhi-fu-qi/][纸夫妻]] 在 [[http://xusheng.org/blog/2007/04/11/ji-yi-sen-lin/][记忆森林]] ，和 [[http://xusheng.org/blog/2007/04/13/ning-meng-xiong][柠檬熊]] 一起策划着 [[http://xusheng.org/blog/2007/03/24/xi-ji-tu-shu-guan][袭击图书馆]] 。
