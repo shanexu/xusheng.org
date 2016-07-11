@@ -38,11 +38,11 @@
 
 首先，我要说的是，从外皮做蜂蜜派是相当费功夫的，所以为了节约时间就用市场上卖的冷冻外皮。当然，时间充裕的话（比如现在），可以试着从蜂蜜派的外皮做起。好了，现在，我们开始吧。
 
-1. 用模子做派
+1. 用模子做派\\
    从冰箱里取出派的外皮，搁置 10～15 分钟，解冻。在案板上撒上面粉，把外皮揉好，嵌在模子里。
-2. 用烤箱烤
+2. 用烤箱烤\\
    把做好的派放在铁盘上，用 200 度的高温，烤 12～13 分钟，烤至派的颜色变黄。在烤好的部位趁热涂上蜂蜜。
-3. 可以吃了
+3. 可以吃了\\
    .....
 
 不过千万不要忘了邀请，为了你的蜂蜜派的蜂蜜而使自己的头的直径高了 20 个百分点的柠檬熊。
@@ -68,18 +68,18 @@
 
 #+begin_quote
 “
-Fly me to the moon
-And let me play among the stars
-Let me see what spring is like
-On Jupiter and Mars
-In other words , hold my hand
+Fly me to the moon\\
+And let me play among the stars\\
+Let me see what spring is like\\
+On Jupiter and Mars\\
+In other words , hold my hand\\
 In other words , darling , kiss me
  
-Fill my heart with song
-And let me sing forever more
-You are all I long for
-All I worship and adore
-In other words , please be true
+Fill my heart with song\\
+And let me sing forever more\\
+You are all I long for\\
+All I worship and adore\\
+In other words , please be true\\
 In other words , I LOVE YOU .
 ”
 #+end_quote
