@@ -4,16 +4,37 @@
     <title>Shane Xu&#39;s Home</title>
     <link>http://xusheng.org/</link>
     <description>Life is too short for so much sorrows.</description>
-    <pubDate>Mon, 11 Jul 2016 09:09:21 CST</pubDate>
-    <lastBuildDate>Mon, 11 Jul 2016 09:09:21 CST</lastBuildDate>
+    <pubDate>Mon, 11 Jul 2016 20:30:24 CST</pubDate>
+    <lastBuildDate>Mon, 11 Jul 2016 20:30:24 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
     <item>
+      <title>记忆森林</title>
+      <link>http://xusheng.org/blog/2007/04/11/ji-yi-sen-lin</link>
+      <description><![CDATA[记忆森林]]></description>
+      <pubDate>2016-07-11</pubDate>
+      <guid>http://xusheng.org/blog/2007/04/11/ji-yi-sen-lin</guid>
+    </item>
+    <item>
+      <title>柠檬熊</title>
+      <link>http://xusheng.org/blog/2007/04/13/ning-meng-xiong</link>
+      <description><![CDATA[柠檬熊的童话]]></description>
+      <pubDate>2016-07-11</pubDate>
+      <guid>http://xusheng.org/blog/2007/04/13/ning-meng-xiong</guid>
+    </item>
+    <item>
+      <title>生日快乐</title>
+      <link>http://xusheng.org/blog/2016/07/11/sheng-ri-kuai-le</link>
+      <description><![CDATA[生日快乐四则]]></description>
+      <pubDate>2016-07-11</pubDate>
+      <guid>http://xusheng.org/blog/2016/07/11/sheng-ri-kuai-le</guid>
+    </item>
+    <item>
       <title>袭击图书馆</title>
-      <link>http://xusheng.org/blog/2016/07/11/xi-ji-tu-shu-guan</link>
+      <link>http://xusheng.org/blog/2007/03/24/xi-ji-tu-shu-guan</link>
       <description><![CDATA[袭击图书馆]]></description>
       <pubDate>2016-07-11</pubDate>
-      <guid>http://xusheng.org/blog/2016/07/11/xi-ji-tu-shu-guan</guid>
+      <guid>http://xusheng.org/blog/2007/03/24/xi-ji-tu-shu-guan</guid>
     </item>
     <item>
       <title>纸夫妻</title>
@@ -56,20 +77,6 @@
       <description><![CDATA[<TODO: insert your description here>]]></description>
       <pubDate>2016-07-09</pubDate>
       <guid>http://xusheng.org/blog/2016/04/16/sidekiq</guid>
-    </item>
-    <item>
-      <title>Complete the Sequence!</title>
-      <link>http://xusheng.org/blog/2016/07/09/complete-the-sequence</link>
-      <description><![CDATA[A solution for CMPLS]]></description>
-      <pubDate>2016-07-09</pubDate>
-      <guid>http://xusheng.org/blog/2016/07/09/complete-the-sequence</guid>
-    </item>
-    <item>
-      <title>Happy Pi Day!</title>
-      <link>http://xusheng.org/blog/2016/03/15/happy-pi-day</link>
-      <description><![CDATA[海子故居游记]]></description>
-      <pubDate>2016-03-15</pubDate>
-      <guid>http://xusheng.org/blog/2016/03/15/happy-pi-day</guid>
     </item>
   </channel>
 </rss>
