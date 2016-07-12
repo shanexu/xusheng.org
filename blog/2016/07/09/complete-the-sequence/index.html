@@ -25,6 +25,7 @@
     <div class="node nav">
       <ul>
           <li><a href="/blog/">Blog</a></li>
+          <li><a href="/media/">Media</a></li>
         <li><a href="/tags/">Tags</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="https://github.com/shanexu">GitHub</a></li>
@@ -36,11 +37,11 @@
 
   <h3 class="section">Complete the Sequence!</h3>
 <p>
-今年四月份的时候，我开始重新学起了Haskell。按照往年的惯例，开始在<a href="http://www.spoj.com/"> SPOJ </a>上刷题（严格来说不能叫刷，以我卑微的算法能力，一天能做掉一道题目已经是万幸了）。其实，我主要是把以前用别的语言做过的题目，再用Haskell做一遍。其中，有一道题 <a href="http://www.spoj.com/problems/CMPLS/">CMPLS - Complete the Sequence!</a> 虽然，不是很难，但是其解题过程着实有趣，尤其是用Haskell的时候。
+今年四月份的时候，我开始重新学起了 Haskell。按照往年的惯例，开始在<a href="http://www.spoj.com/"> SPOJ </a>上刷题（严格来说不能叫刷，以我卑微的算法能力，一天能做掉一道题目已经是万幸了）。其实，我主要是把以前用别的语言做过的题目，再用 Haskell 做一遍。其中，有一道题 <a href="http://www.spoj.com/problems/CMPLS/">CMPLS - Complete the Sequence!</a> 虽然，不是很难，但是其解题过程着实有趣，尤其是用 Haskell 的时候。
 </p>
 
 <p>
-题目的大概意思是给定一个数列P(n)以及前S项目, 求这个数列的后C项。其中数列的通项公式可表示为:
+题目的大概意思是给定一个数列 P(n)以及前 S 项目, 求这个数列的后 C 项。其中数列的通项公式可表示为:
 </p>
 
 \begin{equation}
@@ -48,7 +49,7 @@ P(n)=a_D.n^D+a_{D-1}.n^{D-1}+...+a_1.n+a_0
 \end{equation}
 
 <p>
-上一次做这道题目的时候，我还在学ruby也就是6年前的样子。我重新翻看自己的解法的时候简直生不如死。代码是这样的。
+上一次做这道题目的时候，我还在学 ruby 也就是 6 年前的样子。我重新翻看自己的解法的时候简直生不如死。代码是这样的。
 </p>
 
 <div class="org-src-container">
@@ -93,7 +94,7 @@ P(n)=a_D.n^D+a_{D-1}.n^{D-1}+...+a_1.n+a_0
 </div>
 
 <p>
-在经过一段时间的读码之后，我开始有了一点思路。举个例子，输入序列是：1, 8, 27, 64, 125。也就是正整数的立方的数列。 \(P(n)=n^3\) 。后一个数减去前一个数得到一个新数列7, 19, 37, 61。继续做前面的操作，获得数列12, 18, 24。继续操作，获得数列6, 6。终于我们得到了一个常数列。回看一下，倒数第二个数列是等差数列其通项公式为 \(P(n)=6+6n\) 。
+在经过一段时间的读码之后，我开始有了一点思路。举个例子，输入序列是：1, 8, 27, 64, 125。也就是正整数的立方的数列。 \(P(n)=n^3\) 。后一个数减去前一个数得到一个新数列 7, 19, 37, 61。继续做前面的操作，获得数列 12, 18, 24。继续操作，获得数列 6, 6。终于我们得到了一个常数列。回看一下，倒数第二个数列是等差数列其通项公式为 \(P(n)=6+6n\) 。
 </p>
 
 <div class="org-src-container">
@@ -114,7 +115,7 @@ A(n)=A(n-1)+D(n-1)
 \end{equation}
 
 <p>
-而经过刚刚的操作我们发现似乎经过操作之后，最后能得到一个常数列。其实这点很好证明。假设 \(A(n)\) 的通项公式的最高次幂为 \(x\) ，那么相邻两数相减就可以把这个最高次幂消去，于是 \(D(n)\) 的通项公式就是最高次为 \(x-1\) 的多项式。如此操作下去就能将 \(n\) 的次方消去，最后剩下常数了。然后，在从常数列算出等差数列，从等差数列继续推算出高次数列。上面的ruby代码就是这两个过程。我这里把这两个过程分别叫做seeds和series。seeds算出从原始数列到各个差数列的首项，而series则反向从差数列推算出原始数列。这次我用Haskell来解这道题目。首先解决几个小问题。在Haskell中，如何表示一个常数列。这个很简单，在GHC.List包中有一个函数repeat :: a -&gt; [a]，比如repeat 1, 就是1,1,1,1...常数列。由于Haskell的懒惰特性，repeat 1不会立即求值，只有等到需要的时候才会求值，比如take 10 (repeat 1)，这个表达式只会求出数列的前10项，因为从第11项开始数列暂时不被使用，所以停止求值。然而我觉得使用repeat函数并不过瘾。可以用下面的表达式定义常数列。
+而经过刚刚的操作我们发现似乎经过操作之后，最后能得到一个常数列。其实这点很好证明。假设 \(A(n)\) 的通项公式的最高次幂为 \(x\) ，那么相邻两数相减就可以把这个最高次幂消去，于是 \(D(n)\) 的通项公式就是最高次为 \(x-1\) 的多项式。如此操作下去就能将 \(n\) 的次方消去，最后剩下常数了。然后，在从常数列算出等差数列，从等差数列继续推算出高次数列。上面的 ruby 代码就是这两个过程。我这里把这两个过程分别叫做 seeds 和 series。seeds 算出从原始数列到各个差数列的首项，而 series 则反向从差数列推算出原始数列。这次我用 Haskell 来解这道题目。首先解决几个小问题。在 Haskell 中，如何表示一个常数列。这个很简单，在 GHC.List 包中有一个函数 repeat :: a -&gt; [a]，比如 repeat 1, 就是 1,1,1,1...常数列。由于 Haskell 的懒惰特性，repeat 1 不会立即求值，只有等到需要的时候才会求值，比如 take 10 (repeat 1)，这个表达式只会求出数列的前 10 项，因为从第 11 项开始数列暂时不被使用，所以停止求值。然而我觉得使用 repeat 函数并不过瘾。可以用下面的表达式定义常数列。
 </p>
 
 <div class="org-src-container">
@@ -141,7 +142,7 @@ odds = let twos = 2 : twos
 </div>
 
 <p>
-第一种方法比较直白，用语言来表述就是，后一项等于前一项加2。而第二种表达看上去有些啰嗦，我也用语言解释一下，twos是一个常数列，odds数列的每一项等于其前一项和在twos数列对应的项的和。把twos数列当成差数列，那么odds数列就是原数列。也就是说:
+第一种方法比较直白，用语言来表述就是，后一项等于前一项加 2。而第二种表达看上去有些啰嗦，我也用语言解释一下，twos 是一个常数列，odds 数列的每一项等于其前一项和在 twos 数列对应的项的和。把 twos 数列当成差数列，那么 odds 数列就是原数列。也就是说:
 </p>
 
 <div class="org-src-container">
@@ -155,35 +156,35 @@ an = a1 : zipWith (+) an dn
 </div>
 
 <p>
-有了这个两个表达式，就可以写seeds和series函数了。
+有了这个两个表达式，就可以写 seeds 和 series 函数了。
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-haskell">{-# OPTIONS_GHC -optc-O2 #-}
-
-import Control.Monad
-
-series :: [Int] -&gt; [Int]
-series [x]    = let s = x : s in s
-series (x:xs) = let s = x : zipWith (+) (series xs) s in s
-
-seeds :: [Int] -&gt; [Int]
-seeds xs@(x:ts) = if all (==x) ts
-                  then [x]
-                  else x : seeds (zipWith (-) ts xs)
-
-cmpls :: Int -&gt; Int -&gt; [Int] -&gt; [Int]
-cmpls s c = take c . drop s . series . seeds
-
-solveProblems :: [String] -&gt; IO ()
-solveProblems = foldM_ f []
-  where f []     l = return . map read . words $ l
-        f [s, c] l = putStrLn (unwords . map show $ cmpls s c (map read . words $ l))
-                     &gt;&gt; return []
-
-main :: IO ()
-main = getContents &gt;&gt;= solveProblems . tail . lines
+<pre class="src src-haskell"><span class="linenr"> 1: </span>{-# OPTIONS_GHC -optc-O2 #-}
+<span class="linenr"> 2: </span>
+<span class="linenr"> 3: </span>import Control.Monad
+<span class="linenr"> 4: </span>
+<span class="linenr"> 5: </span>series :: [Int] -&gt; [Int]
+<span class="linenr"> 6: </span>series [x]    = let s = x : s in s
+<span class="linenr"> 7: </span>series (x:xs) = let s = x : zipWith (+) (series xs) s in s
+<span class="linenr"> 8: </span>
+<span class="linenr"> 9: </span>seeds :: [Int] -&gt; [Int]
+<span class="linenr">10: </span>seeds xs@(x:ts) = if all (==x) ts
+<span class="linenr">11: </span>                  then [x]
+<span class="linenr">12: </span>                  else x : seeds (zipWith (-) ts xs)
+<span class="linenr">13: </span>
+<span class="linenr">14: </span>cmpls :: Int -&gt; Int -&gt; [Int] -&gt; [Int]
+<span class="linenr">15: </span>cmpls s c = take c . drop s . series . seeds
+<span class="linenr">16: </span>
+<span class="linenr">17: </span>solveProblems :: [String] -&gt; IO ()
+<span class="linenr">18: </span>solveProblems = foldM_ f []
+<span class="linenr">19: </span>  where f []     l = return . map read . words $ l
+<span class="linenr">20: </span>        f [s, c] l = putStrLn (unwords . map show $ cmpls s c (map read . words $ l))
+<span class="linenr">21: </span>                     &gt;&gt; return []
+<span class="linenr">22: </span>
+<span class="linenr">23: </span>main :: IO ()
+<span class="linenr">24: </span>main = getContents &gt;&gt;= solveProblems . tail . lines
 </pre>
 </div>
 
@@ -191,7 +192,7 @@ main = getContents &gt;&gt;= solveProblems . tail . lines
     <div>
       <div class="post-meta">
         <span title="post date" class="post-info">2016-07-09</span>
-        <span title="last modification date" class="post-info">2016-07-09</span>
+        <span title="last modification date" class="post-info">2016-07-12</span>
         <span title="tags" class="post-info"><a href="/tags/spoj/">spoj</a>, <a href="/tags/algorithm/">algorithm</a>, <a href="/tags/haskell/">haskell</a></span>
         <span title="author" class="post-info">Shane Xu</span>
       </div>
