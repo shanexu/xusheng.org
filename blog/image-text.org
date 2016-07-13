@@ -3,11 +3,11 @@
 #+EMAIL:       xusheng0711@gmail.com
 #+DATE:        2016-07-13 Wed
 #+URI:         /blog/%y/%m/%d/image-text
-#+KEYWORDS:    javascript
+#+KEYWORDS:    javascript, js, 效果, 前端
 #+TAGS:        javascript
 #+LANGUAGE:    en
 #+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
-#+DESCRIPTION: 如何用 N 张图片拼出 2016 字样
+#+DESCRIPTION: js图片拼字 js效果
 
 如何用 N 张图片拼出 2016 字样。这是我几年前，在公司年会上的抽奖程序里面实现的一个效果。
 
