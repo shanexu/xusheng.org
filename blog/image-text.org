@@ -1,0 +1,20 @@
+#+TITLE:       如何用 N 张图片拼出 2016 字样
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2016-07-13 Wed
+#+URI:         /blog/%y/%m/%d/image-text
+#+KEYWORDS:    javascript
+#+TAGS:        javascript
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: 如何用 N 张图片拼出 2016 字样
+
+如何用 N 张图片拼出 2016 字样。这是我几年前，在公司年会上的抽奖程序里面实现的一个效果。
+
+#+BEGIN_HTML
+<script src="https://cdn.staticfile.org/react/0.14.3/react.js"></script>
+<script src="https://cdn.staticfile.org/react/0.14.3/react-dom.js"></script>
+<script>
+console.log(React);
+</script>
+#+END_HTML
