@@ -4,7 +4,7 @@
     <title>如何用 N 张图片拼出 2016 字样 - Shane Xu&#39;s Home</title>
     <meta charset="utf-8" />
     <meta name="author" content="Shane Xu" />
-    <meta name="description" content="js图片拼字 js效果" />
+    <meta name="description" content="js 图片拼字 js 效果" />
     <meta name="keywords" content="javascript, js, 效果, 前端" />
     <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
     <link rel="stylesheet" href="/media/css/extra.css" type="text/css">
@@ -40,7 +40,7 @@
 </p>
 
 <p>
-我那时候的想法很简单，就是把所有抽奖人的头像，排列成“2015”的字样。最后实现的效果就是下面这样的。
+我那时候的想法很简单，就是把所有抽奖人的头像，排列成“2015”的字样，今天我排的是 2016。最后实现的效果就是下面这样的。
 </p>
 
 <script src="http://cdn.staticfile.org/react/0.14.3/react.js"></script>
@@ -111,6 +111,104 @@ ReactDOM.render(
   document.getElementById('example')
 );
 </script>
+
+<p>
+一开始有这个想法的时候，我并没有解决方案。我那个时候在网上，搜索了半圈，也没找到靠谱的方案，甚至几乎连类似的效果都没有人提及。于是我自己思索。
+</p>
+
+<ol class="org-ol">
+<li>计算机上的文字本身是如何显示的，在一个方格 AxB 大小的方格里，通过字体文件，计算机知道方格中的某个像素应该染上颜色。</li>
+
+<li>如果在 div 的区域内，知道该在哪个像素点填充颜色，就能“画出”文字。</li>
+
+<li>将文字画在图片上，通过获取图像上每个像素点的颜色就知道，该坐标是否需要染色。</li>
+
+<li>前端 js 有方法画出文字吗？</li>
+
+<li>有 canvas。</li>
+
+<li>canvas 里面如何获取每个点的颜色</li>
+</ol>
+<div class="org-src-container">
+
+<pre class="src src-javascript">var p = ctx.getImageData(i, j, 1, 1).data;
+</pre>
+</div>
+
+<p>
+于是问题就解决了。首先，在需要放置图片的区域，先插入一个 canvas，然后在 canvas 的适当位置（这个位置，可以根据 canvas 的大小以及文字的大小进行计算，或者直接通过几次尝试），用某种颜色（我选择蓝色），画上想要展示的文字，然后遍历 canvas 上每一个点，在有颜色的点上放置一张图片。这是最粗暴的做法。这样做不好的地方在于，放置图片太密集。因为图片本身有大小，所以可以选择一定的步长来遍历图片上的像素点。
+</p>
+
+<p>
+完整的代码如下。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-javascript"><span class="linenr"> 1: </span>var HiddenCanvas = React.createClass({
+<span class="linenr"> 2: </span>  getInitialState: function() {
+<span class="linenr"> 3: </span>    return {
+<span class="linenr"> 4: </span>      items: []
+<span class="linenr"> 5: </span>    };
+<span class="linenr"> 6: </span>  },
+<span class="linenr"> 7: </span>  componentDidMount: function() {
+<span class="linenr"> 8: </span>    console.log(1);
+<span class="linenr"> 9: </span>    var str = this.props.value;
+<span class="linenr">10: </span>    var myCanvas = this.refs.myCanvas;
+<span class="linenr">11: </span>    var ctx = myCanvas.getContext("2d");
+<span class="linenr">12: </span>    ctx.font="250px Droid Sans Mono";
+<span class="linenr">13: </span>    ctx.fillStyle="blue";
+<span class="linenr">14: </span>    ctx.fillText(this.props.value, 20, 250);
+<span class="linenr">15: </span>
+<span class="linenr">16: </span>    function rgbToHex(r, g, b) {
+<span class="linenr">17: </span>      if (r &gt; 255 || g &gt; 255 || b &gt; 255)
+<span class="linenr">18: </span>        throw "Invalid color component";
+<span class="linenr">19: </span>      return ((r &lt;&lt; 16) | (g &lt;&lt; 8) | b).toString(16);
+<span class="linenr">20: </span>    }
+<span class="linenr">21: </span>
+<span class="linenr">22: </span>    setTimeout(function(){
+<span class="linenr">23: </span>      var items = [];
+<span class="linenr">24: </span>      var count = 0;
+<span class="linenr">25: </span>      for(var i = 0; i &lt; 800; i = i + 24) {
+<span class="linenr">26: </span>        for(var j = 0; j &lt; 300; j = j + 24) {
+<span class="linenr">27: </span>          var p = ctx.getImageData(i, j, 1, 1).data;
+<span class="linenr">28: </span>          var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
+<span class="linenr">29: </span>          if(hex == "#0000ff") {
+<span class="linenr">30: </span>            items.push({
+<span class="linenr">31: </span>              id: count++,
+<span class="linenr">32: </span>              left: i - 12,
+<span class="linenr">33: </span>              top: j - 12,
+<span class="linenr">34: </span>              transform: 'rotate(' + (360 * Math.random()) + 'deg)'
+<span class="linenr">35: </span>            });
+<span class="linenr">36: </span>          }
+<span class="linenr">37: </span>        }
+<span class="linenr">38: </span>      }
+<span class="linenr">39: </span>      this.setState({
+<span class="linenr">40: </span>        items: items
+<span class="linenr">41: </span>      });
+<span class="linenr">42: </span>    }.bind(this));
+<span class="linenr">43: </span>  },
+<span class="linenr">44: </span>  render: function() {
+<span class="linenr">45: </span>    var images = this.state.items.map(function(m){
+<span class="linenr">46: </span>      return (
+<span class="linenr">47: </span>        &lt;img key={m.id} src="https://avatars1.githubusercontent.com/u/1257453?v=3&amp;s=460" style={{width: '48px', position: 'absolute', left: m.left, top: m.top, transform: m.transform}} /&gt;
+<span class="linenr">48: </span>      );
+<span class="linenr">49: </span>    });
+<span class="linenr">50: </span>    return (
+<span class="linenr">51: </span>      &lt;div style={{position: 'relative'}}&gt;
+<span class="linenr">52: </span>        {images}
+<span class="linenr">53: </span>        &lt;canvas ref="myCanvas" width="800" height="300" style={{opacity: 0}}/&gt;
+<span class="linenr">54: </span>      &lt;/div&gt;
+<span class="linenr">55: </span>    );
+<span class="linenr">56: </span>  }
+<span class="linenr">57: </span>});
+<span class="linenr">58: </span>
+<span class="linenr">59: </span>ReactDOM.render(
+<span class="linenr">60: </span>  &lt;HiddenCanvas value="2016"/&gt;,
+<span class="linenr">61: </span>  document.getElementById('example')
+<span class="linenr">62: </span>);
+</pre>
+</div>
 
 
     <div>
