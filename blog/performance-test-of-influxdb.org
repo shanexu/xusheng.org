@@ -15,4 +15,287 @@
 * 是否真是 GC 的锅
 influxdb 的最新稳定版 v0.13 是用 go1.6.2 版本编译的。而从 v0.10 到 v0.13 的变化主要是，一是 v0.13 只支持 TSM 存储引擎；二是 metastore 的存储格式的变化。三是完全将 cluster 移出 master；支持 influxdb-relay，四是使用 go1.6.2。v0.10 默认就是使用 TSM 存储引擎，metastore 存放的是 influxdb 的系统信息，包括 database、shard、retention policies 信息，cluster 目前我们没有用到。所以说 go 的版本变化，可能是最大的升级。所以尝试使用 go1.6.2 来编译 influxdb v0.10.2 的代码。
 而 go 从 1.5 开始对 gc 进行了优化。可以看下图。
-[[http://i.stack.imgur.com/4TOux.png][go gc performance improvements]]
+
+#+ATTR_HTML: :width 100%
+[[http://i.stack.imgur.com/4TOux.png]]
+
+** 分别用 1.4.3 和 1.6.2 编译 influxdb 的 v10.2 的代码
+
+过程不再赘述。
+
+** 使用 [[https://github.com/tsenart/vegeta][vegeta]] 进行简单测试
+
+我这里使用了下面的简单脚本
+
+#+BEGIN_SRC bash
+rm -rf ~/.influxdb
+GODEBUG=gctrace=1 $GOPATH/bin/influxd -config influx.config 2> gc.log 1 > gc.log &
+sleep 3
+curl "http://127.0.0.1:8086/query?q=create+database+test" 
+vegeta attack -rate 5000 -targets targets.txt -duration 1m > out.dat 
+vegeta report -reporter plot > report.html < out.dat
+vegeta report < out.dat > report.txt
+pkill influxd
+#+END_SRC
+
+其中第四行，使用 vegeta 对目标用 5000 每秒的速度进行压测，并执行 5 分钟。请求内容为 targets.txt 文件中内容
+
+targets.txt
+#+BEGIN_SRC text
+POST http://127.0.0.1:8086/write?db=test
+@post1.txt
+POST http://127.0.0.1:8086/write?db=test
+@post2.txt
+#+END_SRC
+
+post1.txt
+#+BEGIN_SRC text
+cpu,host=server01,region=uswest value=1
+#+END_SRC
+
+post2.txt
+#+BEGIN_SRC text
+cpu,host=server02,region=uswest value=2
+#+END_SRC
+
+** 测试结果
+
+*** influxdb v0.10.2 with go 1.6.2
+
+#+BEGIN_SRC text
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m0.001980491s, 4m59.999799956s, 2.180535ms
+Latencies     [mean, 50, 95, 99, max]  109.514855ms, 298.07µs, 22.694783ms, 1.338986781s, 31.9022429s
+Bytes In      [total, mean]            140, 0.00
+Bytes Out     [total, mean]            57040160, 38.03
+Success       [ratio]                  95.07%
+Status Codes  [code:count]             204:1425997  0:73996  500:7
+
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m6.970133222s, 4m59.999799893s, 6.970333329s
+Latencies     [mean, 50, 95, 99, max]  194.96891ms, 251.684µs, 10.231109ms, 7.263452882s, 30.575939048s
+Bytes In      [total, mean]            356540, 0.24
+Bytes Out     [total, mean]            50971080, 33.98
+Success       [ratio]                  83.76%
+Status Codes  [code:count]             204:1256450  0:225723  500:17827
+
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m23.88965317s, 4m59.999799933s, 23.889853237s
+Latencies     [mean, 50, 95, 99, max]  573.704285ms, 256.848µs, 373.879973ms, 30.000069249s, 42.097210576s
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            48968480, 32.65
+Success       [ratio]                  81.61%
+Status Codes  [code:count]             204:1224212  0:275788
+#+END_SRC
+
+*** influxdb v0.10.2 with go 1.4.3
+
+#+BEGIN_SRC text
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m0.004029292s, 4m59.999799919s, 4.229373ms
+Latencies     [mean, 50, 95, 99, max]  135.82944ms, 245.895µs, 270.774208ms, 1.602307692s, 30.654207406s
+Bytes In      [total, mean]            340, 0.00
+Bytes Out     [total, mean]            58612760, 39.08
+Success       [ratio]                  97.69%
+Status Codes  [code:count]             204:1465302  0:34681  500:17
+
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m0.000166845s, 4m59.999799895s, 366.95µs
+Latencies     [mean, 50, 95, 99, max]  195.576968ms, 245.78µs, 159.36697ms, 3.400151326s, 35.851218729s
+Bytes In      [total, mean]            460, 0.00
+Bytes Out     [total, mean]            56339960, 37.56
+Success       [ratio]                  93.90%
+Status Codes  [code:count]             500:23  204:1408476  0:91501
+
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m17.804309192s, 4m59.999799812s, 17.80450938s
+Latencies     [mean, 50, 95, 99, max]  426.521055ms, 232.794µs, 27.149849ms, 19.774855337s, 37.465746818s
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            52030240, 34.69
+Success       [ratio]                  86.72%
+Status Codes  [code:count]             204:1300756  0:199244
+#+END_SRC
+
+*** 粗糙的结论
+实际在 influxdb 应用上测试结果，用 1.4.3 还是 1.6.2 版本的 go，性能差距都不到。两边都有 5%以上的失败率，有时候甚至更大。最大响应时间达到 30 多秒，从 mean、p50、p95、p99 可以看出使用 go1.6.2 相对 go1.4.3 稍微稳定一些。而在请求失败率上两个版本的 go 相差不多。所以可能是 influxdb 自身设计的问题。其实在多次实验时，发现 influxdb 自身的 performance 非常不稳定，成功率可以从 80%到 97%的区间内浮动。这个可能跟我自身 host 机状态波动，有关系。
+
+* 从 influxdb 的设计实现上找原因
+
+查看 influxdb 的源代码，influxdb/tsdb/engine/tsm1/DESIGN.md 文件里写了 influxdb 的核心存储引擎 tsm 的设计思想，其中关于 cache 有一段说明。
+
+#+BEGIN_QUOTE
+In cases where IO performance of the compaction process falls behind the incoming write rate, it is possible that writes might arrive at the cache while the cache is both too full and the compaction of the previous snapshot is still in progress. In this case, the cache will reject the write, causing the write to fail.
+Well behaved clients should interpret write failures as back pressure and should either discard the write or back off and retry the write after a delay.
+#+END_QUOTE
+
+所以当 IO 效率低于写入请求，并且缓存太满，并且 influxdb 正在压缩上一个快照时，缓存将拒绝写入，这样就会造成写入失败。可能就是这个原因造成线上 influxdb 的写入失败。
+
+** 验证
+
+修改 influxdb 的配置文件中 =cache-max-memory-size= 的大小，分别取 524288000, 1048576000, 2097152000 做对比实验。
+
+** 测试结果
+
+*** cache-max-memory-size = 1048576000
+
+#+BEGIN_SRC text
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m0.002119678s, 4m59.99979986s, 2.319818ms
+Latencies     [mean, 50, 95, 99, max]  121.932968ms, 279.603µs, 65.095647ms, 3.288262722s, 30.36089555s
+Bytes In      [total, mean]            68600, 0.05
+Bytes Out     [total, mean]            55282880, 36.86
+Success       [ratio]                  91.91%
+Status Codes  [code:count]             204:1378642  0:117928  500:3430
+
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m0.000155613s, 4m59.999799964s, 355.649µs
+Latencies     [mean, 50, 95, 99, max]  296.312046ms, 274.635µs, 275.418937ms, 7.714693807s, 34.929590394s
+Bytes In      [total, mean]            74700, 0.05
+Bytes Out     [total, mean]            50140880, 33.43
+Success       [ratio]                  83.32%
+Status Codes  [code:count]             204:1249787  0:246478  500:3735
+
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m0.003303128s, 4m59.99979984s, 3.503288ms
+Latencies     [mean, 50, 95, 99, max]  486.213429ms, 273.166µs, 162.797527ms, 22.770177307s, 38.670751654s
+Bytes In      [total, mean]            22240, 0.01
+Bytes Out     [total, mean]            49247240, 32.83
+Success       [ratio]                  82.00%
+Status Codes  [code:count]             204:1230069  0:268819  500:1112
+#+END_SRC
+
+*** cache-max-memory-size = 209715200
+
+#+BEGIN_SRC text
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m0.000206298s, 4m59.999799885s, 406.413µs
+Latencies     [mean, 50, 95, 99, max]  105.561443ms, 280.679µs, 133.660391ms, 4.272511789s, 30.178221868s
+Bytes In      [total, mean]            109940, 0.07
+Bytes Out     [total, mean]            54304240, 36.20
+Success       [ratio]                  90.14%
+Status Codes  [code:count]             500:5497  204:1352109  0:142394
+
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m0.00063656s, 4m59.999799741s, 836.819µs
+Latencies     [mean, 50, 95, 99, max]  403.032632ms, 283.288µs, 132.281409ms, 17.146120226s, 34.961099552s
+Bytes In      [total, mean]            6940, 0.00
+Bytes Out     [total, mean]            50793880, 33.86
+Success       [ratio]                  84.63%
+Status Codes  [code:count]             204:1269500  0:230153  500:347
+
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m0.002669908s, 4m59.999799832s, 2.870076ms
+Latencies     [mean, 50, 95, 99, max]  189.887367ms, 285.122µs, 25.492475ms, 4.98658491s, 31.051832766s
+Bytes In      [total, mean]            53880, 0.04
+Bytes Out     [total, mean]            56097080, 37.40
+Success       [ratio]                  93.32%
+Status Codes  [code:count]             204:1399733  0:97573  500:2694
+#+END_SRC
+
+** 粗糙的结论
+
+即便使用了较大的缓存大小，也没有什么改善，cache 的大小应该已经足够了，可以做一个反向实验进行验证，将所有 size 都设置为原来的 1024 分之一会如何。失败率，大幅提升，应该就是 design 中说的当缓存不足同时正好还在压缩快照的时候，有大量的写库请求到来，缓存拒绝写入，直接返回失败。
+
+* 阶段性反思
+
+在前面的几次试验中，均发现 influxdb 占用非常高的 cpu 和内存的情况。
+
+* influxdb v0.13 测试
+
+既然原因可能出现在 influxdb 自身实现的问题，那么换用高版本的 influxdb 可能解决问题。编译 v0.13，进行五分钟压力测试。
+
+** 测试结果
+
+#+BEGIN_SRC text
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m0.000176914s, 4m59.999799839s, 377.075µs
+Latencies     [mean, 50, 95, 99, max]  157.978362ms, 295.813µs, 689.447448ms, 2.054181264s, 31.600573441s
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            56050840, 37.37
+Success       [ratio]                  93.42%
+Status Codes  [code:count]             204:1401271  0:98729
+
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m0.001996966s, 4m59.999799885s, 2.197081ms
+Latencies     [mean, 50, 95, 99, max]  125.248782ms, 282.792µs, 289.775591ms, 2.014326005s, 32.323906996s
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            57304760, 38.20
+Success       [ratio]                  95.51%
+Status Codes  [code:count]             0:67381  204:1432619
+
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m0.002641955s, 4m59.999799884s, 2.842071ms
+Latencies     [mean, 50, 95, 99, max]  263.99356ms, 269.23µs, 170.339463ms, 3.972251984s, 39.134441684s
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            54417840, 36.28
+Success       [ratio]                  90.70%
+Status Codes  [code:count]             204:1360446  0:139554
+#+END_SRC
+
+** 粗糙的结论
+
+几乎没有什么变化。
+
+* influxdb master (v1.0) 测试
+
+直接编译安装最新 master 分支上的 influxdb，进行测试。这里测试脚本的第四行需要改成。
+
+#+BEGIN_SRC bash
+curl -XPOST "http://127.0.0.1:8086/query?q=create+database+test"
+#+END_SRC
+
+influxdb 新版本中，对所有写入请求全部需要使用 POST。
+
+** 测试结果
+
+#+BEGIN_SRC text
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m0.0008003s, 4m59.9998s, 1.0003ms
+Latencies     [mean, 50, 95, 99, max]  7.919775ms, 233.53µs, 57.682496ms, 122.933138ms, 380.276957ms
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            59998800, 40.00
+Success       [ratio]                  100.00%
+Status Codes  [code:count]             0:30  204:1499970
+
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m0.000224284s, 4m59.999799907s, 424.377µs
+Latencies     [mean, 50, 95, 99, max]  8.782911ms, 227.512µs, 64.94512ms, 124.63881ms, 314.79162ms
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            59996960, 40.00
+Success       [ratio]                  99.99%
+Status Codes  [code:count]             204:1499924  0:76
+
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m0.054103088s, 4m59.999799917s, 54.303171ms
+Latencies     [mean, 50, 95, 99, max]  10.155739ms, 226.897µs, 72.689772ms, 149.892418ms, 393.597255ms
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            59994320, 40.00
+Success       [ratio]                  99.99%
+Status Codes  [code:count]             204:1499858  0:142
+#+END_SRC
+
+** 再使用 gcvis 查看 gc 状态的一分钟测试
+
+最后做一个 gc 和响应时间的关联测试。这里用 [[http://github.com/davecheney/gcvis][gcvis]] 做 gc 可视化，便于比较。
+
+*** 测试结果
+
+#+BEGIN_SRC text
+Requests      [total, rate]            37297, 5000.13
+Duration      [total, attack, wait]    7.459466659s, 7.459199917s, 266.742µs
+Latencies     [mean, 50, 95, 99, max]  1.1144ms, 235.342µs, 7.536124ms, 19.233395ms, 43.384439ms
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            1491880, 40.00
+Success       [ratio]                  100.00%
+Status Codes  [code:count]             204:37297
+#+END_SRC
+
+#+ATTR_HTML: :width 100%
+[[file:gc.png]]
+
+#+ATTR_HTML: :width 100%
+[[file:vegeta-plot.png]]
+
+
+** 粗糙的结论
+influxdb v1.0 在 5 分钟压力测试时，成功率几乎达到 100%，最长响应时间在 1s 以下，稳定性和性能都得到了大幅提升。所以还是等待最新版的 influxdb 吧。
