@@ -1,0 +1,18 @@
+#+TITLE:       influxdb 性能测试
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2016-07-30 Sat
+#+URI:         /blog/%y/%m/%d/performance-test-of-influxdb
+#+KEYWORDS:    influxdb
+#+TAGS:        influxdb
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: a simple write test of influxdb
+
+* 起因
+公司线上 influxdb 出现小概率无法写入数据现象，持续时间大概几秒。运行一两星期出现一次。初步判断可能是 go1.4.3 的 gc 效率问题。
+
+* 是否真是 GC 的锅
+influxdb 的最新稳定版 v0.13 是用 go1.6.2 版本编译的。而从 v0.10 到 v0.13 的变化主要是，一是 v0.13 只支持 TSM 存储引擎；二是 metastore 的存储格式的变化。三是完全将 cluster 移出 master；支持 influxdb-relay，四是使用 go1.6.2。v0.10 默认就是使用 TSM 存储引擎，metastore 存放的是 influxdb 的系统信息，包括 database、shard、retention policies 信息，cluster 目前我们没有用到。所以说 go 的版本变化，可能是最大的升级。所以尝试使用 go1.6.2 来编译 influxdb v0.10.2 的代码。
+而 go 从 1.5 开始对 gc 进行了优化。可以看下图。
+[[http://i.stack.imgur.com/4TOux.png][go gc performance improvements]]
