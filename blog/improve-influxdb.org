@@ -1,0 +1,175 @@
+#+TITLE:       提升 influxdb v0.10.2 性能
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2016-07-30 Sat
+#+URI:         /blog/%y/%m/%d/imporve-influxdb-v0.10.2-performance
+#+KEYWORDS:    influxdb
+#+TAGS:        influxdb, go
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: how to imporve influxdb v0.10.2 performance
+
+之前在给 influxdb 做性能测试的时候，得出的结论，v0.10.2 和 v0.13 在大量写入的时候，会占用大量的内存和 cpu，而之前线上之所以 influxdb 突然拒绝服务，长达数秒之久，原来是它直接挂了。既然 v1.0 还没有发布，我就思考能否将 v1.0 在解决性能问题上的修改，直接 apply 到 v0.10.2 上呢。有了这样一个思路之后，我就开始在 v0.13 的版本和 master 的最新提交之间，不断进行二分查找。最后终于被我找到了那次关键的提交。
+
+#+BEGIN_QUOTE
+commit c2370b437b9840363ed3d12638fe0ca0ea5ed296
+Author: Jason Wilder <mail@jasonwilder.com>
+Date:   Fri Jul 15 23:26:25 2016 -0600
+
+    Limit in-flight wal writes/encodings
+    
+    A slower disk can can cause excessive allocations to occur when
+    writing to the WAL because the slower encoding and compression occurs
+    before taking the write lock.  The encoding/compression grabs a large
+    byte slice from a pool and ultimately waits until it can acquire the
+    write lock.
+    
+    This adds a throttle to limit how many inflight WAL writes can be queued
+    up to prevent OOMing the processess with slower disks and heavy writes.
+#+END_QUOTE
+
+意思是说限制 wal writes/encodings，在拿到写锁之前，wal 已经 encoding 或者 compression 了，而前面这个操作需要预先，allocation 一块较大的内存，所以很可能造成 OOMing 问题。在看下这次改动的地方。
+
+#+BEGIN_SRC
+diff --git a/pkg/throttle/throttle.go b/pkg/throttle/throttle.go
+new file mode 100644
+index 0000000..f29c4a2
+--- /dev/null
++++ b/pkg/throttle/throttle.go
+@@ -0,0 +1,18 @@
++package throttle
++
++// Fixed is a simple channel based concurrency limiter.  It uses a fixed
++// size channel to limit callers from proceeding until there is a value avalable
++// in the channel.  If all are in-use, the caller blocks until one is freed.
++type Fixed chan struct{}
++
++func New(limit int) Fixed {
++	return make(Fixed, limit)
++}
++
++func (t Fixed) Take() {
++	t <- struct{}{}
++}
++
++func (t Fixed) Release() {
++	<-t
++}
+diff --git a/tsdb/engine/tsm1/wal.go b/tsdb/engine/tsm1/wal.go
+index 3926f93..d7880cc 100644
+--- a/tsdb/engine/tsm1/wal.go
++++ b/tsdb/engine/tsm1/wal.go
+@@ -18,6 +18,7 @@ import (
+ 
+ 	"github.com/golang/snappy"
+ 	"github.com/influxdata/influxdb/models"
++	"github.com/influxdata/influxdb/pkg/throttle"
+ )
+ 
+ const (
+@@ -90,7 +91,8 @@ type WAL struct {
+ 	LoggingEnabled bool
+ 
+ 	// statistics for the WAL
+-	stats *WALStatistics
++	stats    *WALStatistics
++	throttle throttle.Fixed
+ }
+ 
+ func NewWAL(path string) *WAL {
+@@ -103,6 +105,7 @@ func NewWAL(path string) *WAL {
+ 		logger:      log.New(os.Stderr, "[tsm1wal] ", log.LstdFlags),
+ 		closing:     make(chan struct{}),
+ 		stats:       &WALStatistics{},
++		throttle:    throttle.New(10),
+ 	}
+ }
+ 
+@@ -277,6 +280,12 @@ func (l *WAL) LastWriteTime() time.Time {
+ }
+ 
+ func (l *WAL) writeToLog(entry WALEntry) (int, error) {
++	// limit how many concurrent encodings can be in flight.  Since we can only
++	// write one at a time to disk, a slow disk can cause the allocations below
++	// to increase quickly.  If we're backed up, wait until others have completed.
++	l.throttle.Take()
++	defer l.throttle.Release()
++
+ 	// encode and compress the entry while we're not locked
+ 	bytes := getBuf(walEncodeBufSize)
+ 	defer putBuf(bytes)
+diff --git a/tsdb/store.go b/tsdb/store.go
+index 5889577..3076d01 100644
+--- a/tsdb/store.go
++++ b/tsdb/store.go
+@@ -16,6 +16,7 @@ import (
+ 
+ 	"github.com/influxdata/influxdb/influxql"
+ 	"github.com/influxdata/influxdb/models"
++	"github.com/influxdata/influxdb/pkg/throttle"
+ )
+ 
+ var (
+@@ -145,7 +146,7 @@ func (s *Store) loadShards() error {
+ 		err error
+ 	}
+ 
+-	throttle := newthrottle(runtime.GOMAXPROCS(0))
++	t := throttle.New(runtime.GOMAXPROCS(0))
+ 
+ 	resC := make(chan *res)
+ 	var n int
+@@ -171,8 +172,8 @@ func (s *Store) loadShards() error {
+ 			for _, sh := range shards {
+ 				n++
+ 				go func(index *DatabaseIndex, db, rp, sh string) {
+-					throttle.take()
+-					defer throttle.release()
++					t.Take()
++					defer t.Release()
+ 
+ 					start := time.Now()
+ 					path := filepath.Join(s.path, db, rp, sh)
+@@ -514,7 +515,7 @@ func (s *Store) walkShards(shards []*Shard, fn func(sh *Shard) error) error {
+ 		err error
+ 	}
+ 
+-	throttle := newthrottle(runtime.GOMAXPROCS(0))
++	t := throttle.New(runtime.GOMAXPROCS(0))
+ 
+ 	resC := make(chan res)
+ 	var n int
+@@ -523,8 +524,8 @@ func (s *Store) walkShards(shards []*Shard, fn func(sh *Shard) error) error {
+ 		n++
+ 
+ 		go func(sh *Shard) {
+-			throttle.take()
+-			defer throttle.release()
++			t.Take()
++			defer t.Release()
+ 
+ 			if err := fn(sh); err != nil {
+ 				resC <- res{err: fmt.Errorf("shard %d: %s", sh.id, err)}
+@@ -914,20 +915,3 @@ func measurementsFromSourcesOrDB(db *DatabaseIndex, sources ...influxql.Source)
+ 
+ 	return measurements, nil
+ }
+-
+-// throttle is a simple channel based concurrency limiter.  It uses a fixed
+-// size channel to limit callers from proceeding until there is a value avalable
+-// in the channel.  If all are in-use, the caller blocks until one is freed.
+-type throttle chan struct{}
+-
+-func newthrottle(limit int) throttle {
+-	return make(throttle, limit)
+-}
+-
+-func (t throttle) take() {
+-	t <- struct{}{}
+-}
+-
+-func (t throttle) release() {
+-	<-t
+-}
+
+#+END_SRC
