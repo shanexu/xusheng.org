@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>提升 influxdb v0.10.2 性能 - Shane Xu&#39;s Home</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Shane Xu" />
+    <meta name="description" content="how to imporve influxdb v0.10.2 performance" />
+    <meta name="keywords" content="influxdb" />
+    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/extra.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css"/>
+  </head>
+
+  <body>
+    <div>
+      <header class="masthead">
+        <h1 class="settitle">Shane Xu&#39;s Home</h1>
+        <blockquote>Life is too short for so much sorrows.</blockquote>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="xusheng.org">
+        </form>
+      </header>
+    </div>
+    <div class="node nav">
+      <ul>
+          <li><a href="/blog/">Blog</a></li>
+        <li><a href="/tags/">Tags</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="https://github.com/shanexu">GitHub</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+      </ul>
+      <hr/>
+    </div>
+
+
+  <h3 class="section">提升 influxdb v0.10.2 性能</h3>
+<p>
+之前在给 influxdb 做性能测试的时候，得出的结论，v0.10.2 和 v0.13 在大量写入的时候，会占用大量的内存和 cpu，而之前线上之所以 influxdb 突然拒绝服务，长达数秒之久，原来是它直接挂了。既然 v1.0 还没有发布，我就思考能否将 v1.0 在解决性能问题上的修改，直接 apply 到 v0.10.2 上呢。有了这样一个思路之后，我就开始在 v0.13 的版本和 master 的最新提交之间，不断进行二分查找。最后终于被我找到了那次关键的提交。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">commit c2370b437b9840363ed3d12638fe0ca0ea5ed296
+Author: Jason Wilder &lt;mail@jasonwilder.com&gt;
+Date:   Fri Jul 15 23:26:25 2016 -0600
+
+    Limit in-flight wal writes/encodings
+
+    A slower disk can can cause excessive allocations to occur when
+    writing to the WAL because the slower encoding and compression occurs
+    before taking the write lock.  The encoding/compression grabs a large
+    byte slice from a pool and ultimately waits until it can acquire the
+    write lock.
+
+    This adds a throttle to limit how many inflight WAL writes can be queued
+    up to prevent OOMing the processess with slower disks and heavy writes.
+</pre>
+</div>
+
+<p>
+意思是说限制 wal writes/encodings，在拿到写锁之前，wal 已经 encoding 或者 compression 了，而前面这个操作需要预先，allocation 一块较大的内存，所以很可能造成 OOMing 问题。在看下这次改动的地方。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-diff"><span class="linenr">  1: </span>diff --git a/pkg/throttle/throttle.go b/pkg/throttle/throttle.go
+<span class="linenr">  2: </span>new file mode 100644
+<span class="linenr">  3: </span>index 0000000..f29c4a2
+<span class="linenr">  4: </span>--- /dev/null
+<span class="linenr">  5: </span>+++ b/pkg/throttle/throttle.go
+<span class="linenr">  6: </span>@@ -0,0 +1,18 @@
+<span class="linenr">  7: </span>+package throttle
+<span class="linenr">  8: </span>+
+<span class="linenr">  9: </span>+// Fixed is a simple channel based concurrency limiter.  It uses a fixed
+<span class="linenr"> 10: </span>+// size channel to limit callers from proceeding until there is a value avalable
+<span class="linenr"> 11: </span>+// in the channel.  If all are in-use, the caller blocks until one is freed.
+<span class="linenr"> 12: </span>+type Fixed chan struct{}
+<span class="linenr"> 13: </span>+
+<span class="linenr"> 14: </span>+func New(limit int) Fixed {
+<span class="linenr"> 15: </span>+ return make(Fixed, limit)
+<span class="linenr"> 16: </span>+}
+<span class="linenr"> 17: </span>+
+<span class="linenr"> 18: </span>+func (t Fixed) Take() {
+<span class="linenr"> 19: </span>+ t &lt;- struct{}{}
+<span class="linenr"> 20: </span>+}
+<span class="linenr"> 21: </span>+
+<span class="linenr"> 22: </span>+func (t Fixed) Release() {
+<span class="linenr"> 23: </span>+ &lt;-t
+<span class="linenr"> 24: </span>+}
+<span class="linenr"> 25: </span>diff --git a/tsdb/engine/tsm1/wal.go b/tsdb/engine/tsm1/wal.go
+<span class="linenr"> 26: </span>index 3926f93..d7880cc 100644
+<span class="linenr"> 27: </span>--- a/tsdb/engine/tsm1/wal.go
+<span class="linenr"> 28: </span>+++ b/tsdb/engine/tsm1/wal.go
+<span class="linenr"> 29: </span>@@ -18,6 +18,7 @@ import (
+<span class="linenr"> 30: </span>
+<span class="linenr"> 31: </span>  "github.com/golang/snappy"
+<span class="linenr"> 32: </span>  "github.com/influxdata/influxdb/models"
+<span class="linenr"> 33: </span>+ "github.com/influxdata/influxdb/pkg/throttle"
+<span class="linenr"> 34: </span> )
+<span class="linenr"> 35: </span>
+<span class="linenr"> 36: </span> const (
+<span class="linenr"> 37: </span>@@ -90,7 +91,8 @@ type WAL struct {
+<span class="linenr"> 38: </span>  LoggingEnabled bool
+<span class="linenr"> 39: </span>
+<span class="linenr"> 40: </span>  // statistics for the WAL
+<span class="linenr"> 41: </span>- stats *WALStatistics
+<span class="linenr"> 42: </span>+ stats    *WALStatistics
+<span class="linenr"> 43: </span>+ throttle throttle.Fixed
+<span class="linenr"> 44: </span> }
+<span class="linenr"> 45: </span>
+<span class="linenr"> 46: </span> func NewWAL(path string) *WAL {
+<span class="linenr"> 47: </span>@@ -103,6 +105,7 @@ func NewWAL(path string) *WAL {
+<span class="linenr"> 48: </span>    logger:      log.New(os.Stderr, "[tsm1wal] ", log.LstdFlags),
+<span class="linenr"> 49: </span>    closing:     make(chan struct{}),
+<span class="linenr"> 50: </span>    stats:       &amp;WALStatistics{},
+<span class="linenr"> 51: </span>+   throttle:    throttle.New(10),
+<span class="linenr"> 52: </span>  }
+<span class="linenr"> 53: </span> }
+<span class="linenr"> 54: </span>
+<span class="linenr"> 55: </span>@@ -277,6 +280,12 @@ func (l *WAL) LastWriteTime() time.Time {
+<span class="linenr"> 56: </span> }
+<span class="linenr"> 57: </span>
+<span class="linenr"> 58: </span> func (l *WAL) writeToLog(entry WALEntry) (int, error) {
+<span class="linenr"> 59: </span>+ // limit how many concurrent encodings can be in flight.  Since we can only
+<span class="linenr"> 60: </span>+ // write one at a time to disk, a slow disk can cause the allocations below
+<span class="linenr"> 61: </span>+ // to increase quickly.  If we're backed up, wait until others have completed.
+<span class="linenr"> 62: </span>+ l.throttle.Take()
+<span class="linenr"> 63: </span>+ defer l.throttle.Release()
+<span class="linenr"> 64: </span>+
+<span class="linenr"> 65: </span>  // encode and compress the entry while we're not locked
+<span class="linenr"> 66: </span>  bytes := getBuf(walEncodeBufSize)
+<span class="linenr"> 67: </span>  defer putBuf(bytes)
+<span class="linenr"> 68: </span>diff --git a/tsdb/store.go b/tsdb/store.go
+<span class="linenr"> 69: </span>index 5889577..3076d01 100644
+<span class="linenr"> 70: </span>--- a/tsdb/store.go
+<span class="linenr"> 71: </span>+++ b/tsdb/store.go
+<span class="linenr"> 72: </span>@@ -16,6 +16,7 @@ import (
+<span class="linenr"> 73: </span>
+<span class="linenr"> 74: </span>  "github.com/influxdata/influxdb/influxql"
+<span class="linenr"> 75: </span>  "github.com/influxdata/influxdb/models"
+<span class="linenr"> 76: </span>+ "github.com/influxdata/influxdb/pkg/throttle"
+<span class="linenr"> 77: </span> )
+<span class="linenr"> 78: </span>
+<span class="linenr"> 79: </span> var (
+<span class="linenr"> 80: </span>@@ -145,7 +146,7 @@ func (s *Store) loadShards() error {
+<span class="linenr"> 81: </span>    err error
+<span class="linenr"> 82: </span>  }
+<span class="linenr"> 83: </span>
+<span class="linenr"> 84: </span>- throttle := newthrottle(runtime.GOMAXPROCS(0))
+<span class="linenr"> 85: </span>+ t := throttle.New(runtime.GOMAXPROCS(0))
+<span class="linenr"> 86: </span>
+<span class="linenr"> 87: </span>  resC := make(chan *res)
+<span class="linenr"> 88: </span>  var n int
+<span class="linenr"> 89: </span>@@ -171,8 +172,8 @@ func (s *Store) loadShards() error {
+<span class="linenr"> 90: </span>      for _, sh := range shards {
+<span class="linenr"> 91: </span>        n++
+<span class="linenr"> 92: </span>        go func(index *DatabaseIndex, db, rp, sh string) {
+<span class="linenr"> 93: </span>-         throttle.take()
+<span class="linenr"> 94: </span>-         defer throttle.release()
+<span class="linenr"> 95: </span>+         t.Take()
+<span class="linenr"> 96: </span>+         defer t.Release()
+<span class="linenr"> 97: </span>
+<span class="linenr"> 98: </span>          start := time.Now()
+<span class="linenr"> 99: </span>          path := filepath.Join(s.path, db, rp, sh)
+<span class="linenr">100: </span>@@ -514,7 +515,7 @@ func (s *Store) walkShards(shards []*Shard, fn func(sh *Shard) error) error {
+<span class="linenr">101: </span>    err error
+<span class="linenr">102: </span>  }
+<span class="linenr">103: </span>
+<span class="linenr">104: </span>- throttle := newthrottle(runtime.GOMAXPROCS(0))
+<span class="linenr">105: </span>+ t := throttle.New(runtime.GOMAXPROCS(0))
+<span class="linenr">106: </span>
+<span class="linenr">107: </span>  resC := make(chan res)
+<span class="linenr">108: </span>  var n int
+<span class="linenr">109: </span>@@ -523,8 +524,8 @@ func (s *Store) walkShards(shards []*Shard, fn func(sh *Shard) error) error {
+<span class="linenr">110: </span>    n++
+<span class="linenr">111: </span>
+<span class="linenr">112: </span>    go func(sh *Shard) {
+<span class="linenr">113: </span>-     throttle.take()
+<span class="linenr">114: </span>-     defer throttle.release()
+<span class="linenr">115: </span>+     t.Take()
+<span class="linenr">116: </span>+     defer t.Release()
+<span class="linenr">117: </span>
+<span class="linenr">118: </span>      if err := fn(sh); err != nil {
+<span class="linenr">119: </span>        resC &lt;- res{err: fmt.Errorf("shard %d: %s", sh.id, err)}
+<span class="linenr">120: </span>@@ -914,20 +915,3 @@ func measurementsFromSourcesOrDB(db *DatabaseIndex, sources ...influxql.Source)
+<span class="linenr">121: </span>
+<span class="linenr">122: </span>  return measurements, nil
+<span class="linenr">123: </span> }
+<span class="linenr">124: </span>-
+<span class="linenr">125: </span>-// throttle is a simple channel based concurrency limiter.  It uses a fixed
+<span class="linenr">126: </span>-// size channel to limit callers from proceeding until there is a value avalable
+<span class="linenr">127: </span>-// in the channel.  If all are in-use, the caller blocks until one is freed.
+<span class="linenr">128: </span>-type throttle chan struct{}
+<span class="linenr">129: </span>-
+<span class="linenr">130: </span>-func newthrottle(limit int) throttle {
+<span class="linenr">131: </span>- return make(throttle, limit)
+<span class="linenr">132: </span>-}
+<span class="linenr">133: </span>-
+<span class="linenr">134: </span>-func (t throttle) take() {
+<span class="linenr">135: </span>- t &lt;- struct{}{}
+<span class="linenr">136: </span>-}
+<span class="linenr">137: </span>-
+<span class="linenr">138: </span>-func (t throttle) release() {
+<span class="linenr">139: </span>- &lt;-t
+<span class="linenr">140: </span>-}
+</pre>
+</div>
+
+<p>
+以 encoding wal 为例，这里增加了一个 <code>throttle.take()</code> 动作，并且在完成操作后，执行 <code>throttle.release()</code> 方法， <code>throttle</code> 里面放了固定数量的值，当调用 take 方法的时候如果 <code>throttle</code> 中如果没有资源，那么调用者就会 <code>block</code> ，直到  <code>throttle</code> 中有了新的资源，也就是其他调用者完成自己动作，并调用 <code>release</code> 方法。
+</p>
+
+<p>
+然后将这部分的改动，合并到 v0.10.2 的代码中，并进行测试。结果入下。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m0.000129097s, 4m59.999799858s, 329.239µs
+Latencies     [mean, 50, 95, 99, max]  1.227473ms, 230.474µs, 1.237975ms, 33.100274ms, 251.524774ms
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            59994600, 40.00
+Success       [ratio]                  99.99%
+Status Codes  [code:count]             204:1499865  0:135
+
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m0.000380718s, 4m59.999799905s, 580.813µs
+Latencies     [mean, 50, 95, 99, max]  1.477462ms, 239.262µs, 2.878066ms, 36.939105ms, 328.367048ms
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            60000000, 40.00
+Success       [ratio]                  100.00%
+Status Codes  [code:count]             204:1500000
+
+Requests      [total, rate]            1500000, 5000.00
+Duration      [total, attack, wait]    5m0.000769812s, 4m59.999799915s, 969.897µs
+Latencies     [mean, 50, 95, 99, max]  1.957877ms, 242.364µs, 3.483565ms, 41.994757ms, 638.448146ms
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            59999880, 40.00
+Success       [ratio]                  100.00%
+Status Codes  [code:count]             204:1499997  0:3
+</pre>
+</div>
+
+<p>
+这已经是跟 v1.0 版本的结果差不多了。
+</p>
+
+
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2016-07-30</span>
+        <span title="last modification date" class="post-info">2016-07-31</span>
+        <span title="tags" class="post-info"><a href="/tags/influxdb/">influxdb</a>, <a href="/tags/go/">go</a></span>
+        <span title="author" class="post-info">Shane Xu</span>
+      </div>
+      <section>
+        <h2 class="chapter">Comments</h2>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2016/07/30/imporve-influxdb-v0.10.2-performance";
+          var disqus_url = "http://xusheng.org/blog/2016/07/30/imporve-influxdb-v0.10.2-performance";
+          var disqus_shortname = 'shanexu';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="/media/js/prettify.js"></script>
+      <script src="http://xusheng.org/cdn/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="/media/js/main.js"></script>
+        <script type="text/javascript">
+         var _gaq = _gaq || [];
+         _gaq.push(['_setAccount', 'UA-74684473-1']);
+         _gaq.push(['_trackPageview']);
+         (function() {
+           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+         })();
+        </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x (<a href="http://orgmode.org">Org mode</a> 8.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711@gmail.com">Shane Xu</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>
