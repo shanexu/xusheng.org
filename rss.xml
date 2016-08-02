@@ -4,10 +4,17 @@
     <title>Shane Xu&#39;s Home</title>
     <link>http://xusheng.org/</link>
     <description>Life is too short for so much sorrows.</description>
-    <pubDate>Mon, 01 Aug 2016 22:41:21 CST</pubDate>
-    <lastBuildDate>Mon, 01 Aug 2016 22:41:21 CST</lastBuildDate>
+    <pubDate>Tue, 02 Aug 2016 23:38:46 CST</pubDate>
+    <lastBuildDate>Tue, 02 Aug 2016 23:38:46 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
+    <item>
+      <title>关于出走的一切</title>
+      <link>http://xusheng.org/blog/2006/06/22/guan-yu-chu-zou-de-yi-qie</link>
+      <description><![CDATA[关于出走的一切]]></description>
+      <pubDate>2016-08-02</pubDate>
+      <guid>http://xusheng.org/blog/2006/06/22/guan-yu-chu-zou-de-yi-qie</guid>
+    </item>
     <item>
       <title>赫马弗洛狄忒斯之海与忘忧果</title>
       <link>http://xusheng.org/blog/2006/09/14/he-ma-fu-luo-di-tui-si-zhi-hai-yu-wang-you-guo</link>
@@ -70,13 +77,6 @@
       <description><![CDATA[永远的开始]]></description>
       <pubDate>2016-07-14</pubDate>
       <guid>http://xusheng.org/blog/2009/12/18/yong-yuan-de-kai-shi</guid>
-    </item>
-    <item>
-      <title>Complete the Sequence!</title>
-      <link>http://xusheng.org/blog/2016/07/09/complete-the-sequence</link>
-      <description><![CDATA[A solution for CMPLS]]></description>
-      <pubDate>2016-07-12</pubDate>
-      <guid>http://xusheng.org/blog/2016/07/09/complete-the-sequence</guid>
     </item>
   </channel>
 </rss>
