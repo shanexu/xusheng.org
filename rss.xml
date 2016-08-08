@@ -4,10 +4,17 @@
     <title>Shane Xu&#39;s Home</title>
     <link>http://xusheng.org/</link>
     <description>Life is too short for so much sorrows.</description>
-    <pubDate>Tue, 02 Aug 2016 23:53:59 CST</pubDate>
-    <lastBuildDate>Tue, 02 Aug 2016 23:53:59 CST</lastBuildDate>
+    <pubDate>Mon, 08 Aug 2016 14:48:15 CST</pubDate>
+    <lastBuildDate>Mon, 08 Aug 2016 14:48:15 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
+    <item>
+      <title>升级 influxdb 从 0.10 或 0.11 到 0.13</title>
+      <link>http://xusheng.org/blog/2016/08/08/upgrading-influxdb-from-0-10-or-0-11-to-0-13</link>
+      <description><![CDATA[how to upgrade influxdb]]></description>
+      <pubDate>2016-08-08</pubDate>
+      <guid>http://xusheng.org/blog/2016/08/08/upgrading-influxdb-from-0-10-or-0-11-to-0-13</guid>
+    </item>
     <item>
       <title>CirCle</title>
       <link>http://xusheng.org/blog/2007/03/10/circle</link>
@@ -70,13 +77,6 @@
       <description><![CDATA[雪和命运之轮]]></description>
       <pubDate>2016-07-14</pubDate>
       <guid>http://xusheng.org/blog/2006/01/01/xue</guid>
-    </item>
-    <item>
-      <title>夜半雷雨</title>
-      <link>http://xusheng.org/blog/2010/05/17/ye-ban-lei-yu</link>
-      <description><![CDATA[夜半雷雨]]></description>
-      <pubDate>2016-07-14</pubDate>
-      <guid>http://xusheng.org/blog/2010/05/17/ye-ban-lei-yu</guid>
     </item>
   </channel>
 </rss>

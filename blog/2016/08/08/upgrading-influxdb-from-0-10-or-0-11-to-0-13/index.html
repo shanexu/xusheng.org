@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>升级 influxdb 从 0.10 或 0.11 到 0.13 - Shane Xu&#39;s Home</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Shane Xu" />
+    <meta name="description" content="how to upgrade influxdb" />
+    <meta name="keywords" content="influxdb" />
+    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/extra.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css"/>
+  </head>
+
+  <body>
+    <div>
+      <header class="masthead">
+        <h1 class="settitle">Shane Xu&#39;s Home</h1>
+        <blockquote>Life is too short for so much sorrows.</blockquote>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="xusheng.org">
+        </form>
+      </header>
+    </div>
+    <div class="node nav">
+      <ul>
+          <li><a href="/blog/">Blog</a></li>
+        <li><a href="/tags/">Tags</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="https://github.com/shanexu">GitHub</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+      </ul>
+      <hr/>
+    </div>
+
+
+  <h3 class="section">升级 influxdb 从 0.10 或 0.11 到 0.13</h3>
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">起因</h2>
+<div class="outline-text-2" id="text-orgheadline1">
+<p>
+influxdb 一直不稳定。三天两头挂掉。看到 github 有人也遇到类似的问题 <a href="https://github.com/influxdata/influxdb/issues/6015">https://github.com/influxdata/influxdb/issues/6015</a> , 然后升级到 v0.13 就好了。所以决定从 v0.10 升级到 v0.13。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">变动</h2>
+<div class="outline-text-2" id="text-orgheadline2">
+<p>
+从 0.10 到 0.13 主要有两方面的变化。
+</p>
+<ol class="org-ol">
+<li>0.13 只支持 TSM 格式的 shards。所有 b1 和 bz1 的 shards 都需要转成 TSM 格式。<br  /></li>
+<li>0.12 之前 influxdb 通过 raft service 把 metastore 信息存储在 raft.db 中，0.12 以后 influxdb 把 metastore 信息存储在了 meta.db 中。</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">准备</h2>
+<div class="outline-text-2" id="text-orgheadline3">
+<p>
+在开始升级之前，必须先保留 0.10 版本的 influxdb，如果已经升级了，就重新安装。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline12" class="outline-2">
+<h2 id="orgheadline12">步骤</h2>
+<div class="outline-text-2" id="text-orgheadline12">
+</div><div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4">0. 备份</h3>
+<div class="outline-text-3" id="text-orgheadline4">
+<p>
+备份整个 meta 文件夹，以防不测。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-bash">cp -r &lt;path_to_meta_directory&gt; &lt;path_to_011_meta_directory_backup&gt;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline5" class="outline-3">
+<h3 id="orgheadline5">1. export metastore data</h3>
+<div class="outline-text-3" id="text-orgheadline5">
+<p>
+在 influxdb 还是运行的时候，将 metastore data 导出到备份文件夹
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-bash">influxd backup &lt;path_to_metastore_backup&gt;
+</pre>
+</div>
+
+<p>
+文件夹会自动创建。
+</p>
+
+<p>
+举个例子:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-bash">~# influxd backup /tmp/backup/
+2016/04/01 15:33:35 backing up metastore to /tmp/backup/meta.00
+2016/04/01 15:33:35 backup complete
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline6" class="outline-3">
+<h3 id="orgheadline6">2. 停止 influxd service</h3>
+<div class="outline-text-3" id="text-orgheadline6">
+<div class="org-src-container">
+
+<pre class="src src-bash">sudo service influxdb stop
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline7" class="outline-3">
+<h3 id="orgheadline7">3. 升级 influxdb 到 0.13 但是先别启动</h3>
+</div>
+
+<div id="outline-container-orgheadline8" class="outline-3">
+<h3 id="orgheadline8">4. 用步骤 1 中的导出备份，升级 metastore 到 0.13 的格式</h3>
+<div class="outline-text-3" id="text-orgheadline8">
+<div class="org-src-container">
+
+<pre class="src src-bash">influxd restore -metadir=&lt;path_to_013_meta_directory&gt; &lt;path_to_metastore_backup&gt;
+</pre>
+</div>
+
+<p>
+举个例子:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-bash">~# influxd restore -metadir=/var/lib/influxdb/meta /tmp/backup
+Using metastore snapshot: /tmp/backup/meta.00
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline9" class="outline-3">
+<h3 id="orgheadline9">5. 生成新的配置文件</h3>
+<div class="outline-text-3" id="text-orgheadline9">
+<div class="org-src-container">
+
+<pre class="src src-bash">influxd config &gt; /etc/influxdb/influxdb_013.conf.generated
+</pre>
+</div>
+
+<p>
+然后对比旧的配置文件，修改。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline10" class="outline-3">
+<h3 id="orgheadline10">6. 启动 0.13 的 service</h3>
+<div class="outline-text-3" id="text-orgheadline10">
+<div class="org-src-container">
+
+<pre class="src src-bash">sudo service influxdb start
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline11" class="outline-3">
+<h3 id="orgheadline11">7. 确认 metastore 信息正确完整</h3>
+<div class="outline-text-3" id="text-orgheadline11">
+<p>
+0.13 的这几个命令的输出 <code>SHOW DATABASES</code> ， <code>SHOW USERS</code> ， <code>SHOW RETENTION POLICIES ON &lt;database_name&gt;</code> ，应该和 0.10 的一致。如果有任何问题，用步骤 0 创建的备份文件，重来。
+</p>
+</div>
+</div>
+</div>
+
+
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2016-08-08</span>
+        <span title="last modification date" class="post-info">2016-08-08</span>
+        <span title="tags" class="post-info"><a href="/tags/influxdb/">influxdb</a></span>
+        <span title="author" class="post-info">Shane Xu</span>
+      </div>
+      <section>
+        <h2 class="chapter">Comments</h2>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2016/08/08/upgrading-influxdb-from-0-10-or-0-11-to-0-13";
+          var disqus_url = "http://xusheng.org/blog/2016/08/08/upgrading-influxdb-from-0-10-or-0-11-to-0-13";
+          var disqus_shortname = 'shanexu';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="/media/js/prettify.js"></script>
+      <script src="http://xusheng.org/cdn/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="/media/js/main.js"></script>
+        <script type="text/javascript">
+         var _gaq = _gaq || [];
+         _gaq.push(['_setAccount', 'UA-74684473-1']);
+         _gaq.push(['_trackPageview']);
+         (function() {
+           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+         })();
+        </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x (<a href="http://orgmode.org">Org mode</a> 8.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711@gmail.com">Shane Xu</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>
