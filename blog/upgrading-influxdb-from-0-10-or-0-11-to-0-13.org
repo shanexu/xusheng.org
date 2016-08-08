@@ -1,0 +1,88 @@
+#+TITLE:       升级 influxdb 从 0.10 或 0.11 到 0.13
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2016-08-08 Mon
+#+URI:         /blog/%y/%m/%d/upgrading-influxdb-from-0-10-or-0-11-to-0-13
+#+KEYWORDS:    influxdb
+#+TAGS:        influxdb
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: how to upgrade influxdb
+
+* 起因
+influxdb 一直不稳定。三天两头挂掉。看到 github 有人也遇到类似的问题 [[https://github.com/influxdata/influxdb/issues/6015]] , 然后升级到 v0.13 就好了。所以决定从 v0.10 升级到 v0.13。
+
+* 变动
+从 0.10 到 0.13 主要有两方面的变化。
+1. 0.13 只支持 TSM 格式的 shards。所有 b1 和 bz1 的 shards 都需要转成 TSM 格式。\\
+2. 0.12 之前 influxdb 通过 raft service 把 metastore 信息存储在 raft.db 中，0.12 以后 influxdb 把 metastore 信息存储在了 meta.db 中。
+
+* 准备
+在开始升级之前，必须先保留 0.10 版本的 influxdb，如果已经升级了，就重新安装。
+
+* 步骤
+
+** 0. 备份
+备份整个 meta 文件夹，以防不测。
+
+#+begin_src bash
+cp -r <path_to_meta_directory> <path_to_011_meta_directory_backup>
+#+end_src
+
+** 1. export metastore data
+在 influxdb 还是运行的时候，将 metastore data 导出到备份文件夹
+
+#+begin_src bash
+influxd backup <path_to_metastore_backup>
+#+end_src
+
+文件夹会自动创建。
+
+举个例子:
+
+#+begin_src bash
+~# influxd backup /tmp/backup/
+2016/04/01 15:33:35 backing up metastore to /tmp/backup/meta.00
+2016/04/01 15:33:35 backup complete
+#+end_src
+
+** 2. 停止 influxd service
+
+#+begin_src bash
+sudo service influxdb stop
+#+end_src
+
+** 3. 升级 influxdb 到 0.13 但是先别启动
+
+** 4. 用步骤 1 中的导出备份，升级 metastore 到 0.13 的格式
+
+#+begin_src bash
+influxd restore -metadir=<path_to_013_meta_directory> <path_to_metastore_backup>
+#+end_src
+
+举个例子:
+
+#+begin_src bash
+~# influxd restore -metadir=/var/lib/influxdb/meta /tmp/backup
+Using metastore snapshot: /tmp/backup/meta.00
+#+end_src
+
+** 5. 生成新的配置文件
+
+#+begin_src bash
+influxd config > /etc/influxdb/influxdb_013.conf.generated
+#+end_src
+
+然后对比旧的配置文件，修改。
+
+** 6. 启动 0.13 的 service
+
+#+begin_src bash
+sudo service influxdb start
+#+end_src
+
+** 7. 确认 metastore 信息正确完整
+
+0.13 的这几个命令的输出 =SHOW DATABASES= ， =SHOW USERS= ， =SHOW RETENTION POLICIES ON <database_name>= ，应该和 0.10 的一致。如果有任何问题，用步骤 0 创建的备份文件，重来。
+
+
