@@ -262,7 +262,7 @@ created by github.com/influxdata/influxdb-relay/relay.(*HTTP).ServeHTTP
 	/Users/shane/Documents/gosrc/influxdb-relay/src/github.com/influxdata/influxdb-relay/relay/http.go:218 +0xce6
 #+end_src
 
-这块地方正我修改的代码，而出错的那行是这样的:
+这块地方正是我修改的代码，而出错的那行是这样的:
 
 #+begin_src go
 batch.wg.Wait()
