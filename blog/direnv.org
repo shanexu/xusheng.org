@@ -1,0 +1,22 @@
+#+TITLE:       direnv
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2016-08-14 Sun
+#+URI:         /blog/%y/%m/%d/direnv
+#+KEYWORDS:    direnv
+#+TAGS:        go
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: direnv
+
+2014年的苹果WWDC上有个口号:
+
+#+begin_quote
+Write the Code. Change the World.
+#+end_quote
+
+然而我觉得 [[http://direnv.net/][direnv]] 的作者则是:
+
+#+begin_quote
+Write the Code. Save the World.
+#+end_quote
