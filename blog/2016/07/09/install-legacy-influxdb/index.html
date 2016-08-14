@@ -51,7 +51,8 @@ InfluxDB 0.10.2 需要 Go 1.4.3。目前 Go 的稳定版已经跑到 1.6.2 了�
 </pre>
 </div>
 <p>
-如果使用 zsh 的话就把 bash 替换成 zsh。然后安装 Go。
+如果使用 zsh 的话就把 bash 替换成 zsh。
+然后安装 Go。
 </p>
 <div class="org-src-container">
 
@@ -126,7 +127,8 @@ go get -t ./...
 </pre>
 </div>
 <p>
-第二条命令会扫描当前目录下的所有 go 源代码，从中找到 import 并从远端下载到本地。在这个过程中可能会碰到编译出错的问题，比如：
+第二条命令会扫描当前目录下的所有 go 源代码，从中找到 import 并从远端下载到本地。
+在这个过程中可能会碰到编译出错的问题，比如：
 </p>
 <div class="org-src-container">
 
@@ -155,7 +157,8 @@ go install ./...
 </pre>
 </div>
 <p>
-二进制可执行文件将被安装在 <code>$GOPATH/bin</code> 。InfluxDB 的 Server 端的可执行文件的名字为 <code>influxd</code> ， 而 <code>influx</code> 则是 influxdb 的文本界面客户端。可以通过添加编译 flag 来设置编译出来的二进制文件的版本号和 commit 号：
+二进制可执行文件将被安装在 <code>$GOPATH/bin</code> 。InfluxDB 的 Server 端的可执行文件的名字为 <code>influxd</code> ， 而 <code>influx</code> 则是 influxdb 的文本界面客户端。
+可以通过添加编译 flag 来设置编译出来的二进制文件的版本号和 commit 号：
 </p>
 <div class="org-src-container">
 

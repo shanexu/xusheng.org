@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>influxdb-relay性能瓶颈分析 - Shane Xu&#39;s Home</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Shane Xu" />
+    <meta name="description" content="influxdb-relay性能瓶颈分析" />
+    <meta name="keywords" content="influxdb, go" />
+    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/extra.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css"/>
+  </head>
+
+  <body>
+    <div>
+      <header class="masthead">
+        <h1 class="settitle">Shane Xu&#39;s Home</h1>
+        <blockquote>Life is too short for so much sorrows.</blockquote>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="xusheng.org">
+        </form>
+      </header>
+    </div>
+    <div class="node nav">
+      <ul>
+          <li><a href="/blog/">Blog</a></li>
+        <li><a href="/tags/">Tags</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="https://github.com/shanexu">GitHub</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+      </ul>
+      <hr/>
+    </div>
+
+
+  <h3 class="section">influxdb-relay性能瓶颈分析</h3>
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">起因</h2>
+<div class="outline-text-2" id="text-orgheadline1">
+<p>
+为了让influxdb能够达到高可用，我便考虑在influxdb外面套一层，比如nginx。然而发现官方已经开发了一个influxdb-relay的东西，于是决定索性使用这个东西。
+首先看一张官方README.md中的图。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-text">        ┌─────────────────┐                 
+        │writes &amp; queries │                 
+        └─────────────────┘                 
+                 │                          
+                 ▼                          
+         ┌───────────────┐                  
+         │               │                  
+┌────────│ Load Balancer │─────────┐        
+│        │               │         │        
+│        └──────┬─┬──────┘         │        
+│               │ │                │        
+│               │ │                │        
+│        ┌──────┘ └────────┐       │        
+│        │ ┌─────────────┐ │       │┌──────┐
+│        │ │/write or UDP│ │       ││/query│
+│        ▼ └─────────────┘ ▼       │└──────┘
+│  ┌──────────┐      ┌──────────┐  │        
+│  │ InfluxDB │      │ InfluxDB │  │        
+│  │ Relay    │      │ Relay    │  │        
+│  └──┬────┬──┘      └────┬──┬──┘  │        
+│     │    |              |  │     │        
+│     |  ┌─┼──────────────┘  |     │        
+│     │  │ └──────────────┐  │     │        
+│     ▼  ▼                ▼  ▼     │        
+│  ┌──────────┐      ┌──────────┐  │        
+│  │          │      │          │  │        
+└─▶│ InfluxDB │      │ InfluxDB │◀─┘        
+   │          │      │          │           
+   └──────────┘      └──────────┘
+</pre>
+</div>
+
+<p>
+influxdb-relay只做数据的冗余写入，并在后端的influxdb宕机时，将数据存储在内存，当influxdb恢复时，将宕机期间的数据重新写回influxdb。
+客户端在访问influxdb的时候，实际访问的是一个 <code>Load Balancer</code> 比如 <code>Nginx</code> , 然后 <code>Load Balancer</code> 根据不同的path，选择influxdb或者influxdb-relay。
+</p>
+
+<p>
+然而，这influxdb-relay的性能却很奇怪。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">POST /write
+Requests      [total, rate]            180000, 3000.02
+Duration      [total, attack, wait]    1m20.11586256s, 59.999606572s, 20.116255988s
+Latencies     [mean, 50, 95, 99, max]  1.404856127s, 1.214236ms, 5.609988425s, 43.430687195s, 50.347228848s
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            3958680, 21.99
+Success       [ratio]                  54.98%
+Status Codes  [code:count]             204:98967  0:81033
+
+GET /ping
+Requests      [total, rate]            180000, 3000.02
+Duration      [total, attack, wait]    59.999785977s, 59.999606599s, 179.378µs
+Latencies     [mean, 50, 95, 99, max]  150.317µs, 145.68µs, 166.688µs, 194.65µs, 2.344456ms
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            0, 0.00
+Success       [ratio]                  100.00%
+Status Codes  [code:count]             204:180000
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">过程</h2>
+<div class="outline-text-2" id="text-orgheadline2">
+<p>
+在之前的文章里面提过，最新版influxdb，即便是在 vegeta 5000/s 的攻击下，还是能保证99%以上的成功率，
+然而 <code>influxdb-relay</code> 却在 3000/s 的速度的时候就已经撑不住了。作为influxdb的前置程序，至少要达到或者
+超过influxdb的处理性能，才算合理吧。所以我做了个对比试验，在处理Http请求的 <code>http.go</code> 里加入了
+<code>ping</code> 处理逻辑。经过测试，可以看出，go的http库，应该不慢，所以还是在relay处理write的逻辑上有问题。
+</p>
+
+<p>
+<code>/ping</code> 这个url官方的代码里面，没有加入，这是我在 <code>relay/http.go</code> 加的，代码如下:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-go">func (h *HTTP) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+  start := time.Now()
+
+  if r.URL.Path == "/ping" &amp;&amp; (r.Method == "GET" || r.Method == "HEAD") {
+    w.Header().Add("X-InfluxDB-Version", "relay")
+    w.WriteHeader(http.StatusNoContent)
+    return
+  }
+</pre>
+</div>
+<p>
+实际这段代码，根据 <code>influxdb-relay</code> 的设计理念是不需要的。
+</p>
+
+<p>
+再回看一下vegeta的report中的Error Set:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-text">Error Set:
+Post http://127.0.0.1:9096/write?db=test: dial tcp 0.0.0.0:0-&gt;127.0.0.1:9096: bind: can't assign requested address
+Post http://127.0.0.1:9096/write?db=test: dial tcp 0.0.0.0:0-&gt;127.0.0.1:9096: socket: too many open files
+Post http://127.0.0.1:9096/write?db=test: read tcp 127.0.0.1:59803-&gt;127.0.0.1:9096: read: connection reset by peer
+Post http://127.0.0.1:9096/write?db=test: read tcp 127.0.0.1:59805-&gt;127.0.0.1:9096: read: connection reset by peer
+Post http://127.0.0.1:9096/write?db=test: read tcp 127.0.0.1:59806-&gt;127.0.0.1:9096: read: connection reset by peer
+</pre>
+</div>
+<p>
+这里既有 <code>socket: too many open files</code> , 又有 <code>read: connection reset by peer</code> , 还有 <code>bind: can't assign requested address</code> ,
+然后结合代码。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-go">var responses = make(chan *responseData, len(h.backends))
+
+for _, b := range h.backends {
+  b := b
+  go func() {
+    defer wg.Done()
+    resp, err := b.post(outBytes, query, authHeader)
+    if err != nil {
+      log.Printf("Problem posting to relay %q backend %q: %v", h.Name(), b.name, err)
+    } else {
+      if resp.StatusCode/100 == 5 {
+        log.Printf("5xx response for relay %q backend %q: %v", h.Name(), b.name, resp.StatusCode)
+      }
+      responses &lt;- resp
+    }
+  }()
+}
+
+go func() {
+  wg.Wait()
+  close(responses)
+  putBuf(outBuf)
+}()
+
+var errResponse *responseData
+
+for resp := range responses {
+</pre>
+</div>
+<p>
+首先这里，开了一个 <code>channel</code> , <code>var responses = make(chan *responseData, len(h.backends))</code> , 只有当
+所有的backends都回复了之后，至二个 <code>responses</code> channel 才会关闭，客户端才能拿到结果，然而一旦某一个
+backends卡壳了，就要等待go的http client timeout了，这个timeout默认时间是10s, 相当于说客户端至少要等待
+10s，然而实际并不止这样。在看看 <code>retry.go</code> 中的部分代码:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-go">interval := r.initialInterval
+for {
+  resp, err := r.p.post(buf.Bytes(), batch.query, batch.auth)
+  if err == nil &amp;&amp; resp.StatusCode/100 != 5 {
+    batch.resp = resp
+    atomic.StoreInt32(&amp;r.buffering, 0)
+    batch.wg.Done()
+    break
+  }
+
+  if interval != r.maxInterval {
+    interval *= r.multiplier
+    if interval &gt; r.maxInterval {
+      interval = r.maxInterval
+    }
+  }
+
+  time.Sleep(interval)
+}
+</pre>
+</div>
+<p>
+当超时等statusCode &gt;= 500的错误发生时，retry会将这个请求加入bufer中，然后由run方法获取batch并向后端influxdb请求。
+这时的逻辑是，一旦请求失败，就sleep一定时间，而这个一定时间就是初始时间乘以一个放大因子，放大因子默认是2，于是客户端
+就会在不断等待中，最后超时。而在vegeta疯狂的攻击下，是经不起等待的。所以我改了下http.go中的逻辑，客户端请求后，直接
+返回204，让客户端不再等待。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-go">(&amp;responseData{
+  StatusCode: 204,
+}).Write(w)
+</pre>
+</div>
+<p>
+删除 <code>responses channel</code> , 以及对应的代码。
+貌似有了一定的改善。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-text">Requests      [total, rate]            180000, 3000.02
+Duration      [total, attack, wait]    1m17.299212505s, 59.999606586s, 17.299605919s
+Latencies     [mean, 50, 95, 99, max]  672.645729ms, 185.598µs, 345.300005ms, 30.003589182s, 36.777965011s
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            6231240, 34.62
+Success       [ratio]                  86.55%
+Status Codes  [code:count]             204:155781  0:24219  
+Error Set:
+Post http://127.0.0.1:9096/write?db=test: read tcp 127.0.0.1:57421-&gt;127.0.0.1:9096: read: connection reset by peer
+Post http://127.0.0.1:9096/write?db=test: read tcp 127.0.0.1:57406-&gt;127.0.0.1:9096: read: connection reset by peer
+Post http://127.0.0.1:9096/write?db=test: read tcp 127.0.0.1:57407-&gt;127.0.0.1:9096: read: connection reset by peer
+Post http://127.0.0.1:9096/write?db=test: write tcp 127.0.0.1:57404-&gt;127.0.0.1:9096: write: broken pipe
+Post http://127.0.0.1:9096/write?db=test: read tcp 127.0.0.1:57399-&gt;127.0.0.1:9096: read: connection reset by peer
+Post http://127.0.0.1:9096/write?db=test: write tcp 127.0.0.1:57413-&gt;127.0.0.1:9096: write: broken pipe
+Post http://127.0.0.1:9096/write?db=test: write tcp 127.0.0.1:57418-&gt;127.0.0.1:9096: write: broken pipe
+Post http://127.0.0.1:9096/write?db=test: write tcp 127.0.0.1:57416-&gt;127.0.0.1:9096: write: broken pipe
+Post http://127.0.0.1:9096/write?db=test: read tcp 127.0.0.1:57398-&gt;127.0.0.1:9096: read: connection reset by peer
+Post http://127.0.0.1:9096/write?db=test: read tcp 127.0.0.1:57396-&gt;127.0.0.1:9096: read: connection reset by peer
+Post http://127.0.0.1:9096/write?db=test: write tcp 127.0.0.1:57402-&gt;127.0.0.1:9096: write: broken pipe
+Post http://127.0.0.1:9096/write?db=test: read tcp 127.0.0.1:57415-&gt;127.0.0.1:9096: read: connection reset by peer
+</pre>
+</div>
+
+<p>
+但是还是很糟糕，毕竟之前influxdb的数据与这个还是有一定差距的。
+于是我把目光放到的 <code>retry.go</code> 中
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-go">func (r *retryBuffer) post(buf []byte, query string, auth string) (*responseData, error) {
+  if atomic.LoadInt32(&amp;r.buffering) == 0 {
+    resp, err := r.p.post(buf, query, auth)
+    // TODO A 5xx caused by the point data could cause the relay to buffer forever
+    if err == nil &amp;&amp; resp.StatusCode/100 != 5 {
+      return resp, err
+    }
+    atomic.StoreInt32(&amp;r.buffering, 1)
+  }
+
+  // already buffering or failed request
+  batch, err := r.list.add(buf, query, auth)
+  if err != nil {
+    return nil, err
+  }
+
+  batch.wg.Wait()
+  return batch.resp, nil
+}
+</pre>
+</div>
+
+<p>
+如果没有buffering那么，直接发送请求给influxdb，不然就把请求放到buffer中，如果buffer满了，就返回错误。既然已经在客户端那边
+直接返回了204那么，这个没有buffer的raw的请求就没有必要再单独处理了，索性一并放到buffer中去，buffer有一个好处，就是能把多个
+请求合并成一个请求提交给后端的influxdb，这样就能减少请求次数了。代码改成如下：
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-go">func (r *retryBuffer) post(buf []byte, query string, auth string) (*responseData, error) {
+  batch, err := r.list.add(buf, query, auth)
+  if err != nil {
+    return nil, err
+  }
+
+  batch.wg.Wait()
+  return batch.resp, nil
+}
+</pre>
+</div>
+
+<p>
+用2000/s速度测试，结果如下：
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">Requests      [total, rate]            120000, 2000.02
+Duration      [total, attack, wait]    1m0.000271382s, 59.999499926s, 771.456µs
+Latencies     [mean, 50, 95, 99, max]  304.395µs, 259.447µs, 460.682µs, 1.044402ms, 42.391318ms
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            4800000, 40.00
+Success       [ratio]                  100.00%
+Status Codes  [code:count]             204:120000  
+Error Set:
+</pre>
+</div>
+
+<p>
+其实我没法用更快的速度测试，如果是3000/s，那么就会出下面的问题。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">2016/08/13 17:52:22 starting relays...
+2016/08/13 17:52:22 Starting HTTP relay "example-http" on 127.0.0.1:9096
+panic: runtime error: invalid memory address or nil pointer dereference
+[signal 0xb code=0x1 addr=0x0 pc=0x837d8]
+
+goroutine 38179 [running]:
+panic(0x370fc0, 0xc820014200)
+  /Users/shane/.gvm/gos/go1.6.2/src/runtime/panic.go:481 +0x3e6
+github.com/influxdata/influxdb-relay/relay.(*retryBuffer).post(0xc820010b90, 0xc8202de254, 0x3c, 0x40, 0xc820393700, 0x7, 0x0, 0x0, 0xc82002d500, 0x0, ...)
+  /Users/shane/Documents/gosrc/influxdb-relay/src/github.com/influxdata/influxdb-relay/relay/retry.go:56 +0x118
+github.com/influxdata/influxdb-relay/relay.(*HTTP).ServeHTTP.func1(0xc820393710, 0xc8200c9ce0, 0xc8202de254, 0x3c, 0x40, 0xc820393700, 0x7, 0x0, 0x0, 0xc820022280)
+  /Users/shane/Documents/gosrc/influxdb-relay/src/github.com/influxdata/influxdb-relay/relay/http.go:210 +0xe8
+created by github.com/influxdata/influxdb-relay/relay.(*HTTP).ServeHTTP
+  /Users/shane/Documents/gosrc/influxdb-relay/src/github.com/influxdata/influxdb-relay/relay/http.go:218 +0xce6
+</pre>
+</div>
+
+<p>
+这块地方正是我修改的代码，而出错的那行是这样的:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-go">batch.wg.Wait()
+</pre>
+</div>
+
+<p>
+<code>invalid memory address or nil</code> , 我在这行代码前面加几行。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-go">if batch == nil {
+  log.Print("batch is nil")
+}
+batch.wg.Wait()
+</pre>
+</div>
+
+<p>
+果然打出了日志
+</p>
+<div class="org-src-container">
+
+<pre class="src src-log">2016/08/13 18:06:28 batch is nil
+</pre>
+</div>
+
+<p>
+这个错误很有意思了，batch是通过 <code>bufferList</code> 的 <code>add</code> 方法得到，并且在方法的末尾，有空值检查。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-go">if *cur == nil {
+  // new tail element
+  *cur = newBatch(buf, query, auth)
+} else {
+  // append to current batch
+  b := *cur
+  b.size += len(buf)
+  b.bufs = append(b.bufs, buf)
+}
+
+l.cond.L.Unlock()
+return *cur, nil
+</pre>
+</div>
+
+<p>
+首先要排除，我的修改有没有问题，把代码回退，用2000/s的速度测试。但是很不幸，这个速度会让influxdb-relay直接挂起，所以索性把 <code>http.go</code> 请求influxdb的代码改了。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-go">func (b *simplePoster) post(buf []byte, query string, auth string) (*responseData, error) {
+  time.Sleep(time.Microsecond * time.Duration(rand.Intn(400)))
+  if auth == "hello" {
+    return &amp;responseData{
+      StatusCode: 204,
+    }, nil
+  } else {
+    return &amp;responseData{
+      StatusCode: 502,
+    }, nil
+  }
+}
+</pre>
+</div>
+
+<p>
+这里要模拟一个场景：第一次请求的时候均失败，在run方法请求的时候均成功，time.Sleep模拟请求耗时。为了甄别请求的调用者，这里在auth这个参数上做了点文章。所以要修改下 <code>retry.go</code>
+中的 <code>run</code> 方法的调用，把 ="hello"= 作为参数传递给 <code>SimplePoster.post</code> 方法。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-go">for {
+  resp, err := r.p.post(buf.Bytes(), batch.query, "hello")
+  if err == nil &amp;&amp; resp.StatusCode/100 != 5 {
+</pre>
+</div>
+
+<p>
+然后用2000/s的速度测试，果然出问题了。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-text">2016/08/14 09:11:40 starting relays...
+2016/08/14 09:11:40 Starting HTTP relay "example-http" on 127.0.0.1:9096
+panic: runtime error: invalid memory address or nil pointer dereference
+[signal 0xb code=0x1 addr=0x0 pc=0x83463]
+
+goroutine 77131 [running]:
+panic(0x370cc0, 0xc820014200)
+  /Users/shane/.gvm/gos/go1.6.2/src/runtime/panic.go:481 +0x3e6
+github.com/influxdata/influxdb-relay/relay.(*retryBuffer).post(0xc820010b90, 0xc820164000, 0x3c, 0x200, 0xc8205efbb0, 0x7, 0x0, 0x0, 0xc82002c000, 0x0, ...)
+  /Users/shane/Documents/gosrc/influxdb-relay/src/github.com/influxdata/influxdb-relay/relay/retry.go:66 +0x273
+github.com/influxdata/influxdb-relay/relay.(*HTTP).ServeHTTP.func1(0xc8205efbc0, 0xc8200d5d00, 0xc820164000, 0x3c, 0x200, 0xc8205efbb0, 0x7, 0x0, 0x0, 0xc820022280)
+  /Users/shane/Documents/gosrc/influxdb-relay/src/github.com/influxdata/influxdb-relay/relay/http.go:211 +0xe8
+created by github.com/influxdata/influxdb-relay/relay.(*HTTP).ServeHTTP
+  /Users/shane/Documents/gosrc/influxdb-relay/src/github.com/influxdata/influxdb-relay/relay/http.go:219 +0xce6
+</pre>
+</div>
+
+<p>
+然后把用来模拟http请求耗时的time.Sleep去掉，异常又不发生了。以我这三脚猫的go语言功底，一时间难以发现错误的原因，但是直觉很重要。我在 <code>BufferList.add</code> 的 <code>l.cond.L.Unlock</code> 
+后面加了一个 <code>time.Sleep</code> , 情况会怎样呢。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-go">func (l *bufferList) add(buf []byte, query string, auth string) (*batch, error) {
+
+  // ...
+
+  l.cond.L.Unlock()
+  time.Sleep(time.Microsecond * time.Duration(rand.Intn(100)))
+  return *cur, nil
+}
+</pre>
+</div>
+
+<p>
+启动之后，一请求就把报错。
+经过一番仔细思考，我得出一个结论。 <code>BufferList.add</code> 方法返回了执行 <code>Batch</code> 的指针，而 <code>Unlock</code> 之后， <code>BufferList.pop</code> 方法就会改变 <code>BufferList</code> 中数据的，这时候post方法中，获取的地址指向的 <code>Batch</code> 
+已经被 <code>pop</code> 方法改变，很可能已经是nil，所以就报错了。知道了原因修改起来就相对容易了，把 <code>Unlock</code> 调用置后，在 <code>return</code> 之后，也就是 <code>post</code> 方法中获取到值之后，再 <code>Unlock</code> 。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-go">func (l *bufferList) add(buf []byte, query string, auth string) (*batch, error) {
+
+  // ...
+
+  defer l.cond.L.Unlock()
+  return *cur, nil
+}
+</pre>
+</div>
+
+<p>
+测试之后果然没有再出现之前的错误了。
+</p>
+
+<p>
+回到之前的故事。我把所有的请求都扔到了 <code>BufferList</code> 中，这样由于发送速度相对较快，那么必然出现请求合并的场景，这样减少请求次数，增加influxdb的稳定性。
+但是当Buffer满的时候，这种情况在请求速度大于消费速度(比如influxdb宕机)的情况下就会发生。如果按照之前的逻辑，那么客户端是不知道自己的这次请求因为 <code>BufferList</code> 
+满了，而没有成功。为了解决这个问题，我把 <code>http.go</code> 中用来处理response的代码，加回来，并修改了 <code>retry.go</code> 中的 <code>post</code> 方法。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-go">func (r *retryBuffer) post(buf []byte, query string, auth string) (*responseData, error) {
+  pb := getBuf()
+  pb.Write(buf)
+  batch, err := r.list.add(pb.Bytes(), query, auth)
+  if err != nil {
+    putBuf(pb)
+    return nil, err
+  }
+
+  go func() {
+    batch.wg.Wait()
+    putBuf(pb)
+  }()
+
+  return &amp;responseData{
+    StatusCode: 204,
+  }, nil
+}
+</pre>
+</div>
+
+<p>
+下面分别是 vegeta 在3000/s, 5000/s, 10000/s的测试结果
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">Requests      [total, rate]            180000, 3000.02
+Duration      [total, attack, wait]    59.999890163s, 59.999606586s, 283.577µs
+Latencies     [mean, 50, 95, 99, max]  290.602µs, 232.224µs, 402.502µs, 1.371521ms, 16.056569ms
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            7200000, 40.00
+Success       [ratio]                  100.00%
+Status Codes  [code:count]             204:180000  
+Error Set:
+
+&gt; select count(value) from cpu
+name: cpu
+---------
+time    count
+0       180000
+
+
+Requests      [total, rate]            300000, 5000.02
+Duration      [total, attack, wait]    1m0.000013963s, 59.999799896s, 214.067µs
+Latencies     [mean, 50, 95, 99, max]  258.591µs, 191.622µs, 350.592µs, 1.479882ms, 14.940625ms
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            12000000, 40.00
+Success       [ratio]                  100.00%
+Status Codes  [code:count]             204:300000  
+Error Set:
+
+&gt; select count(value) from cpu
+name: cpu
+---------
+time    count
+0       299997
+
+
+Requests      [total, rate]            600000, 10000.02
+Duration      [total, attack, wait]    1m0.000158017s, 59.999899912s, 258.105µs
+Latencies     [mean, 50, 95, 99, max]  329.228µs, 185.111µs, 745.028µs, 4.522189ms, 18.195853ms
+Bytes In      [total, mean]            0, 0.00
+Bytes Out     [total, mean]            24000000, 40.00
+Success       [ratio]                  100.00%
+Status Codes  [code:count]             204:600000  
+Error Set:
+
+&gt; select count(value) from cpu
+name: cpu
+---------
+time    count
+0       599989
+</pre>
+</div>
+
+<p>
+裸的influxdb承受不了vegeta 6000/s以上的攻击，而现在套了influxdb-relay之后就能承受10000/s+的攻击了，虽然真实场景可能更为复杂，
+尤其是读和写都会发生的情况，单从上面的实验可以看出修改版的influxdb-relay已经基本能满足需求了。
+</p>
+</div>
+</div>
+
+
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2016-08-12</span>
+        <span title="last modification date" class="post-info">2016-08-14</span>
+        <span title="tags" class="post-info"><a href="/tags/influxdb/">influxdb</a>, <a href="/tags/go/">go</a></span>
+        <span title="author" class="post-info">Shane Xu</span>
+      </div>
+      <section>
+        <h2 class="chapter">Comments</h2>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2016/08/12/influxdb-relay-performance-bottle-neck-analysing";
+          var disqus_url = "http://xusheng.org/blog/2016/08/12/influxdb-relay-performance-bottle-neck-analysing";
+          var disqus_shortname = 'shanexu';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="/media/js/prettify.js"></script>
+      <script src="http://xusheng.org/cdn/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="/media/js/main.js"></script>
+        <script type="text/javascript">
+         var _gaq = _gaq || [];
+         _gaq.push(['_setAccount', 'UA-74684473-1']);
+         _gaq.push(['_trackPageview']);
+         (function() {
+           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+         })();
+        </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x (<a href="http://orgmode.org">Org mode</a> 8.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711@gmail.com">Shane Xu</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>
