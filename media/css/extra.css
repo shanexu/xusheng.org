@@ -57,19 +57,35 @@
 .linenr {
   color: #a8a8bf;
   background-color: #efeae9;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
-pre {
+.linenr::before {
+  content: ' ';
+}
+
+pre.src span.linenr:first-child {
+  padding-top: 0.3em;
+}
+
+pre.src span.linenr:first-child::after {
+  content: ' ';
+  background-color: #fbf8ef;
+  padding-top: 0.3em;
+}
+
+pre.src {
   background-color: #fbf8ef;
   font-family: "Source Code Pro", Monaco, menlo, "Ubuntu Mono", "Droid Sans Mono", "DejaVu Sans Mono", consolas, courier, monospace;
   box-shadow: none;
   border: none;
-  padding: 5pt;
-  margin-bottom: 14pt;
   color: black;
-  padding: 0;
+  padding: 0.3em 0 0.3em;
   font-size: 95%;
-  overflow: auto; 
+  overflow: auto;
 }
 
 pre.prettyprint {
