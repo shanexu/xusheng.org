@@ -78,7 +78,7 @@ Status Codes  [code:count]             204:180000
 =ping= 处理逻辑。经过测试，可以看出，go的http库，应该不慢，所以还是在relay处理write的逻辑上有问题。
 
 =/ping= 这个url官方的代码里面，没有加入，这是我在 =relay/http.go= 加的，代码如下:
-#+begin_src go
+#+begin_src go -n
 func (h *HTTP) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 
@@ -101,7 +101,7 @@ Post http://127.0.0.1:9096/write?db=test: read tcp 127.0.0.1:59806->127.0.0.1:90
 #+end_src
 这里既有 =socket: too many open files= , 又有 =read: connection reset by peer= , 还有 =bind: can't assign requested address= ,
 然后结合代码。
-#+begin_src go
+#+begin_src go -n
 var responses = make(chan *responseData, len(h.backends))
 
 for _, b := range h.backends {
@@ -134,7 +134,7 @@ for resp := range responses {
 所有的backends都回复了之后，至二个 =responses= channel 才会关闭，客户端才能拿到结果，然而一旦某一个
 backends卡壳了，就要等待go的http client timeout了，这个timeout默认时间是10s, 相当于说客户端至少要等待
 10s，然而实际并不止这样。在看看 =retry.go= 中的部分代码:
-#+begin_src go
+#+begin_src go -n
 interval := r.initialInterval
 for {
 	resp, err := r.p.post(buf.Bytes(), batch.query, batch.auth)
@@ -159,7 +159,7 @@ for {
 这时的逻辑是，一旦请求失败，就sleep一定时间，而这个一定时间就是初始时间乘以一个放大因子，放大因子默认是2，于是客户端
 就会在不断等待中，最后超时。而在vegeta疯狂的攻击下，是经不起等待的。所以我改了下http.go中的逻辑，客户端请求后，直接
 返回204，让客户端不再等待。
-#+begin_src go
+#+begin_src go -n
 (&responseData{
 	StatusCode: 204,
 }).Write(w)
@@ -192,7 +192,7 @@ Post http://127.0.0.1:9096/write?db=test: read tcp 127.0.0.1:57415->127.0.0.1:90
 但是还是很糟糕，毕竟之前influxdb的数据与这个还是有一定差距的。
 于是我把目光放到的 =retry.go= 中
 
-#+begin_src go
+#+begin_src go -n
 func (r *retryBuffer) post(buf []byte, query string, auth string) (*responseData, error) {
 	if atomic.LoadInt32(&r.buffering) == 0 {
 		resp, err := r.p.post(buf, query, auth)
@@ -218,7 +218,7 @@ func (r *retryBuffer) post(buf []byte, query string, auth string) (*responseData
 直接返回了204那么，这个没有buffer的raw的请求就没有必要再单独处理了，索性一并放到buffer中去，buffer有一个好处，就是能把多个
 请求合并成一个请求提交给后端的influxdb，这样就能减少请求次数了。代码改成如下：
 
-#+begin_src go
+#+begin_src go -n
 func (r *retryBuffer) post(buf []byte, query string, auth string) (*responseData, error) {
 	batch, err := r.list.add(buf, query, auth)
 	if err != nil {
@@ -264,13 +264,13 @@ created by github.com/influxdata/influxdb-relay/relay.(*HTTP).ServeHTTP
 
 这块地方正是我修改的代码，而出错的那行是这样的:
 
-#+begin_src go
+#+begin_src go -n
 batch.wg.Wait()
 #+end_src
 
 =invalid memory address or nil= , 我在这行代码前面加几行。
 
-#+begin_src go
+#+begin_src go -n
 if batch == nil {
 	log.Print("batch is nil")
 }
@@ -283,7 +283,7 @@ batch.wg.Wait()
 #+end_src
 
 这个错误很有意思了，batch是通过 =bufferList= 的 =add= 方法得到，并且在方法的末尾，有空值检查。
-#+begin_src go
+#+begin_src go -n
 if *cur == nil {
 	// new tail element
 	*cur = newBatch(buf, query, auth)
@@ -300,7 +300,7 @@ return *cur, nil
 
 首先要排除，我的修改有没有问题，把代码回退，用2000/s的速度测试。但是很不幸，这个速度会让influxdb-relay直接挂起，所以索性把 =http.go= 请求influxdb的代码改了。
 
-#+begin_src go
+#+begin_src go -n
 func (b *simplePoster) post(buf []byte, query string, auth string) (*responseData, error) {
 	time.Sleep(time.Microsecond * time.Duration(rand.Intn(400)))
 	if auth == "hello" {
@@ -318,7 +318,7 @@ func (b *simplePoster) post(buf []byte, query string, auth string) (*responseDat
 这里要模拟一个场景：第一次请求的时候均失败，在run方法请求的时候均成功，time.Sleep模拟请求耗时。为了甄别请求的调用者，这里在auth这个参数上做了点文章。所以要修改下 =retry.go=
 中的 =run= 方法的调用，把 ="hello"= 作为参数传递给 =SimplePoster.post= 方法。
 
-#+begin_src go
+#+begin_src go -n
 for {
 	resp, err := r.p.post(buf.Bytes(), batch.query, "hello")
 	if err == nil && resp.StatusCode/100 != 5 {
@@ -345,7 +345,7 @@ created by github.com/influxdata/influxdb-relay/relay.(*HTTP).ServeHTTP
 然后把用来模拟http请求耗时的time.Sleep去掉，异常又不发生了。以我这三脚猫的go语言功底，一时间难以发现错误的原因，但是直觉很重要。我在 =BufferList.add= 的 =l.cond.L.Unlock= 
 后面加了一个 =time.Sleep= , 情况会怎样呢。
 
-#+begin_src go
+#+begin_src go -n
 func (l *bufferList) add(buf []byte, query string, auth string) (*batch, error) {
 
   // ...
@@ -360,7 +360,7 @@ func (l *bufferList) add(buf []byte, query string, auth string) (*batch, error) 
 经过一番仔细思考，我得出一个结论。 =BufferList.add= 方法返回了执行 =Batch= 的指针，而 =Unlock= 之后， =BufferList.pop= 方法就会改变 =BufferList= 中数据的，这时候post方法中，获取的地址指向的 =Batch= 
 已经被 =pop= 方法改变，很可能已经是nil，所以就报错了。知道了原因修改起来就相对容易了，把 =Unlock= 调用置后，在 =return= 之后，也就是 =post= 方法中获取到值之后，再 =Unlock= 。
 
-#+begin_src go
+#+begin_src go -n
 func (l *bufferList) add(buf []byte, query string, auth string) (*batch, error) {
 
   // ...
@@ -376,7 +376,7 @@ func (l *bufferList) add(buf []byte, query string, auth string) (*batch, error) 
 但是当Buffer满的时候，这种情况在请求速度大于消费速度(比如influxdb宕机)的情况下就会发生。如果按照之前的逻辑，那么客户端是不知道自己的这次请求因为 =BufferList= 
 满了，而没有成功。为了解决这个问题，我把 =http.go= 中用来处理response的代码，加回来，并修改了 =retry.go= 中的 =post= 方法。
 
-#+begin_src go
+#+begin_src go -n
 func (r *retryBuffer) post(buf []byte, query string, auth string) (*responseData, error) {
 	pb := getBuf()
 	pb.Write(buf)
@@ -450,6 +450,4 @@ time    count
 
 裸的influxdb承受不了vegeta 6000/s以上的攻击，而现在套了influxdb-relay之后就能承受10000/s+的攻击了，虽然真实场景可能更为复杂，
 尤其是读和写都会发生的情况，单从上面的实验可以看出修改版的influxdb-relay已经基本能满足需求了。
-
-
 
