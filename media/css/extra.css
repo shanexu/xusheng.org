@@ -61,6 +61,7 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  margin-left: -1em;
 }
 
 .linenr::before {
@@ -83,7 +84,7 @@ pre.src {
   box-shadow: none;
   border: none;
   color: black;
-  padding: 0.3em 0 0.3em;
+  padding: 0.3em 0 0.3em 1em;
   font-size: 95%;
   overflow: auto;
 }

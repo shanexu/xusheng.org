@@ -35,4 +35,7 @@ $(document).ready(function() {
      * pretty print all code blocks
      ******************************************************************/
   /* PR.prettyPrint();*/
+  $('.linenr').each(function(){
+    $(this).text($(this).text().slice(0, -2));
+  });
 });
