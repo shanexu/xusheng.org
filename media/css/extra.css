@@ -67,6 +67,12 @@
   content: ' ';
 }
 
+.linenr::after {
+  content: ' ';
+  background-color: #fbf8ef;
+  padding-top: 0.3em;
+}
+
 pre.src span.linenr:first-child {
   padding-top: 0.3em;
 }
