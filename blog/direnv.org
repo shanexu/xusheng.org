@@ -117,7 +117,7 @@ source venv/bin/active
 
 或者修改 =direnv stdlib= 中的 =python_layout= 方法：
 
-#+begin_src bash
+#+begin_src bash -n
 layout_python() {
   local python=${1:-python}
   local old_env=$PWD/virtualenv
