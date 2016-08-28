@@ -62,6 +62,8 @@
   -ms-user-select: none;
   user-select: none;
   margin-left: -1em;
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
 }
 
 .linenr::before {
@@ -72,10 +74,7 @@
   content: ' ';
   background-color: #fbf8ef;
   padding-top: 0.3em;
-}
-
-pre.src span.linenr:first-child {
-  padding-top: 0.3em;
+  padding-bottom: 0.3em;
 }
 
 pre.src {
