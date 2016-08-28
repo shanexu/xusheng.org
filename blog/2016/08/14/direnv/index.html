@@ -222,27 +222,27 @@ active脚本，在 <code>.envrc</code> 中添加内容：
 
 <div class="org-src-container">
 
-<pre class="src src-bash"><span style="color: #6c3163; font-weight: bold;">layout_python</span><span style="color: #3a81c3;">()</span> <span style="color: #3a81c3;">{</span>
-  <span style="color: #3a81c3;">local</span> <span style="color: #715ab1;">python</span>=$<span style="color: #6c3163;">{</span><span style="color: #4e3163;">1:-python</span><span style="color: #6c3163;">}</span>
-  <span style="color: #3a81c3;">local</span> <span style="color: #715ab1;">old_env</span>=$<span style="color: #715ab1;">PWD</span>/virtualenv
-  <span style="color: #3a81c3;">unset</span> PYTHONHOME
-  <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #6c3163;">[</span><span style="color: #2d9574;">[</span> -d $<span style="color: #715ab1;">old_env</span> &amp;&amp; $<span style="color: #715ab1;">python</span> = python <span style="color: #2d9574;">]</span><span style="color: #6c3163;">]</span>; <span style="color: #3a81c3; font-weight: bold;">then</span>
-    <span style="color: #3a81c3;">export</span> <span style="color: #715ab1;">VIRTUAL_ENV</span>=$<span style="color: #715ab1;">old_env</span>
-  <span style="color: #3a81c3; font-weight: bold;">else</span>
-    <span style="color: #3a81c3;">local</span> python_version
-    <span style="color: #715ab1;">python_version</span>=$<span style="color: #6c3163;">(</span><span style="color: #2d9574;">"$python"</span> -c <span style="color: #2d9574;">"import platform as p;print(p.python_version())"</span><span style="color: #6c3163;">)</span>
-    <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #6c3163;">[</span><span style="color: #2d9574;">[</span> -z $<span style="color: #715ab1;">python_version</span> <span style="color: #2d9574;">]</span><span style="color: #6c3163;">]</span>; <span style="color: #3a81c3; font-weight: bold;">then</span>
-      log_error <span style="color: #2d9574;">"Could not find python's version"</span>
-      <span style="color: #3a81c3; font-weight: bold;">return</span> <span style="color: #4e3163;">1</span>
-    <span style="color: #3a81c3; font-weight: bold;">fi</span>
-
-    <span style="color: #3a81c3;">export</span> <span style="color: #715ab1;">VIRTUAL_ENV</span>=$<span style="color: #715ab1;">PWD</span>/venv
-    <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #6c3163;">[</span><span style="color: #2d9574;">[</span> <span style="color: #4e3163;">!</span> -d $<span style="color: #715ab1;">VIRTUAL_ENV</span> <span style="color: #2d9574;">]</span><span style="color: #6c3163;">]</span>; <span style="color: #3a81c3; font-weight: bold;">then</span>
-      virtualenv <span style="color: #2d9574;">"--python=$python"</span> <span style="color: #2d9574;">"$VIRTUAL_ENV"</span>
-    <span style="color: #3a81c3; font-weight: bold;">fi</span>
-  <span style="color: #3a81c3; font-weight: bold;">fi</span>
-  PATH_add <span style="color: #2d9574;">"$VIRTUAL_ENV/bin"</span>
-<span style="color: #3a81c3;">}</span>
+<pre class="src src-bash"><span class="linenr"> 1: </span><span style="color: #6c3163; font-weight: bold;">layout_python</span><span style="color: #3a81c3;">()</span> <span style="color: #3a81c3;">{</span>
+<span class="linenr"> 2: </span>  <span style="color: #3a81c3;">local</span> <span style="color: #715ab1;">python</span>=$<span style="color: #6c3163;">{</span><span style="color: #4e3163;">1:-python</span><span style="color: #6c3163;">}</span>
+<span class="linenr"> 3: </span>  <span style="color: #3a81c3;">local</span> <span style="color: #715ab1;">old_env</span>=$<span style="color: #715ab1;">PWD</span>/virtualenv
+<span class="linenr"> 4: </span>  <span style="color: #3a81c3;">unset</span> PYTHONHOME
+<span class="linenr"> 5: </span>  <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #6c3163;">[</span><span style="color: #2d9574;">[</span> -d $<span style="color: #715ab1;">old_env</span> &amp;&amp; $<span style="color: #715ab1;">python</span> = python <span style="color: #2d9574;">]</span><span style="color: #6c3163;">]</span>; <span style="color: #3a81c3; font-weight: bold;">then</span>
+<span class="linenr"> 6: </span>    <span style="color: #3a81c3;">export</span> <span style="color: #715ab1;">VIRTUAL_ENV</span>=$<span style="color: #715ab1;">old_env</span>
+<span class="linenr"> 7: </span>  <span style="color: #3a81c3; font-weight: bold;">else</span>
+<span class="linenr"> 8: </span>    <span style="color: #3a81c3;">local</span> python_version
+<span class="linenr"> 9: </span>    <span style="color: #715ab1;">python_version</span>=$<span style="color: #6c3163;">(</span><span style="color: #2d9574;">"$python"</span> -c <span style="color: #2d9574;">"import platform as p;print(p.python_version())"</span><span style="color: #6c3163;">)</span>
+<span class="linenr">10: </span>    <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #6c3163;">[</span><span style="color: #2d9574;">[</span> -z $<span style="color: #715ab1;">python_version</span> <span style="color: #2d9574;">]</span><span style="color: #6c3163;">]</span>; <span style="color: #3a81c3; font-weight: bold;">then</span>
+<span class="linenr">11: </span>      log_error <span style="color: #2d9574;">"Could not find python's version"</span>
+<span class="linenr">12: </span>      <span style="color: #3a81c3; font-weight: bold;">return</span> <span style="color: #4e3163;">1</span>
+<span class="linenr">13: </span>    <span style="color: #3a81c3; font-weight: bold;">fi</span>
+<span class="linenr">14: </span>
+<span class="linenr">15: </span>    <span style="color: #3a81c3;">export</span> <span style="color: #715ab1;">VIRTUAL_ENV</span>=$<span style="color: #715ab1;">PWD</span>/venv
+<span class="linenr">16: </span>    <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #6c3163;">[</span><span style="color: #2d9574;">[</span> <span style="color: #4e3163;">!</span> -d $<span style="color: #715ab1;">VIRTUAL_ENV</span> <span style="color: #2d9574;">]</span><span style="color: #6c3163;">]</span>; <span style="color: #3a81c3; font-weight: bold;">then</span>
+<span class="linenr">17: </span>      virtualenv <span style="color: #2d9574;">"--python=$python"</span> <span style="color: #2d9574;">"$VIRTUAL_ENV"</span>
+<span class="linenr">18: </span>    <span style="color: #3a81c3; font-weight: bold;">fi</span>
+<span class="linenr">19: </span>  <span style="color: #3a81c3; font-weight: bold;">fi</span>
+<span class="linenr">20: </span>  PATH_add <span style="color: #2d9574;">"$VIRTUAL_ENV/bin"</span>
+<span class="linenr">21: </span><span style="color: #3a81c3;">}</span>
 </pre>
 </div>
 </div>
@@ -252,7 +252,7 @@ active脚本，在 <code>.envrc</code> 中添加内容：
     <div>
       <div class="post-meta">
         <span title="post date" class="post-info">2016-08-14</span>
-        <span title="last modification date" class="post-info">2016-08-14</span>
+        <span title="last modification date" class="post-info">2016-08-28</span>
         <span title="tags" class="post-info"><a href="/tags/go/">go</a></span>
         <span title="author" class="post-info">Shane Xu</span>
       </div>
