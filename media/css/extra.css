@@ -62,8 +62,6 @@
   -ms-user-select: none;
   user-select: none;
   margin-left: -1em;
-  padding-top: 0.3em;
-  padding-bottom: 0.3em;
 }
 
 .linenr::before {
@@ -73,13 +71,19 @@
 .linenr::after {
   content: ' ';
   background-color: #fbf8ef;
+}
+
+.linenr:first-child::after {
   padding-top: 0.3em;
-  padding-bottom: 0.3em;
+}
+
+.linenr:first-child {
+  padding-top: 0.3em;
 }
 
 pre.src {
   background-color: #fbf8ef;
-  font-family: "Source Code Pro", Monaco, menlo, "Ubuntu Mono", "Droid Sans Mono", "DejaVu Sans Mono", consolas, courier, monospace;
+  font-family: "Droid Sans Mono", "Source Code Pro", Monaco, menlo, "Ubuntu Mono", "DejaVu Sans Mono", consolas, courier, monospace;
   box-shadow: none;
   border: none;
   color: black;
