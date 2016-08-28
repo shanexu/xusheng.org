@@ -71,12 +71,6 @@ pre.src span.linenr:first-child {
   padding-top: 0.3em;
 }
 
-pre.src span.linenr:first-child::after {
-  content: ' ';
-  background-color: #fbf8ef;
-  padding-top: 0.3em;
-}
-
 pre.src {
   background-color: #fbf8ef;
   font-family: "Source Code Pro", Monaco, menlo, "Ubuntu Mono", "Droid Sans Mono", "DejaVu Sans Mono", consolas, courier, monospace;
