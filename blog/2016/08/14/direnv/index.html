@@ -76,7 +76,7 @@ go的gvm，groovy的GVM，haskell的stack，haskell的cabal。这些工具基本
 <div class="org-src-container">
 
 <pre class="src src-bash">git clone https://github.com/direnv/direnv
-cd direnv
+<span style="color: #3a81c3;">cd</span> direnv
 make install
 </pre>
 </div>
@@ -103,7 +103,7 @@ There's package definitions on Homebrew, Arch's AUR, Gentoo go-overlay overlay a
 </p>
 <div class="org-src-container">
 
-<pre class="src src-bash">eval "$(direnv hook zsh)"
+<pre class="src src-bash"><span style="color: #3a81c3;">eval</span> <span style="color: #2d9574;">"$(direnv hook zsh)"</span>
 </pre>
 </div>
 </div>
@@ -117,7 +117,7 @@ There's package definitions on Homebrew, Arch's AUR, Gentoo go-overlay overlay a
 </p>
 <div class="org-src-container">
 
-<pre class="src src-bash">eval "$(direnv hook bash)"
+<pre class="src src-bash"><span style="color: #3a81c3;">eval</span> <span style="color: #2d9574;">"$(direnv hook bash)"</span>
 </pre>
 </div>
 </div>
@@ -131,7 +131,7 @@ There's package definitions on Homebrew, Arch's AUR, Gentoo go-overlay overlay a
 </p>
 <div class="org-src-container">
 
-<pre class="src src-bash">eval (direnv hook fish)
+<pre class="src src-bash"><span style="color: #3a81c3;">eval</span> <span style="color: #3a81c3;">(</span>direnv hook fish<span style="color: #3a81c3;">)</span>
 </pre>
 </div>
 </div>
@@ -145,7 +145,7 @@ There's package definitions on Homebrew, Arch's AUR, Gentoo go-overlay overlay a
 </p>
 <div class="org-src-container">
 
-<pre class="src src-bash">eval `direnv hook tcsh`
+<pre class="src src-bash"><span style="color: #3a81c3;">eval</span> <span style="color: #ff00ff;">`direnv hook tcsh`</span>
 </pre>
 </div>
 </div>
@@ -162,20 +162,20 @@ There's package definitions on Homebrew, Arch's AUR, Gentoo go-overlay overlay a
 <div class="org-src-container">
 
 <pre class="src src-bash">$ cd ~/my_project
-$ echo ${FOO-nope}
+$ echo $<span style="color: #3a81c3;">{</span><span style="color: #715ab1;">FOO</span>-nope<span style="color: #3a81c3;">}</span>
 nope
-$ echo export FOO=foo &gt; .envrc
+$ echo export <span style="color: #715ab1;">FOO</span>=foo &gt; .envrc
 .envrc is not allowed
 $ direnv allow .
 direnv: reloading
 direnv: loading .envrc
 direnv export: +FOO
-$ echo ${FOO-nope}
+$ echo $<span style="color: #3a81c3;">{</span><span style="color: #715ab1;">FOO</span>-nope<span style="color: #3a81c3;">}</span>
 foo
 $ cd ..
 direnv: unloading
 direnv export: ~PATH
-$ echo ${FOO-nope}
+$ echo $<span style="color: #3a81c3;">{</span><span style="color: #715ab1;">FOO</span>-nope<span style="color: #3a81c3;">}</span>
 nope
 </pre>
 </div>
@@ -212,7 +212,7 @@ active脚本，在 <code>.envrc</code> 中添加内容：
 
 <div class="org-src-container">
 
-<pre class="src src-bash">source venv/bin/active
+<pre class="src src-bash"><span style="color: #3a81c3;">source</span> venv/bin/active
 </pre>
 </div>
 
@@ -222,27 +222,27 @@ active脚本，在 <code>.envrc</code> 中添加内容：
 
 <div class="org-src-container">
 
-<pre class="src src-bash">layout_python() {
-  local python=${1:-python}
-  local old_env=$PWD/virtualenv
-  unset PYTHONHOME
-  if [[ -d $old_env &amp;&amp; $python = python ]]; then
-    export VIRTUAL_ENV=$old_env
-  else
-    local python_version
-    python_version=$("$python" -c "import platform as p;print(p.python_version())")
-    if [[ -z $python_version ]]; then
-      log_error "Could not find python's version"
-      return 1
-    fi
+<pre class="src src-bash"><span style="color: #6c3163; font-weight: bold;">layout_python</span><span style="color: #3a81c3;">()</span> <span style="color: #3a81c3;">{</span>
+  <span style="color: #3a81c3;">local</span> <span style="color: #715ab1;">python</span>=$<span style="color: #6c3163;">{</span><span style="color: #4e3163;">1:-python</span><span style="color: #6c3163;">}</span>
+  <span style="color: #3a81c3;">local</span> <span style="color: #715ab1;">old_env</span>=$<span style="color: #715ab1;">PWD</span>/virtualenv
+  <span style="color: #3a81c3;">unset</span> PYTHONHOME
+  <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #6c3163;">[</span><span style="color: #2d9574;">[</span> -d $<span style="color: #715ab1;">old_env</span> &amp;&amp; $<span style="color: #715ab1;">python</span> = python <span style="color: #2d9574;">]</span><span style="color: #6c3163;">]</span>; <span style="color: #3a81c3; font-weight: bold;">then</span>
+    <span style="color: #3a81c3;">export</span> <span style="color: #715ab1;">VIRTUAL_ENV</span>=$<span style="color: #715ab1;">old_env</span>
+  <span style="color: #3a81c3; font-weight: bold;">else</span>
+    <span style="color: #3a81c3;">local</span> python_version
+    <span style="color: #715ab1;">python_version</span>=$<span style="color: #6c3163;">(</span><span style="color: #2d9574;">"$python"</span> -c <span style="color: #2d9574;">"import platform as p;print(p.python_version())"</span><span style="color: #6c3163;">)</span>
+    <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #6c3163;">[</span><span style="color: #2d9574;">[</span> -z $<span style="color: #715ab1;">python_version</span> <span style="color: #2d9574;">]</span><span style="color: #6c3163;">]</span>; <span style="color: #3a81c3; font-weight: bold;">then</span>
+      log_error <span style="color: #2d9574;">"Could not find python's version"</span>
+      <span style="color: #3a81c3; font-weight: bold;">return</span> <span style="color: #4e3163;">1</span>
+    <span style="color: #3a81c3; font-weight: bold;">fi</span>
 
-    export VIRTUAL_ENV=$PWD/venv
-    if [[ ! -d $VIRTUAL_ENV ]]; then
-      virtualenv "--python=$python" "$VIRTUAL_ENV"
-    fi
-  fi
-  PATH_add "$VIRTUAL_ENV/bin"
-}
+    <span style="color: #3a81c3;">export</span> <span style="color: #715ab1;">VIRTUAL_ENV</span>=$<span style="color: #715ab1;">PWD</span>/venv
+    <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #6c3163;">[</span><span style="color: #2d9574;">[</span> <span style="color: #4e3163;">!</span> -d $<span style="color: #715ab1;">VIRTUAL_ENV</span> <span style="color: #2d9574;">]</span><span style="color: #6c3163;">]</span>; <span style="color: #3a81c3; font-weight: bold;">then</span>
+      virtualenv <span style="color: #2d9574;">"--python=$python"</span> <span style="color: #2d9574;">"$VIRTUAL_ENV"</span>
+    <span style="color: #3a81c3; font-weight: bold;">fi</span>
+  <span style="color: #3a81c3; font-weight: bold;">fi</span>
+  PATH_add <span style="color: #2d9574;">"$VIRTUAL_ENV/bin"</span>
+<span style="color: #3a81c3;">}</span>
 </pre>
 </div>
 </div>

@@ -47,7 +47,7 @@ InfluxDB 0.10.2 需要 Go 1.4.3。目前 Go 的稳定版已经跑到 1.6.2 了�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">bash &lt; &lt;(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
+<pre class="src src-sh">bash &lt; &lt;<span style="color: #3a81c3;">(</span>curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer<span style="color: #3a81c3;">)</span>
 </pre>
 </div>
 <p>
@@ -56,9 +56,9 @@ InfluxDB 0.10.2 需要 Go 1.4.3。目前 Go 的稳定版已经跑到 1.6.2 了�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">gvm install go1.4.2 -B #mac 可能需要先安装 go1.4.2 的 binary 版本
+<pre class="src src-sh">gvm install go1.4.2 -B <span style="color: #2aa1ae; background-color: #ecf3ec;">#</span><span style="color: #2aa1ae; background-color: #ecf3ec;">mac &#21487;&#33021;&#38656;&#35201;&#20808;&#23433;&#35013; go1.4.2 &#30340; binary &#29256;&#26412;</span>
 gvm install go1.4.3
-gvm use go1.4.3 --default #可以不设置为 default, 下次使用时需要执行这条命令
+gvm use go1.4.3 --default <span style="color: #2aa1ae; background-color: #ecf3ec;">#</span><span style="color: #2aa1ae; background-color: #ecf3ec;">&#21487;&#20197;&#19981;&#35774;&#32622;&#20026; default, &#19979;&#27425;&#20351;&#29992;&#26102;&#38656;&#35201;&#25191;&#34892;&#36825;&#26465;&#21629;&#20196;</span>
 </pre>
 </div>
 </div>
@@ -100,10 +100,10 @@ Go 能够通过版本控制系统引入远端的包，目前 influxdb 只依赖�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">mkdir $HOME/gocodez
-export GOPATH=$HOME/gocodez
-mkdir -p $GOPATH/src/github.com/influxdb
-cd $GOPATH/src/github.com/influxdb
+<pre class="src src-sh">mkdir $<span style="color: #715ab1;">HOME</span>/gocodez
+<span style="color: #3a81c3;">export</span> <span style="color: #715ab1;">GOPATH</span>=$<span style="color: #715ab1;">HOME</span>/gocodez
+mkdir -p $<span style="color: #715ab1;">GOPATH</span>/src/github.com/influxdb
+<span style="color: #3a81c3;">cd</span> $<span style="color: #715ab1;">GOPATH</span>/src/github.com/influxdb
 git clone https://github.com/influxdata/influxdb.git
 git checkout v0.10.2
 </pre>
@@ -122,7 +122,7 @@ git checkout v0.10.2
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">cd $GOPATH/src/github.com/influxdb/influxdb
+<pre class="src src-sh"><span style="color: #3a81c3;">cd</span> $<span style="color: #715ab1;">GOPATH</span>/src/github.com/influxdb/influxdb
 go get -t ./...
 </pre>
 </div>
@@ -132,8 +132,8 @@ go get -t ./...
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"># github.com/influxdb/influxdb/tsdb/engine/tsm1                                   
-tsdb/engine/tsm1/int.go:271: cannot use d.values (type []uint64) as type *[240]uint64 in argument to simple8b.Decode
+<pre class="src src-sh"><span style="color: #2aa1ae; background-color: #ecf3ec;"># </span><span style="color: #2aa1ae; background-color: #ecf3ec;">github.com/influxdb/influxdb/tsdb/engine/tsm1                                   </span>
+tsdb/engine/tsm1/int.go:271: cannot use d.values <span style="color: #3a81c3;">(</span><span style="color: #3a81c3;">type</span> <span style="color: #6c3163;">[]</span>uint64<span style="color: #3a81c3;">)</span> as type *<span style="color: #3a81c3;">[</span><span style="color: #4e3163;">240</span><span style="color: #3a81c3;">]</span>uint64<span style="color: #3a81c3; font-weight: bold;"> in</span> argument to simple8b.Decode
 </pre>
 </div>
 <p>
@@ -141,9 +141,9 @@ tsdb/engine/tsm1/int.go:271: cannot use d.values (type []uint64) as type *[240]u
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">cd $GOPATH/src/github.com/jwilder/encoding/simple8b
-git checkout 07d88d4f35eec497617bee0c7bfe651a796dae13
-cd $GOPATH/src/github.com/influxdb/influxdb
+<pre class="src src-sh"><span style="color: #3a81c3;">cd</span> $<span style="color: #715ab1;">GOPATH</span>/src/github.com/jwilder/encoding/simple8b
+git checkout <span style="color: #4e3163;">07d88d4f35eec497617bee0c7bfe651a796dae13</span>
+<span style="color: #3a81c3;">cd</span> $<span style="color: #715ab1;">GOPATH</span>/src/github.com/influxdb/influxdb
 go get -t ./...
 </pre>
 </div>
@@ -162,7 +162,7 @@ go install ./...
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">-ldflags="-X main.version=$VERSION -X main.branch=$BRANCH -X main.commit=$COMMIT -X main.buildTime=$TIME"
+<pre class="src src-sh">-ldflags=<span style="color: #2d9574;">"-X main.version=$VERSION -X main.branch=$BRANCH -X main.commit=$COMMIT -X main.buildTime=$TIME"</span>
 </pre>
 </div>
 </div>
@@ -176,9 +176,9 @@ go install ./...
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">$GOPATH/bin/influxd config &gt; influxd.conf
-vim influxd.conf # 修改配置文件
-$GOPATH/bin/influxd -config influxd.conf
+<pre class="src src-sh">$<span style="color: #715ab1;">GOPATH</span>/bin/influxd config &gt; influxd.conf
+vim influxd.conf <span style="color: #2aa1ae; background-color: #ecf3ec;"># </span><span style="color: #2aa1ae; background-color: #ecf3ec;">&#20462;&#25913;&#37197;&#32622;&#25991;&#20214;</span>
+$<span style="color: #715ab1;">GOPATH</span>/bin/influxd -config influxd.conf
 </pre>
 </div>
 </div>

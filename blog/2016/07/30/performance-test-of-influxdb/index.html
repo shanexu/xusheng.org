@@ -79,10 +79,10 @@ influxdb 的最新稳定版 v0.13 是用 go1.6.2 版本编译的。而从 v0.10 
 <div class="org-src-container">
 
 <pre class="src src-bash">rm -rf ~/.influxdb
-GODEBUG=gctrace=1 $GOPATH/bin/influxd -config influx.config 2&gt; gc.log 1 &gt; gc.log &amp;
-sleep 3
-curl "http://127.0.0.1:8086/query?q=create+database+test" 
-vegeta attack -rate 5000 -targets targets.txt -duration 1m &gt; out.dat 
+<span style="color: #715ab1;">GODEBUG</span>=<span style="color: #715ab1;">gctrace</span>=<span style="color: #4e3163;">1</span> $<span style="color: #715ab1;">GOPATH</span>/bin/influxd -config influx.config <span style="color: #4e3163;">2</span>&gt; gc.log <span style="color: #4e3163;">1</span> &gt; gc.log &amp;
+sleep <span style="color: #4e3163;">3</span>
+curl <span style="color: #2d9574;">"http://127.0.0.1:8086/query?q=create+database+test"</span> 
+vegeta attack -rate <span style="color: #4e3163;">5000</span> -targets targets.txt -duration <span style="color: #4e3163;">1m</span> &gt; out.dat 
 vegeta report -reporter plot &gt; report.html &lt; out.dat
 vegeta report &lt; out.dat &gt; report.txt
 pkill influxd
@@ -135,7 +135,7 @@ post2.txt
 
 <pre class="src src-text">Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m0.001980491s, 4m59.999799956s, 2.180535ms
-Latencies     [mean, 50, 95, 99, max]  109.514855ms, 298.07µs, 22.694783ms, 1.338986781s, 31.9022429s
+Latencies     [mean, 50, 95, 99, max]  109.514855ms, 298.07&#181;s, 22.694783ms, 1.338986781s, 31.9022429s
 Bytes In      [total, mean]            140, 0.00
 Bytes Out     [total, mean]            57040160, 38.03
 Success       [ratio]                  95.07%
@@ -143,7 +143,7 @@ Status Codes  [code:count]             204:1425997  0:73996  500:7
 
 Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m6.970133222s, 4m59.999799893s, 6.970333329s
-Latencies     [mean, 50, 95, 99, max]  194.96891ms, 251.684µs, 10.231109ms, 7.263452882s, 30.575939048s
+Latencies     [mean, 50, 95, 99, max]  194.96891ms, 251.684&#181;s, 10.231109ms, 7.263452882s, 30.575939048s
 Bytes In      [total, mean]            356540, 0.24
 Bytes Out     [total, mean]            50971080, 33.98
 Success       [ratio]                  83.76%
@@ -151,7 +151,7 @@ Status Codes  [code:count]             204:1256450  0:225723  500:17827
 
 Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m23.88965317s, 4m59.999799933s, 23.889853237s
-Latencies     [mean, 50, 95, 99, max]  573.704285ms, 256.848µs, 373.879973ms, 30.000069249s, 42.097210576s
+Latencies     [mean, 50, 95, 99, max]  573.704285ms, 256.848&#181;s, 373.879973ms, 30.000069249s, 42.097210576s
 Bytes In      [total, mean]            0, 0.00
 Bytes Out     [total, mean]            48968480, 32.65
 Success       [ratio]                  81.61%
@@ -168,15 +168,15 @@ Status Codes  [code:count]             204:1224212  0:275788
 
 <pre class="src src-text">Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m0.004029292s, 4m59.999799919s, 4.229373ms
-Latencies     [mean, 50, 95, 99, max]  135.82944ms, 245.895µs, 270.774208ms, 1.602307692s, 30.654207406s
+Latencies     [mean, 50, 95, 99, max]  135.82944ms, 245.895&#181;s, 270.774208ms, 1.602307692s, 30.654207406s
 Bytes In      [total, mean]            340, 0.00
 Bytes Out     [total, mean]            58612760, 39.08
 Success       [ratio]                  97.69%
 Status Codes  [code:count]             204:1465302  0:34681  500:17
 
 Requests      [total, rate]            1500000, 5000.00
-Duration      [total, attack, wait]    5m0.000166845s, 4m59.999799895s, 366.95µs
-Latencies     [mean, 50, 95, 99, max]  195.576968ms, 245.78µs, 159.36697ms, 3.400151326s, 35.851218729s
+Duration      [total, attack, wait]    5m0.000166845s, 4m59.999799895s, 366.95&#181;s
+Latencies     [mean, 50, 95, 99, max]  195.576968ms, 245.78&#181;s, 159.36697ms, 3.400151326s, 35.851218729s
 Bytes In      [total, mean]            460, 0.00
 Bytes Out     [total, mean]            56339960, 37.56
 Success       [ratio]                  93.90%
@@ -184,7 +184,7 @@ Status Codes  [code:count]             500:23  204:1408476  0:91501
 
 Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m17.804309192s, 4m59.999799812s, 17.80450938s
-Latencies     [mean, 50, 95, 99, max]  426.521055ms, 232.794µs, 27.149849ms, 19.774855337s, 37.465746818s
+Latencies     [mean, 50, 95, 99, max]  426.521055ms, 232.794&#181;s, 27.149849ms, 19.774855337s, 37.465746818s
 Bytes In      [total, mean]            0, 0.00
 Bytes Out     [total, mean]            52030240, 34.69
 Success       [ratio]                  86.72%
@@ -243,15 +243,15 @@ Well behaved clients should interpret write failures as back pressure and should
 
 <pre class="src src-text">Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m0.002119678s, 4m59.99979986s, 2.319818ms
-Latencies     [mean, 50, 95, 99, max]  121.932968ms, 279.603µs, 65.095647ms, 3.288262722s, 30.36089555s
+Latencies     [mean, 50, 95, 99, max]  121.932968ms, 279.603&#181;s, 65.095647ms, 3.288262722s, 30.36089555s
 Bytes In      [total, mean]            68600, 0.05
 Bytes Out     [total, mean]            55282880, 36.86
 Success       [ratio]                  91.91%
 Status Codes  [code:count]             204:1378642  0:117928  500:3430
 
 Requests      [total, rate]            1500000, 5000.00
-Duration      [total, attack, wait]    5m0.000155613s, 4m59.999799964s, 355.649µs
-Latencies     [mean, 50, 95, 99, max]  296.312046ms, 274.635µs, 275.418937ms, 7.714693807s, 34.929590394s
+Duration      [total, attack, wait]    5m0.000155613s, 4m59.999799964s, 355.649&#181;s
+Latencies     [mean, 50, 95, 99, max]  296.312046ms, 274.635&#181;s, 275.418937ms, 7.714693807s, 34.929590394s
 Bytes In      [total, mean]            74700, 0.05
 Bytes Out     [total, mean]            50140880, 33.43
 Success       [ratio]                  83.32%
@@ -259,7 +259,7 @@ Status Codes  [code:count]             204:1249787  0:246478  500:3735
 
 Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m0.003303128s, 4m59.99979984s, 3.503288ms
-Latencies     [mean, 50, 95, 99, max]  486.213429ms, 273.166µs, 162.797527ms, 22.770177307s, 38.670751654s
+Latencies     [mean, 50, 95, 99, max]  486.213429ms, 273.166&#181;s, 162.797527ms, 22.770177307s, 38.670751654s
 Bytes In      [total, mean]            22240, 0.01
 Bytes Out     [total, mean]            49247240, 32.83
 Success       [ratio]                  82.00%
@@ -275,16 +275,16 @@ Status Codes  [code:count]             204:1230069  0:268819  500:1112
 <div class="org-src-container">
 
 <pre class="src src-text">Requests      [total, rate]            1500000, 5000.00
-Duration      [total, attack, wait]    5m0.000206298s, 4m59.999799885s, 406.413µs
-Latencies     [mean, 50, 95, 99, max]  105.561443ms, 280.679µs, 133.660391ms, 4.272511789s, 30.178221868s
+Duration      [total, attack, wait]    5m0.000206298s, 4m59.999799885s, 406.413&#181;s
+Latencies     [mean, 50, 95, 99, max]  105.561443ms, 280.679&#181;s, 133.660391ms, 4.272511789s, 30.178221868s
 Bytes In      [total, mean]            109940, 0.07
 Bytes Out     [total, mean]            54304240, 36.20
 Success       [ratio]                  90.14%
 Status Codes  [code:count]             500:5497  204:1352109  0:142394
 
 Requests      [total, rate]            1500000, 5000.00
-Duration      [total, attack, wait]    5m0.00063656s, 4m59.999799741s, 836.819µs
-Latencies     [mean, 50, 95, 99, max]  403.032632ms, 283.288µs, 132.281409ms, 17.146120226s, 34.961099552s
+Duration      [total, attack, wait]    5m0.00063656s, 4m59.999799741s, 836.819&#181;s
+Latencies     [mean, 50, 95, 99, max]  403.032632ms, 283.288&#181;s, 132.281409ms, 17.146120226s, 34.961099552s
 Bytes In      [total, mean]            6940, 0.00
 Bytes Out     [total, mean]            50793880, 33.86
 Success       [ratio]                  84.63%
@@ -292,7 +292,7 @@ Status Codes  [code:count]             204:1269500  0:230153  500:347
 
 Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m0.002669908s, 4m59.999799832s, 2.870076ms
-Latencies     [mean, 50, 95, 99, max]  189.887367ms, 285.122µs, 25.492475ms, 4.98658491s, 31.051832766s
+Latencies     [mean, 50, 95, 99, max]  189.887367ms, 285.122&#181;s, 25.492475ms, 4.98658491s, 31.051832766s
 Bytes In      [total, mean]            53880, 0.04
 Bytes Out     [total, mean]            56097080, 37.40
 Success       [ratio]                  93.32%
@@ -336,8 +336,8 @@ Status Codes  [code:count]             204:1399733  0:97573  500:2694
 <div class="org-src-container">
 
 <pre class="src src-text">Requests      [total, rate]            1500000, 5000.00
-Duration      [total, attack, wait]    5m0.000176914s, 4m59.999799839s, 377.075µs
-Latencies     [mean, 50, 95, 99, max]  157.978362ms, 295.813µs, 689.447448ms, 2.054181264s, 31.600573441s
+Duration      [total, attack, wait]    5m0.000176914s, 4m59.999799839s, 377.075&#181;s
+Latencies     [mean, 50, 95, 99, max]  157.978362ms, 295.813&#181;s, 689.447448ms, 2.054181264s, 31.600573441s
 Bytes In      [total, mean]            0, 0.00
 Bytes Out     [total, mean]            56050840, 37.37
 Success       [ratio]                  93.42%
@@ -345,7 +345,7 @@ Status Codes  [code:count]             204:1401271  0:98729
 
 Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m0.001996966s, 4m59.999799885s, 2.197081ms
-Latencies     [mean, 50, 95, 99, max]  125.248782ms, 282.792µs, 289.775591ms, 2.014326005s, 32.323906996s
+Latencies     [mean, 50, 95, 99, max]  125.248782ms, 282.792&#181;s, 289.775591ms, 2.014326005s, 32.323906996s
 Bytes In      [total, mean]            0, 0.00
 Bytes Out     [total, mean]            57304760, 38.20
 Success       [ratio]                  95.51%
@@ -353,7 +353,7 @@ Status Codes  [code:count]             0:67381  204:1432619
 
 Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m0.002641955s, 4m59.999799884s, 2.842071ms
-Latencies     [mean, 50, 95, 99, max]  263.99356ms, 269.23µs, 170.339463ms, 3.972251984s, 39.134441684s
+Latencies     [mean, 50, 95, 99, max]  263.99356ms, 269.23&#181;s, 170.339463ms, 3.972251984s, 39.134441684s
 Bytes In      [total, mean]            0, 0.00
 Bytes Out     [total, mean]            54417840, 36.28
 Success       [ratio]                  90.70%
@@ -382,7 +382,7 @@ Status Codes  [code:count]             204:1360446  0:139554
 
 <div class="org-src-container">
 
-<pre class="src src-bash">curl -XPOST "http://127.0.0.1:8086/query?q=create+database+test"
+<pre class="src src-bash">curl -XPOST <span style="color: #2d9574;">"http://127.0.0.1:8086/query?q=create+database+test"</span>
 </pre>
 </div>
 
@@ -398,15 +398,15 @@ influxdb 新版本中，对所有写入请求全部需要使用 POST。
 
 <pre class="src src-text">Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m0.0008003s, 4m59.9998s, 1.0003ms
-Latencies     [mean, 50, 95, 99, max]  7.919775ms, 233.53µs, 57.682496ms, 122.933138ms, 380.276957ms
+Latencies     [mean, 50, 95, 99, max]  7.919775ms, 233.53&#181;s, 57.682496ms, 122.933138ms, 380.276957ms
 Bytes In      [total, mean]            0, 0.00
 Bytes Out     [total, mean]            59998800, 40.00
 Success       [ratio]                  100.00%
 Status Codes  [code:count]             0:30  204:1499970
 
 Requests      [total, rate]            1500000, 5000.00
-Duration      [total, attack, wait]    5m0.000224284s, 4m59.999799907s, 424.377µs
-Latencies     [mean, 50, 95, 99, max]  8.782911ms, 227.512µs, 64.94512ms, 124.63881ms, 314.79162ms
+Duration      [total, attack, wait]    5m0.000224284s, 4m59.999799907s, 424.377&#181;s
+Latencies     [mean, 50, 95, 99, max]  8.782911ms, 227.512&#181;s, 64.94512ms, 124.63881ms, 314.79162ms
 Bytes In      [total, mean]            0, 0.00
 Bytes Out     [total, mean]            59996960, 40.00
 Success       [ratio]                  99.99%
@@ -414,7 +414,7 @@ Status Codes  [code:count]             204:1499924  0:76
 
 Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m0.054103088s, 4m59.999799917s, 54.303171ms
-Latencies     [mean, 50, 95, 99, max]  10.155739ms, 226.897µs, 72.689772ms, 149.892418ms, 393.597255ms
+Latencies     [mean, 50, 95, 99, max]  10.155739ms, 226.897&#181;s, 72.689772ms, 149.892418ms, 393.597255ms
 Bytes In      [total, mean]            0, 0.00
 Bytes Out     [total, mean]            59994320, 40.00
 Success       [ratio]                  99.99%
@@ -438,8 +438,8 @@ Status Codes  [code:count]             204:1499858  0:142
 <div class="org-src-container">
 
 <pre class="src src-text">Requests      [total, rate]            37297, 5000.13
-Duration      [total, attack, wait]    7.459466659s, 7.459199917s, 266.742µs
-Latencies     [mean, 50, 95, 99, max]  1.1144ms, 235.342µs, 7.536124ms, 19.233395ms, 43.384439ms
+Duration      [total, attack, wait]    7.459466659s, 7.459199917s, 266.742&#181;s
+Latencies     [mean, 50, 95, 99, max]  1.1144ms, 235.342&#181;s, 7.536124ms, 19.233395ms, 43.384439ms
 Bytes In      [total, mean]            0, 0.00
 Bytes Out     [total, mean]            1491880, 40.00
 Success       [ratio]                  100.00%
