@@ -57,18 +57,11 @@ Write the Code. Save the World.
 </blockquote>
 
 <p>
-这几年杂七杂八的东西学的太多了，几乎每一门语言都有自身版本和三方库版本的问题，比如java里面有
-maven这样的构建工具，来控制三方库的版本。更有甚者，如ruby的rvm，node的nvm，Python的virtualenv，
-go的gvm，groovy的GVM，haskell的stack，haskell的cabal。这些工具基本都肩负着三个使命，一是控制
-语言的版本，二是控制三方库的set，三是设置环境变量。于是每次到某个工程下面，就要执行 <code>rvm use xxx</code> ， 
-<code>nvm use xxx</code> ，这些命令来切换环境。然后偶尔一次忘记，就会各种神奇的错误。
+这几年杂七杂八的东西学的太多了，几乎每一门语言都有自身版本和三方库版本的问题，比如java里面有maven这样的构建工具，来控制三方库的版本。更有甚者，如ruby的rvm，node的nvm，Python的virtualenv，go的gvm，groovy的GVM，haskell的stack，haskell的cabal。这些工具基本都肩负着三个使命，一是控制语言的版本，二是控制三方库的set，三是设置环境变量。于是每次到某个工程下面，就要执行 <code>rvm use xxx</code> ， <code>nvm use xxx</code> ，这些命令来切换环境。然后偶尔一次忘记，就会各种神奇的错误。
 </p>
 
 <p>
-然而这几天，正好在测试同一个项目，用不同版本的语言编译的效果，结果在不同的环境切换下，竟然
-切晕了。虽然用 <code>tmux</code> 的分屏，多窗口等方法，勉强能凑活，但是还是偶尔几次忘记自己当前的环境。
-所以我想有没有能够，在不同目录下自动切换环境变量的工具。于是用google搜索"directory environment"，
-还真被我找到了。
+然而这几天，正好在测试同一个项目，用不同版本的语言编译的效果，结果在不同的环境切换下，竟然切晕了。虽然用 <b>tmux</b> 的分屏，多窗口等方法，勉强能凑活，但是还是偶尔几次忘记自己当前的环境。所以我想有没有能够，在不同目录下自动切换环境变量的工具。于是用google搜索 <b>directory environment</b> ，还真被我找到了。
 </p>
 
 <div id="outline-container-orgheadline1" class="outline-2">
@@ -182,10 +175,7 @@ nope
 </div>
 
 <p>
-在想要自动切换环境的目录下面新建一个 <code>.envrc</code> 文件，文件的内容就是设置环境的命令。
-但是要主要的是 <code>.envrc</code> 只支持bash语法，因为这个文件最终也是在bash中执行，然后再
-设置到对应的shell中的。另外值得一提的是 <code>~/.direnvrc</code> 中可以写入全局配置，比如加
-一些函数进去。direnv还提供了一个stdlib，通过 <code>direnv stdlib</code> 可以查看。
+在想要自动切换环境的目录下面新建一个 <code>.envrc</code> 文件，文件的内容就是设置环境的命令。但是要主要的是 <code>.envrc</code> 只支持 <b>bash</b> 语法，因为这个文件最终也是在bash中执行，然后再设置到对应的shell中的。另外值得一提的是 <code>~/.direnvrc</code> 中可以写入全局配置，比如加一些函数进去。direnv还提供了一个 <b>stdlib</b> ，通过 <code>direnv stdlib</code> 可以查看。
 </p>
 </div>
 </div>
@@ -205,10 +195,7 @@ nope
 </div>
 
 <p>
-然后在首次进入这个目录的时候，就会在 <code>.direnv</code> 这个目录下建立，整套Python的virtualenv。
-然而PyCharm似乎不是很满意。PyCharm能够自动识别工程根目录下得 <code>venv</code> 目录。但是现在用direnv之后
-virtualenv的目录改变了。解决方案有很多。比如不用direnv的layout python，用virtualenv生成的
-active脚本，在 <code>.envrc</code> 中添加内容：
+然后在首次进入这个目录的时候，就会在 <code>.direnv</code> 这个目录下建立，整套Python的virtualenv。然而PyCharm似乎不是很满意。PyCharm能够自动识别工程根目录下的 <code>venv</code> 目录。但是现在用direnv之后virtualenv的目录改变了。解决方案有很多。比如不用direnv的 <code>layout python</code> ，用virtualenv生成的active脚本，在 <code>.envrc</code> 中添加内容：
 </p>
 
 <div class="org-src-container">
@@ -218,7 +205,7 @@ active脚本，在 <code>.envrc</code> 中添加内容：
 </div>
 
 <p>
-或者修改 <code>direnv stdlib</code> 中的 <code>python_layout</code> 方法：
+或者修改 <b>direnv stdlib</b> 中的 <code>python_layout</code> 方法：
 </p>
 
 <div class="org-src-container">
@@ -253,7 +240,7 @@ active脚本，在 <code>.envrc</code> 中添加内容：
     <div>
       <div class="post-meta">
         <span title="post date" class="post-info">2016-08-14</span>
-        <span title="last modification date" class="post-info">2016-08-28</span>
+        <span title="last modification date" class="post-info">2016-09-01</span>
         <span title="tags" class="post-info"><a href="/tags/go/">go</a></span>
         <span title="author" class="post-info">Shane Xu</span>
       </div>

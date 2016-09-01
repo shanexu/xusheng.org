@@ -1,3 +1,18 @@
+p code:before, code:after {
+  content: "=";
+  color: #ccc;
+}
+
+p b:before, b:after {
+  content: "*";
+  color: #ccc;
+}
+
+p del:before, del:after {
+  content: "+";
+  color: #ccc;
+}
+
 .nav ul {
   padding-left: 0;
   list-style: none;
