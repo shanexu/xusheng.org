@@ -8,7 +8,8 @@
     <meta name="keywords" content="influxdb" />
     <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
     <link rel="stylesheet" href="/media/css/extra.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css"/>
+    <link rel="stylesheet" href="/media/css/code-dark.css" type="text/css">
+    <!-- <link rel="stylesheet" href="/media/css/code-light.css" type="text/css"> -->
   </head>
 
   <body>
@@ -79,10 +80,10 @@ influxdb 的最新稳定版 v0.13 是用 go1.6.2 版本编译的。而从 v0.10 
 <div class="org-src-container">
 
 <pre class="src src-bash">rm -rf ~/.influxdb
-<span style="color: #715ab1;">GODEBUG</span>=<span style="color: #715ab1;">gctrace</span>=<span style="color: #4e3163;">1</span> $<span style="color: #715ab1;">GOPATH</span>/bin/influxd -config influx.config <span style="color: #4e3163;">2</span>&gt; gc.log <span style="color: #4e3163;">1</span> &gt; gc.log &amp;
-sleep <span style="color: #4e3163;">3</span>
+<span style="color: #7590db;">GODEBUG</span>=<span style="color: #7590db;">gctrace</span>=<span style="color: #a45bad;">1</span> $<span style="color: #7590db;">GOPATH</span>/bin/influxd -config influx.config <span style="color: #a45bad;">2</span>&gt; gc.log <span style="color: #a45bad;">1</span> &gt; gc.log &amp;
+sleep <span style="color: #a45bad;">3</span>
 curl <span style="color: #2d9574;">"http://127.0.0.1:8086/query?q=create+database+test"</span> 
-vegeta attack -rate <span style="color: #4e3163;">5000</span> -targets targets.txt -duration <span style="color: #4e3163;">1m</span> &gt; out.dat 
+vegeta attack -rate <span style="color: #a45bad;">5000</span> -targets targets.txt -duration <span style="color: #a45bad;">1m</span> &gt; out.dat 
 vegeta report -reporter plot &gt; report.html &lt; out.dat
 vegeta report &lt; out.dat &gt; report.txt
 pkill influxd
@@ -501,7 +502,6 @@ influxdb v1.0 在 5 分钟压力测试时，成功率几乎达到 100%，最长�
       </section>
       <script src="//code.jquery.com/jquery-latest.min.js"></script>
       <script src="/media/js/prettify.js"></script>
-      <script src="http://xusheng.org/cdn/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="/media/js/main.js"></script>
         <script type="text/javascript">
          var _gaq = _gaq || [];

@@ -1,0 +1,37 @@
+.linenr {
+  color: #44505c;
+  background-color: #212026;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  margin-left: -1em;
+}
+
+.linenr::before {
+  content: ' ';
+}
+
+.linenr::after {
+  content: ' ';
+  background-color: #292b2e;
+}
+
+.linenr:first-child::after {
+  padding-top: 0.3em;
+}
+
+.linenr:first-child {
+  padding-top: 0.3em;
+}
+
+pre.src {
+  background-color: #292b2e;
+  font-family: "Source Code Pro", "Droid Sans Mono", "Monaco", "menlo", "Ubuntu Mono", "DejaVu Sans Mono", consolas, courier, monospace;
+  box-shadow: none;
+  border: none;
+  color: #b2b2b2;
+  padding: 0.3em 0 0.3em 1em;
+  font-size: 95%;
+  overflow: auto;
+}

@@ -8,7 +8,8 @@
     <meta name="keywords" content="influxdb, go" />
     <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
     <link rel="stylesheet" href="/media/css/extra.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css"/>
+    <link rel="stylesheet" href="/media/css/code-dark.css" type="text/css">
+    <!-- <link rel="stylesheet" href="/media/css/code-light.css" type="text/css"> -->
   </head>
 
   <body>
@@ -125,14 +126,14 @@ Status Codes  [code:count]             204:180000
 </p>
 <div class="org-src-container">
 
-<pre class="src src-go"><span class="linenr">1: </span><span style="color: #3a81c3; font-weight: bold;">func</span> <span style="color: #3a81c3;">(</span>h *<span style="color: #ba2f59; font-weight: bold;">HTTP</span><span style="color: #3a81c3;">)</span> <span style="color: #6c3163; font-weight: bold;">ServeHTTP</span><span style="color: #3a81c3;">(</span>w <span style="color: #ba2f59; font-weight: bold;">http.ResponseWriter</span>, r *<span style="color: #ba2f59; font-weight: bold;">http.Request</span><span style="color: #3a81c3;">)</span> <span style="color: #3a81c3;">{</span>
-<span class="linenr">2: </span>  start := time.<span style="color: #6c3163; font-weight: bold;">Now</span><span style="color: #6c3163;">()</span>
+<pre class="src src-go"><span class="linenr">1: </span><span style="color: #4f97d7; font-weight: bold;">func</span> <span style="color: #4f97d7;">(</span>h *<span style="color: #ce537a; font-weight: bold;">HTTP</span><span style="color: #4f97d7;">)</span> <span style="color: #bc6ec5; font-weight: bold;">ServeHTTP</span><span style="color: #4f97d7;">(</span>w <span style="color: #ce537a; font-weight: bold;">http.ResponseWriter</span>, r *<span style="color: #ce537a; font-weight: bold;">http.Request</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+<span class="linenr">2: </span>  start := time.<span style="color: #bc6ec5; font-weight: bold;">Now</span><span style="color: #bc6ec5;">()</span>
 <span class="linenr">3: </span>
-<span class="linenr">4: </span>  <span style="color: #3a81c3; font-weight: bold;">if</span> r.URL.Path == <span style="color: #2d9574;">"/ping"</span> &amp;&amp; <span style="color: #6c3163;">(</span>r.Method == <span style="color: #2d9574;">"GET"</span> || r.Method == <span style="color: #2d9574;">"HEAD"</span><span style="color: #6c3163;">)</span> <span style="color: #6c3163;">{</span>
-<span class="linenr">5: </span>    w.<span style="color: #6c3163; font-weight: bold;">Header</span><span style="color: #2d9574;">()</span>.<span style="color: #6c3163; font-weight: bold;">Add</span><span style="color: #2d9574;">(</span><span style="color: #2d9574;">"X-InfluxDB-Version"</span>, <span style="color: #2d9574;">"relay"</span><span style="color: #2d9574;">)</span>
-<span class="linenr">6: </span>    w.<span style="color: #6c3163; font-weight: bold;">WriteHeader</span><span style="color: #2d9574;">(</span>http.StatusNoContent<span style="color: #2d9574;">)</span>
-<span class="linenr">7: </span>    <span style="color: #3a81c3; font-weight: bold;">return</span>
-<span class="linenr">8: </span>  <span style="color: #6c3163;">}</span>
+<span class="linenr">4: </span>  <span style="color: #4f97d7; font-weight: bold;">if</span> r.URL.Path == <span style="color: #2d9574;">"/ping"</span> &amp;&amp; <span style="color: #bc6ec5;">(</span>r.Method == <span style="color: #2d9574;">"GET"</span> || r.Method == <span style="color: #2d9574;">"HEAD"</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+<span class="linenr">5: </span>    w.<span style="color: #bc6ec5; font-weight: bold;">Header</span><span style="color: #2d9574;">()</span>.<span style="color: #bc6ec5; font-weight: bold;">Add</span><span style="color: #2d9574;">(</span><span style="color: #2d9574;">"X-InfluxDB-Version"</span>, <span style="color: #2d9574;">"relay"</span><span style="color: #2d9574;">)</span>
+<span class="linenr">6: </span>    w.<span style="color: #bc6ec5; font-weight: bold;">WriteHeader</span><span style="color: #2d9574;">(</span>http.StatusNoContent<span style="color: #2d9574;">)</span>
+<span class="linenr">7: </span>    <span style="color: #4f97d7; font-weight: bold;">return</span>
+<span class="linenr">8: </span>  <span style="color: #bc6ec5;">}</span>
 </pre>
 </div>
 <p>
@@ -158,33 +159,33 @@ Post http://127.0.0.1:9096/write?db=test: read tcp 127.0.0.1:59806-&gt;127.0.0.1
 </p>
 <div class="org-src-container">
 
-<pre class="src src-go"><span class="linenr"> 1: </span><span style="color: #3a81c3; font-weight: bold;">var</span> responses = <span style="color: #3a81c3;">make</span><span style="color: #3a81c3;">(</span><span style="color: #3a81c3; font-weight: bold;">chan</span> *<span style="color: #ba2f59; font-weight: bold;">responseData</span>, <span style="color: #3a81c3;">len</span><span style="color: #6c3163;">(</span>h.backends<span style="color: #6c3163;">)</span><span style="color: #3a81c3;">)</span>
+<pre class="src src-go"><span class="linenr"> 1: </span><span style="color: #4f97d7; font-weight: bold;">var</span> responses = <span style="color: #4f97d7;">make</span><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">chan</span> *<span style="color: #ce537a; font-weight: bold;">responseData</span>, <span style="color: #4f97d7;">len</span><span style="color: #bc6ec5;">(</span>h.backends<span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
 <span class="linenr"> 2: </span>
-<span class="linenr"> 3: </span><span style="color: #3a81c3; font-weight: bold;">for</span> _, b := <span style="color: #3a81c3; font-weight: bold;">range</span> h.backends <span style="color: #3a81c3;">{</span>
+<span class="linenr"> 3: </span><span style="color: #4f97d7; font-weight: bold;">for</span> _, b := <span style="color: #4f97d7; font-weight: bold;">range</span> h.backends <span style="color: #4f97d7;">{</span>
 <span class="linenr"> 4: </span>  b := b
-<span class="linenr"> 5: </span>  <span style="color: #3a81c3; font-weight: bold;">go</span> <span style="color: #3a81c3; font-weight: bold;">func</span><span style="color: #6c3163;">()</span> <span style="color: #6c3163;">{</span>
-<span class="linenr"> 6: </span>    <span style="color: #3a81c3; font-weight: bold;">defer</span> wg.<span style="color: #6c3163; font-weight: bold;">Done</span><span style="color: #2d9574;">()</span>
-<span class="linenr"> 7: </span>    resp, err := b.<span style="color: #6c3163; font-weight: bold;">post</span><span style="color: #2d9574;">(</span>outBytes, query, authHeader<span style="color: #2d9574;">)</span>
-<span class="linenr"> 8: </span>    <span style="color: #3a81c3; font-weight: bold;">if</span> err != <span style="color: #4e3163;">nil</span> <span style="color: #2d9574;">{</span>
-<span class="linenr"> 9: </span>      log.<span style="color: #6c3163; font-weight: bold;">Printf</span><span style="color: #67b11d;">(</span><span style="color: #2d9574;">"Problem posting to relay %q backend %q: %v"</span>, h.<span style="color: #6c3163; font-weight: bold;">Name</span><span style="color: #b1951d;">()</span>, b.name, err<span style="color: #67b11d;">)</span>
-<span class="linenr">10: </span>    <span style="color: #2d9574;">}</span> <span style="color: #3a81c3; font-weight: bold;">else</span> <span style="color: #2d9574;">{</span>
-<span class="linenr">11: </span>      <span style="color: #3a81c3; font-weight: bold;">if</span> resp.StatusCode/<span style="color: #4e3163;">100</span> == <span style="color: #4e3163;">5</span> <span style="color: #67b11d;">{</span>
-<span class="linenr">12: </span>        log.<span style="color: #6c3163; font-weight: bold;">Printf</span><span style="color: #b1951d;">(</span><span style="color: #2d9574;">"5xx response for relay %q backend %q: %v"</span>, h.<span style="color: #6c3163; font-weight: bold;">Name</span><span style="color: #3a81c3;">()</span>, b.name, resp.StatusCode<span style="color: #b1951d;">)</span>
+<span class="linenr"> 5: </span>  <span style="color: #4f97d7; font-weight: bold;">go</span> <span style="color: #4f97d7; font-weight: bold;">func</span><span style="color: #bc6ec5;">()</span> <span style="color: #bc6ec5;">{</span>
+<span class="linenr"> 6: </span>    <span style="color: #4f97d7; font-weight: bold;">defer</span> wg.<span style="color: #bc6ec5; font-weight: bold;">Done</span><span style="color: #2d9574;">()</span>
+<span class="linenr"> 7: </span>    resp, err := b.<span style="color: #bc6ec5; font-weight: bold;">post</span><span style="color: #2d9574;">(</span>outBytes, query, authHeader<span style="color: #2d9574;">)</span>
+<span class="linenr"> 8: </span>    <span style="color: #4f97d7; font-weight: bold;">if</span> err != <span style="color: #a45bad;">nil</span> <span style="color: #2d9574;">{</span>
+<span class="linenr"> 9: </span>      log.<span style="color: #bc6ec5; font-weight: bold;">Printf</span><span style="color: #67b11d;">(</span><span style="color: #2d9574;">"Problem posting to relay %q backend %q: %v"</span>, h.<span style="color: #bc6ec5; font-weight: bold;">Name</span><span style="color: #b1951d;">()</span>, b.name, err<span style="color: #67b11d;">)</span>
+<span class="linenr">10: </span>    <span style="color: #2d9574;">}</span> <span style="color: #4f97d7; font-weight: bold;">else</span> <span style="color: #2d9574;">{</span>
+<span class="linenr">11: </span>      <span style="color: #4f97d7; font-weight: bold;">if</span> resp.StatusCode/<span style="color: #a45bad;">100</span> == <span style="color: #a45bad;">5</span> <span style="color: #67b11d;">{</span>
+<span class="linenr">12: </span>        log.<span style="color: #bc6ec5; font-weight: bold;">Printf</span><span style="color: #b1951d;">(</span><span style="color: #2d9574;">"5xx response for relay %q backend %q: %v"</span>, h.<span style="color: #bc6ec5; font-weight: bold;">Name</span><span style="color: #4f97d7;">()</span>, b.name, resp.StatusCode<span style="color: #b1951d;">)</span>
 <span class="linenr">13: </span>      <span style="color: #67b11d;">}</span>
 <span class="linenr">14: </span>      responses &lt;- resp
 <span class="linenr">15: </span>    <span style="color: #2d9574;">}</span>
-<span class="linenr">16: </span>  <span style="color: #6c3163;">}()</span>
-<span class="linenr">17: </span><span style="color: #3a81c3;">}</span>
+<span class="linenr">16: </span>  <span style="color: #bc6ec5;">}()</span>
+<span class="linenr">17: </span><span style="color: #4f97d7;">}</span>
 <span class="linenr">18: </span>
-<span class="linenr">19: </span><span style="color: #3a81c3; font-weight: bold;">go</span> <span style="color: #3a81c3; font-weight: bold;">func</span><span style="color: #3a81c3;">()</span> <span style="color: #3a81c3;">{</span>
-<span class="linenr">20: </span>  wg.<span style="color: #6c3163; font-weight: bold;">Wait</span><span style="color: #6c3163;">()</span>
-<span class="linenr">21: </span>  <span style="color: #3a81c3;">close</span><span style="color: #6c3163;">(</span>responses<span style="color: #6c3163;">)</span>
-<span class="linenr">22: </span>  <span style="color: #6c3163; font-weight: bold;">putBuf</span><span style="color: #6c3163;">(</span>outBuf<span style="color: #6c3163;">)</span>
-<span class="linenr">23: </span><span style="color: #3a81c3;">}()</span>
+<span class="linenr">19: </span><span style="color: #4f97d7; font-weight: bold;">go</span> <span style="color: #4f97d7; font-weight: bold;">func</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7;">{</span>
+<span class="linenr">20: </span>  wg.<span style="color: #bc6ec5; font-weight: bold;">Wait</span><span style="color: #bc6ec5;">()</span>
+<span class="linenr">21: </span>  <span style="color: #4f97d7;">close</span><span style="color: #bc6ec5;">(</span>responses<span style="color: #bc6ec5;">)</span>
+<span class="linenr">22: </span>  <span style="color: #bc6ec5; font-weight: bold;">putBuf</span><span style="color: #bc6ec5;">(</span>outBuf<span style="color: #bc6ec5;">)</span>
+<span class="linenr">23: </span><span style="color: #4f97d7;">}()</span>
 <span class="linenr">24: </span>
-<span class="linenr">25: </span><span style="color: #3a81c3; font-weight: bold;">var</span> errResponse *responseData
+<span class="linenr">25: </span><span style="color: #4f97d7; font-weight: bold;">var</span> errResponse *responseData
 <span class="linenr">26: </span>
-<span class="linenr">27: </span><span style="color: #3a81c3; font-weight: bold;">for</span> resp := <span style="color: #3a81c3; font-weight: bold;">range</span> responses <span style="color: #3a81c3;">{</span>
+<span class="linenr">27: </span><span style="color: #4f97d7; font-weight: bold;">for</span> resp := <span style="color: #4f97d7; font-weight: bold;">range</span> responses <span style="color: #4f97d7;">{</span>
 </pre>
 </div>
 <p>
@@ -196,24 +197,24 @@ backends卡壳了，就要等待go的http client timeout了，这个timeout默�
 <div class="org-src-container">
 
 <pre class="src src-go"><span class="linenr"> 1: </span>interval := r.initialInterval
-<span class="linenr"> 2: </span><span style="color: #3a81c3; font-weight: bold;">for</span> <span style="color: #3a81c3;">{</span>
-<span class="linenr"> 3: </span>  resp, err := r.p.<span style="color: #6c3163; font-weight: bold;">post</span><span style="color: #6c3163;">(</span>buf.<span style="color: #6c3163; font-weight: bold;">Bytes</span><span style="color: #2d9574;">()</span>, batch.query, batch.auth<span style="color: #6c3163;">)</span>
-<span class="linenr"> 4: </span>  <span style="color: #3a81c3; font-weight: bold;">if</span> err == <span style="color: #4e3163;">nil</span> &amp;&amp; resp.StatusCode/<span style="color: #4e3163;">100</span> != <span style="color: #4e3163;">5</span> <span style="color: #6c3163;">{</span>
+<span class="linenr"> 2: </span><span style="color: #4f97d7; font-weight: bold;">for</span> <span style="color: #4f97d7;">{</span>
+<span class="linenr"> 3: </span>  resp, err := r.p.<span style="color: #bc6ec5; font-weight: bold;">post</span><span style="color: #bc6ec5;">(</span>buf.<span style="color: #bc6ec5; font-weight: bold;">Bytes</span><span style="color: #2d9574;">()</span>, batch.query, batch.auth<span style="color: #bc6ec5;">)</span>
+<span class="linenr"> 4: </span>  <span style="color: #4f97d7; font-weight: bold;">if</span> err == <span style="color: #a45bad;">nil</span> &amp;&amp; resp.StatusCode/<span style="color: #a45bad;">100</span> != <span style="color: #a45bad;">5</span> <span style="color: #bc6ec5;">{</span>
 <span class="linenr"> 5: </span>    batch.resp = resp
-<span class="linenr"> 6: </span>    atomic.<span style="color: #6c3163; font-weight: bold;">StoreInt32</span><span style="color: #2d9574;">(</span>&amp;r.buffering, <span style="color: #4e3163;">0</span><span style="color: #2d9574;">)</span>
-<span class="linenr"> 7: </span>    batch.wg.<span style="color: #6c3163; font-weight: bold;">Done</span><span style="color: #2d9574;">()</span>
-<span class="linenr"> 8: </span>    <span style="color: #3a81c3; font-weight: bold;">break</span>
-<span class="linenr"> 9: </span>  <span style="color: #6c3163;">}</span>
+<span class="linenr"> 6: </span>    atomic.<span style="color: #bc6ec5; font-weight: bold;">StoreInt32</span><span style="color: #2d9574;">(</span>&amp;r.buffering, <span style="color: #a45bad;">0</span><span style="color: #2d9574;">)</span>
+<span class="linenr"> 7: </span>    batch.wg.<span style="color: #bc6ec5; font-weight: bold;">Done</span><span style="color: #2d9574;">()</span>
+<span class="linenr"> 8: </span>    <span style="color: #4f97d7; font-weight: bold;">break</span>
+<span class="linenr"> 9: </span>  <span style="color: #bc6ec5;">}</span>
 <span class="linenr">10: </span>
-<span class="linenr">11: </span>  <span style="color: #3a81c3; font-weight: bold;">if</span> interval != r.maxInterval <span style="color: #6c3163;">{</span>
+<span class="linenr">11: </span>  <span style="color: #4f97d7; font-weight: bold;">if</span> interval != r.maxInterval <span style="color: #bc6ec5;">{</span>
 <span class="linenr">12: </span>    interval *= r.multiplier
-<span class="linenr">13: </span>    <span style="color: #3a81c3; font-weight: bold;">if</span> interval &gt; r.maxInterval <span style="color: #2d9574;">{</span>
+<span class="linenr">13: </span>    <span style="color: #4f97d7; font-weight: bold;">if</span> interval &gt; r.maxInterval <span style="color: #2d9574;">{</span>
 <span class="linenr">14: </span>      interval = r.maxInterval
 <span class="linenr">15: </span>    <span style="color: #2d9574;">}</span>
-<span class="linenr">16: </span>  <span style="color: #6c3163;">}</span>
+<span class="linenr">16: </span>  <span style="color: #bc6ec5;">}</span>
 <span class="linenr">17: </span>
-<span class="linenr">18: </span>  time.<span style="color: #6c3163; font-weight: bold;">Sleep</span><span style="color: #6c3163;">(</span>interval<span style="color: #6c3163;">)</span>
-<span class="linenr">19: </span><span style="color: #3a81c3;">}</span>
+<span class="linenr">18: </span>  time.<span style="color: #bc6ec5; font-weight: bold;">Sleep</span><span style="color: #bc6ec5;">(</span>interval<span style="color: #bc6ec5;">)</span>
+<span class="linenr">19: </span><span style="color: #4f97d7;">}</span>
 </pre>
 </div>
 <p>
@@ -224,9 +225,9 @@ backends卡壳了，就要等待go的http client timeout了，这个timeout默�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-go"><span class="linenr">1: </span><span style="color: #3a81c3;">(</span>&amp;<span style="color: #ba2f59; font-weight: bold;">responseData</span><span style="color: #6c3163;">{</span>
-<span class="linenr">2: </span>  <span style="color: #4e3163;">StatusCode</span>: <span style="color: #4e3163;">204</span>,
-<span class="linenr">3: </span><span style="color: #6c3163;">}</span><span style="color: #3a81c3;">)</span>.<span style="color: #6c3163; font-weight: bold;">Write</span><span style="color: #3a81c3;">(</span>w<span style="color: #3a81c3;">)</span>
+<pre class="src src-go"><span class="linenr">1: </span><span style="color: #4f97d7;">(</span>&amp;<span style="color: #ce537a; font-weight: bold;">responseData</span><span style="color: #bc6ec5;">{</span>
+<span class="linenr">2: </span>  <span style="color: #a45bad;">StatusCode</span>: <span style="color: #a45bad;">204</span>,
+<span class="linenr">3: </span><span style="color: #bc6ec5;">}</span><span style="color: #4f97d7;">)</span>.<span style="color: #bc6ec5; font-weight: bold;">Write</span><span style="color: #4f97d7;">(</span>w<span style="color: #4f97d7;">)</span>
 </pre>
 </div>
 <p>
@@ -265,25 +266,25 @@ Post http://127.0.0.1:9096/write?db=test: read tcp 127.0.0.1:57415-&gt;127.0.0.1
 
 <div class="org-src-container">
 
-<pre class="src src-go"><span class="linenr"> 1: </span><span style="color: #3a81c3; font-weight: bold;">func</span> <span style="color: #3a81c3;">(</span>r *<span style="color: #ba2f59; font-weight: bold;">retryBuffer</span><span style="color: #3a81c3;">)</span> <span style="color: #6c3163; font-weight: bold;">post</span><span style="color: #3a81c3;">(</span>buf <span style="color: #6c3163;">[]</span><span style="color: #ba2f59; font-weight: bold;">byte</span>, query <span style="color: #ba2f59; font-weight: bold;">string</span>, auth <span style="color: #ba2f59; font-weight: bold;">string</span><span style="color: #3a81c3;">)</span> <span style="color: #3a81c3;">(</span>*<span style="color: #ba2f59; font-weight: bold;">responseData</span>, <span style="color: #ba2f59; font-weight: bold;">error</span><span style="color: #3a81c3;">)</span> <span style="color: #3a81c3;">{</span>
-<span class="linenr"> 2: </span>  <span style="color: #3a81c3; font-weight: bold;">if</span> atomic.<span style="color: #6c3163; font-weight: bold;">LoadInt32</span><span style="color: #6c3163;">(</span>&amp;r.buffering<span style="color: #6c3163;">)</span> == <span style="color: #4e3163;">0</span> <span style="color: #6c3163;">{</span>
-<span class="linenr"> 3: </span>    resp, err := r.p.<span style="color: #6c3163; font-weight: bold;">post</span><span style="color: #2d9574;">(</span>buf, query, auth<span style="color: #2d9574;">)</span>
-<span class="linenr"> 4: </span>    <span style="color: #2aa1ae; background-color: #ecf3ec;">// </span><span style="color: #cc9393;">TODO</span><span style="color: #2aa1ae; background-color: #ecf3ec;"> A 5xx caused by the point data could cause the relay to buffer forever</span>
-<span class="linenr"> 5: </span>    <span style="color: #3a81c3; font-weight: bold;">if</span> err == <span style="color: #4e3163;">nil</span> &amp;&amp; resp.StatusCode/<span style="color: #4e3163;">100</span> != <span style="color: #4e3163;">5</span> <span style="color: #2d9574;">{</span>
-<span class="linenr"> 6: </span>      <span style="color: #3a81c3; font-weight: bold;">return</span> resp, err
+<pre class="src src-go"><span class="linenr"> 1: </span><span style="color: #4f97d7; font-weight: bold;">func</span> <span style="color: #4f97d7;">(</span>r *<span style="color: #ce537a; font-weight: bold;">retryBuffer</span><span style="color: #4f97d7;">)</span> <span style="color: #bc6ec5; font-weight: bold;">post</span><span style="color: #4f97d7;">(</span>buf <span style="color: #bc6ec5;">[]</span><span style="color: #ce537a; font-weight: bold;">byte</span>, query <span style="color: #ce537a; font-weight: bold;">string</span>, auth <span style="color: #ce537a; font-weight: bold;">string</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">(</span>*<span style="color: #ce537a; font-weight: bold;">responseData</span>, <span style="color: #ce537a; font-weight: bold;">error</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+<span class="linenr"> 2: </span>  <span style="color: #4f97d7; font-weight: bold;">if</span> atomic.<span style="color: #bc6ec5; font-weight: bold;">LoadInt32</span><span style="color: #bc6ec5;">(</span>&amp;r.buffering<span style="color: #bc6ec5;">)</span> == <span style="color: #a45bad;">0</span> <span style="color: #bc6ec5;">{</span>
+<span class="linenr"> 3: </span>    resp, err := r.p.<span style="color: #bc6ec5; font-weight: bold;">post</span><span style="color: #2d9574;">(</span>buf, query, auth<span style="color: #2d9574;">)</span>
+<span class="linenr"> 4: </span>    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #cc9393;">TODO</span><span style="color: #2aa1ae; background-color: #292e34;"> A 5xx caused by the point data could cause the relay to buffer forever</span>
+<span class="linenr"> 5: </span>    <span style="color: #4f97d7; font-weight: bold;">if</span> err == <span style="color: #a45bad;">nil</span> &amp;&amp; resp.StatusCode/<span style="color: #a45bad;">100</span> != <span style="color: #a45bad;">5</span> <span style="color: #2d9574;">{</span>
+<span class="linenr"> 6: </span>      <span style="color: #4f97d7; font-weight: bold;">return</span> resp, err
 <span class="linenr"> 7: </span>    <span style="color: #2d9574;">}</span>
-<span class="linenr"> 8: </span>    atomic.<span style="color: #6c3163; font-weight: bold;">StoreInt32</span><span style="color: #2d9574;">(</span>&amp;r.buffering, <span style="color: #4e3163;">1</span><span style="color: #2d9574;">)</span>
-<span class="linenr"> 9: </span>  <span style="color: #6c3163;">}</span>
+<span class="linenr"> 8: </span>    atomic.<span style="color: #bc6ec5; font-weight: bold;">StoreInt32</span><span style="color: #2d9574;">(</span>&amp;r.buffering, <span style="color: #a45bad;">1</span><span style="color: #2d9574;">)</span>
+<span class="linenr"> 9: </span>  <span style="color: #bc6ec5;">}</span>
 <span class="linenr">10: </span>
-<span class="linenr">11: </span>  <span style="color: #2aa1ae; background-color: #ecf3ec;">// </span><span style="color: #2aa1ae; background-color: #ecf3ec;">already buffering or failed request</span>
-<span class="linenr">12: </span>  batch, err := r.list.<span style="color: #6c3163; font-weight: bold;">add</span><span style="color: #6c3163;">(</span>buf, query, auth<span style="color: #6c3163;">)</span>
-<span class="linenr">13: </span>  <span style="color: #3a81c3; font-weight: bold;">if</span> err != <span style="color: #4e3163;">nil</span> <span style="color: #6c3163;">{</span>
-<span class="linenr">14: </span>    <span style="color: #3a81c3; font-weight: bold;">return</span> <span style="color: #4e3163;">nil</span>, err
-<span class="linenr">15: </span>  <span style="color: #6c3163;">}</span>
+<span class="linenr">11: </span>  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">already buffering or failed request</span>
+<span class="linenr">12: </span>  batch, err := r.list.<span style="color: #bc6ec5; font-weight: bold;">add</span><span style="color: #bc6ec5;">(</span>buf, query, auth<span style="color: #bc6ec5;">)</span>
+<span class="linenr">13: </span>  <span style="color: #4f97d7; font-weight: bold;">if</span> err != <span style="color: #a45bad;">nil</span> <span style="color: #bc6ec5;">{</span>
+<span class="linenr">14: </span>    <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #a45bad;">nil</span>, err
+<span class="linenr">15: </span>  <span style="color: #bc6ec5;">}</span>
 <span class="linenr">16: </span>
-<span class="linenr">17: </span>  batch.wg.<span style="color: #6c3163; font-weight: bold;">Wait</span><span style="color: #6c3163;">()</span>
-<span class="linenr">18: </span>  <span style="color: #3a81c3; font-weight: bold;">return</span> batch.resp, <span style="color: #4e3163;">nil</span>
-<span class="linenr">19: </span><span style="color: #3a81c3;">}</span>
+<span class="linenr">17: </span>  batch.wg.<span style="color: #bc6ec5; font-weight: bold;">Wait</span><span style="color: #bc6ec5;">()</span>
+<span class="linenr">18: </span>  <span style="color: #4f97d7; font-weight: bold;">return</span> batch.resp, <span style="color: #a45bad;">nil</span>
+<span class="linenr">19: </span><span style="color: #4f97d7;">}</span>
 </pre>
 </div>
 
@@ -295,15 +296,15 @@ Post http://127.0.0.1:9096/write?db=test: read tcp 127.0.0.1:57415-&gt;127.0.0.1
 
 <div class="org-src-container">
 
-<pre class="src src-go"><span class="linenr">1: </span><span style="color: #3a81c3; font-weight: bold;">func</span> <span style="color: #3a81c3;">(</span>r *<span style="color: #ba2f59; font-weight: bold;">retryBuffer</span><span style="color: #3a81c3;">)</span> <span style="color: #6c3163; font-weight: bold;">post</span><span style="color: #3a81c3;">(</span>buf <span style="color: #6c3163;">[]</span><span style="color: #ba2f59; font-weight: bold;">byte</span>, query <span style="color: #ba2f59; font-weight: bold;">string</span>, auth <span style="color: #ba2f59; font-weight: bold;">string</span><span style="color: #3a81c3;">)</span> <span style="color: #3a81c3;">(</span>*<span style="color: #ba2f59; font-weight: bold;">responseData</span>, <span style="color: #ba2f59; font-weight: bold;">error</span><span style="color: #3a81c3;">)</span> <span style="color: #3a81c3;">{</span>
-<span class="linenr">2: </span>  batch, err := r.list.<span style="color: #6c3163; font-weight: bold;">add</span><span style="color: #6c3163;">(</span>buf, query, auth<span style="color: #6c3163;">)</span>
-<span class="linenr">3: </span>  <span style="color: #3a81c3; font-weight: bold;">if</span> err != <span style="color: #4e3163;">nil</span> <span style="color: #6c3163;">{</span>
-<span class="linenr">4: </span>    <span style="color: #3a81c3; font-weight: bold;">return</span> <span style="color: #4e3163;">nil</span>, err
-<span class="linenr">5: </span>  <span style="color: #6c3163;">}</span>
+<pre class="src src-go"><span class="linenr">1: </span><span style="color: #4f97d7; font-weight: bold;">func</span> <span style="color: #4f97d7;">(</span>r *<span style="color: #ce537a; font-weight: bold;">retryBuffer</span><span style="color: #4f97d7;">)</span> <span style="color: #bc6ec5; font-weight: bold;">post</span><span style="color: #4f97d7;">(</span>buf <span style="color: #bc6ec5;">[]</span><span style="color: #ce537a; font-weight: bold;">byte</span>, query <span style="color: #ce537a; font-weight: bold;">string</span>, auth <span style="color: #ce537a; font-weight: bold;">string</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">(</span>*<span style="color: #ce537a; font-weight: bold;">responseData</span>, <span style="color: #ce537a; font-weight: bold;">error</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+<span class="linenr">2: </span>  batch, err := r.list.<span style="color: #bc6ec5; font-weight: bold;">add</span><span style="color: #bc6ec5;">(</span>buf, query, auth<span style="color: #bc6ec5;">)</span>
+<span class="linenr">3: </span>  <span style="color: #4f97d7; font-weight: bold;">if</span> err != <span style="color: #a45bad;">nil</span> <span style="color: #bc6ec5;">{</span>
+<span class="linenr">4: </span>    <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #a45bad;">nil</span>, err
+<span class="linenr">5: </span>  <span style="color: #bc6ec5;">}</span>
 <span class="linenr">6: </span>
-<span class="linenr">7: </span>  batch.wg.<span style="color: #6c3163; font-weight: bold;">Wait</span><span style="color: #6c3163;">()</span>
-<span class="linenr">8: </span>  <span style="color: #3a81c3; font-weight: bold;">return</span> batch.resp, <span style="color: #4e3163;">nil</span>
-<span class="linenr">9: </span><span style="color: #3a81c3;">}</span>
+<span class="linenr">7: </span>  batch.wg.<span style="color: #bc6ec5; font-weight: bold;">Wait</span><span style="color: #bc6ec5;">()</span>
+<span class="linenr">8: </span>  <span style="color: #4f97d7; font-weight: bold;">return</span> batch.resp, <span style="color: #a45bad;">nil</span>
+<span class="linenr">9: </span><span style="color: #4f97d7;">}</span>
 </pre>
 </div>
 
@@ -353,7 +354,7 @@ created by github.com/influxdata/influxdb-relay/relay.(*HTTP).ServeHTTP
 
 <div class="org-src-container">
 
-<pre class="src src-go"><span class="linenr">1: </span>batch.wg.<span style="color: #6c3163; font-weight: bold;">Wait</span><span style="color: #3a81c3;">()</span>
+<pre class="src src-go"><span class="linenr">1: </span>batch.wg.<span style="color: #bc6ec5; font-weight: bold;">Wait</span><span style="color: #4f97d7;">()</span>
 </pre>
 </div>
 
@@ -363,10 +364,10 @@ created by github.com/influxdata/influxdb-relay/relay.(*HTTP).ServeHTTP
 
 <div class="org-src-container">
 
-<pre class="src src-go"><span class="linenr">1: </span><span style="color: #3a81c3; font-weight: bold;">if</span> batch == <span style="color: #4e3163;">nil</span> <span style="color: #3a81c3;">{</span>
-<span class="linenr">2: </span>  log.<span style="color: #6c3163; font-weight: bold;">Print</span><span style="color: #6c3163;">(</span><span style="color: #2d9574;">"batch is nil"</span><span style="color: #6c3163;">)</span>
-<span class="linenr">3: </span><span style="color: #3a81c3;">}</span>
-<span class="linenr">4: </span>batch.wg.<span style="color: #6c3163; font-weight: bold;">Wait</span><span style="color: #3a81c3;">()</span>
+<pre class="src src-go"><span class="linenr">1: </span><span style="color: #4f97d7; font-weight: bold;">if</span> batch == <span style="color: #a45bad;">nil</span> <span style="color: #4f97d7;">{</span>
+<span class="linenr">2: </span>  log.<span style="color: #bc6ec5; font-weight: bold;">Print</span><span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">"batch is nil"</span><span style="color: #bc6ec5;">)</span>
+<span class="linenr">3: </span><span style="color: #4f97d7;">}</span>
+<span class="linenr">4: </span>batch.wg.<span style="color: #bc6ec5; font-weight: bold;">Wait</span><span style="color: #4f97d7;">()</span>
 </pre>
 </div>
 
@@ -384,18 +385,18 @@ created by github.com/influxdata/influxdb-relay/relay.(*HTTP).ServeHTTP
 </p>
 <div class="org-src-container">
 
-<pre class="src src-go"><span class="linenr"> 1: </span><span style="color: #3a81c3; font-weight: bold;">if</span> *cur == <span style="color: #4e3163;">nil</span> <span style="color: #3a81c3;">{</span>
-<span class="linenr"> 2: </span>  <span style="color: #2aa1ae; background-color: #ecf3ec;">// </span><span style="color: #2aa1ae; background-color: #ecf3ec;">new tail element</span>
-<span class="linenr"> 3: </span>  *cur = <span style="color: #6c3163; font-weight: bold;">newBatch</span><span style="color: #6c3163;">(</span>buf, query, auth<span style="color: #6c3163;">)</span>
-<span class="linenr"> 4: </span><span style="color: #3a81c3;">}</span> <span style="color: #3a81c3; font-weight: bold;">else</span> <span style="color: #3a81c3;">{</span>
-<span class="linenr"> 5: </span>  <span style="color: #2aa1ae; background-color: #ecf3ec;">// </span><span style="color: #2aa1ae; background-color: #ecf3ec;">append to current batch</span>
+<pre class="src src-go"><span class="linenr"> 1: </span><span style="color: #4f97d7; font-weight: bold;">if</span> *cur == <span style="color: #a45bad;">nil</span> <span style="color: #4f97d7;">{</span>
+<span class="linenr"> 2: </span>  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">new tail element</span>
+<span class="linenr"> 3: </span>  *cur = <span style="color: #bc6ec5; font-weight: bold;">newBatch</span><span style="color: #bc6ec5;">(</span>buf, query, auth<span style="color: #bc6ec5;">)</span>
+<span class="linenr"> 4: </span><span style="color: #4f97d7;">}</span> <span style="color: #4f97d7; font-weight: bold;">else</span> <span style="color: #4f97d7;">{</span>
+<span class="linenr"> 5: </span>  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">append to current batch</span>
 <span class="linenr"> 6: </span>  b := *cur
-<span class="linenr"> 7: </span>  b.size += <span style="color: #3a81c3;">len</span><span style="color: #6c3163;">(</span>buf<span style="color: #6c3163;">)</span>
-<span class="linenr"> 8: </span>  b.bufs = <span style="color: #3a81c3;">append</span><span style="color: #6c3163;">(</span>b.bufs, buf<span style="color: #6c3163;">)</span>
-<span class="linenr"> 9: </span><span style="color: #3a81c3;">}</span>
+<span class="linenr"> 7: </span>  b.size += <span style="color: #4f97d7;">len</span><span style="color: #bc6ec5;">(</span>buf<span style="color: #bc6ec5;">)</span>
+<span class="linenr"> 8: </span>  b.bufs = <span style="color: #4f97d7;">append</span><span style="color: #bc6ec5;">(</span>b.bufs, buf<span style="color: #bc6ec5;">)</span>
+<span class="linenr"> 9: </span><span style="color: #4f97d7;">}</span>
 <span class="linenr">10: </span>
-<span class="linenr">11: </span>l.cond.L.<span style="color: #6c3163; font-weight: bold;">Unlock</span><span style="color: #3a81c3;">()</span>
-<span class="linenr">12: </span><span style="color: #3a81c3; font-weight: bold;">return</span> *cur, <span style="color: #4e3163;">nil</span>
+<span class="linenr">11: </span>l.cond.L.<span style="color: #bc6ec5; font-weight: bold;">Unlock</span><span style="color: #4f97d7;">()</span>
+<span class="linenr">12: </span><span style="color: #4f97d7; font-weight: bold;">return</span> *cur, <span style="color: #a45bad;">nil</span>
 </pre>
 </div>
 
@@ -405,18 +406,18 @@ created by github.com/influxdata/influxdb-relay/relay.(*HTTP).ServeHTTP
 
 <div class="org-src-container">
 
-<pre class="src src-go"><span class="linenr"> 1: </span><span style="color: #3a81c3; font-weight: bold;">func</span> <span style="color: #3a81c3;">(</span>b *<span style="color: #ba2f59; font-weight: bold;">simplePoster</span><span style="color: #3a81c3;">)</span> <span style="color: #6c3163; font-weight: bold;">post</span><span style="color: #3a81c3;">(</span>buf <span style="color: #6c3163;">[]</span><span style="color: #ba2f59; font-weight: bold;">byte</span>, query <span style="color: #ba2f59; font-weight: bold;">string</span>, auth <span style="color: #ba2f59; font-weight: bold;">string</span><span style="color: #3a81c3;">)</span> <span style="color: #3a81c3;">(</span>*<span style="color: #ba2f59; font-weight: bold;">responseData</span>, <span style="color: #ba2f59; font-weight: bold;">error</span><span style="color: #3a81c3;">)</span> <span style="color: #3a81c3;">{</span>
-<span class="linenr"> 2: </span>  time.<span style="color: #6c3163; font-weight: bold;">Sleep</span><span style="color: #6c3163;">(</span>time.Microsecond * time.<span style="color: #6c3163; font-weight: bold;">Duration</span><span style="color: #2d9574;">(</span>rand.<span style="color: #6c3163; font-weight: bold;">Intn</span><span style="color: #67b11d;">(</span><span style="color: #4e3163;">400</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span><span style="color: #6c3163;">)</span>
-<span class="linenr"> 3: </span>  <span style="color: #3a81c3; font-weight: bold;">if</span> auth == <span style="color: #2d9574;">"hello"</span> <span style="color: #6c3163;">{</span>
-<span class="linenr"> 4: </span>    <span style="color: #3a81c3; font-weight: bold;">return</span> &amp;<span style="color: #ba2f59; font-weight: bold;">responseData</span><span style="color: #2d9574;">{</span>
-<span class="linenr"> 5: </span>      <span style="color: #4e3163;">StatusCode</span>: <span style="color: #4e3163;">204</span>,
-<span class="linenr"> 6: </span>    <span style="color: #2d9574;">}</span>, <span style="color: #4e3163;">nil</span>
-<span class="linenr"> 7: </span>  <span style="color: #6c3163;">}</span> <span style="color: #3a81c3; font-weight: bold;">else</span> <span style="color: #6c3163;">{</span>
-<span class="linenr"> 8: </span>    <span style="color: #3a81c3; font-weight: bold;">return</span> &amp;<span style="color: #ba2f59; font-weight: bold;">responseData</span><span style="color: #2d9574;">{</span>
-<span class="linenr"> 9: </span>      <span style="color: #4e3163;">StatusCode</span>: <span style="color: #4e3163;">502</span>,
-<span class="linenr">10: </span>    <span style="color: #2d9574;">}</span>, <span style="color: #4e3163;">nil</span>
-<span class="linenr">11: </span>  <span style="color: #6c3163;">}</span>
-<span class="linenr">12: </span><span style="color: #3a81c3;">}</span>
+<pre class="src src-go"><span class="linenr"> 1: </span><span style="color: #4f97d7; font-weight: bold;">func</span> <span style="color: #4f97d7;">(</span>b *<span style="color: #ce537a; font-weight: bold;">simplePoster</span><span style="color: #4f97d7;">)</span> <span style="color: #bc6ec5; font-weight: bold;">post</span><span style="color: #4f97d7;">(</span>buf <span style="color: #bc6ec5;">[]</span><span style="color: #ce537a; font-weight: bold;">byte</span>, query <span style="color: #ce537a; font-weight: bold;">string</span>, auth <span style="color: #ce537a; font-weight: bold;">string</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">(</span>*<span style="color: #ce537a; font-weight: bold;">responseData</span>, <span style="color: #ce537a; font-weight: bold;">error</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+<span class="linenr"> 2: </span>  time.<span style="color: #bc6ec5; font-weight: bold;">Sleep</span><span style="color: #bc6ec5;">(</span>time.Microsecond * time.<span style="color: #bc6ec5; font-weight: bold;">Duration</span><span style="color: #2d9574;">(</span>rand.<span style="color: #bc6ec5; font-weight: bold;">Intn</span><span style="color: #67b11d;">(</span><span style="color: #a45bad;">400</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>
+<span class="linenr"> 3: </span>  <span style="color: #4f97d7; font-weight: bold;">if</span> auth == <span style="color: #2d9574;">"hello"</span> <span style="color: #bc6ec5;">{</span>
+<span class="linenr"> 4: </span>    <span style="color: #4f97d7; font-weight: bold;">return</span> &amp;<span style="color: #ce537a; font-weight: bold;">responseData</span><span style="color: #2d9574;">{</span>
+<span class="linenr"> 5: </span>      <span style="color: #a45bad;">StatusCode</span>: <span style="color: #a45bad;">204</span>,
+<span class="linenr"> 6: </span>    <span style="color: #2d9574;">}</span>, <span style="color: #a45bad;">nil</span>
+<span class="linenr"> 7: </span>  <span style="color: #bc6ec5;">}</span> <span style="color: #4f97d7; font-weight: bold;">else</span> <span style="color: #bc6ec5;">{</span>
+<span class="linenr"> 8: </span>    <span style="color: #4f97d7; font-weight: bold;">return</span> &amp;<span style="color: #ce537a; font-weight: bold;">responseData</span><span style="color: #2d9574;">{</span>
+<span class="linenr"> 9: </span>      <span style="color: #a45bad;">StatusCode</span>: <span style="color: #a45bad;">502</span>,
+<span class="linenr">10: </span>    <span style="color: #2d9574;">}</span>, <span style="color: #a45bad;">nil</span>
+<span class="linenr">11: </span>  <span style="color: #bc6ec5;">}</span>
+<span class="linenr">12: </span><span style="color: #4f97d7;">}</span>
 </pre>
 </div>
 
@@ -427,9 +428,9 @@ created by github.com/influxdata/influxdb-relay/relay.(*HTTP).ServeHTTP
 
 <div class="org-src-container">
 
-<pre class="src src-go"><span class="linenr">1: </span><span style="color: #3a81c3; font-weight: bold;">for</span> <span style="color: #3a81c3;">{</span>
-<span class="linenr">2: </span>  resp, err := r.p.<span style="color: #6c3163; font-weight: bold;">post</span><span style="color: #6c3163;">(</span>buf.<span style="color: #6c3163; font-weight: bold;">Bytes</span><span style="color: #2d9574;">()</span>, batch.query, <span style="color: #2d9574;">"hello"</span><span style="color: #6c3163;">)</span>
-<span class="linenr">3: </span>  <span style="color: #3a81c3; font-weight: bold;">if</span> err == <span style="color: #4e3163;">nil</span> &amp;&amp; resp.StatusCode/<span style="color: #4e3163;">100</span> != <span style="color: #4e3163;">5</span> <span style="color: #6c3163;">{</span>
+<pre class="src src-go"><span class="linenr">1: </span><span style="color: #4f97d7; font-weight: bold;">for</span> <span style="color: #4f97d7;">{</span>
+<span class="linenr">2: </span>  resp, err := r.p.<span style="color: #bc6ec5; font-weight: bold;">post</span><span style="color: #bc6ec5;">(</span>buf.<span style="color: #bc6ec5; font-weight: bold;">Bytes</span><span style="color: #2d9574;">()</span>, batch.query, <span style="color: #2d9574;">"hello"</span><span style="color: #bc6ec5;">)</span>
+<span class="linenr">3: </span>  <span style="color: #4f97d7; font-weight: bold;">if</span> err == <span style="color: #a45bad;">nil</span> &amp;&amp; resp.StatusCode/<span style="color: #a45bad;">100</span> != <span style="color: #a45bad;">5</span> <span style="color: #bc6ec5;">{</span>
 </pre>
 </div>
 
@@ -462,14 +463,14 @@ created by github.com/influxdata/influxdb-relay/relay.(*HTTP).ServeHTTP
 
 <div class="org-src-container">
 
-<pre class="src src-go"><span class="linenr">1: </span><span style="color: #3a81c3; font-weight: bold;">func</span> <span style="color: #3a81c3;">(</span>l *<span style="color: #ba2f59; font-weight: bold;">bufferList</span><span style="color: #3a81c3;">)</span> <span style="color: #6c3163; font-weight: bold;">add</span><span style="color: #3a81c3;">(</span>buf <span style="color: #6c3163;">[]</span><span style="color: #ba2f59; font-weight: bold;">byte</span>, query <span style="color: #ba2f59; font-weight: bold;">string</span>, auth <span style="color: #ba2f59; font-weight: bold;">string</span><span style="color: #3a81c3;">)</span> <span style="color: #3a81c3;">(</span>*<span style="color: #ba2f59; font-weight: bold;">batch</span>, <span style="color: #ba2f59; font-weight: bold;">error</span><span style="color: #3a81c3;">)</span> <span style="color: #3a81c3;">{</span>
+<pre class="src src-go"><span class="linenr">1: </span><span style="color: #4f97d7; font-weight: bold;">func</span> <span style="color: #4f97d7;">(</span>l *<span style="color: #ce537a; font-weight: bold;">bufferList</span><span style="color: #4f97d7;">)</span> <span style="color: #bc6ec5; font-weight: bold;">add</span><span style="color: #4f97d7;">(</span>buf <span style="color: #bc6ec5;">[]</span><span style="color: #ce537a; font-weight: bold;">byte</span>, query <span style="color: #ce537a; font-weight: bold;">string</span>, auth <span style="color: #ce537a; font-weight: bold;">string</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">(</span>*<span style="color: #ce537a; font-weight: bold;">batch</span>, <span style="color: #ce537a; font-weight: bold;">error</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
 <span class="linenr">2: </span>
-<span class="linenr">3: </span>  <span style="color: #2aa1ae; background-color: #ecf3ec;">// </span><span style="color: #2aa1ae; background-color: #ecf3ec;">...</span>
+<span class="linenr">3: </span>  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">...</span>
 <span class="linenr">4: </span>
-<span class="linenr">5: </span>  l.cond.L.<span style="color: #6c3163; font-weight: bold;">Unlock</span><span style="color: #6c3163;">()</span>
-<span class="linenr">6: </span>  time.<span style="color: #6c3163; font-weight: bold;">Sleep</span><span style="color: #6c3163;">(</span>time.Microsecond * time.<span style="color: #6c3163; font-weight: bold;">Duration</span><span style="color: #2d9574;">(</span>rand.<span style="color: #6c3163; font-weight: bold;">Intn</span><span style="color: #67b11d;">(</span><span style="color: #4e3163;">100</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span><span style="color: #6c3163;">)</span>
-<span class="linenr">7: </span>  <span style="color: #3a81c3; font-weight: bold;">return</span> *cur, <span style="color: #4e3163;">nil</span>
-<span class="linenr">8: </span><span style="color: #3a81c3;">}</span>
+<span class="linenr">5: </span>  l.cond.L.<span style="color: #bc6ec5; font-weight: bold;">Unlock</span><span style="color: #bc6ec5;">()</span>
+<span class="linenr">6: </span>  time.<span style="color: #bc6ec5; font-weight: bold;">Sleep</span><span style="color: #bc6ec5;">(</span>time.Microsecond * time.<span style="color: #bc6ec5; font-weight: bold;">Duration</span><span style="color: #2d9574;">(</span>rand.<span style="color: #bc6ec5; font-weight: bold;">Intn</span><span style="color: #67b11d;">(</span><span style="color: #a45bad;">100</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>
+<span class="linenr">7: </span>  <span style="color: #4f97d7; font-weight: bold;">return</span> *cur, <span style="color: #a45bad;">nil</span>
+<span class="linenr">8: </span><span style="color: #4f97d7;">}</span>
 </pre>
 </div>
 
@@ -481,13 +482,13 @@ created by github.com/influxdata/influxdb-relay/relay.(*HTTP).ServeHTTP
 
 <div class="org-src-container">
 
-<pre class="src src-go"><span class="linenr">1: </span><span style="color: #3a81c3; font-weight: bold;">func</span> <span style="color: #3a81c3;">(</span>l *<span style="color: #ba2f59; font-weight: bold;">bufferList</span><span style="color: #3a81c3;">)</span> <span style="color: #6c3163; font-weight: bold;">add</span><span style="color: #3a81c3;">(</span>buf <span style="color: #6c3163;">[]</span><span style="color: #ba2f59; font-weight: bold;">byte</span>, query <span style="color: #ba2f59; font-weight: bold;">string</span>, auth <span style="color: #ba2f59; font-weight: bold;">string</span><span style="color: #3a81c3;">)</span> <span style="color: #3a81c3;">(</span>*<span style="color: #ba2f59; font-weight: bold;">batch</span>, <span style="color: #ba2f59; font-weight: bold;">error</span><span style="color: #3a81c3;">)</span> <span style="color: #3a81c3;">{</span>
+<pre class="src src-go"><span class="linenr">1: </span><span style="color: #4f97d7; font-weight: bold;">func</span> <span style="color: #4f97d7;">(</span>l *<span style="color: #ce537a; font-weight: bold;">bufferList</span><span style="color: #4f97d7;">)</span> <span style="color: #bc6ec5; font-weight: bold;">add</span><span style="color: #4f97d7;">(</span>buf <span style="color: #bc6ec5;">[]</span><span style="color: #ce537a; font-weight: bold;">byte</span>, query <span style="color: #ce537a; font-weight: bold;">string</span>, auth <span style="color: #ce537a; font-weight: bold;">string</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">(</span>*<span style="color: #ce537a; font-weight: bold;">batch</span>, <span style="color: #ce537a; font-weight: bold;">error</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
 <span class="linenr">2: </span>
-<span class="linenr">3: </span>  <span style="color: #2aa1ae; background-color: #ecf3ec;">// </span><span style="color: #2aa1ae; background-color: #ecf3ec;">...</span>
+<span class="linenr">3: </span>  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">...</span>
 <span class="linenr">4: </span>
-<span class="linenr">5: </span>  <span style="color: #3a81c3; font-weight: bold;">defer</span> l.cond.L.<span style="color: #6c3163; font-weight: bold;">Unlock</span><span style="color: #6c3163;">()</span>
-<span class="linenr">6: </span>  <span style="color: #3a81c3; font-weight: bold;">return</span> *cur, <span style="color: #4e3163;">nil</span>
-<span class="linenr">7: </span><span style="color: #3a81c3;">}</span>
+<span class="linenr">5: </span>  <span style="color: #4f97d7; font-weight: bold;">defer</span> l.cond.L.<span style="color: #bc6ec5; font-weight: bold;">Unlock</span><span style="color: #bc6ec5;">()</span>
+<span class="linenr">6: </span>  <span style="color: #4f97d7; font-weight: bold;">return</span> *cur, <span style="color: #a45bad;">nil</span>
+<span class="linenr">7: </span><span style="color: #4f97d7;">}</span>
 </pre>
 </div>
 
@@ -503,24 +504,24 @@ created by github.com/influxdata/influxdb-relay/relay.(*HTTP).ServeHTTP
 
 <div class="org-src-container">
 
-<pre class="src src-go"><span class="linenr"> 1: </span><span style="color: #3a81c3; font-weight: bold;">func</span> <span style="color: #3a81c3;">(</span>r *<span style="color: #ba2f59; font-weight: bold;">retryBuffer</span><span style="color: #3a81c3;">)</span> <span style="color: #6c3163; font-weight: bold;">post</span><span style="color: #3a81c3;">(</span>buf <span style="color: #6c3163;">[]</span><span style="color: #ba2f59; font-weight: bold;">byte</span>, query <span style="color: #ba2f59; font-weight: bold;">string</span>, auth <span style="color: #ba2f59; font-weight: bold;">string</span><span style="color: #3a81c3;">)</span> <span style="color: #3a81c3;">(</span>*<span style="color: #ba2f59; font-weight: bold;">responseData</span>, <span style="color: #ba2f59; font-weight: bold;">error</span><span style="color: #3a81c3;">)</span> <span style="color: #3a81c3;">{</span>
-<span class="linenr"> 2: </span>  pb := <span style="color: #6c3163; font-weight: bold;">getBuf</span><span style="color: #6c3163;">()</span>
-<span class="linenr"> 3: </span>  pb.<span style="color: #6c3163; font-weight: bold;">Write</span><span style="color: #6c3163;">(</span>buf<span style="color: #6c3163;">)</span>
-<span class="linenr"> 4: </span>  batch, err := r.list.<span style="color: #6c3163; font-weight: bold;">add</span><span style="color: #6c3163;">(</span>pb.<span style="color: #6c3163; font-weight: bold;">Bytes</span><span style="color: #2d9574;">()</span>, query, auth<span style="color: #6c3163;">)</span>
-<span class="linenr"> 5: </span>  <span style="color: #3a81c3; font-weight: bold;">if</span> err != <span style="color: #4e3163;">nil</span> <span style="color: #6c3163;">{</span>
-<span class="linenr"> 6: </span>    <span style="color: #6c3163; font-weight: bold;">putBuf</span><span style="color: #2d9574;">(</span>pb<span style="color: #2d9574;">)</span>
-<span class="linenr"> 7: </span>    <span style="color: #3a81c3; font-weight: bold;">return</span> <span style="color: #4e3163;">nil</span>, err
-<span class="linenr"> 8: </span>  <span style="color: #6c3163;">}</span>
+<pre class="src src-go"><span class="linenr"> 1: </span><span style="color: #4f97d7; font-weight: bold;">func</span> <span style="color: #4f97d7;">(</span>r *<span style="color: #ce537a; font-weight: bold;">retryBuffer</span><span style="color: #4f97d7;">)</span> <span style="color: #bc6ec5; font-weight: bold;">post</span><span style="color: #4f97d7;">(</span>buf <span style="color: #bc6ec5;">[]</span><span style="color: #ce537a; font-weight: bold;">byte</span>, query <span style="color: #ce537a; font-weight: bold;">string</span>, auth <span style="color: #ce537a; font-weight: bold;">string</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">(</span>*<span style="color: #ce537a; font-weight: bold;">responseData</span>, <span style="color: #ce537a; font-weight: bold;">error</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+<span class="linenr"> 2: </span>  pb := <span style="color: #bc6ec5; font-weight: bold;">getBuf</span><span style="color: #bc6ec5;">()</span>
+<span class="linenr"> 3: </span>  pb.<span style="color: #bc6ec5; font-weight: bold;">Write</span><span style="color: #bc6ec5;">(</span>buf<span style="color: #bc6ec5;">)</span>
+<span class="linenr"> 4: </span>  batch, err := r.list.<span style="color: #bc6ec5; font-weight: bold;">add</span><span style="color: #bc6ec5;">(</span>pb.<span style="color: #bc6ec5; font-weight: bold;">Bytes</span><span style="color: #2d9574;">()</span>, query, auth<span style="color: #bc6ec5;">)</span>
+<span class="linenr"> 5: </span>  <span style="color: #4f97d7; font-weight: bold;">if</span> err != <span style="color: #a45bad;">nil</span> <span style="color: #bc6ec5;">{</span>
+<span class="linenr"> 6: </span>    <span style="color: #bc6ec5; font-weight: bold;">putBuf</span><span style="color: #2d9574;">(</span>pb<span style="color: #2d9574;">)</span>
+<span class="linenr"> 7: </span>    <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #a45bad;">nil</span>, err
+<span class="linenr"> 8: </span>  <span style="color: #bc6ec5;">}</span>
 <span class="linenr"> 9: </span>
-<span class="linenr">10: </span>  <span style="color: #3a81c3; font-weight: bold;">go</span> <span style="color: #3a81c3; font-weight: bold;">func</span><span style="color: #6c3163;">()</span> <span style="color: #6c3163;">{</span>
-<span class="linenr">11: </span>    batch.wg.<span style="color: #6c3163; font-weight: bold;">Wait</span><span style="color: #2d9574;">()</span>
-<span class="linenr">12: </span>    <span style="color: #6c3163; font-weight: bold;">putBuf</span><span style="color: #2d9574;">(</span>pb<span style="color: #2d9574;">)</span>
-<span class="linenr">13: </span>  <span style="color: #6c3163;">}()</span>
+<span class="linenr">10: </span>  <span style="color: #4f97d7; font-weight: bold;">go</span> <span style="color: #4f97d7; font-weight: bold;">func</span><span style="color: #bc6ec5;">()</span> <span style="color: #bc6ec5;">{</span>
+<span class="linenr">11: </span>    batch.wg.<span style="color: #bc6ec5; font-weight: bold;">Wait</span><span style="color: #2d9574;">()</span>
+<span class="linenr">12: </span>    <span style="color: #bc6ec5; font-weight: bold;">putBuf</span><span style="color: #2d9574;">(</span>pb<span style="color: #2d9574;">)</span>
+<span class="linenr">13: </span>  <span style="color: #bc6ec5;">}()</span>
 <span class="linenr">14: </span>
-<span class="linenr">15: </span>  <span style="color: #3a81c3; font-weight: bold;">return</span> &amp;<span style="color: #ba2f59; font-weight: bold;">responseData</span><span style="color: #6c3163;">{</span>
-<span class="linenr">16: </span>    <span style="color: #4e3163;">StatusCode</span>: <span style="color: #4e3163;">204</span>,
-<span class="linenr">17: </span>  <span style="color: #6c3163;">}</span>, <span style="color: #4e3163;">nil</span>
-<span class="linenr">18: </span><span style="color: #3a81c3;">}</span>
+<span class="linenr">15: </span>  <span style="color: #4f97d7; font-weight: bold;">return</span> &amp;<span style="color: #ce537a; font-weight: bold;">responseData</span><span style="color: #bc6ec5;">{</span>
+<span class="linenr">16: </span>    <span style="color: #a45bad;">StatusCode</span>: <span style="color: #a45bad;">204</span>,
+<span class="linenr">17: </span>  <span style="color: #bc6ec5;">}</span>, <span style="color: #a45bad;">nil</span>
+<span class="linenr">18: </span><span style="color: #4f97d7;">}</span>
 </pre>
 </div>
 
@@ -614,7 +615,6 @@ time    count
       </section>
       <script src="//code.jquery.com/jquery-latest.min.js"></script>
       <script src="/media/js/prettify.js"></script>
-      <script src="http://xusheng.org/cdn/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="/media/js/main.js"></script>
         <script type="text/javascript">
          var _gaq = _gaq || [];

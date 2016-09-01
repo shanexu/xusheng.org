@@ -4,10 +4,17 @@
     <title>Shane Xu&#39;s Home</title>
     <link>http://xusheng.org/</link>
     <description>Life is too short for so much sorrows.</description>
-    <pubDate>Sun, 28 Aug 2016 23:17:27 CST</pubDate>
-    <lastBuildDate>Sun, 28 Aug 2016 23:17:27 CST</lastBuildDate>
+    <pubDate>Thu, 01 Sep 2016 09:29:05 CST</pubDate>
+    <lastBuildDate>Thu, 01 Sep 2016 09:29:05 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
+    <item>
+      <title>Complete the Sequence!</title>
+      <link>http://xusheng.org/blog/2016/07/09/complete-the-sequence</link>
+      <description><![CDATA[A solution for CMPLS]]></description>
+      <pubDate>2016-09-01</pubDate>
+      <guid>http://xusheng.org/blog/2016/07/09/complete-the-sequence</guid>
+    </item>
     <item>
       <title>direnv</title>
       <link>http://xusheng.org/blog/2016/08/14/direnv</link>
@@ -70,13 +77,6 @@
       <description><![CDATA[a simple write test of influxdb]]></description>
       <pubDate>2016-07-30</pubDate>
       <guid>http://xusheng.org/blog/2016/07/30/performance-test-of-influxdb</guid>
-    </item>
-    <item>
-      <title>如何用 N 张图片拼出 2016 字样</title>
-      <link>http://xusheng.org/blog/2016/07/13/image-text</link>
-      <description><![CDATA[js 图片拼字 js 效果]]></description>
-      <pubDate>2016-07-14</pubDate>
-      <guid>http://xusheng.org/blog/2016/07/13/image-text</guid>
     </item>
   </channel>
 </rss>
