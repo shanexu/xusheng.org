@@ -9,7 +9,7 @@ p b:before, b:after {
 }
 
 p del:before, del:after {
-  content: "+";
+  content: "";
   color: #ccc;
 }
 
