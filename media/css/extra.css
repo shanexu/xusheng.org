@@ -1,3 +1,18 @@
+.settitle a {
+  color: inherit;
+  text-decoration: inherit;
+  font-weight: inherit;
+}
+
+.nav hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #999;
+  margin: 1em 0;
+  padding: 0;
+}
+
 p code:before, code:after {
   content: "=";
   color: #ccc;
