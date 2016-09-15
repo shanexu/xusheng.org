@@ -25,3 +25,115 @@ curl -X POST -H "Content-Type: application/json" -d '
 ' "http://127.0.0.1:9092/kapacitor/v1/tasks"
 #+end_src
 
+我想当然地认为，在单引号中出现单引号就用 =\= 转义，然而我错了。
+
+#+begin_src text
+./test.sh: line 8: syntax error near unexpected token `)'
+./test.sh: line 8: `    "script": "stream|from().measurement(\'quote\')|alert().crit(lambda: \"price\" < 174).log(\'/tmp/price1.log\')",'
+#+end_src
+
+于是我用 [[https://www.google.com.hk/search?newwindow=1&safe=strict&site=&source=hp&btnG=Google+搜索&q=How+to+escape+single-quotes+within+single-quoted+strings+in+bash][Google]] 搜索, 本文的标题。得到了一个解决方案，调整后的脚本如下。
+
+#+begin_src bash
+curl -X POST -H "Content-Type: application/json" -d '
+{
+    "id" : "quote1",
+    "type" : "stream",
+    "dbrps": [{"db": "udp", "rp" : "autogen"}],
+    "script": "stream|from().measurement('"'"'quote'"'"')|alert().crit(lambda: \"price\" < 174).log('"'"'/tmp/price1.log'"'"')",
+    "status": "enabled"
+}
+' "http://127.0.0.1:9092/kapacitor/v1/tasks"
+#+end_src
+
+然而仔细一想，这好像哪里不对 =measurement('"'"'quote= 此处的一坨引号，实际是将原本的一个长串断开成了 ='...measurement('= 和 ="'"= 和 ='quote...'= ，所以严格意义上这并不算 =escape= ，并且这很丑。
+
+然后我在这篇 [[http://unix.stackexchange.com/questions/187651/how-to-echo-single-quote-when-using-single-quote-to-wrap-special-characters-in]] 找到了另外的一些解决方案。
+
+#+begin_src bash
+echo $'It\'s Shell Programming'  # ksh, bash, and zsh only, does not expand variables
+echo 'It'\''s Shell Programming' # all shells, single quote is outside the quotes
+#+end_src
+
+这里的第二种方法，实际上和前面的说的那种是类似的，这是是把这个字符串，拆成了 ='It'= 和 =\'= 和 ='s Shell Programming'= 三部分。重点说一下第一个方法。
+
+=bash= 的 [[http://linux.die.net/man/1/bash][Manual]] 里有这么一段话:
+
+#+begin_quote
+Words of the form $'string' are treated specially. The word expands to string, with backslash-escaped characters replaced as specified by the ANSI C standard. Backslash escape sequences, if present, are decoded as follows:
+
+    \a
+
+    alert (bell)
+
+    \b
+
+    backspace
+
+    \e
+
+    \E
+
+    an escape character
+
+    \f
+
+    form feed
+
+    \n
+
+    new line
+
+    \r
+
+    carriage return
+
+    \t
+
+    horizontal tab
+
+    \v
+
+    vertical tab
+
+    \\
+
+    backslash
+
+    \'
+
+    single quote
+
+    \"
+
+    double quote
+
+    \nnn
+
+    the eight-bit character whose value is the octal value nnn (one to three digits)
+
+    \xHH
+
+    the eight-bit character whose value is the hexadecimal value HH (one or two hex digits)
+
+    \cx
+
+    a control-x character 
+The expanded result is single-quoted, as if the dollar sign had not been present. 
+#+end_quote
+
+所以在单引号前面加个 =$= 这样的字符串，可以理解为是一个类似C语言中的字符串。于是之前的命令就可以改成下面的样子了。
+
+#+begin_src bash
+curl -X POST -H "Content-Type: application/json" -d $'
+{
+    "id" : "quote1",
+    "type" : "stream",
+    "dbrps": [{"db": "udp", "rp" : "autogen"}],
+    "script": "stream|from().measurement(\'quote\')|alert().crit(lambda: \\"price\\" < 174).log(\'/tmp/price1.log\')",
+    "status": "enabled"
+}
+' "http://127.0.0.1:9092/kapacitor/v1/tasks"
+#+end_src
+
+没想到在这个简单的问题上我花费了那么多时间。所以要经常 ~RTFM~ 啊。
