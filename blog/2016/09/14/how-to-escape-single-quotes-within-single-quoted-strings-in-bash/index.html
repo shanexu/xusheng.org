@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>How to escape single-quotes within single-quoted strings in bash - Shane Xu&#39;s Home</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Shane Xu" />
+    <meta name="description" content="How to escape single-quotes within single-quoted strings in bash" />
+    <meta name="keywords" content="bash" />
+    <link rel="stylesheet" href="/media/source-code-pro/source-code-pro.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/extra.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/code-dark.css" type="text/css">
+    <!-- <link rel="stylesheet" href="/media/css/code-light.css" type="text/css"> -->
+  </head>
+
+  <body>
+    <div>
+      <header class="masthead">
+        <h1 class="settitle"><a href="/">Shane Xu&#39;s Home</a></h1>
+        <blockquote>Life is too short for so much sorrow.</blockquote>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="xusheng.org">
+        </form>
+      </header>
+    </div>
+    <div class="node nav">
+      <ul>
+          <li><a href="/blog/">Blog</a></li>
+        <li><a href="/tags/">Tags</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="https://github.com/shanexu">GitHub</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+      </ul>
+      <hr/>
+    </div>
+
+
+  <h3 class="section">How to escape single-quotes within single-quoted strings in bash</h3>
+<p>
+事情的始末是这样的。那天我部署了一个 <a href="https://www.influxdata.com/time-series-platform/kapacitor/">Kapacitor</a> ，然后尝试调用它的rest api添加一个Task。然而令我没想到是，习惯了使用 <code>curl</code> 的我，这次竟然迟迟没有搞定这个这个rest接口。
+</p>
+
+<p>
+Kapacitor的这个接口其实很简单，就是往 <code>/kapacitor/v1/tasks</code> 这个地址 <code>POST</code> 一段JSON数据。然而这个JSON数据中有一个要命的 <code>script</code> 字段，这个字段中又有单引号出现。我用的命令如下。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-bash">curl -X POST -H <span style="color: #2d9574;">"Content-Type: application/json"</span> -d <span style="color: #2d9574;">'</span>
+<span style="color: #2d9574;">{</span>
+<span style="color: #2d9574;">    "id" : "quote1",</span>
+<span style="color: #2d9574;">    "type" : "stream",</span>
+<span style="color: #2d9574;">    "dbrps": [{"db": "udp", "rp" : "autogen"}],</span>
+<span style="color: #2d9574;">    "script": "stream|from().measurement(\'</span>quote<span style="color: #2d9574;">\'</span><span style="color: #e0211d; text-decoration: overline;">)</span>|alert<span style="color: #e0211d; text-decoration: overline;">()</span>.crit<span style="color: #e0211d; text-decoration: overline;">(</span>lambda: <span style="color: #2d9574;">\"</span>price<span style="color: #2d9574;">\"</span> &lt; <span style="color: #a45bad;">174</span><span style="color: #e0211d; text-decoration: overline;">)</span>.log<span style="color: #e0211d; text-decoration: overline;">(</span><span style="color: #2d9574;">\'</span>/tmp/price1.log<span style="color: #2d9574;">\'</span><span style="color: #e0211d; text-decoration: overline;">)</span><span style="color: #2d9574;">",</span>
+<span style="color: #2d9574;">    "</span>status<span style="color: #2d9574;">": "</span>enabled<span style="color: #2d9574;">"</span>
+<span style="color: #2d9574;">}</span>
+<span style="color: #2d9574;">' "</span>http://127.0.0.1:9092/kapacitor/v1/tasks<span style="color: #2d9574;">"</span>
+</pre>
+</div>
+
+<p>
+我想当然地认为，在单引号中出现单引号就用 <code>\</code> 转义，然而我错了。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">./test.sh: line 8: syntax error near unexpected token `)'
+./test.sh: line 8: `    "script": "stream|from().measurement(\'quote\')|alert().crit(lambda: \"price\" &lt; 174).log(\'/tmp/price1.log\')",'
+</pre>
+</div>
+
+<p>
+于是我用 <a href="https://www.google.com.hk/search?newwindow=1&amp;safe=strict&amp;site=&amp;source=hp&amp;btnG=Google+%E6%90%9C%E7%B4%A2&amp;q=How+to+escape+single-quotes+within+single-quoted+strings+in+bash">Google</a> 搜索, 本文的标题。得到了一个解决方案，调整后的脚本如下。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-bash">curl -X POST -H <span style="color: #2d9574;">"Content-Type: application/json"</span> -d <span style="color: #2d9574;">'</span>
+<span style="color: #2d9574;">{</span>
+<span style="color: #2d9574;">    "id" : "quote1",</span>
+<span style="color: #2d9574;">    "type" : "stream",</span>
+<span style="color: #2d9574;">    "dbrps": [{"db": "udp", "rp" : "autogen"}],</span>
+<span style="color: #2d9574;">    "script": "stream|from().measurement('"'"'quote'"'"')|alert().crit(lambda: \"price\" &lt; 174).log('"'"'/tmp/price1.log'"'"')",</span>
+<span style="color: #2d9574;">    "status": "enabled"</span>
+<span style="color: #2d9574;">}</span>
+<span style="color: #2d9574;">'</span> <span style="color: #2d9574;">"http://127.0.0.1:9092/kapacitor/v1/tasks"</span>
+</pre>
+</div>
+
+<p>
+然而仔细一想，这好像哪里不对 <code>measurement('"'"'quote</code> 此处的一坨引号，实际是将原本的一个长串断开成了 <code>'...measurement('</code> 和 <code>"'"</code> 和 <code>'quote...'</code> ，所以严格意义上这并不算 <code>escape</code> ，并且这很丑。
+</p>
+
+<p>
+然后我在这篇 <a href="http://unix.stackexchange.com/questions/187651/how-to-echo-single-quote-when-using-single-quote-to-wrap-special-characters-in">http://unix.stackexchange.com/questions/187651/how-to-echo-single-quote-when-using-single-quote-to-wrap-special-characters-in</a> 找到了另外的一些解决方案。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-bash"><span style="color: #4f97d7;">echo</span> $<span style="color: #2d9574;">'It\'</span>s Shell Programming<span style="color: #2d9574;">'  # ksh, bash, and zsh only, does not expand variables</span>
+<span style="color: #2d9574;">echo '</span>It<span style="color: #2d9574;">'\''s Shell Programming'</span> <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">all shells, single quote is outside the quotes</span>
+</pre>
+</div>
+
+<p>
+这里的第二种方法，实际上和前面的说的那种是类似的，这是是把这个字符串，拆成了 <code>'It'</code> 和 <code>\'</code> 和 <code>'s Shell Programming'</code> 三部分。重点说一下第一个方法。
+</p>
+
+<p>
+<code>bash</code> 的 <a href="http://linux.die.net/man/1/bash">Manual</a> 里有这么一段话:
+</p>
+
+<blockquote>
+<p>
+Words of the form $'string' are treated specially. The word expands to string, with backslash-escaped characters replaced as specified by the ANSI C standard. Backslash escape sequences, if present, are decoded as follows:
+</p>
+
+<p>
+\a
+</p>
+
+<p>
+alert (bell)
+</p>
+
+<p>
+\b
+</p>
+
+<p>
+backspace
+</p>
+
+<p>
+\e
+</p>
+
+<p>
+\E
+</p>
+
+<p>
+an escape character
+</p>
+
+<p>
+\f
+</p>
+
+<p>
+form feed
+</p>
+
+<p>
+\n
+</p>
+
+<p>
+new line
+</p>
+
+<p>
+\r
+</p>
+
+<p>
+carriage return
+</p>
+
+<p>
+\t
+</p>
+
+<p>
+horizontal tab
+</p>
+
+<p>
+\v
+</p>
+
+<p>
+vertical tab
+</p>
+
+<p>
+<br  />
+</p>
+
+<p>
+backslash
+</p>
+
+<p>
+\'
+</p>
+
+<p>
+single quote
+</p>
+
+<p>
+\"
+</p>
+
+<p>
+double quote
+</p>
+
+<p>
+\nnn
+</p>
+
+<p>
+the eight-bit character whose value is the octal value nnn (one to three digits)
+</p>
+
+<p>
+\xHH
+</p>
+
+<p>
+the eight-bit character whose value is the hexadecimal value HH (one or two hex digits)
+</p>
+
+<p>
+\cx
+</p>
+
+<p>
+    a control-x character 
+The expanded result is single-quoted, as if the dollar sign had not been present. 
+</p>
+</blockquote>
+
+<p>
+所以在单引号前面加个 <code>$</code> 这样的字符串，可以理解为是一个类似C语言中的字符串。于是之前的命令就可以改成下面的样子了。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-bash">curl -X POST -H <span style="color: #2d9574;">"Content-Type: application/json"</span> -d $<span style="color: #2d9574;">'</span>
+<span style="color: #2d9574;">{</span>
+<span style="color: #2d9574;">    "id" : "quote1",</span>
+<span style="color: #2d9574;">    "type" : "stream",</span>
+<span style="color: #2d9574;">    "dbrps": [{"db": "udp", "rp" : "autogen"}],</span>
+<span style="color: #2d9574;">    "script": "stream|from().measurement(\'</span>quote<span style="color: #2d9574;">\'</span><span style="color: #e0211d; text-decoration: overline;">)</span>|alert<span style="color: #e0211d; text-decoration: overline;">()</span>.crit<span style="color: #e0211d; text-decoration: overline;">(</span>lambda: <span style="color: #2d9574;">\\"price\\"</span> &lt; <span style="color: #a45bad;">174</span><span style="color: #e0211d; text-decoration: overline;">)</span>.log<span style="color: #e0211d; text-decoration: overline;">(</span><span style="color: #2d9574;">\'</span>/tmp/price1.log<span style="color: #2d9574;">\'</span><span style="color: #e0211d; text-decoration: overline;">)</span><span style="color: #2d9574;">",</span>
+<span style="color: #2d9574;">    "</span>status<span style="color: #2d9574;">": "</span>enabled<span style="color: #2d9574;">"</span>
+<span style="color: #2d9574;">}</span>
+<span style="color: #2d9574;">' "</span>http://127.0.0.1:9092/kapacitor/v1/tasks<span style="color: #2d9574;">"</span>
+</pre>
+</div>
+
+<p>
+没想到在这个简单的问题上我花费了那么多时间。所以要经常 <code>RTFM</code> 啊。
+</p>
+
+
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2016-09-14</span>
+        <span title="last modification date" class="post-info">2016-09-15</span>
+        <span title="tags" class="post-info"><a href="/tags/bash/">bash</a></span>
+        <span title="author" class="post-info">Shane Xu</span>
+      </div>
+      <section>
+        <h2 class="chapter">Comments</h2>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2016/09/14/how-to-escape-single-quotes-within-single-quoted-strings-in-bash";
+          var disqus_url = "http://xusheng.org/blog/2016/09/14/how-to-escape-single-quotes-within-single-quoted-strings-in-bash";
+          var disqus_shortname = 'shanexu';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="/media/js/prettify.js"></script>
+      <script src="/media/js/main.js"></script>
+        <script type="text/javascript">
+         var _gaq = _gaq || [];
+         _gaq.push(['_setAccount', 'UA-74684473-1']);
+         _gaq.push(['_trackPageview']);
+         (function() {
+           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+         })();
+        </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x (<a href="http://orgmode.org">Org mode</a> 8.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711@gmail.com">Shane Xu</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>

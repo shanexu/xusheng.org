@@ -424,7 +424,7 @@ created by github.com/influxdata/influxdb-relay/relay.(*HTTP).ServeHTTP
 
 <p>
 这里要模拟一个场景：第一次请求的时候均失败，在run方法请求的时候均成功，time.Sleep模拟请求耗时。为了甄别请求的调用者，这里在auth这个参数上做了点文章。所以要修改下 <code>retry.go</code>
-中的 <code>run</code> 方法的调用，把 ="hello"= 作为参数传递给 <code>SimplePoster.post</code> 方法。
+中的 <code>run</code> 方法的调用，把 <code>"hello"</code> 作为参数传递给 <code>SimplePoster.post</code> 方法。
 </p>
 
 <div class="org-src-container">
