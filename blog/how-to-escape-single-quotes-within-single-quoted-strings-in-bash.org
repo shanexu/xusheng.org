@@ -1,0 +1,27 @@
+#+TITLE:       How to escape single-quotes within single-quoted strings in bash
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2016-09-14 Wed
+#+URI:         /blog/%y/%m/%d/how-to-escape-single-quotes-within-single-quoted-strings-in-bash
+#+KEYWORDS:    bash
+#+TAGS:        bash
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: How to escape single-quotes within single-quoted strings in bash
+
+事情的始末是这样的。那天我部署了一个 [[https://www.influxdata.com/time-series-platform/kapacitor/][Kapacitor]] ，然后尝试调用它的rest api添加一个Task。然而令我没想到是，习惯了使用 =curl= 的我，这次竟然迟迟没有搞定这个这个rest接口。
+
+Kapacitor的这个接口其实很简单，就是往 =/kapacitor/v1/tasks= 这个地址 =POST= 一段JSON数据。然而这个JSON数据中有一个要命的 =script= 字段，这个字段中又有单引号出现。我用的命令如下。
+
+#+begin_src bash
+curl -X POST -H "Content-Type: application/json" -d '
+{
+    "id" : "quote1",
+    "type" : "stream",
+    "dbrps": [{"db": "udp", "rp" : "autogen"}],
+    "script": "stream|from().measurement(\'quote\')|alert().crit(lambda: \"price\" < 174).log(\'/tmp/price1.log\')",
+    "status": "enabled"
+}
+' "http://127.0.0.1:9092/kapacitor/v1/tasks"
+#+end_src
+
