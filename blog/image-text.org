@@ -71,7 +71,7 @@ var HiddenCanvas = React.createClass({
     return (
       <div style={{position: 'relative'}}>
         {images}
-        <canvas ref="myCanvas" width="800" height="300" style={{opacity: 0}}/>
+        <canvas ref="myCanvas" width="800" height="300" style={{visibility: 'hidden'}}/>
       </div>
     );
   }
@@ -160,7 +160,7 @@ var HiddenCanvas = React.createClass({
     return (
       <div style={{position: 'relative'}}>
         {images}
-        <canvas ref="myCanvas" width="800" height="300" style={{opacity: 0}}/>
+        <canvas ref="myCanvas" width="800" height="300" style={{visibility: 'hidden'}}/>
       </div>
     );
   }
