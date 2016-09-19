@@ -102,7 +102,7 @@ var HiddenCanvas = React.createClass({
     return (
       <div style={{position: 'relative'}}>
         {images}
-        <canvas ref="myCanvas" width="800" height="300" style={{opacity: 0}}/>
+        <canvas ref="myCanvas" width="800" height="300" style={{visibility: 'hidden'}}/>
       </div>
     );
   }
@@ -201,7 +201,7 @@ ReactDOM.render(
 <span class="linenr">50: </span>    <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #67b11d;">(</span>
 <span class="linenr">51: </span>      &lt;div style=<span style="color: #b1951d;">{</span><span style="color: #4f97d7;">{</span>position: <span style="color: #2d9574;">'relative'</span><span style="color: #4f97d7;">}</span><span style="color: #b1951d;">}</span>&gt;
 <span class="linenr">52: </span>        <span style="color: #b1951d;">{</span>images<span style="color: #b1951d;">}</span>
-<span class="linenr">53: </span>        &lt;canvas ref=<span style="color: #2d9574;">"myCanvas"</span> width=<span style="color: #2d9574;">"800"</span> height=<span style="color: #2d9574;">"300"</span> style=<span style="color: #b1951d;">{</span><span style="color: #4f97d7;">{</span>opacity: <span style="color: #a45bad;">0</span><span style="color: #4f97d7;">}</span><span style="color: #b1951d;">}</span>/&gt;
+<span class="linenr">53: </span>        &lt;canvas ref=<span style="color: #2d9574;">"myCanvas"</span> width=<span style="color: #2d9574;">"800"</span> height=<span style="color: #2d9574;">"300"</span> style=<span style="color: #b1951d;">{</span><span style="color: #4f97d7;">{</span>visibility: <span style="color: #2d9574;">'hidden'</span><span style="color: #4f97d7;">}</span><span style="color: #b1951d;">}</span>/&gt;
 <span class="linenr">54: </span>      &lt;/div&gt;
 <span class="linenr">55: </span>    <span style="color: #67b11d;">)</span>;
 <span class="linenr">56: </span>  <span style="color: #2d9574;">}</span>
@@ -218,7 +218,7 @@ ReactDOM.render(
     <div>
       <div class="post-meta">
         <span title="post date" class="post-info">2016-07-13</span>
-        <span title="last modification date" class="post-info">2016-07-14</span>
+        <span title="last modification date" class="post-info">2016-09-19</span>
         <span title="tags" class="post-info"><a href="/tags/javascript/">javascript</a></span>
         <span title="author" class="post-info">Shane Xu</span>
       </div>
