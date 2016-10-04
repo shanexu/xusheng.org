@@ -1,0 +1,12 @@
+#+TITLE:       God Knows
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2016-10-04 Tue
+#+URI:         /blog/%y/%m/%d/god-knows
+#+KEYWORDS:    music, 团长, 凉宫春日
+#+TAGS:        music
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: <TODO: insert your description here>
+
+目前为止，我一共有三把吉他，但是其实我并不会弹吉他。
