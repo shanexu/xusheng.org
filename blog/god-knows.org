@@ -1,4 +1,4 @@
-#+TITLE:       God Knows
+#+TITLE:       God Knows..Won't Stop My Music
 #+AUTHOR:      Shane Xu
 #+EMAIL:       xusheng0711@gmail.com
 #+DATE:        2016-10-04 Tue
@@ -9,4 +9,7 @@
 #+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
 #+DESCRIPTION: <TODO: insert your description here>
 
-目前为止，我一共有三把吉他，但是其实我并不会弹吉他。
+如果世界毁灭，请至少留下一首歌，如果我有这个选择的权利的话，我希望这一首歌是《God Knows》。
+
+目前为止我有三把吉他，最新的一把是“伪吉太”。那个时候刚补完了《轻音少女》，头脑发热，就入手了一把“伪吉太”。那时的我脑子里全是《ふわふわ时间》，《No,Thank you!》，《天使にふれたよ!》。然而静下心来的时候，我却想起了团长——万事随心所欲的凉宫春日。
+
