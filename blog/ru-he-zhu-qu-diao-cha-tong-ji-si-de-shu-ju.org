@@ -128,7 +128,7 @@ var dynamicurl="/diaochatongjisi/116219/116319/index.html";var wzwschallenge="RA
 
 用 =google= 搜索了个js =unminify= 的在线工具，得到了下面的结果：
 
-#+begin_src javascript
+#+begin_src javascript -n
 var dynamicurl = "/diaochatongjisi/116219/116319/index.html";
 var wzwschallenge = "RANDOMSTR11682";
 var wzwschallengex = "STRRANDOM11682";
@@ -208,7 +208,7 @@ HXXTTKKLLPPP5();
 
 只看最后一个看书 =HXXTTKKLLPPP5= ，通过几个方法，设置了cookie，然后再重新访问了当前网址。打开 =node= ，目测直接运行这些代码必然，会有问题，于是稍微开了下，给 =node= 环境造了一个虚假的浏览器环境。
 
-#+begin_src javascript
+#+begin_src javascript -n
 var window = {innerWidth: 1280, innerHeight: 800, screenX: 0, screenY: 0, screen: {width: 1280, height: 800}};
 var document = (function(){
     var cookies = [];
@@ -249,4 +249,63 @@ document.cookie;
 - PhantomJS
 - Nashorn - Included with Oracle Java 8
 
+这里用 =PyExecJS=, =Beautiful Soup=, =Requests=, 写一个简单的抓取脚本
 
+#+begin_src python -n
+import requests
+from bs4 import BeautifulSoup
+import execjs
+
+url = 'http://www.pbc.gov.cn/diaochatongjisi/116219/116319/index.html'
+rep = requests.get(url, allow_redirects=False)
+rep.encoding = 'UTF-8'
+
+cookies = ["%s=%s" % (c.name, c.value) for c in rep.cookies]
+
+soup = BeautifulSoup(rep.text, 'html.parser')
+
+js_tpl = """
+function func(){
+    var window = {innerWidth: 1280, innerHeight: 800, screenX: 0, screenY: 0, screen: {width: 1280, height: 800}};
+    var document = (function(){
+        var cookies = [];
+        return {
+            get cookie() {
+                return cookies;
+            },
+            set cookie(c) {
+                cookies.push(c);
+            }
+        }
+    })();
+    %s
+    return document.cookie;
+}
+"""
+
+js_source = js_tpl % soup.find('script').text
+
+ctx = execjs.compile(js_source)
+
+cookies2 = [h.split('; ')[0] for h in ctx.call('func')]
+
+cookies = cookies + cookies2
+
+headers = {
+    'Cookie': '; '.join(cookies)
+}
+
+rep2 = requests.get(url, headers=headers, allow_redirects=False)
+
+ccpassport = rep2.cookies['ccpassport']
+
+headers2 = {
+    'Cookie': 'ccpassport=' + ccpassport
+}
+
+rep3 = requests.get(url, headers=headers2, allow_redirects=False)
+rep3.encoding = 'UTF-8'
+
+print('content:', rep3.text)
+print('ccpassport:', ccpassport)
+#+end_src
