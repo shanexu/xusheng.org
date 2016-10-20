@@ -251,61 +251,6 @@ document.cookie;
 
 这里用 =PyExecJS=, =Beautiful Soup=, =Requests=, 写一个简单的抓取脚本
 
-#+begin_src python -n
-import requests
-from bs4 import BeautifulSoup
-import execjs
-
-url = 'http://www.pbc.gov.cn/diaochatongjisi/116219/116319/index.html'
-rep = requests.get(url, allow_redirects=False)
-rep.encoding = 'UTF-8'
-
-cookies = ["%s=%s" % (c.name, c.value) for c in rep.cookies]
-
-soup = BeautifulSoup(rep.text, 'html.parser')
-
-js_tpl = """
-function func(){
-    var window = {innerWidth: 1280, innerHeight: 800, screenX: 0, screenY: 0, screen: {width: 1280, height: 800}};
-    var document = (function(){
-        var cookies = [];
-        return {
-            get cookie() {
-                return cookies;
-            },
-            set cookie(c) {
-                cookies.push(c);
-            }
-        }
-    })();
-    %s
-    return document.cookie;
-}
-"""
-
-js_source = js_tpl % soup.find('script').text
-
-ctx = execjs.compile(js_source)
-
-cookies2 = [h.split('; ')[0] for h in ctx.call('func')]
-
-cookies = cookies + cookies2
-
-headers = {
-    'Cookie': '; '.join(cookies)
-}
-
-rep2 = requests.get(url, headers=headers, allow_redirects=False)
-
-ccpassport = rep2.cookies['ccpassport']
-
-headers2 = {
-    'Cookie': 'ccpassport=' + ccpassport
-}
-
-rep3 = requests.get(url, headers=headers2, allow_redirects=False)
-rep3.encoding = 'UTF-8'
-
-print('content:', rep3.text)
-print('ccpassport:', ccpassport)
-#+end_src
+#+begin_html
+<script src="https://gist.github.com/shanexu/cc343f1e2106ca4fd623264694504cf8.js"></script>
+#+end_html
