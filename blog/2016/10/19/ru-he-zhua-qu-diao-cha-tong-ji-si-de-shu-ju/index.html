@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>如何抓取中国人民银行调查统计司的数据 - Shane Xu&#39;s Home</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Shane Xu" />
+    <meta name="description" content="如何抓取中国人民银行调查统计司的数据" />
+    <meta name="keywords" content="数据采集" />
+    <link rel="stylesheet" href="/media/source-code-pro/source-code-pro.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/extra.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/code-dark.css" type="text/css">
+    <!-- <link rel="stylesheet" href="/media/css/code-light.css" type="text/css"> -->
+  </head>
+
+  <body>
+    <div>
+      <header class="masthead">
+        <h1 class="settitle"><a href="/">Shane Xu&#39;s Home</a></h1>
+        <blockquote>Life is too short for so much sorrow.</blockquote>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="xusheng.org">
+        </form>
+      </header>
+    </div>
+    <div class="node nav">
+      <ul>
+          <li><a href="/blog/">Blog</a></li>
+        <li><a href="/tags/">Tags</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="https://github.com/shanexu">GitHub</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+      </ul>
+      <hr/>
+    </div>
+
+
+  <h3 class="section">如何抓取中国人民银行调查统计司的数据</h3>
+<p>
+友人找我解决个问题，用python抓取中国人民银行调查统计司的一个页面(<a href="http://www.pbc.gov.cn/diaochatongjisi/116219/116319/index.html">http://www.pbc.gov.cn/diaochatongjisi/116219/116319/index.html</a>)的数据。原本以为这会是一个极其简单的问题。然而却碰到了一个磕绊。
+</p>
+
+<p>
+首先用惯用手法， <code>curl</code> 看下裸的内容。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">$ curl -i  http://www.pbc.gov.cn/diaochatongjisi/116219/116319/index.html
+
+HTTP/1.1 200 OK
+Server: 360wzws
+Date: Wed, 19 Oct 2016 15:04:28 GMT
+Content-Type: text/html
+Transfer-Encoding: chunked
+Connection: keep-alive
+Set-Cookie: wzwsconfirm=c638a799682c4ef7c292c212e0fc23db; path=/
+Set-Cookie: wzwsvtime=1476889468; path=/
+
+&lt;html&gt;
+&lt;head&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;noscript&gt;
+&lt;h1&gt;&lt;strong&gt;&#35831;&#24320;&#21551;JavaScript&#24182;&#21047;&#26032;&#35813;&#39029;.&lt;/strong&gt;&lt;/h1&gt;
+&lt;/noscript&gt;
+&lt;script type="text/javascript"&gt;
+eval(function(p,a,c,k,e,d){e=function(c){return(c&lt;a?'':e(parseInt(c/a)))+((c=c%a)&gt;32?String.fromCharCode(c+32):c.toString(33))};if(!''.replace(/^/,String)){while(c--)d[e(c)]=k[c]||e(c);k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('15 D="k";15 1a="i";15 1b="l";15 11=d;15 F = "e+/=";J g(10) {15 U, N, R;15 o, p, q;R = 10.S;N = 0;U = "";17 (N &lt; R) {o = 10.s(N++) &amp; 6;O (N == R) {U += F.r(o &gt;&gt; a);U += F.r((o &amp; 1) &lt;&lt; b);U += "==";n;}p = 10.s(N++);O (N == R) {U += F.r(o &gt;&gt; a);U += F.r(((o &amp; 1) &lt;&lt; b) | ((p &amp; 5) &gt;&gt; b));U += F.r((p &amp; 4) &lt;&lt; a);U += "=";n;}q = 10.s(N++);U += F.r(o &gt;&gt; a);U += F.r(((o &amp; 1) &lt;&lt; b) | ((p &amp; 5) &gt;&gt; b));U += F.r(((p &amp; 4) &lt;&lt; a) | ((q &amp; 3) &gt;&gt; c));U += F.r(q &amp; 2);}W U;}J H(){15 16= 19.Q||B.C.u||B.m.u;15 K= 19.P||B.C.t||B.m.t;O (16*K &lt;= 8) {W 14;}15 1d = 19.Y;15 1e = 19.Z;O (1d + 16 &lt;= 0 || 1e + K &lt;= 0 || 1d &gt;= 19.X.18 || 1e &gt;= 19.X.M) {W 14;}W G;}J h(){15 12 = 1a+1b;15 L = 0;15 N    = 0;I(N = 0; N &lt; 12.S; N++) {L += 12.s(N);}L *= 9;L += 7;W "j"+L;}J f(){O(H()) {} E {15 A = ""; A = "1c="+g(11.13()) + "; V=/";B.w = A; 15 v = h();A = "1a="+g(v.13()) + "; V=/";B.w = A; 19.T=D;}}f();',59,74,'0|0x3|0x3f|0xc0|0xf|0xf0|0xff|111111|120000|19|2|4|6|7|ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789|HXXTTKKLLPPP5|KTKY2RBD9NHPBCIHV9ZMEQQDARSLVFDU|QWERTASDFGXYSF|RANDOMSTR11682|WZWS_CONFIRM_PREFIX_LABEL7|/diaochatongjisi/116219/116319/index.html|STRRANDOM11682|body|break|c1|c2|c3|charAt|charCodeAt|clientHeight|clientWidth|confirm|cookie|cookieString|document|documentElement|dynamicurl|else|encoderchars|false|findDimensions|for|function|h|hash|height|i|if|innerHeight|innerWidth|len|length|location|out|path|return|screen|screenX|screenY|str|template|tmp|toString|true|var|w|while|width|window|wzwschallenge|wzwschallengex|wzwstemplate|x|y'.split('|'),0,{}))
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+</div>
+
+<p>
+shit! 没有数据。也许是js里面渲染出来的。于是用 <code>chrome</code> 打开页面，查看页面源代码，我看到的东西是这样的:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-html">&lt;<span style="color: #4f97d7; font-weight: bold;">!DOCTYPE</span> html PUBLIC <span style="color: #2d9574;">"-//W3C//DTD XHTML 1.0 Transitional//EN"</span> <span style="color: #2d9574;">"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">html</span>&gt;
+ &lt;<span style="color: #bc6ec5; font-weight: bold;">head</span>&gt;
+  &lt;<span style="color: #bc6ec5; font-weight: bold;">meta</span> <span style="color: #7590db;">http-equiv</span>=<span style="color: #2d9574;">"Content-Type"</span> <span style="color: #7590db;">content</span>=<span style="color: #2d9574;">"text/html; charset=utf-8"</span> /&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">title</span>&gt;<span style="font-weight: bold; text-decoration: underline;">&#32479;&#35745;&#25968;&#25454;</span>&lt;/<span style="color: #bc6ec5; font-weight: bold;">title</span>&gt;
+&lt;<span style="color: #bc6ec5; font-weight: bold;">meta</span>  <span style="color: #7590db;">name</span>=<span style="color: #2d9574;">"&#39029;&#38754;&#29983;&#25104;&#26102;&#38388;"</span> <span style="color: #7590db;">content</span>=<span style="color: #2d9574;">"2016-09-29 17:15:53"</span> /&gt;
+&lt;<span style="color: #bc6ec5; font-weight: bold;">meta</span>  <span style="color: #7590db;">name</span>=<span style="color: #2d9574;">"&#32531;&#23384;&#28165;&#29702;&#26102;&#38388;"</span> <span style="color: #7590db;">content</span>=<span style="color: #2d9574;">"2016-09-02 17:42:14"</span>/&gt;
+&lt;<span style="color: #bc6ec5; font-weight: bold;">meta</span>  <span style="color: #7590db;">name</span>=<span style="color: #2d9574;">"easysite&#29256;&#26412;"</span> <span style="color: #7590db;">content</span>=<span style="color: #2d9574;">"7.9.5"</span>/&gt;
+&lt;<span style="color: #bc6ec5; font-weight: bold;">meta</span> <span style="color: #7590db;">name</span>=<span style="color: #2d9574;">"keywords"</span>  <span style="color: #7590db;">content</span>=<span style="color: #2d9574;">""</span> /&gt;
+&lt;<span style="color: #bc6ec5; font-weight: bold;">meta</span> <span style="color: #7590db;">name</span>=<span style="color: #2d9574;">"description"</span>  <span style="color: #7590db;">content</span>=<span style="color: #2d9574;">"&#32479;&#35745;&#25968;&#25454;"</span> /&gt;
+............
+<span style="color: #2aa1ae; background-color: #292e34;">&lt;!--</span><span style="color: #2aa1ae; background-color: #292e34;">&#23548;&#33322; </span><span style="color: #2aa1ae; background-color: #292e34;">--&gt;</span>
+&lt;<span style="color: #bc6ec5; font-weight: bold;">div</span> <span style="color: #7590db;">id</span>=<span style="color: #2d9574;">"logo"</span>&gt; 
+  &lt;<span style="color: #bc6ec5; font-weight: bold;">div</span> <span style="color: #7590db;">class</span>=<span style="color: #2d9574;">"logo2"</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">table</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"950"</span> <span style="color: #7590db;">height</span>=<span style="color: #2d9574;">"100%"</span> <span style="color: #7590db;">cellpadding</span>=<span style="color: #2d9574;">"0"</span> <span style="color: #7590db;">cellspacing</span>=<span style="color: #2d9574;">"0"</span> <span style="color: #7590db;">border</span>=<span style="color: #2d9574;">"0"</span>&gt;
+        &lt;<span style="color: #bc6ec5; font-weight: bold;">tr</span>&gt;
+          &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"119"</span> <span style="color: #7590db;">align</span>=<span style="color: #2d9574;">"center"</span> <span style="color: #7590db;">valign</span>=<span style="color: #2d9574;">"middle"</span> <span style="color: #7590db;">id</span>=<span style="color: #2d9574;">"biaotou"</span> <span style="color: #7590db;">style</span>=<span style="color: #2d9574;">"background-image:url(/eportal/fileDir/rmyh/template/common/header/gongkai1.jpg);"</span>&gt;&#20449;&#24687;&#20844;&#24320;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+          &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"831"</span> <span style="color: #7590db;">style</span>=<span style="color: #2d9574;">"background-image:url(/eportal/fileDir/rmyh/template/common/header/gongkai2.jpg);background-repeat:repeat-x;"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">table</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"100%"</span> <span style="color: #7590db;">height</span>=<span style="color: #2d9574;">"100%"</span> <span style="color: #7590db;">cellpadding</span>=<span style="color: #2d9574;">"0"</span> <span style="color: #7590db;">cellspacing</span>=<span style="color: #2d9574;">"0"</span> <span style="color: #7590db;">border</span>=<span style="color: #2d9574;">"0"</span> <span style="color: #7590db;">class</span>=<span style="color: #2d9574;">"cs"</span>&gt;
+              &lt;<span style="color: #bc6ec5; font-weight: bold;">tr</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"83"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/goutongjiaoliu/113456/113469/index.html"</span>  <span style="color: #7590db;">target</span>=<span style="color: #2d9574;">"_parent"</span>&gt;&#26032;&#38395;&#21457;&#24067;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"83"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/tiaofasi/144941/index.html"</span> <span style="color: #7590db;">target</span>=<span style="color: #2d9574;">"_parent"</span>&gt;&#27861;&#24459;&#27861;&#35268;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"83"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/rmyh/105145/index.html"</span>  <span style="color: #7590db;">target</span>=<span style="color: #2d9574;">"_parent"</span>&gt;&#36135;&#24065;&#25919;&#31574;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"83"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/jinrongshichangsi/147160/147289/index.html"</span>  <span style="color: #7590db;">target</span>=<span style="color: #2d9574;">"_parent"</span>&gt;&#20449;&#36151;&#25919;&#31574;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"83"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/jinrongshichangsi/147160/147171/index.html"</span>  <span style="color: #7590db;">target</span>=<span style="color: #2d9574;">"_parent"</span>&gt;&#37329;&#34701;&#24066;&#22330;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"83"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/jinrongwendingju/146766/index.html"</span>  <span style="color: #7590db;">target</span>=<span style="color: #2d9574;">"_parent"</span>&gt;&#37329;&#34701;&#31283;&#23450;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"83"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/diaochatongjisi/116219/index.html"</span> <span style="color: #7590db;">target</span>=<span style="color: #2d9574;">"_parent"</span>&gt;&#35843;&#26597;&#32479;&#35745;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"83"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/kuaijicaiwusi/145920/index.html"</span>  <span style="color: #7590db;">target</span>=<span style="color: #2d9574;">"_parent"</span>&gt;&#38134;&#34892;&#20250;&#35745;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"83"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/zhifujiesuansi/128525/index.html"</span>  <span style="color: #7590db;">target</span>=<span style="color: #2d9574;">"_parent"</span>&gt;&#25903;&#20184;&#20307;&#31995;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"84"</span> <span style="color: #7590db;">style</span>=<span style="color: #2d9574;">"border-right-style:none;"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/kejisi/146812/index.html"</span>  <span style="color: #7590db;">target</span>=<span style="color: #2d9574;">"_parent"</span>&gt;&#37329;&#34701;&#31185;&#25216;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+              &lt;/<span style="color: #bc6ec5; font-weight: bold;">tr</span>&gt;
+              &lt;<span style="color: #bc6ec5; font-weight: bold;">tr</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">colspan</span>=<span style="color: #2d9574;">"10"</span> <span style="color: #7590db;">style</span>=<span style="color: #2d9574;">"border-right-style:none; height:6px;"</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+              &lt;/<span style="color: #bc6ec5; font-weight: bold;">tr</span>&gt;
+              &lt;<span style="color: #bc6ec5; font-weight: bold;">tr</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"83"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/huobijinyinju/147948/index.html"</span>  <span style="color: #7590db;">target</span>=<span style="color: #2d9574;">"_parent"</span>&gt;&#20154;&#27665;&#24065;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"83"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/guokuju/136142/index.html"</span>  <span style="color: #7590db;">target</span>=<span style="color: #2d9574;">"_parent"</span>&gt;&#32463;&#29702;&#22269;&#24211;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"83"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/goujisi/144449/index.html"</span>  <span style="color: #7590db;">target</span>=<span style="color: #2d9574;">"_parent"</span>&gt;&#22269;&#38469;&#20132;&#24448;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"83"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/renshisi/144501/144513/index.html"</span>  <span style="color: #7590db;">target</span>=<span style="color: #2d9574;">"_parent"</span>&gt;&#20154;&#21592;&#25307;&#24405;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"83"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/yanjiuju/124427/index.html"</span>  <span style="color: #7590db;">target</span>=<span style="color: #2d9574;">"_parent"</span>&gt;&#37329;&#34701;&#30740;&#31350;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"83"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/zhengxinguanliju/128332/index.html"</span>  <span style="color: #7590db;">target</span>=<span style="color: #2d9574;">"_parent"</span>&gt;&#24449;&#20449;&#31649;&#29702;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"83"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/fanxiqianju/135153/index.html"</span>  <span style="color: #7590db;">target</span>=<span style="color: #2d9574;">"_parent"</span>&gt;&#21453;&#27927;&#38065;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"83"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/dangweixuanchuanbu/110698/index.html"</span> <span style="color: #7590db;">target</span>=<span style="color: #2d9574;">"_parent"</span>&gt;&#20826;&#24314;&#24037;&#20316;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"83"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/gonghui/147897/index.html"</span> &gt;&#24037;&#20250;&#24037;&#20316;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+                &lt;<span style="color: #bc6ec5; font-weight: bold;">td</span> <span style="color: #7590db;">width</span>=<span style="color: #2d9574;">"84"</span> <span style="color: #7590db;">style</span>=<span style="color: #2d9574;">"border-right-style:none;width:82px;"</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">a</span> <span style="color: #7590db;">href</span>=<span style="color: #2d9574;">"/kejisi/146812/146832/index.html"</span> &gt;&#37329;&#34701;&#26631;&#20934;&#21270;&lt;/<span style="color: #bc6ec5; font-weight: bold;">a</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+              &lt;/<span style="color: #bc6ec5; font-weight: bold;">tr</span>&gt;
+            &lt;/<span style="color: #bc6ec5; font-weight: bold;">table</span>&gt;&lt;/<span style="color: #bc6ec5; font-weight: bold;">td</span>&gt;
+        &lt;/<span style="color: #bc6ec5; font-weight: bold;">tr</span>&gt;
+      &lt;/<span style="color: #bc6ec5; font-weight: bold;">table</span>&gt;
+  &lt;/<span style="color: #bc6ec5; font-weight: bold;">div</span>&gt;
+.............
+&lt;/<span style="color: #bc6ec5; font-weight: bold;">div</span>&gt;&lt;<span style="color: #bc6ec5; font-weight: bold;">div</span> <span style="color: #7590db;">style</span>=<span style="color: #2d9574;">"display:none"</span> <span style="color: #7590db;">easysite</span>=<span style="color: #2d9574;">"easysiteHiddenDiv"</span>&gt;
+&lt;<span style="color: #bc6ec5; font-weight: bold;">input</span> <span style="color: #7590db;">type</span>=<span style="color: #2d9574;">"hidden"</span>  <span style="color: #7590db;">id</span>=<span style="color: #2d9574;">"currentLoginUserLoginName"</span>/&gt;
+&lt;<span style="color: #bc6ec5; font-weight: bold;">input</span> <span style="color: #7590db;">type</span>=<span style="color: #2d9574;">"hidden"</span>  <span style="color: #7590db;">id</span>=<span style="color: #2d9574;">"currentLoginUserLoginId"</span>/&gt;
+&lt;/<span style="color: #bc6ec5; font-weight: bold;">div</span>&gt; &lt;/<span style="color: #bc6ec5; font-weight: bold;">body</span>&gt;
+&lt;/<span style="color: #bc6ec5; font-weight: bold;">html</span>&gt;
+</pre>
+</div>
+
+<p>
+shit! 也许是http头里面有什么花样。于是用 <code>chrome</code> 调试工具里的 <code>Copy as cURL</code> 把浏览器发送的全部的头都拿到，得到的命令是这样的。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-bash">curl <span style="color: #2d9574;">'http://www.pbc.gov.cn/diaochatongjisi/116219/116319/index.html'</span> -H <span style="color: #2d9574;">'If-None-Match: W/"11827-d359-53da1eca7c440"'</span> -H <span style="color: #2d9574;">'Accept-Encoding: gzip, deflate, sdch'</span> -H <span style="color: #2d9574;">'Accept-Language: zh,en-US;q=0.8,en;q=0.6'</span> -H <span style="color: #2d9574;">'Upgrade-Insecure-Requests: 1'</span> -H <span style="color: #2d9574;">'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36'</span> -H <span style="color: #2d9574;">'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'</span> -H <span style="color: #2d9574;">'Referer: http://www.pbc.gov.cn/diaochatongjisi/116219/116319/index.html'</span> -H <span style="color: #2d9574;">'Cookie: sdfsdf; wzwsconfirm=b3ae4367ad93720e06c784de08ac826b; wzwstemplate=Mw==; ccpassport=6068335aa29d19017e67012d53b65ea5; wzwschallenge=-1; wzwsvtime=1476889531; _gscu_1042262807=76862674r67d3p17; _gscs_1042262807=t768895303f1std16|pv:1; _gscbrs_1042262807=1'</span> -H <span style="color: #2d9574;">'Connection: keep-alive'</span> -H <span style="color: #2d9574;">'If-Modified-Since: Thu, 29 Sep 2016 09:15:53 GMT'</span> -H <span style="color: #2d9574;">'Cache-Control: max-age=0'</span> --compressed
+</pre>
+</div>
+
+<p>
+一点一点去除无用的头，最后得到的命令是这样的。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-bash">curl <span style="color: #2d9574;">'http://www.pbc.gov.cn/diaochatongjisi/116219/116319/index.html'</span> -H <span style="color: #2d9574;">'Cookie: ccpassport=6068335aa29d19017e67012d53b65ea5;'</span>
+</pre>
+</div>
+
+<p>
+所以这个头里面的 <code>ccpassport</code> 就是重点。
+</p>
+
+<p>
+一般来说cookie会在第一次访问这个网站的时候，服务器会发送 <code>Set-Cookie</code> 头给客户端，回看第一条命令的输出结果，的确有 <code>Set-Cookie</code> ，但是没有 <code>ccpassport</code> ，于是猜测就是第一个命令得到的一堆js，通过访问某个网址获取了 <code>ccpassport</code> cookie的。于是仔细看了下这个js。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-javascript">eval<span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">function</span><span style="color: #bc6ec5;">(</span><span style="color: #7590db;">p</span>,<span style="color: #7590db;">a</span>,<span style="color: #7590db;">c</span>,<span style="color: #7590db;">k</span>,<span style="color: #7590db;">e</span>,<span style="color: #7590db;">d</span><span style="color: #bc6ec5;">){</span>e=<span style="color: #4f97d7; font-weight: bold;">function</span><span style="color: #2d9574;">(</span>c<span style="color: #2d9574;">){</span><span style="color: #4f97d7; font-weight: bold;">return</span><span style="color: #67b11d;">(</span>c&lt;a?<span style="color: #2d9574;">''</span>:e<span style="color: #b1951d;">(</span>parseInt<span style="color: #4f97d7;">(</span>c/a<span style="color: #4f97d7;">)</span><span style="color: #b1951d;">)</span><span style="color: #67b11d;">)</span>+<span style="color: #67b11d;">(</span><span style="color: #b1951d;">(</span>c=c%a<span style="color: #b1951d;">)</span>&gt;<span style="color: #a45bad;">32</span>?String.fromCharCode<span style="color: #b1951d;">(</span>c+<span style="color: #a45bad;">32</span><span style="color: #b1951d;">)</span>:c.toString<span style="color: #b1951d;">(</span><span style="color: #a45bad;">33</span><span style="color: #b1951d;">)</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">}</span>;<span style="color: #4f97d7; font-weight: bold;">if</span><span style="color: #2d9574;">(</span>!<span style="color: #2d9574;">''</span>.replace<span style="color: #67b11d;">(</span><span style="color: #2d9574;">/^/</span>,String<span style="color: #67b11d;">)</span><span style="color: #2d9574;">){</span><span style="color: #4f97d7; font-weight: bold;">while</span><span style="color: #67b11d;">(</span>c--<span style="color: #67b11d;">)</span>d<span style="color: #67b11d;">[</span>e<span style="color: #b1951d;">(</span>c<span style="color: #b1951d;">)</span><span style="color: #67b11d;">]</span>=k<span style="color: #67b11d;">[</span>c<span style="color: #67b11d;">]</span>||e<span style="color: #67b11d;">(</span>c<span style="color: #67b11d;">)</span>;k=<span style="color: #67b11d;">[</span><span style="color: #4f97d7; font-weight: bold;">function</span><span style="color: #b1951d;">(</span>e<span style="color: #b1951d;">){</span><span style="color: #4f97d7; font-weight: bold;">return</span> d<span style="color: #4f97d7;">[</span>e<span style="color: #4f97d7;">]</span><span style="color: #b1951d;">}</span><span style="color: #67b11d;">]</span>;e=<span style="color: #4f97d7; font-weight: bold;">function</span><span style="color: #67b11d;">(){</span><span style="color: #4f97d7; font-weight: bold;">return</span><span style="color: #2d9574;">'\\w+'</span><span style="color: #67b11d;">}</span>;c=<span style="color: #a45bad;">1</span><span style="color: #2d9574;">}</span>;<span style="color: #4f97d7; font-weight: bold;">while</span><span style="color: #2d9574;">(</span>c--<span style="color: #2d9574;">)</span><span style="color: #4f97d7; font-weight: bold;">if</span><span style="color: #2d9574;">(</span>k<span style="color: #67b11d;">[</span>c<span style="color: #67b11d;">]</span><span style="color: #2d9574;">)</span>p=p.replace<span style="color: #2d9574;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">RegExp</span><span style="color: #67b11d;">(</span><span style="color: #2d9574;">'\\b'</span>+e<span style="color: #b1951d;">(</span>c<span style="color: #b1951d;">)</span>+<span style="color: #2d9574;">'\\b'</span>,<span style="color: #2d9574;">'g'</span><span style="color: #67b11d;">)</span>,k<span style="color: #67b11d;">[</span>c<span style="color: #67b11d;">]</span><span style="color: #2d9574;">)</span>;<span style="color: #4f97d7; font-weight: bold;">return</span> p<span style="color: #bc6ec5;">}(</span><span style="color: #2d9574;">'15 D="k";15 1a="i";15 1b="l";15 11=d;15 F = "e+/=";J g(10) {15 U, N, R;15 o, p, q;R = 10.S;N = 0;U = "";17 (N &lt; R) {o = 10.s(N++) &amp; 6;O (N == R) {U += F.r(o &gt;&gt; a);U += F.r((o &amp; 1) &lt;&lt; b);U += "==";n;}p = 10.s(N++);O (N == R) {U += F.r(o &gt;&gt; a);U += F.r(((o &amp; 1) &lt;&lt; b) | ((p &amp; 5) &gt;&gt; b));U += F.r((p &amp; 4) &lt;&lt; a);U += "=";n;}q = 10.s(N++);U += F.r(o &gt;&gt; a);U += F.r(((o &amp; 1) &lt;&lt; b) | ((p &amp; 5) &gt;&gt; b));U += F.r(((p &amp; 4) &lt;&lt; a) | ((q &amp; 3) &gt;&gt; c));U += F.r(q &amp; 2);}W U;}J H(){15 16= 19.Q||B.C.u||B.m.u;15 K= 19.P||B.C.t||B.m.t;O (16*K &lt;= 8) {W 14;}15 1d = 19.Y;15 1e = 19.Z;O (1d + 16 &lt;= 0 || 1e + K &lt;= 0 || 1d &gt;= 19.X.18 || 1e &gt;= 19.X.M) {W 14;}W G;}J h(){15 12 = 1a+1b;15 L = 0;15 N    = 0;I(N = 0; N &lt; 12.S; N++) {L += 12.s(N);}L *= 9;L += 7;W "j"+L;}J f(){O(H()) {} E {15 A = ""; A = "1c="+g(11.13()) + "; V=/";B.w = A; 15 v = h();A = "1a="+g(v.13()) + "; V=/";B.w = A; 19.T=D;}}f();'</span>,<span style="color: #a45bad;">59</span>,<span style="color: #a45bad;">74</span>,<span style="color: #2d9574;">'0|0x3|0x3f|0xc0|0xf|0xf0|0xff|111111|120000|19|2|4|6|7|ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789|HXXTTKKLLPPP5|KTKY2RBD9NHPBCIHV9ZMEQQDARSLVFDU|QWERTASDFGXYSF|RANDOMSTR11682|WZWS_CONFIRM_PREFIX_LABEL7|/diaochatongjisi/116219/116319/index.html|STRRANDOM11682|body|break|c1|c2|c3|charAt|charCodeAt|clientHeight|clientWidth|confirm|cookie|cookieString|document|documentElement|dynamicurl|else|encoderchars|false|findDimensions|for|function|h|hash|height|i|if|innerHeight|innerWidth|len|length|location|out|path|return|screen|screenX|screenY|str|template|tmp|toString|true|var|w|while|width|window|wzwschallenge|wzwschallengex|wzwstemplate|x|y'</span>.split<span style="color: #2d9574;">(</span><span style="color: #2d9574;">'|'</span><span style="color: #2d9574;">)</span>,<span style="color: #a45bad;">0</span>,<span style="color: #2d9574;">{}</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+
+<p>
+shit! 压缩过的代码。
+</p>
+
+<p>
+js的 <code>eval</code> 是接收一个字符串，并将其如代码般执行一遍，所以 <code>eval</code> 里面的表达式的返回值应该是一个字符串，于是用 <code>console.log</code> 替换 <code>eval</code> ，在 <code>chrome</code> 调试终端中执行，得到结果如下。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-javascript"><span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">dynamicurl</span>=<span style="color: #2d9574;">"/diaochatongjisi/116219/116319/index.html"</span>;<span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">wzwschallenge</span>=<span style="color: #2d9574;">"RANDOMSTR11682"</span>;<span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">wzwschallengex</span>=<span style="color: #2d9574;">"STRRANDOM11682"</span>;<span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">template</span>=<span style="color: #a45bad;">7</span>;<span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">encoderchars</span> = <span style="color: #2d9574;">"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="</span>;<span style="color: #4f97d7; font-weight: bold;">function</span> KTKY2RBD9NHPBCIHV9ZMEQQDARSLVFDU<span style="color: #4f97d7;">(</span><span style="color: #7590db;">str</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span><span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">out</span>, <span style="color: #7590db;">i</span>, <span style="color: #7590db;">len</span>;<span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">c1</span>, <span style="color: #7590db;">c2</span>, <span style="color: #7590db;">c3</span>;len = str.length;i = <span style="color: #a45bad;">0</span>;out = <span style="color: #2d9574;">""</span>;<span style="color: #4f97d7; font-weight: bold;">while</span> <span style="color: #bc6ec5;">(</span>i &lt; len<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>c1 = str.charCodeAt<span style="color: #2d9574;">(</span>i++<span style="color: #2d9574;">)</span> &amp; <span style="color: #a45bad;">0xff</span>;<span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #2d9574;">(</span>i == len<span style="color: #2d9574;">)</span> <span style="color: #2d9574;">{</span>out += encoderchars.charAt<span style="color: #67b11d;">(</span>c1 &gt;&gt; <span style="color: #a45bad;">2</span><span style="color: #67b11d;">)</span>;out += encoderchars.charAt<span style="color: #67b11d;">(</span><span style="color: #b1951d;">(</span>c1 &amp; <span style="color: #a45bad;">0x3</span><span style="color: #b1951d;">)</span> &lt;&lt; <span style="color: #a45bad;">4</span><span style="color: #67b11d;">)</span>;out += <span style="color: #2d9574;">"=="</span>;<span style="color: #4f97d7; font-weight: bold;">break</span>;<span style="color: #2d9574;">}</span>c2 = str.charCodeAt<span style="color: #2d9574;">(</span>i++<span style="color: #2d9574;">)</span>;<span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #2d9574;">(</span>i == len<span style="color: #2d9574;">)</span> <span style="color: #2d9574;">{</span>out += encoderchars.charAt<span style="color: #67b11d;">(</span>c1 &gt;&gt; <span style="color: #a45bad;">2</span><span style="color: #67b11d;">)</span>;out += encoderchars.charAt<span style="color: #67b11d;">(</span><span style="color: #b1951d;">(</span><span style="color: #4f97d7;">(</span>c1 &amp; <span style="color: #a45bad;">0x3</span><span style="color: #4f97d7;">)</span> &lt;&lt; <span style="color: #a45bad;">4</span><span style="color: #b1951d;">)</span> | <span style="color: #b1951d;">(</span><span style="color: #4f97d7;">(</span>c2 &amp; <span style="color: #a45bad;">0xf0</span><span style="color: #4f97d7;">)</span> &gt;&gt; <span style="color: #a45bad;">4</span><span style="color: #b1951d;">)</span><span style="color: #67b11d;">)</span>;out += encoderchars.charAt<span style="color: #67b11d;">(</span><span style="color: #b1951d;">(</span>c2 &amp; <span style="color: #a45bad;">0xf</span><span style="color: #b1951d;">)</span> &lt;&lt; <span style="color: #a45bad;">2</span><span style="color: #67b11d;">)</span>;out += <span style="color: #2d9574;">"="</span>;<span style="color: #4f97d7; font-weight: bold;">break</span>;<span style="color: #2d9574;">}</span>c3 = str.charCodeAt<span style="color: #2d9574;">(</span>i++<span style="color: #2d9574;">)</span>;out += encoderchars.charAt<span style="color: #2d9574;">(</span>c1 &gt;&gt; <span style="color: #a45bad;">2</span><span style="color: #2d9574;">)</span>;out += encoderchars.charAt<span style="color: #2d9574;">(</span><span style="color: #67b11d;">(</span><span style="color: #b1951d;">(</span>c1 &amp; <span style="color: #a45bad;">0x3</span><span style="color: #b1951d;">)</span> &lt;&lt; <span style="color: #a45bad;">4</span><span style="color: #67b11d;">)</span> | <span style="color: #67b11d;">(</span><span style="color: #b1951d;">(</span>c2 &amp; <span style="color: #a45bad;">0xf0</span><span style="color: #b1951d;">)</span> &gt;&gt; <span style="color: #a45bad;">4</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span>;out += encoderchars.charAt<span style="color: #2d9574;">(</span><span style="color: #67b11d;">(</span><span style="color: #b1951d;">(</span>c2 &amp; <span style="color: #a45bad;">0xf</span><span style="color: #b1951d;">)</span> &lt;&lt; <span style="color: #a45bad;">2</span><span style="color: #67b11d;">)</span> | <span style="color: #67b11d;">(</span><span style="color: #b1951d;">(</span>c3 &amp; <span style="color: #a45bad;">0xc0</span><span style="color: #b1951d;">)</span> &gt;&gt; <span style="color: #a45bad;">6</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span>;out += encoderchars.charAt<span style="color: #2d9574;">(</span>c3 &amp; <span style="color: #a45bad;">0x3f</span><span style="color: #2d9574;">)</span>;<span style="color: #bc6ec5;">}</span><span style="color: #4f97d7; font-weight: bold;">return</span> out;<span style="color: #4f97d7;">}</span><span style="color: #4f97d7; font-weight: bold;">function</span> findDimensions<span style="color: #4f97d7;">(){</span><span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">w</span>= window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;<span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">h</span>= window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;<span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span>w*h &lt;= <span style="color: #a45bad;">120000</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span><span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #a45bad;">true</span>;<span style="color: #bc6ec5;">}</span><span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">x</span> = window.screenX;<span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">y</span> = window.screenY;<span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span>x + w &lt;= <span style="color: #a45bad;">0</span> || y + h &lt;= <span style="color: #a45bad;">0</span> || x &gt;= window.screen.width || y &gt;= window.screen.height<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span><span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #a45bad;">true</span>;<span style="color: #bc6ec5;">}</span><span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #a45bad;">false</span>;<span style="color: #4f97d7;">}</span><span style="color: #4f97d7; font-weight: bold;">function</span> QWERTASDFGXYSF<span style="color: #4f97d7;">(){</span><span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">tmp</span> = wzwschallenge+wzwschallengex;<span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">hash</span> = <span style="color: #a45bad;">0</span>;<span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">i</span>    = <span style="color: #a45bad;">0</span>;<span style="color: #4f97d7; font-weight: bold;">for</span><span style="color: #bc6ec5;">(</span>i = <span style="color: #a45bad;">0</span>; i &lt; tmp.length; i++<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>hash += tmp.charCodeAt<span style="color: #2d9574;">(</span>i<span style="color: #2d9574;">)</span>;<span style="color: #bc6ec5;">}</span>hash *= <span style="color: #a45bad;">19</span>;hash += <span style="color: #a45bad;">111111</span>;<span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #2d9574;">"WZWS_CONFIRM_PREFIX_LABEL7"</span>+hash;<span style="color: #4f97d7;">}</span><span style="color: #4f97d7; font-weight: bold;">function</span> HXXTTKKLLPPP5<span style="color: #4f97d7;">(){</span><span style="color: #4f97d7; font-weight: bold;">if</span><span style="color: #bc6ec5;">(</span>findDimensions<span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{}</span> <span style="color: #4f97d7; font-weight: bold;">else</span> <span style="color: #bc6ec5;">{</span><span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">cookieString</span> = <span style="color: #2d9574;">""</span>;  cookieString = <span style="color: #2d9574;">"wzwstemplate="</span>+KTKY2RBD9NHPBCIHV9ZMEQQDARSLVFDU<span style="color: #2d9574;">(</span>template.toString<span style="color: #67b11d;">()</span><span style="color: #2d9574;">)</span> + <span style="color: #2d9574;">"; path=/"</span>;document.cookie = cookieString; <span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">confirm</span> = QWERTASDFGXYSF<span style="color: #2d9574;">()</span>;cookieString = <span style="color: #2d9574;">"wzwschallenge="</span>+KTKY2RBD9NHPBCIHV9ZMEQQDARSLVFDU<span style="color: #2d9574;">(</span>confirm.toString<span style="color: #67b11d;">()</span><span style="color: #2d9574;">)</span> + <span style="color: #2d9574;">"; path=/"</span>;document.cookie = cookieString;  window.location=dynamicurl;<span style="color: #bc6ec5;">}</span><span style="color: #4f97d7;">}</span>HXXTTKKLLPPP5<span style="color: #4f97d7;">()</span>;
+</pre>
+</div>
+
+<p>
+用 <code>google</code> 搜索了个js <code>unminify</code> 的在线工具，得到了下面的结果：
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-javascript"><span class="linenr"> 1: </span><span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">dynamicurl</span> = <span style="color: #2d9574;">"/diaochatongjisi/116219/116319/index.html"</span>;
+<span class="linenr"> 2: </span><span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">wzwschallenge</span> = <span style="color: #2d9574;">"RANDOMSTR11682"</span>;
+<span class="linenr"> 3: </span><span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">wzwschallengex</span> = <span style="color: #2d9574;">"STRRANDOM11682"</span>;
+<span class="linenr"> 4: </span><span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">template</span> = <span style="color: #a45bad;">7</span>;
+<span class="linenr"> 5: </span><span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">encoderchars</span> = <span style="color: #2d9574;">"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="</span>;
+<span class="linenr"> 6: </span>
+<span class="linenr"> 7: </span><span style="color: #4f97d7; font-weight: bold;">function</span> <span style="color: #bc6ec5; font-weight: bold;">KTKY2RBD9NHPBCIHV9ZMEQQDARSLVFDU</span><span style="color: #4f97d7;">(</span><span style="color: #7590db;">str</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+<span class="linenr"> 8: </span>    <span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">out</span>, <span style="color: #7590db;">i</span>, <span style="color: #7590db;">len</span>;
+<span class="linenr"> 9: </span>    <span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">c1</span>, <span style="color: #7590db;">c2</span>, <span style="color: #7590db;">c3</span>;
+<span class="linenr">10: </span>    len = str.length;
+<span class="linenr">11: </span>    i = <span style="color: #a45bad;">0</span>;
+<span class="linenr">12: </span>    out = <span style="color: #2d9574;">""</span>;
+<span class="linenr">13: </span>    <span style="color: #4f97d7; font-weight: bold;">while</span> <span style="color: #bc6ec5;">(</span>i &lt; len<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+<span class="linenr">14: </span>        c1 = str.charCodeAt<span style="color: #2d9574;">(</span>i++<span style="color: #2d9574;">)</span> &amp; <span style="color: #a45bad;">0xff</span>;
+<span class="linenr">15: </span>        <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #2d9574;">(</span>i == len<span style="color: #2d9574;">)</span> <span style="color: #2d9574;">{</span>
+<span class="linenr">16: </span>            out += encoderchars.charAt<span style="color: #67b11d;">(</span>c1 &gt;&gt; <span style="color: #a45bad;">2</span><span style="color: #67b11d;">)</span>;
+<span class="linenr">17: </span>            out += encoderchars.charAt<span style="color: #67b11d;">(</span><span style="color: #b1951d;">(</span>c1 &amp; <span style="color: #a45bad;">0x3</span><span style="color: #b1951d;">)</span> &lt;&lt; <span style="color: #a45bad;">4</span><span style="color: #67b11d;">)</span>;
+<span class="linenr">18: </span>            out += <span style="color: #2d9574;">"=="</span>;
+<span class="linenr">19: </span>            <span style="color: #4f97d7; font-weight: bold;">break</span>;
+<span class="linenr">20: </span>        <span style="color: #2d9574;">}</span>
+<span class="linenr">21: </span>        c2 = str.charCodeAt<span style="color: #2d9574;">(</span>i++<span style="color: #2d9574;">)</span>;
+<span class="linenr">22: </span>        <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #2d9574;">(</span>i == len<span style="color: #2d9574;">)</span> <span style="color: #2d9574;">{</span>
+<span class="linenr">23: </span>            out += encoderchars.charAt<span style="color: #67b11d;">(</span>c1 &gt;&gt; <span style="color: #a45bad;">2</span><span style="color: #67b11d;">)</span>;
+<span class="linenr">24: </span>            out += encoderchars.charAt<span style="color: #67b11d;">(</span><span style="color: #b1951d;">(</span><span style="color: #4f97d7;">(</span>c1 &amp; <span style="color: #a45bad;">0x3</span><span style="color: #4f97d7;">)</span> &lt;&lt; <span style="color: #a45bad;">4</span><span style="color: #b1951d;">)</span> | <span style="color: #b1951d;">(</span><span style="color: #4f97d7;">(</span>c2 &amp; <span style="color: #a45bad;">0xf0</span><span style="color: #4f97d7;">)</span> &gt;&gt; <span style="color: #a45bad;">4</span><span style="color: #b1951d;">)</span><span style="color: #67b11d;">)</span>;
+<span class="linenr">25: </span>            out += encoderchars.charAt<span style="color: #67b11d;">(</span><span style="color: #b1951d;">(</span>c2 &amp; <span style="color: #a45bad;">0xf</span><span style="color: #b1951d;">)</span> &lt;&lt; <span style="color: #a45bad;">2</span><span style="color: #67b11d;">)</span>;
+<span class="linenr">26: </span>            out += <span style="color: #2d9574;">"="</span>;
+<span class="linenr">27: </span>            <span style="color: #4f97d7; font-weight: bold;">break</span>;
+<span class="linenr">28: </span>        <span style="color: #2d9574;">}</span>
+<span class="linenr">29: </span>        c3 = str.charCodeAt<span style="color: #2d9574;">(</span>i++<span style="color: #2d9574;">)</span>;
+<span class="linenr">30: </span>        out += encoderchars.charAt<span style="color: #2d9574;">(</span>c1 &gt;&gt; <span style="color: #a45bad;">2</span><span style="color: #2d9574;">)</span>;
+<span class="linenr">31: </span>        out += encoderchars.charAt<span style="color: #2d9574;">(</span><span style="color: #67b11d;">(</span><span style="color: #b1951d;">(</span>c1 &amp; <span style="color: #a45bad;">0x3</span><span style="color: #b1951d;">)</span> &lt;&lt; <span style="color: #a45bad;">4</span><span style="color: #67b11d;">)</span> | <span style="color: #67b11d;">(</span><span style="color: #b1951d;">(</span>c2 &amp; <span style="color: #a45bad;">0xf0</span><span style="color: #b1951d;">)</span> &gt;&gt; <span style="color: #a45bad;">4</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span>;
+<span class="linenr">32: </span>        out += encoderchars.charAt<span style="color: #2d9574;">(</span><span style="color: #67b11d;">(</span><span style="color: #b1951d;">(</span>c2 &amp; <span style="color: #a45bad;">0xf</span><span style="color: #b1951d;">)</span> &lt;&lt; <span style="color: #a45bad;">2</span><span style="color: #67b11d;">)</span> | <span style="color: #67b11d;">(</span><span style="color: #b1951d;">(</span>c3 &amp; <span style="color: #a45bad;">0xc0</span><span style="color: #b1951d;">)</span> &gt;&gt; <span style="color: #a45bad;">6</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span>;
+<span class="linenr">33: </span>        out += encoderchars.charAt<span style="color: #2d9574;">(</span>c3 &amp; <span style="color: #a45bad;">0x3f</span><span style="color: #2d9574;">)</span>;
+<span class="linenr">34: </span>    <span style="color: #bc6ec5;">}</span>
+<span class="linenr">35: </span>    <span style="color: #4f97d7; font-weight: bold;">return</span> out;
+<span class="linenr">36: </span><span style="color: #4f97d7;">}</span>
+<span class="linenr">37: </span>
+<span class="linenr">38: </span><span style="color: #4f97d7; font-weight: bold;">function</span> <span style="color: #bc6ec5; font-weight: bold;">findDimensions</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7;">{</span>
+<span class="linenr">39: </span>    <span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">w</span> = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+<span class="linenr">40: </span>    <span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">h</span> = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+<span class="linenr">41: </span>    <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span>w * h &lt;= <span style="color: #a45bad;">120000</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+<span class="linenr">42: </span>        <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #a45bad;">true</span>;
+<span class="linenr">43: </span>    <span style="color: #bc6ec5;">}</span>
+<span class="linenr">44: </span>    <span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">x</span> = window.screenX;
+<span class="linenr">45: </span>    <span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">y</span> = window.screenY;
+<span class="linenr">46: </span>    <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span>x + w &lt;= <span style="color: #a45bad;">0</span> || y + h &lt;= <span style="color: #a45bad;">0</span> || x &gt;= window.screen.width || y &gt;= window.screen.height<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+<span class="linenr">47: </span>        <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #a45bad;">true</span>;
+<span class="linenr">48: </span>    <span style="color: #bc6ec5;">}</span>
+<span class="linenr">49: </span>    <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #a45bad;">false</span>;
+<span class="linenr">50: </span><span style="color: #4f97d7;">}</span>
+<span class="linenr">51: </span>
+<span class="linenr">52: </span><span style="color: #4f97d7; font-weight: bold;">function</span> <span style="color: #bc6ec5; font-weight: bold;">QWERTASDFGXYSF</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7;">{</span>
+<span class="linenr">53: </span>    <span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">tmp</span> = wzwschallenge + wzwschallengex;
+<span class="linenr">54: </span>    <span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">hash</span> = <span style="color: #a45bad;">0</span>;
+<span class="linenr">55: </span>    <span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">i</span> = <span style="color: #a45bad;">0</span>;
+<span class="linenr">56: </span>    <span style="color: #4f97d7; font-weight: bold;">for</span> <span style="color: #bc6ec5;">(</span>i = <span style="color: #a45bad;">0</span>; i &lt; tmp.length; i++<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+<span class="linenr">57: </span>        hash += tmp.charCodeAt<span style="color: #2d9574;">(</span>i<span style="color: #2d9574;">)</span>;
+<span class="linenr">58: </span>    <span style="color: #bc6ec5;">}</span>
+<span class="linenr">59: </span>    hash *= <span style="color: #a45bad;">19</span>;
+<span class="linenr">60: </span>    hash += <span style="color: #a45bad;">111111</span>;
+<span class="linenr">61: </span>    <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #2d9574;">"WZWS_CONFIRM_PREFIX_LABEL7"</span> + hash;
+<span class="linenr">62: </span><span style="color: #4f97d7;">}</span>
+<span class="linenr">63: </span>
+<span class="linenr">64: </span><span style="color: #4f97d7; font-weight: bold;">function</span> <span style="color: #bc6ec5; font-weight: bold;">HXXTTKKLLPPP5</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7;">{</span>
+<span class="linenr">65: </span>    <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span>findDimensions<span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{}</span> <span style="color: #4f97d7; font-weight: bold;">else</span> <span style="color: #bc6ec5;">{</span>
+<span class="linenr">66: </span>        <span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">cookieString</span> = <span style="color: #2d9574;">""</span>;
+<span class="linenr">67: </span>        cookieString = <span style="color: #2d9574;">"wzwstemplate="</span> + KTKY2RBD9NHPBCIHV9ZMEQQDARSLVFDU<span style="color: #2d9574;">(</span>template.toString<span style="color: #67b11d;">()</span><span style="color: #2d9574;">)</span> + <span style="color: #2d9574;">"; path=/"</span>;
+<span class="linenr">68: </span>        document.cookie = cookieString;
+<span class="linenr">69: </span>        <span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">confirm</span> = QWERTASDFGXYSF<span style="color: #2d9574;">()</span>;
+<span class="linenr">70: </span>        cookieString = <span style="color: #2d9574;">"wzwschallenge="</span> + KTKY2RBD9NHPBCIHV9ZMEQQDARSLVFDU<span style="color: #2d9574;">(</span>confirm.toString<span style="color: #67b11d;">()</span><span style="color: #2d9574;">)</span> + <span style="color: #2d9574;">"; path=/"</span>;
+<span class="linenr">71: </span>        document.cookie = cookieString;
+<span class="linenr">72: </span>        window.location = dynamicurl;
+<span class="linenr">73: </span>    <span style="color: #bc6ec5;">}</span>
+<span class="linenr">74: </span><span style="color: #4f97d7;">}</span>
+<span class="linenr">75: </span>HXXTTKKLLPPP5<span style="color: #4f97d7;">()</span>;
+</pre>
+</div>
+
+<p>
+只看最后一个看书 <code>HXXTTKKLLPPP5</code> ，通过几个方法，设置了cookie，然后再重新访问了当前网址。打开 <code>node</code> ，目测直接运行这些代码必然，会有问题，于是稍微开了下，给 <code>node</code> 环境造了一个虚假的浏览器环境。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-javascript"><span class="linenr"> 1: </span><span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">window</span> = <span style="color: #4f97d7;">{</span>innerWidth: <span style="color: #a45bad;">1280</span>, innerHeight: <span style="color: #a45bad;">800</span>, screenX: <span style="color: #a45bad;">0</span>, screenY: <span style="color: #a45bad;">0</span>, screen: <span style="color: #bc6ec5;">{</span>width: <span style="color: #a45bad;">1280</span>, height: <span style="color: #a45bad;">800</span><span style="color: #bc6ec5;">}</span><span style="color: #4f97d7;">}</span>;
+<span class="linenr"> 2: </span><span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">document</span> = <span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">function</span><span style="color: #bc6ec5;">(){</span>
+<span class="linenr"> 3: </span>    <span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">cookies</span> = <span style="color: #2d9574;">[]</span>;
+<span class="linenr"> 4: </span>    <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #2d9574;">{</span>
+<span class="linenr"> 5: </span>        get cookie<span style="color: #67b11d;">()</span> <span style="color: #67b11d;">{</span>
+<span class="linenr"> 6: </span>            <span style="color: #4f97d7; font-weight: bold;">return</span> cookies;
+<span class="linenr"> 7: </span>        <span style="color: #67b11d;">}</span>,
+<span class="linenr"> 8: </span>        set cookie<span style="color: #67b11d;">(</span>c<span style="color: #67b11d;">)</span> <span style="color: #67b11d;">{</span>
+<span class="linenr"> 9: </span>            cookies.push<span style="color: #b1951d;">(</span>c<span style="color: #b1951d;">)</span>;
+<span class="linenr">10: </span>        <span style="color: #67b11d;">}</span>
+<span class="linenr">11: </span>    <span style="color: #2d9574;">}</span>
+<span class="linenr">12: </span><span style="color: #bc6ec5;">}</span><span style="color: #4f97d7;">)()</span>;
+<span class="linenr">13: </span>eval<span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">function</span><span style="color: #bc6ec5;">(</span><span style="color: #7590db;">p</span>,<span style="color: #7590db;">a</span>,<span style="color: #7590db;">c</span>,<span style="color: #7590db;">k</span>,<span style="color: #7590db;">e</span>,<span style="color: #7590db;">d</span><span style="color: #bc6ec5;">){</span>e=<span style="color: #4f97d7; font-weight: bold;">function</span><span style="color: #2d9574;">(</span>c<span style="color: #2d9574;">){</span><span style="color: #4f97d7; font-weight: bold;">return</span><span style="color: #67b11d;">(</span>c&lt;a?<span style="color: #2d9574;">''</span>:e<span style="color: #b1951d;">(</span>parseInt<span style="color: #4f97d7;">(</span>c/a<span style="color: #4f97d7;">)</span><span style="color: #b1951d;">)</span><span style="color: #67b11d;">)</span>+<span style="color: #67b11d;">(</span><span style="color: #b1951d;">(</span>c=c%a<span style="color: #b1951d;">)</span>&gt;<span style="color: #a45bad;">32</span>?String.fromCharCode<span style="color: #b1951d;">(</span>c+<span style="color: #a45bad;">32</span><span style="color: #b1951d;">)</span>:c.toString<span style="color: #b1951d;">(</span><span style="color: #a45bad;">33</span><span style="color: #b1951d;">)</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">}</span>;<span style="color: #4f97d7; font-weight: bold;">if</span><span style="color: #2d9574;">(</span>!<span style="color: #2d9574;">''</span>.replace<span style="color: #67b11d;">(</span><span style="color: #2d9574;">/^/</span>,String<span style="color: #67b11d;">)</span><span style="color: #2d9574;">){</span><span style="color: #4f97d7; font-weight: bold;">while</span><span style="color: #67b11d;">(</span>c--<span style="color: #67b11d;">)</span>d<span style="color: #67b11d;">[</span>e<span style="color: #b1951d;">(</span>c<span style="color: #b1951d;">)</span><span style="color: #67b11d;">]</span>=k<span style="color: #67b11d;">[</span>c<span style="color: #67b11d;">]</span>||e<span style="color: #67b11d;">(</span>c<span style="color: #67b11d;">)</span>;k=<span style="color: #67b11d;">[</span><span style="color: #4f97d7; font-weight: bold;">function</span><span style="color: #b1951d;">(</span>e<span style="color: #b1951d;">){</span><span style="color: #4f97d7; font-weight: bold;">return</span> d<span style="color: #4f97d7;">[</span>e<span style="color: #4f97d7;">]</span><span style="color: #b1951d;">}</span><span style="color: #67b11d;">]</span>;e=<span style="color: #4f97d7; font-weight: bold;">function</span><span style="color: #67b11d;">(){</span><span style="color: #4f97d7; font-weight: bold;">return</span><span style="color: #2d9574;">'\\w+'</span><span style="color: #67b11d;">}</span>;c=<span style="color: #a45bad;">1</span><span style="color: #2d9574;">}</span>;<span style="color: #4f97d7; font-weight: bold;">while</span><span style="color: #2d9574;">(</span>c--<span style="color: #2d9574;">)</span><span style="color: #4f97d7; font-weight: bold;">if</span><span style="color: #2d9574;">(</span>k<span style="color: #67b11d;">[</span>c<span style="color: #67b11d;">]</span><span style="color: #2d9574;">)</span>p=p.replace<span style="color: #2d9574;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">RegExp</span><span style="color: #67b11d;">(</span><span style="color: #2d9574;">'\\b'</span>+e<span style="color: #b1951d;">(</span>c<span style="color: #b1951d;">)</span>+<span style="color: #2d9574;">'\\b'</span>,<span style="color: #2d9574;">'g'</span><span style="color: #67b11d;">)</span>,k<span style="color: #67b11d;">[</span>c<span style="color: #67b11d;">]</span><span style="color: #2d9574;">)</span>;<span style="color: #4f97d7; font-weight: bold;">return</span> p<span style="color: #bc6ec5;">}(</span><span style="color: #2d9574;">'15 D="k";15 1a="i";15 1b="l";15 11=d;15 F = "e+/=";J g(10) {15 U, N, R;15 o, p, q;R = 10.S;N = 0;U = "";17 (N &lt; R) {o = 10.s(N++) &amp; 6;O (N == R) {U += F.r(o &gt;&gt; a);U += F.r((o &amp; 1) &lt;&lt; b);U += "==";n;}p = 10.s(N++);O (N == R) {U += F.r(o &gt;&gt; a);U += F.r(((o &amp; 1) &lt;&lt; b) | ((p &amp; 5) &gt;&gt; b));U += F.r((p &amp; 4) &lt;&lt; a);U += "=";n;}q = 10.s(N++);U += F.r(o &gt;&gt; a);U += F.r(((o &amp; 1) &lt;&lt; b) | ((p &amp; 5) &gt;&gt; b));U += F.r(((p &amp; 4) &lt;&lt; a) | ((q &amp; 3) &gt;&gt; c));U += F.r(q &amp; 2);}W U;}J H(){15 16= 19.Q||B.C.u||B.m.u;15 K= 19.P||B.C.t||B.m.t;O (16*K &lt;= 8) {W 14;}15 1d = 19.Y;15 1e = 19.Z;O (1d + 16 &lt;= 0 || 1e + K &lt;= 0 || 1d &gt;= 19.X.18 || 1e &gt;= 19.X.M) {W 14;}W G;}J h(){15 12 = 1a+1b;15 L = 0;15 N    = 0;I(N = 0; N &lt; 12.S; N++) {L += 12.s(N);}L *= 9;L += 7;W "j"+L;}J f(){O(H()) {} E {15 A = ""; A = "1c="+g(11.13()) + "; V=/";B.w = A; 15 v = h();A = "1a="+g(v.13()) + "; V=/";B.w = A; 19.T=D;}}f();'</span>,<span style="color: #a45bad;">59</span>,<span style="color: #a45bad;">74</span>,<span style="color: #2d9574;">'0|0x3|0x3f|0xc0|0xf|0xf0|0xff|111111|120000|19|2|4|6|7|ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789|HXXTTKKLLPPP5|KTKY2RBD9NHPBCIHV9ZMEQQDARSLVFDU|QWERTASDFGXYSF|RANDOMSTR11682|WZWS_CONFIRM_PREFIX_LABEL7|/diaochatongjisi/116219/116319/index.html|STRRANDOM11682|body|break|c1|c2|c3|charAt|charCodeAt|clientHeight|clientWidth|confirm|cookie|cookieString|document|documentElement|dynamicurl|else|encoderchars|false|findDimensions|for|function|h|hash|height|i|if|innerHeight|innerWidth|len|length|location|out|path|return|screen|screenX|screenY|str|template|tmp|toString|true|var|w|while|width|window|wzwschallenge|wzwschallengex|wzwstemplate|x|y'</span>.split<span style="color: #2d9574;">(</span><span style="color: #2d9574;">'|'</span><span style="color: #2d9574;">)</span>,<span style="color: #a45bad;">0</span>,<span style="color: #2d9574;">{}</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>;
+<span class="linenr">14: </span>document.cookie;
+</pre>
+</div>
+
+<p>
+在node.js里面跑一遍，获得下面的结果:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-javascript"><span style="color: #4f97d7;">[</span> 
+    <span style="color: #2d9574;">'wzwstemplate=Nw==; path=/'</span>,
+    <span style="color: #2d9574;">'wzwschallenge=V1pXU19DT05GSVJNX1BSRUZJWF9MQUJFTDcxNDc0Mzk=; path=/'</span> 
+<span style="color: #4f97d7;">]</span>
+</pre>
+</div>
+
+<p>
+在第二次访问那个地址的时候，浏览器是带着上面两个cookie，以及原先的cookie一起访问了，那个网址，所以才能得到正确的内容。所以这个网站的爬取思路，就是：
+</p>
+<ol class="org-ol">
+<li>不带任何cookie访问网址</li>
+<li>运行返回的js，并获得两个cookie，并和第1步的cookie一起，访问网址</li>
+<li>获得结果</li>
+</ol>
+
+<p>
+不像java，python貌似没有js引擎，网上搜了下，有人做了个 <a href="https://pypi.python.org/pypi/PyExecJS">PyExecJS</a> 这个库函，可以调用各个平台自身的js引擎，从而在python中运行js。它支持的js运行环境有如下：
+</p>
+<ul class="org-ul">
+<li>PyV8 - A python wrapper for Google V8 engine,</li>
+<li>Node.js</li>
+<li>Apple JavaScriptCore - Included with Mac OS X</li>
+<li>Mozilla SpiderMonkey</li>
+<li>Microsoft Windows Script Host (JScript)</li>
+<li>SlimerJS</li>
+<li>PhantomJS</li>
+<li>Nashorn - Included with Oracle Java 8</li>
+</ul>
+
+<p>
+这里用 <code>PyExecJS</code>, <code>Beautiful Soup</code>, <code>Requests</code>, 写一个简单的抓取脚本
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #4f97d7; font-weight: bold;">import</span> requests
+<span class="linenr"> 2: </span><span style="color: #4f97d7; font-weight: bold;">from</span> bs4 <span style="color: #4f97d7; font-weight: bold;">import</span> BeautifulSoup
+<span class="linenr"> 3: </span><span style="color: #4f97d7; font-weight: bold;">import</span> execjs
+<span class="linenr"> 4: </span>
+<span class="linenr"> 5: </span><span style="color: #7590db;">url</span> = <span style="color: #2d9574;">'http://www.pbc.gov.cn/diaochatongjisi/116219/116319/index.html'</span>
+<span class="linenr"> 6: </span><span style="color: #7590db;">rep</span> = requests.get<span style="color: #4f97d7;">(</span>url, allow_redirects=<span style="color: #a45bad;">False</span><span style="color: #4f97d7;">)</span>
+<span class="linenr"> 7: </span><span style="color: #7590db;">rep.encoding</span> = <span style="color: #2d9574;">'UTF-8'</span>
+<span class="linenr"> 8: </span>
+<span class="linenr"> 9: </span><span style="color: #7590db;">cookies</span> = <span style="color: #4f97d7;">[</span><span style="color: #2d9574;">"%s=%s"</span> % <span style="color: #bc6ec5;">(</span>c.name, c.value<span style="color: #bc6ec5;">)</span> <span style="color: #4f97d7; font-weight: bold;">for</span> c <span style="color: #4f97d7; font-weight: bold;">in</span> rep.cookies<span style="color: #4f97d7;">]</span>
+<span class="linenr">10: </span>
+<span class="linenr">11: </span><span style="color: #7590db;">soup</span> = BeautifulSoup<span style="color: #4f97d7;">(</span>rep.text, <span style="color: #2d9574;">'html.parser'</span><span style="color: #4f97d7;">)</span>
+<span class="linenr">12: </span>
+<span class="linenr">13: </span><span style="color: #7590db;">js_tpl</span> = <span style="color: #2d9574;">"""</span>
+<span class="linenr">14: </span><span style="color: #2d9574;">function func(){</span>
+<span class="linenr">15: </span><span style="color: #2d9574;">    var window = {innerWidth: 1280, innerHeight: 800, screenX: 0, screenY: 0, screen: {width: 1280, height: 800}};</span>
+<span class="linenr">16: </span><span style="color: #2d9574;">    var document = (function(){</span>
+<span class="linenr">17: </span><span style="color: #2d9574;">        var cookies = [];</span>
+<span class="linenr">18: </span><span style="color: #2d9574;">        return {</span>
+<span class="linenr">19: </span><span style="color: #2d9574;">            get cookie() {</span>
+<span class="linenr">20: </span><span style="color: #2d9574;">                return cookies;</span>
+<span class="linenr">21: </span><span style="color: #2d9574;">            },</span>
+<span class="linenr">22: </span><span style="color: #2d9574;">            set cookie(c) {</span>
+<span class="linenr">23: </span><span style="color: #2d9574;">                cookies.push(c);</span>
+<span class="linenr">24: </span><span style="color: #2d9574;">            }</span>
+<span class="linenr">25: </span><span style="color: #2d9574;">        }</span>
+<span class="linenr">26: </span><span style="color: #2d9574;">    })();</span>
+<span class="linenr">27: </span><span style="color: #2d9574;">    %s</span>
+<span class="linenr">28: </span><span style="color: #2d9574;">    return document.cookie;</span>
+<span class="linenr">29: </span><span style="color: #2d9574;">}</span>
+<span class="linenr">30: </span><span style="color: #2d9574;">"""</span>
+<span class="linenr">31: </span>
+<span class="linenr">32: </span><span style="color: #7590db;">js_source</span> = js_tpl % soup.find<span style="color: #4f97d7;">(</span><span style="color: #2d9574;">'script'</span><span style="color: #4f97d7;">)</span>.text
+<span class="linenr">33: </span>
+<span class="linenr">34: </span><span style="color: #7590db;">ctx</span> = execjs.<span style="color: #4f97d7;">compile</span><span style="color: #4f97d7;">(</span>js_source<span style="color: #4f97d7;">)</span>
+<span class="linenr">35: </span>
+<span class="linenr">36: </span><span style="color: #7590db;">cookies2</span> = <span style="color: #4f97d7;">[</span>h.split<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">'; '</span><span style="color: #bc6ec5;">)[</span><span style="color: #a45bad;">0</span><span style="color: #bc6ec5;">]</span> <span style="color: #4f97d7; font-weight: bold;">for</span> h <span style="color: #4f97d7; font-weight: bold;">in</span> ctx.call<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">'func'</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">]</span>
+<span class="linenr">37: </span>
+<span class="linenr">38: </span><span style="color: #7590db;">cookies</span> = cookies + cookies2
+<span class="linenr">39: </span>
+<span class="linenr">40: </span><span style="color: #7590db;">headers</span> = <span style="color: #4f97d7;">{</span>
+<span class="linenr">41: </span>    <span style="color: #2d9574;">'Cookie'</span>: <span style="color: #2d9574;">'; '</span>.join<span style="color: #bc6ec5;">(</span>cookies<span style="color: #bc6ec5;">)</span>
+<span class="linenr">42: </span><span style="color: #4f97d7;">}</span>
+<span class="linenr">43: </span>
+<span class="linenr">44: </span><span style="color: #7590db;">rep2</span> = requests.get<span style="color: #4f97d7;">(</span>url, headers=headers, allow_redirects=<span style="color: #a45bad;">False</span><span style="color: #4f97d7;">)</span>
+<span class="linenr">45: </span>
+<span class="linenr">46: </span><span style="color: #7590db;">ccpassport</span> = rep2.cookies<span style="color: #4f97d7;">[</span><span style="color: #2d9574;">'ccpassport'</span><span style="color: #4f97d7;">]</span>
+<span class="linenr">47: </span>
+<span class="linenr">48: </span><span style="color: #7590db;">headers2</span> = <span style="color: #4f97d7;">{</span>
+<span class="linenr">49: </span>    <span style="color: #2d9574;">'Cookie'</span>: <span style="color: #2d9574;">'ccpassport='</span> + ccpassport
+<span class="linenr">50: </span><span style="color: #4f97d7;">}</span>
+<span class="linenr">51: </span>
+<span class="linenr">52: </span><span style="color: #7590db;">rep3</span> = requests.get<span style="color: #4f97d7;">(</span>url, headers=headers2, allow_redirects=<span style="color: #a45bad;">False</span><span style="color: #4f97d7;">)</span>
+<span class="linenr">53: </span><span style="color: #7590db;">rep3.encoding</span> = <span style="color: #2d9574;">'UTF-8'</span>
+<span class="linenr">54: </span>
+<span class="linenr">55: </span><span style="color: #4f97d7; font-weight: bold;">print</span><span style="color: #4f97d7;">(</span><span style="color: #2d9574;">'content:'</span>, rep3.text<span style="color: #4f97d7;">)</span>
+<span class="linenr">56: </span><span style="color: #4f97d7; font-weight: bold;">print</span><span style="color: #4f97d7;">(</span><span style="color: #2d9574;">'ccpassport:'</span>, ccpassport<span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+
+
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2016-10-19</span>
+        <span title="last modification date" class="post-info">2016-10-20</span>
+        <span title="tags" class="post-info"><a href="/tags/python/">python</a>, <a href="/tags/javascript/">javascript</a></span>
+        <span title="author" class="post-info">Shane Xu</span>
+      </div>
+      <section>
+        <h2 class="chapter">Comments</h2>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2016/10/19/ru-he-zhua-qu-diao-cha-tong-ji-si-de-shu-ju";
+          var disqus_url = "http://xusheng.org/blog/2016/10/19/ru-he-zhua-qu-diao-cha-tong-ji-si-de-shu-ju";
+          var disqus_shortname = 'shanexu';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="/media/js/prettify.js"></script>
+      <script src="/media/js/main.js"></script>
+        <script type="text/javascript">
+         var _gaq = _gaq || [];
+         _gaq.push(['_setAccount', 'UA-74684473-1']);
+         _gaq.push(['_trackPageview']);
+         (function() {
+           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+         })();
+        </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x (<a href="http://orgmode.org">Org mode</a> 8.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711@gmail.com">Shane Xu</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>

@@ -273,10 +273,16 @@ dt {
     margin-bottom: 3px;
 }
 
-li {
-    margin: 10px;
-    text-align: justify;
-    list-style-image : url(http://orgmode.org/triangle.png);
+ul > li {
+  margin: 10px;
+  text-align: justify;
+  list-style-image : url(http://orgmode.org/triangle.png);
+}
+
+ol > li {
+  margin: 10px;
+  margin-left: 16px;
+  text-align: justify;
 }
 
 #table-of-contents {
