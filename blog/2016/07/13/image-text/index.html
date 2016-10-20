@@ -120,17 +120,13 @@ ReactDOM.render(
 
 <ol class="org-ol">
 <li>计算机上的文字本身是如何显示的，在一个方格 AxB 大小的方格里，通过字体文件，计算机知道方格中的某个像素应该染上颜色。</li>
-
 <li>如果在 div 的区域内，知道该在哪个像素点填充颜色，就能“画出”文字。</li>
-
 <li>将文字画在图片上，通过获取图像上每个像素点的颜色就知道，该坐标是否需要染色。</li>
-
 <li>前端 js 有方法画出文字吗？</li>
-
 <li>有 canvas。</li>
-
 <li>canvas 里面如何获取每个点的颜色</li>
 </ol>
+
 <div class="org-src-container">
 
 <pre class="src src-javascript"><span style="color: #4f97d7; font-weight: bold;">var</span> <span style="color: #7590db;">p</span> = ctx.getImageData<span style="color: #4f97d7;">(</span>i, j, <span style="color: #a45bad;">1</span>, <span style="color: #a45bad;">1</span><span style="color: #4f97d7;">)</span>.data;
@@ -218,7 +214,7 @@ ReactDOM.render(
     <div>
       <div class="post-meta">
         <span title="post date" class="post-info">2016-07-13</span>
-        <span title="last modification date" class="post-info">2016-09-19</span>
+        <span title="last modification date" class="post-info">2016-10-20</span>
         <span title="tags" class="post-info"><a href="/tags/javascript/">javascript</a></span>
         <span title="author" class="post-info">Shane Xu</span>
       </div>
