@@ -1,0 +1,10 @@
+#+TITLE:       InfluxDB负载测试设计
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2016-10-20 Thu
+#+URI:         /blog/%y/%m/%d/influxdb-load-test-design
+#+KEYWORDS:    influxdb, go
+#+TAGS:        influxdb, go
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: <TODO: insert your description here>
