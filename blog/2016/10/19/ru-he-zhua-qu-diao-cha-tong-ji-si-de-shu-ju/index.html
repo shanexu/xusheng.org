@@ -331,66 +331,7 @@ js的 <code>eval</code> 是接收一个字符串，并将其如代码般执行�
 这里用 <code>PyExecJS</code>, <code>Beautiful Soup</code>, <code>Requests</code>, 写一个简单的抓取脚本
 </p>
 
-<div class="org-src-container">
-
-<pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #4f97d7; font-weight: bold;">import</span> requests
-<span class="linenr"> 2: </span><span style="color: #4f97d7; font-weight: bold;">from</span> bs4 <span style="color: #4f97d7; font-weight: bold;">import</span> BeautifulSoup
-<span class="linenr"> 3: </span><span style="color: #4f97d7; font-weight: bold;">import</span> execjs
-<span class="linenr"> 4: </span>
-<span class="linenr"> 5: </span><span style="color: #7590db;">url</span> = <span style="color: #2d9574;">'http://www.pbc.gov.cn/diaochatongjisi/116219/116319/index.html'</span>
-<span class="linenr"> 6: </span><span style="color: #7590db;">rep</span> = requests.get<span style="color: #4f97d7;">(</span>url, allow_redirects=<span style="color: #a45bad;">False</span><span style="color: #4f97d7;">)</span>
-<span class="linenr"> 7: </span><span style="color: #7590db;">rep.encoding</span> = <span style="color: #2d9574;">'UTF-8'</span>
-<span class="linenr"> 8: </span>
-<span class="linenr"> 9: </span><span style="color: #7590db;">cookies</span> = <span style="color: #4f97d7;">[</span><span style="color: #2d9574;">"%s=%s"</span> % <span style="color: #bc6ec5;">(</span>c.name, c.value<span style="color: #bc6ec5;">)</span> <span style="color: #4f97d7; font-weight: bold;">for</span> c <span style="color: #4f97d7; font-weight: bold;">in</span> rep.cookies<span style="color: #4f97d7;">]</span>
-<span class="linenr">10: </span>
-<span class="linenr">11: </span><span style="color: #7590db;">soup</span> = BeautifulSoup<span style="color: #4f97d7;">(</span>rep.text, <span style="color: #2d9574;">'html.parser'</span><span style="color: #4f97d7;">)</span>
-<span class="linenr">12: </span>
-<span class="linenr">13: </span><span style="color: #7590db;">js_tpl</span> = <span style="color: #2d9574;">"""</span>
-<span class="linenr">14: </span><span style="color: #2d9574;">function func(){</span>
-<span class="linenr">15: </span><span style="color: #2d9574;">    var window = {innerWidth: 1280, innerHeight: 800, screenX: 0, screenY: 0, screen: {width: 1280, height: 800}};</span>
-<span class="linenr">16: </span><span style="color: #2d9574;">    var document = (function(){</span>
-<span class="linenr">17: </span><span style="color: #2d9574;">        var cookies = [];</span>
-<span class="linenr">18: </span><span style="color: #2d9574;">        return {</span>
-<span class="linenr">19: </span><span style="color: #2d9574;">            get cookie() {</span>
-<span class="linenr">20: </span><span style="color: #2d9574;">                return cookies;</span>
-<span class="linenr">21: </span><span style="color: #2d9574;">            },</span>
-<span class="linenr">22: </span><span style="color: #2d9574;">            set cookie(c) {</span>
-<span class="linenr">23: </span><span style="color: #2d9574;">                cookies.push(c);</span>
-<span class="linenr">24: </span><span style="color: #2d9574;">            }</span>
-<span class="linenr">25: </span><span style="color: #2d9574;">        }</span>
-<span class="linenr">26: </span><span style="color: #2d9574;">    })();</span>
-<span class="linenr">27: </span><span style="color: #2d9574;">    %s</span>
-<span class="linenr">28: </span><span style="color: #2d9574;">    return document.cookie;</span>
-<span class="linenr">29: </span><span style="color: #2d9574;">}</span>
-<span class="linenr">30: </span><span style="color: #2d9574;">"""</span>
-<span class="linenr">31: </span>
-<span class="linenr">32: </span><span style="color: #7590db;">js_source</span> = js_tpl % soup.find<span style="color: #4f97d7;">(</span><span style="color: #2d9574;">'script'</span><span style="color: #4f97d7;">)</span>.text
-<span class="linenr">33: </span>
-<span class="linenr">34: </span><span style="color: #7590db;">ctx</span> = execjs.<span style="color: #4f97d7;">compile</span><span style="color: #4f97d7;">(</span>js_source<span style="color: #4f97d7;">)</span>
-<span class="linenr">35: </span>
-<span class="linenr">36: </span><span style="color: #7590db;">cookies2</span> = <span style="color: #4f97d7;">[</span>h.split<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">'; '</span><span style="color: #bc6ec5;">)[</span><span style="color: #a45bad;">0</span><span style="color: #bc6ec5;">]</span> <span style="color: #4f97d7; font-weight: bold;">for</span> h <span style="color: #4f97d7; font-weight: bold;">in</span> ctx.call<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">'func'</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">]</span>
-<span class="linenr">37: </span>
-<span class="linenr">38: </span><span style="color: #7590db;">cookies</span> = cookies + cookies2
-<span class="linenr">39: </span>
-<span class="linenr">40: </span><span style="color: #7590db;">headers</span> = <span style="color: #4f97d7;">{</span>
-<span class="linenr">41: </span>    <span style="color: #2d9574;">'Cookie'</span>: <span style="color: #2d9574;">'; '</span>.join<span style="color: #bc6ec5;">(</span>cookies<span style="color: #bc6ec5;">)</span>
-<span class="linenr">42: </span><span style="color: #4f97d7;">}</span>
-<span class="linenr">43: </span>
-<span class="linenr">44: </span><span style="color: #7590db;">rep2</span> = requests.get<span style="color: #4f97d7;">(</span>url, headers=headers, allow_redirects=<span style="color: #a45bad;">False</span><span style="color: #4f97d7;">)</span>
-<span class="linenr">45: </span>
-<span class="linenr">46: </span><span style="color: #7590db;">ccpassport</span> = rep2.cookies<span style="color: #4f97d7;">[</span><span style="color: #2d9574;">'ccpassport'</span><span style="color: #4f97d7;">]</span>
-<span class="linenr">47: </span>
-<span class="linenr">48: </span><span style="color: #7590db;">headers2</span> = <span style="color: #4f97d7;">{</span>
-<span class="linenr">49: </span>    <span style="color: #2d9574;">'Cookie'</span>: <span style="color: #2d9574;">'ccpassport='</span> + ccpassport
-<span class="linenr">50: </span><span style="color: #4f97d7;">}</span>
-<span class="linenr">51: </span>
-<span class="linenr">52: </span><span style="color: #7590db;">rep3</span> = requests.get<span style="color: #4f97d7;">(</span>url, headers=headers2, allow_redirects=<span style="color: #a45bad;">False</span><span style="color: #4f97d7;">)</span>
-<span class="linenr">53: </span><span style="color: #7590db;">rep3.encoding</span> = <span style="color: #2d9574;">'UTF-8'</span>
-<span class="linenr">54: </span>
-<span class="linenr">55: </span><span style="color: #4f97d7; font-weight: bold;">print</span><span style="color: #4f97d7;">(</span><span style="color: #2d9574;">'content:'</span>, rep3.text<span style="color: #4f97d7;">)</span>
-<span class="linenr">56: </span><span style="color: #4f97d7; font-weight: bold;">print</span><span style="color: #4f97d7;">(</span><span style="color: #2d9574;">'ccpassport:'</span>, ccpassport<span style="color: #4f97d7;">)</span>
-</pre>
-</div>
+<script src="https://gist.github.com/shanexu/cc343f1e2106ca4fd623264694504cf8.js"></script>
 
 
     <div>
