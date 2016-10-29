@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>God Knows..Won&#39;t Stop My Music - Shane Xu&#39;s Home</title>
+    <title>InfluxDB负载测试设计 - Shane Xu&#39;s Home</title>
     <meta charset="utf-8" />
     <meta name="author" content="Shane Xu" />
     <meta name="description" content="&lt;TODO: insert your description here&gt;" />
-    <meta name="keywords" content="music, 团长, 凉宫春日" />
+    <meta name="keywords" content="influxdb, go" />
     <link rel="stylesheet" href="/media/source-code-pro/source-code-pro.css" type="text/css">
     <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
     <link rel="stylesheet" href="/media/css/extra.css" type="text/css">
@@ -36,43 +36,61 @@
     </div>
 
 
-  <h3 class="section">God Knows..Won&#39;t Stop My Music</h3>
+  <h3 class="section">InfluxDB负载测试设计</h3>
+
+<div id="outline-container-orgheadline4" class="outline-2">
+<h2 id="orgheadline4">重新看一遍tsm1的DESIGN.md</h2>
+<div class="outline-text-2" id="text-orgheadline4">
+</div><div id="outline-container-orgheadline1" class="outline-3">
+<h3 id="orgheadline1">数据写入</h3>
+<div class="outline-text-3" id="text-orgheadline1">
 <p>
-如果世界毁灭，请至少留下一首歌，如果我有这个选择的权利的话，我希望这一首歌是 <a href="https://www.youtube.com/watch?v=1ot99VU4kzY">God Knows</a> 。
+Write throughput is bounded by the time to process the write on the CPU (parsing, sorting, etc..), adding and evicting to the Cache and appending the write to the WAL.  The first two items are CPU bound and can be tuned and optimized if they become a bottleneck.  The WAL write can be tuned such that in the worst case every write requires at least 2 IOPS (write + fsync) or batched so that multiple writes are queued and fsync'd in sizes matching one or more disk blocks.  Performing more work with each IO will improve throughput
 </p>
 
 <p>
-目前为止我有三把吉他，最新的一把是“伪吉太”。那个时候刚补完了《轻音少女》，头脑发热，就入手了一把“伪吉太”。那时的我脑子里全是《ふわふわ时间》，《No,Thank you!》，《天使にふれたよ!》。然而静下心来的时候，我却想起了团长——万事随心所欲的凉宫春日。
+Write latency is minimal for the WAL write since there are no seeks.  The latency is bounded by the time to complete any write and fsync calls.
+</p>
+</div>
+</div>
+<div id="outline-container-orgheadline2" class="outline-3">
+<h3 id="orgheadline2">数据查询</h3>
+<div class="outline-text-3" id="text-orgheadline2">
+<p>
+Query throughput is directly related to how many blocks can be read in a period of time.  The index structure contains enough information to determine if one or multiple blocks can be read in a single IO.
 </p>
 
 <p>
-从有些这篇文章的想法到现在，竟然已经有十多天的间隔。诚然，在这样的一个开头氛围下，我不知道该如何续写余下的内容。于是我决定把这篇文章当做的我的一个心情抒写。今天（2016-10-14）早上的时候，我突然想起陶渊明的《归去来兮辞》。
+Query latency is determine by how long it takes to find and read the relevant blocks.  The in-memory index structure contains the offsets and sizes of all blocks for a key.  This allows every block to be read in 2 IOPS (seek + read) regardless of position, structure or size of file.
 </p>
+</div>
+</div>
 
-<blockquote>
+<div id="outline-container-orgheadline3" class="outline-3">
+<h3 id="orgheadline3">我粗鄙的结论</h3>
+<div class="outline-text-3" id="text-orgheadline3">
 <p>
-归去来兮，田园将芜胡不归。既自以心为形役，奚惆怅而独悲。
+我一直认为influxdb的瓶颈不在写，而是在于读。
 </p>
-</blockquote>
+</div>
+</div>
+</div>
 
+<div id="outline-container-orgheadline5" class="outline-2">
+<h2 id="orgheadline5">压力测试工具选择</h2>
+<div class="outline-text-2" id="text-orgheadline5">
 <p>
-我一直很喜欢后面这句。
+前几天看到ES的测试工具 <a href="https://github.com/elastic/rally">rally</a> 中用了Actor模型，于是突发奇想，找一个基于Akka的测试工具，于是找到了 <a href="http://gatling.io/">gatling</a> 。我的想法是如果底层使用Akka的话, 利用Akka-cluster应该很容易实现分布式测试。然而这个功能在商业版中才有.
 </p>
-
-<p>
-然而我现在都不知道怎么结尾了。
-</p>
-
-<p>
-今天我提交了辞职报告。
-</p>
+</div>
+</div>
 
 
     <div>
       <div class="post-meta">
-        <span title="post date" class="post-info">2016-10-04</span>
-        <span title="last modification date" class="post-info">2016-10-14</span>
-        <span title="tags" class="post-info"><a href="/tags/music/">music</a></span>
+        <span title="post date" class="post-info">2016-10-20</span>
+        <span title="last modification date" class="post-info">2016-10-20</span>
+        <span title="tags" class="post-info"><a href="/tags/influxdb/">influxdb</a>, <a href="/tags/go/">go</a></span>
         <span title="author" class="post-info">Shane Xu</span>
       </div>
       <section>
@@ -80,8 +98,8 @@
         <div id="disqus_thread"></div>
         <script type="text/javascript">
           //var disqus_developer = 1;
-          var disqus_identifier = "/blog/2016/10/04/god-knows";
-          var disqus_url = "http://xusheng.org/blog/2016/10/04/god-knows";
+          var disqus_identifier = "/blog/2016/10/20/influxdb-load-test-design";
+          var disqus_url = "http://xusheng.org/blog/2016/10/20/influxdb-load-test-design";
           var disqus_shortname = 'shanexu';
           /* * * DON'T EDIT BELOW THIS LINE * * */
           (function() {
