@@ -28,4 +28,109 @@
 * Gatling简单的使用方法
 ** 使用Zip bundle
    从 [[https://repo1.maven.org/maven2/io/gatling/highcharts/gatling-charts-highcharts-bundle/2.2.2/gatling-charts-highcharts-bundle-2.2.2-bundle.zip]] 下载zip包。并解压到某处，然后在 =user-files/simulations/computerdatabase/= 目录里面增加test case。
-  
+   用这种方式，有个弊端，就是我想添加依赖的jar包的话，就只能手动将包放到 =lib= 下面。
+
+** 或者使用SBT Plugin
+   #+begin_src bash
+   git clone https://github.com/gatling/gatling-sbt-plugin-demo.git
+   #+end_src
+   从 github clone 官方提供的，使用 =gatling-sbt= 插件的 demo，然后在 =src/it/scala= 中增加test case就可以了。
+   在写完test case 之后，运行 =sbt gatling-it:testOnly a.b.c(完整类名)= 就可以了。
+
+* 简单的test case
+  Gatling自己有一套完整的http调用的api，并且压力测试还需依赖于通过这套api获得的请求结果，所以 =influxdb-java= 的client在这里没有用武之地。但是这个包的完整的influxdb的dto，却是非常有用。于是在工程里添加依赖。
+  #+begin_src scala
+  libraryDependencies += "org.influxdb" % "influxdb-java" % "2.3"
+  #+end_src
+
+** 一个简单的query test case
+   #+begin_src scala -n
+   package org.xusheng.influxdbloadtest
+
+   import io.gatling.core.Predef._
+   import io.gatling.http.Predef._
+   import scala.concurrent.duration._
+   
+   class InfluxQuerySimulation extends Simulation {
+     val httpConf = http
+       .baseURL("http://127.0.0.1:8086")
+   
+     val h = http("query").get("/query").queryParam("db", "mytest").queryParam("q", "select sum(value) from cpu where time > now() - 1m")
+   
+     val scn = scenario("query").exec(h).pause(1 minute)
+   
+     setUp(scn.inject(atOnceUsers(1))).protocols(httpConf)
+   }
+   #+end_src
+   
+   influxdb的查询就是一个普通的带query parameter的get请求，所以这里没什么好说的。
+
+** 一个简单的write test case
+   #+begin_src scala
+   package org.xusheng.influxdbloadtest
+
+   import io.gatling.core.Predef._
+   import io.gatling.http.Predef._
+   import java.util.concurrent.TimeUnit
+   import scala.concurrent.duration._
+   import org.influxdb.dto._
+   
+   class InfluxWriteSimulation extends Simulation {
+     val httpConf = http
+       .baseURL("http://127.0.0.1:8086")
+   
+     val p = Point.measurement("cpu").addField("value", scala.util.Random.nextInt(100)).tag("partner", "hello").time(System.nanoTime(), TimeUnit.NANOSECONDS).build()
+   
+     val h = http("write").post("/write").body(StringBody(p.lineProtocol())).queryParam("db", "mytest")
+   
+     val scn = scenario("write")
+       .exec(h).pause(1 second)
+   
+     setUp(scn.inject(atOnceUsers(1))).protocols(httpConf)
+   }
+   #+end_src
+
+   这里调用了influxdb-java中dto下面的Point来build的了一个点，然后调用lineProtocol方法获得文本，发送给influxdb。
+
+** 一个Query 和 Write 组合的test case
+   #+begin_src scala
+   package org.xusheng.influxdbloadtest
+   
+   import io.gatling.core.Predef._
+   import io.gatling.http.Predef._
+   import scala.concurrent.duration._
+   
+   class InfluxWriteQuerySimulation extends Simulation {
+   
+     val httpConf = http.baseURL(Generator.url)
+   
+     val hw = http("write")
+       .post("/write")
+       .body(StringBody { session =>
+               Generator.genBatchPoints(session.userId, isWriter = true).lineProtocol()
+             }).queryParam("db", Generator.db)
+   
+     val scnw = scenario("write").exec(forever{
+                                         exec(hw).pace(1 second, 2 seconds)
+                                       })
+   
+     val hr = http("query").
+       get("/query").
+       queryParam("db", Generator.db).
+       queryParam("q", { session =>
+                    Generator.getQueryStringByUserId(session.userId, isWriter = false)
+                  })
+   
+     val scnr = scenario("query").
+       exec(forever{
+              exec(hr).pause{session => Generator.getIntervalByUserId(session.userId, isWriter = false)}
+            })
+   
+     setUp(
+       scnw.inject(rampUsers(Generator.userCount).over(Generator.duringSeconds seconds)),
+       scnr.inject(rampUsers(Generator.userCount).over(Generator.duringSeconds seconds))
+     ).protocols(httpConf)
+   }
+   #+end_src
+   
+   稍微赘言几句，这个test case里面定义了两套动作，一是write，以1到2秒的停顿时间，生成一个包含1到5000个点的BatchPoint，发送write请求到influxdb；二是query，以1分钟一次或是10分钟一次的速度，向influxdb请求1分钟或是10分钟或是30分钟或是1小时或是1天或是7天的数据。这其实是模拟了公司的一个需求。我们想知道的是到底单台influxdb能够容纳多少个用户实例。
