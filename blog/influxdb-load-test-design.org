@@ -66,7 +66,7 @@
    influxdb的查询就是一个普通的带query parameter的get请求，所以这里没什么好说的。
 
 ** 一个简单的write test case
-   #+begin_src scala
+   #+begin_src scala -n
    package org.xusheng.influxdbloadtest
 
    import io.gatling.core.Predef._
@@ -93,7 +93,7 @@
    这里调用了influxdb-java中dto下面的Point来build的了一个点，然后调用lineProtocol方法获得文本，发送给influxdb。
 
 ** 一个Query 和 Write 组合的test case
-   #+begin_src scala
+   #+begin_src scala -n
    package org.xusheng.influxdbloadtest
    
    import io.gatling.core.Predef._
