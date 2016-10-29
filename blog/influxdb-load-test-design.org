@@ -24,4 +24,7 @@
 
 * 压力测试工具选择
   前几天看到ES的测试工具 [[https://github.com/elastic/rally][rally]] 中用了Actor模型，于是突发奇想，找一个基于Akka的测试工具，于是找到了 [[http://gatling.io/][gatling]] 。我的想法是如果底层使用Akka的话, 利用Akka-cluster应该很容易实现分布式测试。然而这个功能在商业版中才有。[[https://github.com/gatling/gatling/issues/415]]
+
+* Gatling简单的使用方法
+  
   
