@@ -5,7 +5,8 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  margin-left: -1em;
+  margin-left: -0.5em;
+  margin-right: 0.5em;
 }
 
 .linenr::before {
@@ -14,15 +15,6 @@
 
 .linenr::after {
   content: ' ';
-  background-color: #292b2e;
-}
-
-.linenr:first-child::after {
-  padding-top: 0.3em;
-}
-
-.linenr:first-child {
-  padding-top: 0.3em;
 }
 
 pre.src {
@@ -31,7 +23,7 @@ pre.src {
   box-shadow: none;
   border: none;
   color: #b2b2b2;
-  padding: 0.3em 0 0.3em 1em;
+  padding: 0.5em 0 0.5em 0.5em;
   font-size: 95%;
   overflow: auto;
 }

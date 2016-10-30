@@ -5,7 +5,8 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  margin-left: -1em;
+  margin-left: -0.5em;
+  margin-right: 0.5em;
 }
 
 .linenr::before {
@@ -14,35 +15,15 @@
 
 .linenr::after {
   content: ' ';
-  background-color: #fbf8ef;
-}
-
-.linenr:first-child::after {
-  padding-top: 0.3em;
-}
-
-.linenr:first-child {
-  padding-top: 0.3em;
 }
 
 pre.src {
   background-color: #fbf8ef;
-  font-family: "Droid Sans Mono", "Source Code Pro", Monaco, menlo, "Ubuntu Mono", "DejaVu Sans Mono", consolas, courier, monospace;
+  font-family: "Source Code Pro", "Droid Sans Mono", Monaco, menlo, "Ubuntu Mono", "DejaVu Sans Mono", consolas, courier, monospace;
   box-shadow: none;
   border: none;
   color: black;
-  padding: 0.3em 0 0.3em 1em;
+  padding: 0.5em 0 0.5em 0.5em;
   font-size: 95%;
   overflow: auto;
-}
-
-pre.prettyprint {
-  font-family: "Droid Sans Mono";
-  border: none;
-  padding: 5pt;
-}
-
-pre.prettyprint li {
-  margin: 0;
-  list-style-image: none;
 }
