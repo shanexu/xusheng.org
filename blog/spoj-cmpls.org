@@ -133,6 +133,6 @@ main = getContents >>= solveProblems . tail . lines
 #+END_SRC
 
 
-#+begin_html
-<script src="http://xusheng.org/cdn/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-#+end_html
+#+BEGIN_EXPORT html
+<script src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+#+END_EXPORT

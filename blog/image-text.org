@@ -13,7 +13,7 @@
 
 我那时候的想法很简单，就是把所有抽奖人的头像，排列成“2015”的字样，今天我排的是 2016。最后实现的效果就是下面这样的。
 
-#+BEGIN_HTML
+#+BEGIN_EXPORT html
 <script src="http://cdn.staticfile.org/react/0.14.3/react.js"></script>
 <script src="http://cdn.staticfile.org/react/0.14.3/react-dom.js"></script>
 <script src="http://cdn.staticfile.org/babel-core/5.8.34/browser.min.js"></script>
@@ -82,7 +82,7 @@ ReactDOM.render(
   document.getElementById('example')
 );
 </script>
-#+END_HTML
+#+END_EXPORT
 
 一开始有这个想法的时候，我并没有解决方案。我那个时候在网上，搜索了半圈，也没找到靠谱的方案，甚至几乎连类似的效果都没有人提及。于是我自己思索。
 
