@@ -1,0 +1,138 @@
+#+TITLE:       动态扩容
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2016-12-16 Fri
+#+URI:         /blog/%y/%m/%d/dynamic_upstreams
+#+KEYWORDS:    nginx, openresty, lua
+#+TAGS:        nginx, openresty
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: 动态扩容
+
+* 现状
+** Nginx如何获取集群中的机器信息
+   发布时从数据库的表中获取，通过生成upstream.conf。
+
+   #+BEGIN_SRC nginx
+   upstream pro {
+       server 10.0.0.1:8088 weight 1;
+       server 10.0.0.2:8088 weight 1;
+       keepalive 1024;
+
+	     check interval=3000 rise=2 fall=1 timeout=1000 type=http default_down=false;
+       check_http_send "GET /ok.htm HTTP/1.0\r\nConnection:keep-alive\r\n\r\n";
+	     check_keepalive_requests 100;
+   }
+   #+END_SRC
+
+** 问题
+   无法实现动态扩容，只有重新reload nginx 配置才能添加新机器或者新集群。
+
+* 动态扩容方案
+
+** 核心问题
+
+*** 如何不经重新加载获取集群变化信息
+
+*** 比如，运行时从数据库中获取
+
+*** 比如，用域名代替集群信息
+
+** 方案一 使用域名
+   参考 [[https://www.nginx.com/blog/dns-service-discovery-nginx-plus/]]
+
+*** 配置一
+    #+BEGIN_SRC nginx
+    server {
+        location / {
+            proxy_pass http://pro.xusheng.org:8080;
+        }
+    }
+    #+END_SRC
+
+**** 问题
+     1. dns记录被缓存，直到下一次重新加载配置或者重启才会刷新
+     2. 不能使用自定义的负载均衡算法，也无法配置健康检查
+
+*** 配置二
+    #+BEGIN_SRC nginx
+    upstream backends {
+        least_conn;
+
+        server pro.xusheng.org:8080 max_fails=3;
+    }
+    
+    server {
+        location / {
+            proxy_pass http://backends;
+        }
+    }    
+    #+END_SRC
+
+**** 问题
+     1. dns记录被缓存，直到下一次重新加载配置或者重启才会刷新
+
+*** 配置三
+    #+BEGIN_SRC nginx
+    resolver 10.0.0.2 valid=10s;
+
+    server {
+        location / {
+            set $backend_servers pro.xusheg.org;
+            proxy_pass http://$backend_servers:8080;
+        }
+    }
+    #+END_SRC
+
+**** 问题
+     1. 不能使用自定义的负载均衡算法，也无法配置健康检查
+
+*** 结论
+    配置三看似是最完美的解决方案
+
+**** 优势
+     1. nginx改动可以忽略不计
+
+**** 劣势
+
+     1. 健康检查需要交给外部组件
+     2. 需要维护dns
+     3. 不支持端口号
+
+*** 题外话
+    如果使用 =Nginx Plus= 使用配置二，可以规避上面的所有劣势。但是一是收费，二是目测不支持现在nginx使用的lua模块
+
+** 方案二 定时从固定数据源获取集群信息
+
+*** 需要做的工作
+     1. 将机器信息写入数据源
+     2. 新机器添加时需要启动应用并添加到数据源
+     3. nginx运行时添加机器
+
+*** 从现有的数据库表定时获取集群信息
+
+**** 优势
+     1. 复用原有的数据结构
+
+**** 劣势
+     1. lua模块需要实现整套nginx实现的健康检查机制，负载均衡算法，等等
+
+*** 使用 =zookeeper= 作为数据源
+**** 数据格式
+
+***** nginx关心的数据格式
+     #+BEGIN_SRC bash
+     ls {prefix}/{env}/{app}/{cluster}/
+     [ip1, ip2]
+     #+END_SRC
+
+
+**** 优势
+     1. 可以使用zk节点上的version信息
+     2. 可以使用zk通知（lua实现代价较高，如果使用zk未来可以考虑）
+
+**** 劣势
+     1. lua模块需要实现整套nginx实现的健康检查机制，负载均衡算法，等等
+     2. 需要写zk
+
+
