@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>动态扩容 - Shane Xu&#39;s Home</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Shane Xu" />
+    <meta name="description" content="动态扩容" />
+    <meta name="keywords" content="nginx, openresty, lua" />
+    <link rel="stylesheet" href="/media/source-code-pro/source-code-pro.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/extra.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/code-dark.css" type="text/css">
+    <!-- <link rel="stylesheet" href="/media/css/code-light.css" type="text/css"> -->
+  </head>
+
+  <body>
+    <div>
+      <header class="masthead">
+        <h1 class="settitle"><a href="/">Shane Xu&#39;s Home</a></h1>
+        <blockquote>Life is too short for so much sorrow.</blockquote>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="xusheng.org">
+        </form>
+      </header>
+    </div>
+    <div class="node nav">
+      <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/media/">Media</a></li>
+        <li><a href="/tags/">Tags</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="https://github.com/shanexu">GitHub</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+      </ul>
+      <hr/>
+    </div>
+
+
+  <h3 class="section">动态扩容</h3>
+
+<div id="outline-container-orge865981" class="outline-2">
+<h2 id="orge865981">现状</h2>
+<div class="outline-text-2" id="text-orge865981">
+</div><div id="outline-container-orgc88a1fb" class="outline-3">
+<h3 id="orgc88a1fb">Nginx如何获取集群中的机器信息</h3>
+<div class="outline-text-3" id="text-orgc88a1fb">
+<p>
+发布时从数据库的表中获取，通过生成upstream.conf。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-nginx"><span style="color: #C678DD;">upstream</span> <span style="color: #61AFEF;">pro</span> {
+    <span style="color: #C678DD;">server</span> 10.0.0.1:8088 weight 1;
+    <span style="color: #C678DD;">server</span> 10.0.0.2:8088 weight 1;
+    <span style="color: #C678DD;">keepalive</span> 1024;
+
+    <span style="color: #C678DD;">check</span> interval=3000 rise=2 fall=1 timeout=1000 type=http default_down=false;
+    <span style="color: #C678DD;">check_http_send</span> <span style="color: #98C379;">"GET /ok.htm HTTP/1.0\r\nConnection:keep-alive\r\n\r\n"</span>;
+    <span style="color: #C678DD;">check_keepalive_requests</span> 100;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org41f02ca" class="outline-3">
+<h3 id="org41f02ca">问题</h3>
+<div class="outline-text-3" id="text-org41f02ca">
+<p>
+无法实现动态扩容，只有重新reload nginx 配置才能添加新机器或者新集群。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org34db0f2" class="outline-2">
+<h2 id="org34db0f2">动态扩容方案</h2>
+<div class="outline-text-2" id="text-org34db0f2">
+</div><div id="outline-container-org125730b" class="outline-3">
+<h3 id="org125730b">核心问题</h3>
+<div class="outline-text-3" id="text-org125730b">
+</div><div id="outline-container-org9073571" class="outline-4">
+<h4 id="org9073571">如何不经重新加载获取集群变化信息</h4>
+</div>
+
+<div id="outline-container-org8d78865" class="outline-4">
+<h4 id="org8d78865">比如，运行时从数据库中获取</h4>
+</div>
+
+<div id="outline-container-org5cf56d2" class="outline-4">
+<h4 id="org5cf56d2">比如，用域名代替集群信息</h4>
+</div>
+</div>
+
+<div id="outline-container-org1b2d2ee" class="outline-3">
+<h3 id="org1b2d2ee">方案一 使用域名</h3>
+<div class="outline-text-3" id="text-org1b2d2ee">
+<p>
+参考 <a href="https://www.nginx.com/blog/dns-service-discovery-nginx-plus/">https://www.nginx.com/blog/dns-service-discovery-nginx-plus/</a>
+</p>
+</div>
+
+<div id="outline-container-org363ab28" class="outline-4">
+<h4 id="org363ab28">配置一</h4>
+<div class="outline-text-4" id="text-org363ab28">
+<div class="org-src-container">
+<pre class="src src-nginx"><span style="color: #C678DD;">server</span> {
+    <span style="color: #C678DD;">location</span> <span style="color: #61AFEF;">/</span> {
+        <span style="color: #C678DD;">proxy_pass</span> http://pro.xusheng.org:8080;
+    }
+}
+</pre>
+</div>
+</div>
+
+<ul class="org-ul"><li><a id="org659bad2"></a>问题<br  /><div class="outline-text-5" id="text-org659bad2">
+<ol class="org-ol">
+<li>dns记录被缓存，直到下一次重新加载配置或者重启才会刷新</li>
+<li>不能使用自定义的负载均衡算法，也无法配置健康检查</li>
+</ol>
+</div></li></ul>
+</div>
+
+<div id="outline-container-orgb60bb1b" class="outline-4">
+<h4 id="orgb60bb1b">配置二</h4>
+<div class="outline-text-4" id="text-orgb60bb1b">
+<div class="org-src-container">
+<pre class="src src-nginx"><span style="color: #C678DD;">upstream</span> <span style="color: #61AFEF;">backends</span> {
+    <span style="color: #C678DD;">least_conn</span>;
+
+    <span style="color: #C678DD;">server</span> pro.xusheng.org:8080 max_fails=3;
+}
+
+<span style="color: #C678DD;">server</span> {
+    <span style="color: #C678DD;">location</span> <span style="color: #61AFEF;">/</span> {
+        <span style="color: #C678DD;">proxy_pass</span> http://backends;
+    }
+}
+</pre>
+</div>
+</div>
+
+<ul class="org-ul"><li><a id="org5039786"></a>问题<br  /><div class="outline-text-5" id="text-org5039786">
+<ol class="org-ol">
+<li>dns记录被缓存，直到下一次重新加载配置或者重启才会刷新</li>
+</ol>
+</div></li></ul>
+</div>
+
+<div id="outline-container-orga7c2ed4" class="outline-4">
+<h4 id="orga7c2ed4">配置三</h4>
+<div class="outline-text-4" id="text-orga7c2ed4">
+<div class="org-src-container">
+<pre class="src src-nginx"><span style="color: #C678DD;">resolver</span> 10.0.0.2 valid=10s;
+
+<span style="color: #C678DD;">server</span> {
+    <span style="color: #C678DD;">location</span> <span style="color: #61AFEF;">/</span> {
+        <span style="color: #C678DD;">set</span> <span style="color: #E06C75;">$backend_servers</span> pro.xusheg.org;
+        <span style="color: #C678DD;">proxy_pass</span> http://<span style="color: #E06C75;">$backend_servers</span>:8080;
+    }
+}
+</pre>
+</div>
+</div>
+
+<ul class="org-ul"><li><a id="orgd27a44e"></a>问题<br  /><div class="outline-text-5" id="text-orgd27a44e">
+<ol class="org-ol">
+<li>不能使用自定义的负载均衡算法，也无法配置健康检查</li>
+</ol>
+</div></li></ul>
+</div>
+
+<div id="outline-container-org3d7554d" class="outline-4">
+<h4 id="org3d7554d">结论</h4>
+<div class="outline-text-4" id="text-org3d7554d">
+<p>
+配置三看似是最完美的解决方案
+</p>
+</div>
+
+<ul class="org-ul"><li><a id="org563355d"></a>优势<br  /><div class="outline-text-5" id="text-org563355d">
+<ol class="org-ol">
+<li>nginx改动可以忽略不计</li>
+</ol>
+</div></li>
+
+<li><a id="orga021934"></a>劣势<br  /><div class="outline-text-5" id="text-orga021934">
+<ol class="org-ol">
+<li>健康检查需要交给外部组件</li>
+<li>需要维护dns</li>
+<li>不支持端口号</li>
+</ol>
+</div></li></ul>
+</div>
+
+<div id="outline-container-orge968342" class="outline-4">
+<h4 id="orge968342">题外话</h4>
+<div class="outline-text-4" id="text-orge968342">
+<p>
+如果使用 <code>Nginx Plus</code> 使用配置二，可以规避上面的所有劣势。但是一是收费，二是目测不支持现在nginx使用的lua模块
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org366ad74" class="outline-3">
+<h3 id="org366ad74">方案二 定时从固定数据源获取集群信息</h3>
+<div class="outline-text-3" id="text-org366ad74">
+</div><div id="outline-container-org43974a9" class="outline-4">
+<h4 id="org43974a9">需要做的工作</h4>
+<div class="outline-text-4" id="text-org43974a9">
+<ol class="org-ol">
+<li>将机器信息写入数据源</li>
+<li>新机器添加时需要启动应用并添加到数据源</li>
+<li>nginx运行时添加机器</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org73e3d50" class="outline-4">
+<h4 id="org73e3d50">从现有的数据库表定时获取集群信息</h4>
+<div class="outline-text-4" id="text-org73e3d50">
+</div><ul class="org-ul"><li><a id="orgaac78dd"></a>优势<br  /><div class="outline-text-5" id="text-orgaac78dd">
+<ol class="org-ol">
+<li>复用原有的数据结构</li>
+</ol>
+</div></li>
+
+<li><a id="org8c119ea"></a>劣势<br  /><div class="outline-text-5" id="text-org8c119ea">
+<ol class="org-ol">
+<li>lua模块需要实现整套nginx实现的健康检查机制，负载均衡算法，等等</li>
+</ol>
+</div></li></ul>
+</div>
+
+<div id="outline-container-org5cd75bd" class="outline-4">
+<h4 id="org5cd75bd">使用 <code>zookeeper</code> 作为数据源</h4>
+<div class="outline-text-4" id="text-org5cd75bd">
+</div><ul class="org-ul"><li><a id="org04b00cb"></a>数据格式<br  /><ul class="org-ul"><li><a id="org7ebcbad"></a>nginx关心的数据格式<br  /><div class="outline-text-6" id="text-org7ebcbad">
+<div class="org-src-container">
+<pre class="src src-bash">ls <span style="color: #ABB2BF;">{</span>prefix<span style="color: #ABB2BF;">}</span>/<span style="color: #ABB2BF;">{</span>env<span style="color: #ABB2BF;">}</span>/<span style="color: #ABB2BF;">{</span>app<span style="color: #ABB2BF;">}</span>/<span style="color: #ABB2BF;">{</span>cluster<span style="color: #ABB2BF;">}</span>/
+<span style="color: #ABB2BF;">[</span>ip1, ip2<span style="color: #ABB2BF;">]</span>
+</pre>
+</div>
+</div></li></ul></li>
+
+
+<li><a id="orgd52701e"></a>优势<br  /><div class="outline-text-5" id="text-orgd52701e">
+<ol class="org-ol">
+<li>可以使用zk节点上的version信息</li>
+<li>可以使用zk通知（lua实现代价较高，如果使用zk未来可以考虑）</li>
+</ol>
+</div></li>
+
+<li><a id="org743dee4"></a>劣势<br  /><div class="outline-text-5" id="text-org743dee4">
+<ol class="org-ol">
+<li>lua模块需要实现整套nginx实现的健康检查机制，负载均衡算法，等等</li>
+<li>需要写zk</li>
+</ol>
+</div></li></ul>
+</div>
+</div>
+</div>
+
+
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2016-12-16</span>
+        <span title="last modification date" class="post-info">2016-12-17</span>
+        <span title="tags" class="post-info"><a href="/tags/nginx/">nginx</a>, <a href="/tags/openresty/">openresty</a></span>
+        <span title="author" class="post-info">Shane Xu</span>
+      </div>
+      <section>
+        <h2 class="chapter">Comments</h2>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2016/12/16/dynamic_upstreams";
+          var disqus_url = "http://xusheng.org/blog/2016/12/16/dynamic_upstreams";
+          var disqus_shortname = 'shanexu';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </section>
+      <script src="/media/js/main.js"></script>
+        <script type="text/javascript">
+         var _gaq = _gaq || [];
+         _gaq.push(['_setAccount', 'UA-74684473-1']);
+         _gaq.push(['_trackPageview']);
+         (function() {
+           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+         })();
+        </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711@gmail.com">Shane Xu</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>
