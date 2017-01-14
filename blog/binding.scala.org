@@ -1,0 +1,69 @@
+#+TITLE:       Binding.scala in Practice
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2016-12-31 Sat
+#+URI:         /blog/%y/%m/%d/binding.scala-in-practice
+#+KEYWORDS:    scala.js, Binding.scala, scala
+#+TAGS:        javascript, scala
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: <TODO: insert your description here>
+
+开了这个题目之后，我久久不知道如何动笔。搁置了一周之后，我终于下定决心写好这篇文章。我就来写写，我这两星期 =我= 和 [[https://www.scala-js.org/][scala.js]] 以及 [[https://github.com/ThoughtWorksInc/Binding.scala][Binding.scala]] 浴血奋战的故事([[http://music.163.com/#/song?id=22790726][You and Music and Dream]])。
+
+首先，创建一个最简单的 scala.js with Binding.scala 的项目。
+
+#+BEGIN_SRC shell -n
+mkdir simple-scala.js-Binding.scala
+cd simple-scala.js-Binding.scala
+mkdir -p js/src/{main,test}/scala
+mkdir project
+echo sbt.version=0.13.13 > project/build.properties
+echo 'resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/"
+
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.14")
+
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.3")
+' > project/plugin.sbt
+touch build.sbt
+#+END_SRC
+
+然后在 =build.sbt= 中添加如下内容。
+
+#+BEGIN_SRC scala -n
+lazy val commonSettings = Seq(
+  version := "0.0.1",
+  scalaVersion := "2.11.8",
+  addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
+  scalacOptions ++= Seq("-feature", "-language:implicitConversions")
+)
+
+lazy val BindingScalaVersion = "10.0.1"
+
+lazy val root = (project in file(".")).
+  settings(commonSettings: _*).
+  aggregate(js)
+
+lazy val js = (project in file("js")).
+  settings(commonSettings: _*).
+  settings(
+    mainClass in (Compile) := Some("Application"),
+    persistLauncher := true,
+    libraryDependencies ++= Seq(
+      "org.scala-js" %%% "scalajs-dom" % "0.9.1",
+      "com.thoughtworks.binding" %%% "dom" % BindingScalaVersion,
+      "com.thoughtworks.binding" %%% "route" % BindingScalaVersion
+    )
+  ).
+  enablePlugins(ScalaJSPlugin)
+#+END_SRC
+
+#+BEGIN_SRC scala -n
+import scala.scalajs.js.JSApp
+
+object Application extends JSApp {
+  def main(): Unit = println("Hello World!")
+}
+#+END_SRC
+
+至此一个最简单的 =scala.js= with =Binding.scala= 的工程已经搭建好了。
