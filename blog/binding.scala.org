@@ -4,7 +4,7 @@
 #+DATE:        2016-12-31 Sat
 #+URI:         /blog/%y/%m/%d/binding.scala-in-practice
 #+KEYWORDS:    scala.js, Binding.scala, scala
-#+TAGS:        javascript, scala
+#+TAGS:        javascript, scala.js, scala
 #+LANGUAGE:    en
 #+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
 #+DESCRIPTION: <TODO: insert your description here>
@@ -13,7 +13,7 @@
 
 首先，创建一个最简单的 scala.js with Binding.scala 的项目。
 
-#+BEGIN_SRC shell -n
+#+BEGIN_SRC shell
 mkdir simple-scala.js-Binding.scala
 cd simple-scala.js-Binding.scala
 mkdir -p js/src/{main,test}/scala
@@ -58,7 +58,10 @@ lazy val js = (project in file("js")).
   enablePlugins(ScalaJSPlugin)
 #+END_SRC
 
+然后写一个 =Main= 函数。
+
 #+BEGIN_SRC scala -n
+/* js/src/main/scala/Application.scala */
 import scala.scalajs.js.JSApp
 
 object Application extends JSApp {
@@ -67,3 +70,199 @@ object Application extends JSApp {
 #+END_SRC
 
 至此一个最简单的 =scala.js= with =Binding.scala= 的工程已经搭建好了。
+
+执行 =sbt fastOptJS=
+#+BEGIN_SRC shell
+$ ls js/target/scala-2.11
+classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launcher.js
+#+END_SRC
+
+在项目根目录下新建一个 =index.html= 
+#+BEGIN_SRC html -n
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hello World!</title>
+    <script type="text/javascript" src="./js/target/scala-2.11/js-jsdeps.js"></script>
+    <script type="text/javascript" src="./js/target/scala-2.11/js-fastopt.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="./js/target/scala-2.11/js-launcher.js"></script>
+  </body>
+</html>
+#+END_SRC
+
+在浏览器中打开，就能看到我们亲切的 =Hello World!= 了。
+
+#+BEGIN_EXPORT html
+<iframe height="300" frameborder="0" style="width: 100%; overflow: hidden;" src="https://embed.scalafiddle.io/embed?sfid=zKNO24v/0"></iframe>
+#+END_EXPORT
+
+然而一个真正的前端项目，不可能一直使用本地文件来验证查看的，所以我需要一个server。=Play= 和 =scalatra= 在这个场景中有点杀鸡用牛刀的感觉，所以我选择了 =Akka Http= 做这个 =webserver= 。
+中间又出了点变故，本来打算用 =nginx= 伺服所有的静态文件的，后来深感线上虚拟机上搞一个nginx，还要搞个发布流程甚是麻烦。索性打成一个可以执行的jar，来的方便，一股脑地就把配置写好吧。
+
+#+BEGIN_SRC scala -n
+lazy val commonSettings = Seq(
+  version := "0.0.1",
+  scalaVersion := "2.11.8",
+  addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
+  scalacOptions ++= Seq("-feature", "-language:implicitConversions")
+)
+
+lazy val AkkaVersion = "2.4.16"
+
+lazy val AkkaHttpVersion = "10.0.1"
+
+lazy val BindingScalaVersion = "10.0.1"
+
+lazy val CirceVersion = "0.6.1"
+
+lazy val ScalazVersion = "7.2.8"
+
+lazy val compileCopyTask = taskKey[Unit]("compile and copy")
+
+
+lazy val root = (project in file(".")).
+  settings(commonSettings: _*).
+  aggregate(server, js)
+
+lazy val server = (project in file("server")).
+  settings(commonSettings: _*).
+  settings(
+    cancelable in Global := true,
+    fork in run := true,
+    libraryDependencies ++= Seq(
+      "com.typesafe.akka" %% "akka-actor" % AkkaVersion,
+      "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
+      "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
+      "ch.qos.logback" %  "logback-classic" % "1.1.7",
+      "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0"
+    )
+  ).
+  settings(
+    compileCopyTask := {
+      val mainVersion = scalaVersion.value.split("""\.""").take(2).mkString(".")
+      val to = target.value / ("scala-" + mainVersion) / "classes" / "static" / "js"
+      to.mkdirs()
+      val fastJs = (fastOptJS in Compile in js).value.data
+      val fastJsSourceMap = fastJs.getParentFile / (fastJs.getName + ".map")
+      val fastJsLauncher = (packageScalaJSLauncher in Compile in js).value.data
+      val fastJsDeps = (packageJSDependencies in Compile in js).value
+      val fullJs = (fullOptJS in Compile in js).value.data
+      val fullJsSourceMap = fullJs.getParentFile / (fullJs.getName + ".map")
+      val fullJsDeps = (packageMinifiedJSDependencies in Compile in js).value
+
+      for(f <- Seq(fastJs, fastJsSourceMap, fastJsLauncher, fastJsDeps, fullJs, fullJsSourceMap, fullJsDeps)) {
+        IO.copyFile(f, to / f.getName)
+      }
+    }
+  ).
+  settings(
+    compile in Compile := {
+      compileCopyTask.value
+      (compile in Compile).value
+    }
+  ).
+  settings(
+    mainClass in assembly := Some("Server"),
+    assemblyJarName in assembly := "server.jar"
+  )
+
+lazy val js = (project in file("js")).
+  settings(commonSettings: _*).
+  settings(
+    mainClass in (Compile) := Some("Application"),
+    persistLauncher := true,
+    libraryDependencies ++= Seq(
+      "org.scala-js" %%% "scalajs-dom" % "0.9.1",
+      "com.thoughtworks.binding" %%% "dom" % BindingScalaVersion,
+      "com.thoughtworks.binding" %%% "route" % BindingScalaVersion,
+      "io.circe" %%% "circe-core" % CirceVersion,
+      "io.circe" %%% "circe-parser" % CirceVersion,
+      "io.circe" %%% "circe-generic" % CirceVersion,
+      "org.scalaz" %%% "scalaz-core" % ScalazVersion
+    )
+  ).
+  enablePlugins(ScalaJSPlugin)
+
+#+END_SRC
+
+增加 =server= submodule
+
+#+BEGIN_SRC shell
+mkdir -p server/src/{main,test}/{scala,resources}
+#+END_SRC
+
+增加 =Server.scala=
+
+#+BEGIN_SRC scala -n
+import java.util.concurrent.CountDownLatch
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.server.Directives._
+import com.typesafe.config.ConfigFactory
+import com.typesafe.scalalogging.Logger
+import scala.concurrent.Await
+import scala.concurrent.duration._
+
+object Server extends App {
+  val logger = Logger(Server.getClass)
+  val conf = ConfigFactory.load().withFallback(ConfigFactory.load("default.conf"))
+
+  implicit val actorSystem = ActorSystem()
+  implicit val materializer = ActorMaterializer()
+  implicit val executionContext = actorSystem.dispatcher
+
+  val shutdownLatch = new CountDownLatch(1)
+
+  val devRoute = pathSingleSlash {
+    parameter("fast") { _ =>
+      getFromFile("./src/main/resources/static/index-fastopt.html")
+    } ~
+      getFromFile("./src/main/resources/static/index-fullopt.html")
+  } ~
+    encodeResponse {
+      getFromDirectory("./src/main/resources/static") ~
+        pathPrefix("js") {
+          getFromDirectory("../js/target/scala-2.11")
+        }
+    }
+
+  val productionRoute = pathSingleSlash {
+    parameter("fast") { _ =>
+      getFromResource("static/index-fastopt.html")
+    } ~
+      getFromResource("static/index-fullopt.html")
+  } ~
+    encodeResponse {
+      getFromResourceDirectory("static")
+    }
+
+  val host = conf.getString("server.host")
+  val port = conf.getInt("server.port")
+  val bindingFuture = Http().bindAndHandle(devRoute ~ productionRoute, host, port)
+  logger.info(s"Server online as http://${host}:${port}")
+
+  Runtime.getRuntime().addShutdownHook(new Thread() {
+    override def run() = {
+      val f = bindingFuture.flatMap(_.unbind()) andThen {
+        case _ => actorSystem.terminate()
+      }
+      Await.ready(f, 1 minute)
+      logger.info("Goodbye!")
+      shutdownLatch.countDown()
+    }
+  })
+
+  shutdownLatch.await()
+}
+#+END_SRC
+
+现在只要执行，=sbt server/run= ，然后在浏览器中访问 =http://127.0.0.1:1234/?fast= 或者 =http://127.0.0.1:1234/= 就能分别访问 =fastOptJS= 或者 =fullOptJS= 的js了。
+
+好了这只是一个准备工作，接下来是 =Binding.scala= 的哲学时间。
