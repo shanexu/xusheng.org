@@ -38,12 +38,12 @@
 
   <h3 class="section">InfluxDB负载测试设计</h3>
 
-<div id="outline-container-org6d4fd51" class="outline-2">
-<h2 id="org6d4fd51">重新看一遍tsm1的DESIGN.md</h2>
-<div class="outline-text-2" id="text-org6d4fd51">
-</div><div id="outline-container-org29f3d9b" class="outline-3">
-<h3 id="org29f3d9b">数据写入</h3>
-<div class="outline-text-3" id="text-org29f3d9b">
+<div id="outline-container-org7253009" class="outline-2">
+<h2 id="org7253009">重新看一遍tsm1的DESIGN.md</h2>
+<div class="outline-text-2" id="text-org7253009">
+</div><div id="outline-container-org05f922c" class="outline-3">
+<h3 id="org05f922c">数据写入</h3>
+<div class="outline-text-3" id="text-org05f922c">
 <p>
 Write throughput is bounded by the time to process the write on the CPU (parsing, sorting, etc..), adding and evicting to the Cache and appending the write to the WAL.  The first two items are CPU bound and can be tuned and optimized if they become a bottleneck.  The WAL write can be tuned such that in the worst case every write requires at least 2 IOPS (write + fsync) or batched so that multiple writes are queued and fsync'd in sizes matching one or more disk blocks.  Performing more work with each IO will improve throughput
 </p>
@@ -53,9 +53,9 @@ Write latency is minimal for the WAL write since there are no seeks.  The latenc
 </p>
 </div>
 </div>
-<div id="outline-container-org0802356" class="outline-3">
-<h3 id="org0802356">数据查询</h3>
-<div class="outline-text-3" id="text-org0802356">
+<div id="outline-container-org7ed8540" class="outline-3">
+<h3 id="org7ed8540">数据查询</h3>
+<div class="outline-text-3" id="text-org7ed8540">
 <p>
 Query throughput is directly related to how many blocks can be read in a period of time.  The index structure contains enough information to determine if one or multiple blocks can be read in a single IO.
 </p>
@@ -66,9 +66,9 @@ Query latency is determine by how long it takes to find and read the relevant bl
 </div>
 </div>
 
-<div id="outline-container-orgd3a818d" class="outline-3">
-<h3 id="orgd3a818d">我粗鄙的结论</h3>
-<div class="outline-text-3" id="text-orgd3a818d">
+<div id="outline-container-org0e2d0e3" class="outline-3">
+<h3 id="org0e2d0e3">我粗鄙的结论</h3>
+<div class="outline-text-3" id="text-org0e2d0e3">
 <p>
 我一直认为influxdb的瓶颈不在写，而是在于读。
 </p>
@@ -76,21 +76,21 @@ Query latency is determine by how long it takes to find and read the relevant bl
 </div>
 </div>
 
-<div id="outline-container-orge3ec82e" class="outline-2">
-<h2 id="orge3ec82e">压力测试工具选择</h2>
-<div class="outline-text-2" id="text-orge3ec82e">
+<div id="outline-container-org6c3b61b" class="outline-2">
+<h2 id="org6c3b61b">压力测试工具选择</h2>
+<div class="outline-text-2" id="text-org6c3b61b">
 <p>
 前几天看到ES的测试工具 <a href="https://github.com/elastic/rally">rally</a> 中用了Actor模型，于是突发奇想，找一个基于Akka的测试工具，于是找到了 <a href="http://gatling.io/">gatling</a> 。我的想法是如果底层使用Akka的话, 利用Akka-cluster应该很容易实现分布式测试。然而这个功能在商业版中才有。<a href="https://github.com/gatling/gatling/issues/415">https://github.com/gatling/gatling/issues/415</a>
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgdaed0ad" class="outline-2">
-<h2 id="orgdaed0ad">Gatling简单的使用方法</h2>
-<div class="outline-text-2" id="text-orgdaed0ad">
-</div><div id="outline-container-org2c8fd81" class="outline-3">
-<h3 id="org2c8fd81">使用Zip bundle</h3>
-<div class="outline-text-3" id="text-org2c8fd81">
+<div id="outline-container-org152962b" class="outline-2">
+<h2 id="org152962b">Gatling简单的使用方法</h2>
+<div class="outline-text-2" id="text-org152962b">
+</div><div id="outline-container-org2a15309" class="outline-3">
+<h3 id="org2a15309">使用Zip bundle</h3>
+<div class="outline-text-3" id="text-org2a15309">
 <p>
 从 <a href="https://repo1.maven.org/maven2/io/gatling/highcharts/gatling-charts-highcharts-bundle/2.2.2/gatling-charts-highcharts-bundle-2.2.2-bundle.zip">https://repo1.maven.org/maven2/io/gatling/highcharts/gatling-charts-highcharts-bundle/2.2.2/gatling-charts-highcharts-bundle-2.2.2-bundle.zip</a> 下载zip包。并解压到某处，然后在 <code>user-files/simulations/computerdatabase/</code> 目录里面增加test case。
 用这种方式，有个弊端，就是我想添加依赖的jar包的话，就只能手动将包放到 <code>lib</code> 下面。
@@ -98,9 +98,9 @@ Query latency is determine by how long it takes to find and read the relevant bl
 </div>
 </div>
 
-<div id="outline-container-org040f34c" class="outline-3">
-<h3 id="org040f34c">或者使用SBT Plugin</h3>
-<div class="outline-text-3" id="text-org040f34c">
+<div id="outline-container-org50aafb9" class="outline-3">
+<h3 id="org50aafb9">或者使用SBT Plugin</h3>
+<div class="outline-text-3" id="text-org50aafb9">
 <div class="org-src-container">
 <pre class="src src-bash">git clone https://github.com/gatling/gatling-sbt-plugin-demo.git
 </pre>
@@ -113,9 +113,9 @@ Query latency is determine by how long it takes to find and read the relevant bl
 </div>
 </div>
 
-<div id="outline-container-orge6a0207" class="outline-2">
-<h2 id="orge6a0207">简单的test case</h2>
-<div class="outline-text-2" id="text-orge6a0207">
+<div id="outline-container-orgb2a517b" class="outline-2">
+<h2 id="orgb2a517b">简单的test case</h2>
+<div class="outline-text-2" id="text-orgb2a517b">
 <p>
 Gatling自己有一套完整的http调用的api，并且压力测试还需依赖于通过这套api获得的请求结果，所以 <code>influxdb-java</code> 的client在这里没有用武之地。但是这个包的完整的influxdb的dto，却是非常有用。于是在工程里添加依赖。
 </p>
@@ -125,9 +125,9 @@ Gatling自己有一套完整的http调用的api，并且压力测试还需依赖
 </div>
 </div>
 
-<div id="outline-container-org762eeca" class="outline-3">
-<h3 id="org762eeca">一个简单的query test case</h3>
-<div class="outline-text-3" id="text-org762eeca">
+<div id="outline-container-orga4f2d53" class="outline-3">
+<h3 id="orga4f2d53">一个简单的query test case</h3>
+<div class="outline-text-3" id="text-orga4f2d53">
 <div class="org-src-container">
 <pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #C678DD;">package</span> <span style="color: #98C379;">org.xusheng.influxdbloadtest</span>
 <span class="linenr"> 2: </span>
@@ -154,9 +154,9 @@ influxdb的查询就是一个普通的带query parameter的get请求，所以这
 </div>
 </div>
 
-<div id="outline-container-org05823b1" class="outline-3">
-<h3 id="org05823b1">一个简单的write test case</h3>
-<div class="outline-text-3" id="text-org05823b1">
+<div id="outline-container-orga40d535" class="outline-3">
+<h3 id="orga40d535">一个简单的write test case</h3>
+<div class="outline-text-3" id="text-orga40d535">
 <div class="org-src-container">
 <pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #C678DD;">package</span> <span style="color: #98C379;">org.xusheng.influxdbloadtest</span>
 <span class="linenr"> 2: </span>
@@ -188,9 +188,9 @@ influxdb的查询就是一个普通的带query parameter的get请求，所以这
 </div>
 </div>
 
-<div id="outline-container-org0a39b63" class="outline-3">
-<h3 id="org0a39b63">一个Query 和 Write 组合的test case</h3>
-<div class="outline-text-3" id="text-org0a39b63">
+<div id="outline-container-org23a46a2" class="outline-3">
+<h3 id="org23a46a2">一个Query 和 Write 组合的test case</h3>
+<div class="outline-text-3" id="text-org23a46a2">
 <div class="org-src-container">
 <pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #C678DD;">package</span> <span style="color: #98C379;">org.xusheng.influxdbloadtest</span>
 <span class="linenr"> 2: </span>
