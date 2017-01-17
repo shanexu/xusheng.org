@@ -99,7 +99,7 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 在浏览器中打开，就能看到我们亲切的 =Hello World!= 了。
 
 #+BEGIN_EXPORT html
-<iframe height="300" frameborder="0" style="width: 100%; overflow: hidden;" src="https://embed.scalafiddle.io/embed?sfid=zKNO24v/0"></iframe>
+<iframe height="300" frameborder="0" style="width: 100%; overflow: hidden;" src="https://embed.scalafiddle.io/embed?sfid=zKNO24v/0&theme=dark"></iframe>
 #+END_EXPORT
 
 然而一个真正的前端项目，不可能一直使用本地文件来验证查看的，所以我需要一个server。=Play= 和 =scalatra= 在这个场景中有点杀鸡用牛刀的感觉，所以我选择了 =Akka Http= 做这个 =webserver= 。
@@ -266,3 +266,188 @@ object Server extends App {
 现在只要执行，=sbt server/run= ，然后在浏览器中访问 =http://127.0.0.1:1234/?fast= 或者 =http://127.0.0.1:1234/= 就能分别访问 =fastOptJS= 或者 =fullOptJS= 的js了。
 
 好了这只是一个准备工作，接下来是 =Binding.scala= 的哲学时间。
+
+=Binding.scala= 给我的第一印象不是 类似 =react.js= 的xml语法糖，而是 =mvvm= 中的经典js库 [[http://knockoutjs.com/documentation/introduction.html][knockout]] 。=knockout= 的官方文档中开篇就介绍了，=knockout= 的特性。
+
+#+BEGIN_QUOTE
+- *Elegant dependency tracking* - automatically updates the right parts of your UI whenever your data model changes.
+- *Declarative bindings* - a simple and obvious way to connect parts of your UI to your data model. You can construct a complex dynamic UIs easily using arbitrarily nested binding contexts.
+- *Trivially extensible* - implement custom behaviors as new declarative bindings for easy reuse in just a few lines of code.
+#+END_QUOTE
+
+看一段 =knockout= 文档中的一小撮代码。
+
+#+BEGIN_SRC javascript -n
+function AppViewModel() {
+  this.firstName = ko.observable('Bob');
+  this.lastName = ko.observable('Smith');
+
+  this.fullName = ko.computed(function() {
+    return this.firstName() + " " + this.lastName();
+  }, this);
+}
+#+END_SRC
+
+这里在 =AppViewModel= 中定义了两个 =observable= 属性 =firstName= 和 =lastName= ，以及一个计算属性 =fullName= ， 换句话说，=fullName= 依赖于 =firstName= 和 =lastName= 。下面用 =Binding.scala= 来实现这个逻辑。
+
+#+BEGIN_SRC scala -n
+val firstName = Var("Shane")
+val lastName = Var("Xu")
+
+val fullName = Binding {
+  s"${firstName.bind} ${lastName.bind}"
+}
+#+END_SRC
+
+#+BEGIN_EXPORT html
+<iframe height="300" frameborder="0" style="width: 100%; overflow: hidden;" src="https://embed.scalafiddle.io/embed?sfid=GcSSXpa/2&theme=dark"></iframe>
+#+END_EXPORT
+
+和 =knockout= 类似，=Binding.scala= 代码片段中的 =fullName= 也会随着 =firstName= 和 =lastName= 的变化而变化。
+
+=Binding.scala= 第二印象，才是 =react.js= 。这主要归因于 =Binding.scala= 利用了 =scala= 原生的 =xml= 库，=scala= 是能直接在代码里面写 =xml= 的。然后利用宏来把 =xml= 转化成 =Node= 。
+
+
+好吧回归主题，=Binding.scala in Practice= ，不知道Binding.scala的作者杨博，有没有在生产中使用过Binding.scala。为了写现在这篇文章我又翻出了杨博的 [[http://www.infoq.com/cn/articles/more-than-react-part01][More than React]] 看了遍。其实有些观点，我不太认同。尤其是系列的第三篇 =More than React（二）组件对复用性有害？= ，其中有一句话：
+
+#+BEGIN_QUOTE
+Binding.scala 不发明“组件”之类的噱头，而以更轻巧的“方法”为最小复用单位，让编程体验更加顺畅，获得了更好的代码复用性。
+#+END_QUOTE
+
+有点“为赋新词”的味道。我不认为在基于html的前端编码中，“方法”作为最小的复用单位能提高效率。在目前为止我接触过的所有前端框架中，无论angular、react、knockout，最难解决的问题还是复用。我不知道项目越来越复杂，代码量越来越大杨博会如何组织代码。载我看来，按照组件去组织代码是最为清晰的。比如，在文章中举例的标签编辑器。原文中的代码如下：
+
+#+BEGIN_SRC scala -n
+@dom def tagPicker(tags: Vars[String]) = {
+  val input: Input = <input type="text"/>
+  val addHandler = { event: Event =>
+    if (input.value != "" && !tags.get.contains(input.value)) {
+      tags.get += input.value
+      input.value = ""
+    }
+  }
+  <section>
+    <div>{
+      for (tag <- tags) yield <q>
+        { tag }
+        <button onclick={ event: Event => tags.get -= tag }>x</button>
+      </q>
+    }</div>
+    <div>{ input } <button onclick={ addHandler }>Add</button></div>
+  </section>
+}
+#+END_SRC
+
+我不知道，杨博是有意还是无意地一直在追求代码的行数。这段代码的确比DHTML和React的例子来的逻辑清晰。然而我想问的是，如果我某天想换一种展示方式，比如想把input控件换成select控件，又或者标签想用select来展示，那么上面的代码几乎就是废了。我曾经有幸接触过WPF（窃以为C#是我目前接触过的所有编程语言中，用户体验最好的语言，只可惜血统不好）。在WPF中小到一个Button都可以重写外观。比如，下面这个我随手摘来的栗子 [[https://www.tutorialspoint.com/wpf/wpf_templates.htm]] 。
+
+#+BEGIN_SRC xml -n
+<Window x:Class = "TemplateDemo.MainWindow" 
+   xmlns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+   xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml" 
+   Title = "MainWindow" Height = "350" Width = "604"> 
+	
+   <Window.Resources> 
+      <ControlTemplate x:Key= "ButtonTemplate" TargetType = "Button">
+		
+         <Grid> 
+            <Ellipse x:Name = "ButtonEllipse" Height = "100" Width = "150" > 
+               <Ellipse.Fill> 
+                  <LinearGradientBrush StartPoint = "0,0.2" EndPoint = "0.2,1.4"> 
+                     <GradientStop Offset = "0" Color = "Red" /> 
+                     <GradientStop Offset = "1" Color = "Orange" /> 
+                  </LinearGradientBrush> 
+               </Ellipse.Fill> 
+            </Ellipse> 
+				
+            <ContentPresenter Content = "{TemplateBinding Content}" 
+               HorizontalAlignment = "Center" VerticalAlignment = "Center" /> 
+         </Grid> 
+			
+         <ControlTemplate.Triggers> 
+			
+            <Trigger Property = "IsMouseOver" Value = "True"> 
+               <Setter TargetName = "ButtonEllipse" Property = "Fill" > 
+                  <Setter.Value> 
+                     <LinearGradientBrush StartPoint = "0,0.2" EndPoint = "0.2,1.4"> 
+                        <GradientStop Offset = "0" Color = "YellowGreen" /> 
+                        <GradientStop Offset = "1" Color = "Gold" /> 
+                     </LinearGradientBrush> 
+                  </Setter.Value> 
+               </Setter> 
+            </Trigger> 
+				
+            <Trigger Property = "IsPressed" Value = "True"> 
+               <Setter Property = "RenderTransform"> 
+                  <Setter.Value> 
+                     <ScaleTransform ScaleX = "0.8" ScaleY = "0.8" 
+                        CenterX = "0" CenterY = "0"  /> 
+                  </Setter.Value> 
+               </Setter> 
+               <Setter Property = "RenderTransformOrigin" Value = "0.5,0.5" /> 
+            </Trigger> 
+				
+         </ControlTemplate.Triggers> 
+			
+      </ControlTemplate> 
+   </Window.Resources> 
+	
+   <StackPanel> 
+      <Button Content = "Round Button!"
+         Template = "{StaticResource ButtonTemplate}" 
+         Width = "150" Margin = "50" /> 
+      <Button Content = "Default Button!" Height = "40" 
+         Width = "150" Margin = "5" />
+   </StackPanel> 
+	
+</Window> 
+#+END_SRC
+
+Window.Resources标签中，定义了一个适用于Button的ControlTemplate，然后下面的StackPanel里面就塞了两个Button，上面那个是自定的，下面那个是正常的。而那个自定义的Button同样能够相应用户的点击事件，在用户看来，只是一个长得比较奇怪的Button。Button所有的内部逻辑，都和原先的Default的button一致。
+也许你觉得这里，对一个Button，做了完全定义未免太小题大作了。然而举一个更有意思的例子，也许你就不会这么想了。
+
+如果你所见的控件并不是你想象中的东西。
+
+#+BEGIN_SRC xml
+<LinearGradientBrush x:Key="TabItemHotBackground" EndPoint="0,1" StartPoint="0,0">
+    <GradientStop Color="#EAF6FD" Offset="0.15"/>
+    <GradientStop Color="#D9F0FC" Offset=".5"/>
+    <GradientStop Color="#BEE6FD" Offset=".5"/>
+    <GradientStop Color="#A7D9F5" Offset="1"/>
+</LinearGradientBrush>
+<SolidColorBrush x:Key="TabItemSelectedBackground" Color="#F9F9F9"/>
+<SolidColorBrush x:Key="TabItemHotBorderBrush" Color="#3C7FB1"/>
+
+<Style x:Key="RadioButtonStyle1" TargetType="{x:Type RadioButton}">
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="RadioButton">
+                <Border BorderBrush="Transparent" BorderThickness="0" Background="Transparent" CornerRadius="0">
+                    <TabItem x:Name="tabItem" IsSelected="{TemplateBinding IsChecked}" IsHitTestVisible="False">
+                        <TabItem.Header>
+                            <ContentPresenter Margin="5"/>
+                        </TabItem.Header>
+                    </TabItem>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="true">
+                        <Setter Property="Background" TargetName="tabItem" Value="{StaticResource TabItemHotBackground}"/>
+                    </Trigger>
+                    <Trigger Property="IsChecked" Value="true">
+                        <Setter Property="Panel.ZIndex" Value="1"/>
+                        <Setter Property="Background" TargetName="tabItem" Value="{StaticResource TabItemSelectedBackground}"/>
+                    </Trigger>
+                    <MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="IsChecked" Value="false"/>
+                            <Condition Property="IsMouseOver" Value="true"/>
+                        </MultiTrigger.Conditions>
+                        <Setter Property="BorderBrush" TargetName="tabItem" Value="{StaticResource TabItemHotBorderBrush}"/>
+                    </MultiTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
+#+END_SRC
+
+出处请看这里，[[http://stackoverflow.com/questions/4578665/is-there-a-way-to-template-a-radiobutton-so-it-should-tabitem-styled]] 。原谅我直接粘贴了代码。我已经好多年没有碰WPF了。但是WPF的思想一直深深地烙印在我的心里。
+也许看到上面这坨东西，会令没有WPF经验的人很费解。
