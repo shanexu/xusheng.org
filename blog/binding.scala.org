@@ -308,7 +308,7 @@ val fullName = Binding {
 =Binding.scala= 第二印象，才是 =react.js= 。这主要归因于 =Binding.scala= 利用了 =scala= 原生的 =xml= 库，=scala= 是能直接在代码里面写 =xml= 的。然后利用宏来把 =xml= 转化成 =Node= 。
 
 
-好吧回归主题，=Binding.scala in Practice= ，不知道Binding.scala的作者杨博，有没有在生产中使用过Binding.scala。为了写现在这篇文章我又翻出了杨博的 [[http://www.infoq.com/cn/articles/more-than-react-part01][More than React]] 看了遍。其实有些观点，我不太认同。尤其是系列的第三篇 =More than React（二）组件对复用性有害？= ，其中有一句话：
+好吧回归主题, =Binding.scala in Practice= ，不知道Binding.scala的作者杨博，有没有在生产中使用过Binding.scala。为了写现在这篇文章我又翻出了杨博的 [[http://www.infoq.com/cn/articles/more-than-react-part01][More than React]] 看了遍。其实有些观点，我不太认同。尤其是系列的第三篇 =More than React（二）组件对复用性有害？= ，其中有一句话：
 
 #+BEGIN_QUOTE
 Binding.scala 不发明“组件”之类的噱头，而以更轻巧的“方法”为最小复用单位，让编程体验更加顺畅，获得了更好的代码复用性。
@@ -406,7 +406,7 @@ Window.Resources标签中，定义了一个适用于Button的ControlTemplate，�
 
 如果你所见的控件并不是你想象中的东西。
 
-#+BEGIN_SRC xml
+#+BEGIN_SRC xml -n
 <LinearGradientBrush x:Key="TabItemHotBackground" EndPoint="0,1" StartPoint="0,0">
     <GradientStop Color="#EAF6FD" Offset="0.15"/>
     <GradientStop Color="#D9F0FC" Offset=".5"/>
@@ -450,4 +450,89 @@ Window.Resources标签中，定义了一个适用于Button的ControlTemplate，�
 #+END_SRC
 
 出处请看这里，[[http://stackoverflow.com/questions/4578665/is-there-a-way-to-template-a-radiobutton-so-it-should-tabitem-styled]] 。原谅我直接粘贴了代码。我已经好多年没有碰WPF了。但是WPF的思想一直深深地烙印在我的心里。
-也许看到上面这坨东西，会令没有WPF经验的人很费解。
+也许看到上面这坨东西，会令没有WPF经验的人很费解。其实这段代码实现了一个“伪装成Tabs的Radio Buttons”。提到Radio Button给人的第一映像便是一个空心圆形的控件，当选中时，空心圆形变成实心圆形；同一组的Radio Button只有一个能被选中。总结一下：
+
+1. Radio Button checked=true和checked=false两种状态
+2. 同一组Radio Button仅有一个checked=true
+3. 同一组Radio Button初始的时候可以一个都不被选中
+
+然后再来看看标签页有什么特性：
+
+1. 每一个tab页有active=true和active=false两种状态
+2. 同一组tab页仅有一个active=true
+3. 同意组tab页初始的时候必须有一个被选中
+
+这两种控件在行为上是如此相似。以至于可以通过给Radio Button写一个ControlTemplate就能，把一组Radio Button变成tabs。
+
+以我浅薄的前端开发经验，我想给上面举得例子做个总结:
+
+1. 组件几乎很难在两个不同的项目里无缝的使用，除非你不在乎它的外观
+2. 然而其逻辑几乎可以完美的复用
+
+基于上面的结论，我在 =Binding.scala= 的基础上定了一个简单的组件模型：
+
+#+BEGIN_SRC scala -n
+trait Component[T] { self: T =>
+  @dom
+  def render(implicit template: T => Binding[Node]) = {
+    template(self).bind
+  }
+}
+#+END_SRC
+
+就拿杨博文章中的TagPicker作为例子
+
+#+BEGIN_SRC scala -n
+import org.scalajs.dom.raw.{ Node, Event, HTMLInputElement }
+import com.thoughtworks.binding.dom
+import com.thoughtworks.binding.Binding
+import com.thoughtworks.binding.Binding.{ Var, Vars }
+
+case class TagPicker(tags: Vars[String]) extends Component[TagPicker] {
+  val text = Var("")
+
+  val textChangeHandler = { e: Event =>
+    e.target match {
+      case i: HTMLInputElement =>
+        text := i.value
+      case _ =>
+    }
+  }
+
+  val addHandler = { e: Event =>
+    text.get match {
+      case "" | null =>
+      case value if !tags.get.contains(value) =>
+        tags.get += value
+        text := ""
+    }
+  }
+
+  val removeHandler = { value: String =>
+    { e: Event =>
+      tags.get -= value
+    }
+  }
+}
+
+object TagPicker {
+
+  @dom
+  implicit def defaultTemplate(self: TagPicker): Binding[Node] = {
+    <section>
+      <div>{
+        for (tag <- self.tags) yield {
+          <span>
+            { tag }
+            <button onclick={ self.removeHandler(tag) }>x</button>
+          </span>
+        }
+      }</div>
+      <div>
+        <input value={ self.text.bind } onchange={ self.textChangeHandler }/>
+        <button onclick={ self.addHandler }>Add</button>
+      </div>
+    </section>
+  }
+}
+#+END_SRC
