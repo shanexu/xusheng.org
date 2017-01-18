@@ -13,18 +13,18 @@
   padding: 0;
 }
 
-p code:before, code:after {
+p code:before, p code:after {
   content: "=";
   color: #ccc;
 }
 
-p b:before, b:after {
+p b:before, p b:after {
   content: "*";
   color: #ccc;
 }
 
-p del:before, del:after {
-  content: "";
+p del:before, p del:after {
+  content: "+";
   color: #ccc;
 }
 

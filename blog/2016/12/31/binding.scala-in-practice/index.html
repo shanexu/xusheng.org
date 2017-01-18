@@ -147,7 +147,7 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 在浏览器中打开，就能看到我们亲切的 <code>Hello World!</code> 了。
 </p>
 
-<iframe height="300" frameborder="0" style="width: 100%; overflow: hidden;" src="https://embed.scalafiddle.io/embed?sfid=zKNO24v/0"></iframe>
+<iframe height="300" frameborder="0" style="width: 100%; overflow: hidden;" src="https://embed.scalafiddle.io/embed?sfid=zKNO24v/0&theme=dark"></iframe>
 
 <p>
 然而一个真正的前端项目，不可能一直使用本地文件来验证查看的，所以我需要一个server。=Play= 和 <code>scalatra</code> 在这个场景中有点杀鸡用牛刀的感觉，所以我选择了 <code>Akka Http</code> 做这个 <code>webserver</code> 。
@@ -326,11 +326,338 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 好了这只是一个准备工作，接下来是 <code>Binding.scala</code> 的哲学时间。
 </p>
 
+<p>
+<code>Binding.scala</code> 给我的第一印象不是 类似 <code>react.js</code> 的xml语法糖，而是 <code>mvvm</code> 中的经典js库 <a href="http://knockoutjs.com/documentation/introduction.html">knockout</a> 。=knockout= 的官方文档中开篇就介绍了，=knockout= 的特性。
+</p>
+
+<blockquote>
+<ul class="org-ul">
+<li><b>Elegant dependency tracking</b> - automatically updates the right parts of your UI whenever your data model changes.</li>
+<li><b>Declarative bindings</b> - a simple and obvious way to connect parts of your UI to your data model. You can construct a complex dynamic UIs easily using arbitrarily nested binding contexts.</li>
+<li><b>Trivially extensible</b> - implement custom behaviors as new declarative bindings for easy reuse in just a few lines of code.</li>
+</ul>
+</blockquote>
+
+<p>
+看一段 <code>knockout</code> 文档中的一小撮代码。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-javascript"><span class="linenr">1: </span><span style="color: #C678DD;">function</span> <span style="color: #61AFEF;">AppViewModel</span><span style="color: #ABB2BF;">()</span> <span style="color: #ABB2BF;">{</span>
+<span class="linenr">2: </span>  <span style="color: #56B6C2;">this</span>.firstName = ko.observable<span style="color: #C678DD;">(</span><span style="color: #98C379;">'Bob'</span><span style="color: #C678DD;">)</span>;
+<span class="linenr">3: </span>  <span style="color: #56B6C2;">this</span>.lastName = ko.observable<span style="color: #C678DD;">(</span><span style="color: #98C379;">'Smith'</span><span style="color: #C678DD;">)</span>;
+<span class="linenr">4: </span>
+<span class="linenr">5: </span>  <span style="color: #56B6C2;">this</span>.fullName = ko.computed<span style="color: #C678DD;">(</span><span style="color: #C678DD;">function</span><span style="color: #61AFEF;">()</span> <span style="color: #61AFEF;">{</span>
+<span class="linenr">6: </span>    <span style="color: #C678DD;">return</span> <span style="color: #56B6C2;">this</span>.firstName<span style="color: #56B6C2;">()</span> + <span style="color: #98C379;">" "</span> + <span style="color: #56B6C2;">this</span>.lastName<span style="color: #56B6C2;">()</span>;
+<span class="linenr">7: </span>  <span style="color: #61AFEF;">}</span>, <span style="color: #56B6C2;">this</span><span style="color: #C678DD;">)</span>;
+<span class="linenr">8: </span><span style="color: #ABB2BF;">}</span>
+</pre>
+</div>
+
+<p>
+这里在 <code>AppViewModel</code> 中定义了两个 <code>observable</code> 属性 <code>firstName</code> 和 <code>lastName</code> ，以及一个计算属性 <code>fullName</code> ， 换句话说，=fullName= 依赖于 <code>firstName</code> 和 <code>lastName</code> 。下面用 <code>Binding.scala</code> 来实现这个逻辑。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scala"><span class="linenr">1: </span><span style="color: #C678DD;">val</span> <span style="color: #E06C75;">firstName</span> <span style="color: #C678DD;">=</span> <span style="color: #56B6C2;">Var</span><span style="color: #ABB2BF;">(</span><span style="color: #98C379;">"Shane"</span><span style="color: #ABB2BF;">)</span>
+<span class="linenr">2: </span><span style="color: #C678DD;">val</span> <span style="color: #E06C75;">lastName</span> <span style="color: #C678DD;">=</span> <span style="color: #56B6C2;">Var</span><span style="color: #ABB2BF;">(</span><span style="color: #98C379;">"Xu"</span><span style="color: #ABB2BF;">)</span>
+<span class="linenr">3: </span>
+<span class="linenr">4: </span><span style="color: #C678DD;">val</span> <span style="color: #E06C75;">fullName</span> <span style="color: #C678DD;">=</span> <span style="color: #56B6C2;">Binding</span> <span style="color: #ABB2BF;">{</span>
+<span class="linenr">5: </span>  s<span style="color: #98C379;">"</span><span style="color: #E06C75;">${firstName.bind}</span><span style="color: #98C379;"> </span><span style="color: #E06C75;">${lastName.bind}</span><span style="color: #98C379;">"</span>
+<span class="linenr">6: </span><span style="color: #ABB2BF;">}</span>
+</pre>
+</div>
+
+<iframe height="300" frameborder="0" style="width: 100%; overflow: hidden;" src="https://embed.scalafiddle.io/embed?sfid=GcSSXpa/2&theme=dark"></iframe>
+
+<p>
+和 <code>knockout</code> 类似，=Binding.scala= 代码片段中的 <code>fullName</code> 也会随着 <code>firstName</code> 和 <code>lastName</code> 的变化而变化。
+</p>
+
+<p>
+<code>Binding.scala</code> 第二印象，才是 <code>react.js</code> 。这主要归因于 <code>Binding.scala</code> 利用了 <code>scala</code> 原生的 <code>xml</code> 库，=scala= 是能直接在代码里面写 <code>xml</code> 的。然后利用宏来把 <code>xml</code> 转化成 <code>Node</code> 。
+</p>
+
+
+<p>
+好吧回归主题, <code>Binding.scala in Practice</code> ，不知道Binding.scala的作者杨博，有没有在生产中使用过Binding.scala。为了写现在这篇文章我又翻出了杨博的 <a href="http://www.infoq.com/cn/articles/more-than-react-part01">More than React</a> 看了遍。其实有些观点，我不太认同。尤其是系列的第三篇 <code>More than React（二）组件对复用性有害？</code> ，其中有一句话：
+</p>
+
+<blockquote>
+<p>
+Binding.scala 不发明“组件”之类的噱头，而以更轻巧的“方法”为最小复用单位，让编程体验更加顺畅，获得了更好的代码复用性。
+</p>
+</blockquote>
+
+<p>
+有点“为赋新词”的味道。我不认为在基于html的前端编码中，“方法”作为最小的复用单位能提高效率。在目前为止我接触过的所有前端框架中，无论angular、react、knockout，最难解决的问题还是复用。我不知道项目越来越复杂，代码量越来越大杨博会如何组织代码。载我看来，按照组件去组织代码是最为清晰的。比如，在文章中举例的标签编辑器。原文中的代码如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #828997;">@dom</span> <span style="color: #C678DD;">def</span> <span style="color: #61AFEF;">tagPicker</span><span style="color: #ABB2BF;">(</span>tags<span style="color: #C678DD;">:</span> <span style="color: #E5C07B;">Vars</span><span style="color: #C678DD;">[</span><span style="color: #56B6C2;">String</span><span style="color: #C678DD;">]</span><span style="color: #ABB2BF;">)</span> <span style="color: #C678DD;">=</span> <span style="color: #ABB2BF;">{</span>
+<span class="linenr"> 2: </span>  <span style="color: #C678DD;">val</span> <span style="color: #E06C75;">input</span><span style="color: #C678DD;">:</span> <span style="color: #E5C07B;">Input</span> <span style="color: #C678DD;">=</span> &lt;input <span style="color: #C678DD;">type=</span><span style="color: #98C379;">"text"</span>/&gt;
+<span class="linenr"> 3: </span>  <span style="color: #C678DD;">val</span> <span style="color: #E06C75;">addHandler</span> <span style="color: #C678DD;">=</span> <span style="color: #C678DD;">{</span> event<span style="color: #C678DD;">:</span> <span style="color: #E5C07B;">Event</span> <span style="color: #C678DD;">=&gt;</span>
+<span class="linenr"> 4: </span>    <span style="color: #C678DD;">if</span> <span style="color: #61AFEF;">(</span>input.value != <span style="color: #98C379;">""</span> &amp;&amp; !tags.get.contains<span style="color: #56B6C2;">(</span>input.value<span style="color: #56B6C2;">)</span><span style="color: #61AFEF;">)</span> <span style="color: #61AFEF;">{</span>
+<span class="linenr"> 5: </span>      tags.get += input.value
+<span class="linenr"> 6: </span>      input.value <span style="color: #C678DD;">=</span> <span style="color: #98C379;">""</span>
+<span class="linenr"> 7: </span>    <span style="color: #61AFEF;">}</span>
+<span class="linenr"> 8: </span>  <span style="color: #C678DD;">}</span>
+<span class="linenr"> 9: </span>  &lt;section&gt;
+<span class="linenr">10: </span>    &lt;div&gt;<span style="color: #C678DD;">{</span>
+<span class="linenr">11: </span>      <span style="color: #C678DD;">for</span> <span style="color: #61AFEF;">(</span>tag <span style="color: #C678DD;">&lt;-</span> tags<span style="color: #61AFEF;">)</span> <span style="color: #C678DD;">yield</span> &lt;q&gt;
+<span class="linenr">12: </span>        <span style="color: #61AFEF;">{</span> tag <span style="color: #61AFEF;">}</span>
+<span class="linenr">13: </span>        &lt;button onclick<span style="color: #C678DD;">=</span><span style="color: #61AFEF;">{</span> event<span style="color: #C678DD;">:</span> <span style="color: #E5C07B;">Event</span> <span style="color: #C678DD;">=&gt;</span> tags.get -= tag <span style="color: #61AFEF;">}</span>&gt;x&lt;/button&gt;
+<span class="linenr">14: </span>      &lt;/q&gt;
+<span class="linenr">15: </span>    <span style="color: #C678DD;">}</span>&lt;/div&gt;
+<span class="linenr">16: </span>    &lt;div&gt;<span style="color: #C678DD;">{</span> input <span style="color: #C678DD;">}</span> &lt;button onclick<span style="color: #C678DD;">=</span><span style="color: #C678DD;">{</span> addHandler <span style="color: #C678DD;">}</span>&gt;<span style="color: #56B6C2;">Add</span>&lt;/button&gt;&lt;/div&gt;
+<span class="linenr">17: </span>  &lt;/section&gt;
+<span class="linenr">18: </span><span style="color: #ABB2BF;">}</span>
+</pre>
+</div>
+
+<p>
+我不知道，杨博是有意还是无意地一直在追求代码的行数。这段代码的确比DHTML和React的例子来的逻辑清晰。然而我想问的是，如果我某天想换一种展示方式，比如想把input控件换成select控件，又或者标签想用select来展示，那么上面的代码几乎就是废了。我曾经有幸接触过WPF（窃以为C#是我目前接触过的所有编程语言中，用户体验最好的语言，只可惜血统不好）。在WPF中小到一个Button都可以重写外观。比如，下面这个我随手摘来的栗子 <a href="https://www.tutorialspoint.com/wpf/wpf_templates.htm">https://www.tutorialspoint.com/wpf/wpf_templates.htm</a> 。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-xml"><span class="linenr"> 1: </span>&lt;<span style="color: #61AFEF;">Window</span> <span style="color: #56B6C2;">x</span>:<span style="color: #E06C75;">Class</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">TemplateDemo.MainWindow</span><span style="color: #98C379;">"</span> 
+<span class="linenr"> 2: </span>   <span style="color: #56B6C2;">xmlns</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">http://schemas.microsoft.com/winfx/2006/xaml/presentation</span><span style="color: #98C379;">"</span> 
+<span class="linenr"> 3: </span>   <span style="color: #56B6C2;">xmlns</span>:<span style="color: #E06C75;">x</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">http://schemas.microsoft.com/winfx/2006/xaml</span><span style="color: #98C379;">"</span> 
+<span class="linenr"> 4: </span>   <span style="color: #E06C75;">Title</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">MainWindow</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Height</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">350</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Width</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">604</span><span style="color: #98C379;">"</span>&gt; 
+<span class="linenr"> 5: </span>
+<span class="linenr"> 6: </span>   &lt;<span style="color: #61AFEF;">Window.Resources</span>&gt; 
+<span class="linenr"> 7: </span>      &lt;<span style="color: #61AFEF;">ControlTemplate</span> <span style="color: #56B6C2;">x</span>:<span style="color: #E06C75;">Key</span>= <span style="color: #98C379;">"</span><span style="color: #98C379;">ButtonTemplate</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">TargetType</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">Button</span><span style="color: #98C379;">"</span>&gt;
+<span class="linenr"> 8: </span>
+<span class="linenr"> 9: </span>         &lt;<span style="color: #61AFEF;">Grid</span>&gt; 
+<span class="linenr">10: </span>            &lt;<span style="color: #61AFEF;">Ellipse</span> <span style="color: #56B6C2;">x</span>:<span style="color: #E06C75;">Name</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">ButtonEllipse</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Height</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">100</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Width</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">150</span><span style="color: #98C379;">"</span> &gt; 
+<span class="linenr">11: </span>               &lt;<span style="color: #61AFEF;">Ellipse.Fill</span>&gt; 
+<span class="linenr">12: </span>                  &lt;<span style="color: #61AFEF;">LinearGradientBrush</span> <span style="color: #E06C75;">StartPoint</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">0,0.2</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">EndPoint</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">0.2,1.4</span><span style="color: #98C379;">"</span>&gt; 
+<span class="linenr">13: </span>                     &lt;<span style="color: #61AFEF;">GradientStop</span> <span style="color: #E06C75;">Offset</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">0</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Color</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">Red</span><span style="color: #98C379;">"</span> /&gt; 
+<span class="linenr">14: </span>                     &lt;<span style="color: #61AFEF;">GradientStop</span> <span style="color: #E06C75;">Offset</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">1</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Color</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">Orange</span><span style="color: #98C379;">"</span> /&gt; 
+<span class="linenr">15: </span>                  &lt;/<span style="color: #61AFEF;">LinearGradientBrush</span>&gt; 
+<span class="linenr">16: </span>               &lt;/<span style="color: #61AFEF;">Ellipse.Fill</span>&gt; 
+<span class="linenr">17: </span>            &lt;/<span style="color: #61AFEF;">Ellipse</span>&gt; 
+<span class="linenr">18: </span>
+<span class="linenr">19: </span>            &lt;<span style="color: #61AFEF;">ContentPresenter</span> <span style="color: #E06C75;">Content</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">{TemplateBinding Content}</span><span style="color: #98C379;">"</span> 
+<span class="linenr">20: </span>               <span style="color: #E06C75;">HorizontalAlignment</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">Center</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">VerticalAlignment</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">Center</span><span style="color: #98C379;">"</span> /&gt; 
+<span class="linenr">21: </span>         &lt;/<span style="color: #61AFEF;">Grid</span>&gt; 
+<span class="linenr">22: </span>
+<span class="linenr">23: </span>         &lt;<span style="color: #61AFEF;">ControlTemplate.Triggers</span>&gt; 
+<span class="linenr">24: </span>
+<span class="linenr">25: </span>            &lt;<span style="color: #61AFEF;">Trigger</span> <span style="color: #E06C75;">Property</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">IsMouseOver</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Value</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">True</span><span style="color: #98C379;">"</span>&gt; 
+<span class="linenr">26: </span>               &lt;<span style="color: #61AFEF;">Setter</span> <span style="color: #E06C75;">TargetName</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">ButtonEllipse</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Property</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">Fill</span><span style="color: #98C379;">"</span> &gt; 
+<span class="linenr">27: </span>                  &lt;<span style="color: #61AFEF;">Setter.Value</span>&gt; 
+<span class="linenr">28: </span>                     &lt;<span style="color: #61AFEF;">LinearGradientBrush</span> <span style="color: #E06C75;">StartPoint</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">0,0.2</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">EndPoint</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">0.2,1.4</span><span style="color: #98C379;">"</span>&gt; 
+<span class="linenr">29: </span>                        &lt;<span style="color: #61AFEF;">GradientStop</span> <span style="color: #E06C75;">Offset</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">0</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Color</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">YellowGreen</span><span style="color: #98C379;">"</span> /&gt; 
+<span class="linenr">30: </span>                        &lt;<span style="color: #61AFEF;">GradientStop</span> <span style="color: #E06C75;">Offset</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">1</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Color</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">Gold</span><span style="color: #98C379;">"</span> /&gt; 
+<span class="linenr">31: </span>                     &lt;/<span style="color: #61AFEF;">LinearGradientBrush</span>&gt; 
+<span class="linenr">32: </span>                  &lt;/<span style="color: #61AFEF;">Setter.Value</span>&gt; 
+<span class="linenr">33: </span>               &lt;/<span style="color: #61AFEF;">Setter</span>&gt; 
+<span class="linenr">34: </span>            &lt;/<span style="color: #61AFEF;">Trigger</span>&gt; 
+<span class="linenr">35: </span>
+<span class="linenr">36: </span>            &lt;<span style="color: #61AFEF;">Trigger</span> <span style="color: #E06C75;">Property</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">IsPressed</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Value</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">True</span><span style="color: #98C379;">"</span>&gt; 
+<span class="linenr">37: </span>               &lt;<span style="color: #61AFEF;">Setter</span> <span style="color: #E06C75;">Property</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">RenderTransform</span><span style="color: #98C379;">"</span>&gt; 
+<span class="linenr">38: </span>                  &lt;<span style="color: #61AFEF;">Setter.Value</span>&gt; 
+<span class="linenr">39: </span>                     &lt;<span style="color: #61AFEF;">ScaleTransform</span> <span style="color: #E06C75;">ScaleX</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">0.8</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">ScaleY</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">0.8</span><span style="color: #98C379;">"</span> 
+<span class="linenr">40: </span>                        <span style="color: #E06C75;">CenterX</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">0</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">CenterY</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">0</span><span style="color: #98C379;">"</span>  /&gt; 
+<span class="linenr">41: </span>                  &lt;/<span style="color: #61AFEF;">Setter.Value</span>&gt; 
+<span class="linenr">42: </span>               &lt;/<span style="color: #61AFEF;">Setter</span>&gt; 
+<span class="linenr">43: </span>               &lt;<span style="color: #61AFEF;">Setter</span> <span style="color: #E06C75;">Property</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">RenderTransformOrigin</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Value</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">0.5,0.5</span><span style="color: #98C379;">"</span> /&gt; 
+<span class="linenr">44: </span>            &lt;/<span style="color: #61AFEF;">Trigger</span>&gt; 
+<span class="linenr">45: </span>
+<span class="linenr">46: </span>         &lt;/<span style="color: #61AFEF;">ControlTemplate.Triggers</span>&gt; 
+<span class="linenr">47: </span>
+<span class="linenr">48: </span>      &lt;/<span style="color: #61AFEF;">ControlTemplate</span>&gt; 
+<span class="linenr">49: </span>   &lt;/<span style="color: #61AFEF;">Window.Resources</span>&gt; 
+<span class="linenr">50: </span>
+<span class="linenr">51: </span>   &lt;<span style="color: #61AFEF;">StackPanel</span>&gt; 
+<span class="linenr">52: </span>      &lt;<span style="color: #61AFEF;">Button</span> <span style="color: #E06C75;">Content</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">Round Button!</span><span style="color: #98C379;">"</span>
+<span class="linenr">53: </span>         <span style="color: #E06C75;">Template</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">{StaticResource ButtonTemplate}</span><span style="color: #98C379;">"</span> 
+<span class="linenr">54: </span>         <span style="color: #E06C75;">Width</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">150</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Margin</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">50</span><span style="color: #98C379;">"</span> /&gt; 
+<span class="linenr">55: </span>      &lt;<span style="color: #61AFEF;">Button</span> <span style="color: #E06C75;">Content</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">Default Button!</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Height</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">40</span><span style="color: #98C379;">"</span> 
+<span class="linenr">56: </span>         <span style="color: #E06C75;">Width</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">150</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Margin</span> = <span style="color: #98C379;">"</span><span style="color: #98C379;">5</span><span style="color: #98C379;">"</span> /&gt;
+<span class="linenr">57: </span>   &lt;/<span style="color: #61AFEF;">StackPanel</span>&gt; 
+<span class="linenr">58: </span>
+<span class="linenr">59: </span>&lt;/<span style="color: #61AFEF;">Window</span>&gt;
+</pre>
+</div>
+
+<p>
+Window.Resources标签中，定义了一个适用于Button的ControlTemplate，然后下面的StackPanel里面就塞了两个Button，上面那个是自定的，下面那个是正常的。而那个自定义的Button同样能够相应用户的点击事件，在用户看来，只是一个长得比较奇怪的Button。Button所有的内部逻辑，都和原先的Default的button一致。
+也许你觉得这里，对一个Button，做了完全定义未免太小题大作了。然而举一个更有意思的例子，也许你就不会这么想了。
+</p>
+
+<p>
+如果你所见的控件并不是你想象中的东西。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-xml"><span class="linenr"> 1: </span>&lt;<span style="color: #61AFEF;">LinearGradientBrush</span> <span style="color: #56B6C2;">x</span>:<span style="color: #E06C75;">Key</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">TabItemHotBackground</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">EndPoint</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">0,1</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">StartPoint</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">0,0</span><span style="color: #98C379;">"</span>&gt;
+<span class="linenr"> 2: </span>    &lt;<span style="color: #61AFEF;">GradientStop</span> <span style="color: #E06C75;">Color</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">#EAF6FD</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Offset</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">0.15</span><span style="color: #98C379;">"</span>/&gt;
+<span class="linenr"> 3: </span>    &lt;<span style="color: #61AFEF;">GradientStop</span> <span style="color: #E06C75;">Color</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">#D9F0FC</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Offset</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">.5</span><span style="color: #98C379;">"</span>/&gt;
+<span class="linenr"> 4: </span>    &lt;<span style="color: #61AFEF;">GradientStop</span> <span style="color: #E06C75;">Color</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">#BEE6FD</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Offset</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">.5</span><span style="color: #98C379;">"</span>/&gt;
+<span class="linenr"> 5: </span>    &lt;<span style="color: #61AFEF;">GradientStop</span> <span style="color: #E06C75;">Color</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">#A7D9F5</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Offset</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">1</span><span style="color: #98C379;">"</span>/&gt;
+<span class="linenr"> 6: </span>&lt;/<span style="color: #61AFEF;">LinearGradientBrush</span>&gt;
+<span class="linenr"> 7: </span>&lt;<span style="color: #61AFEF;">SolidColorBrush</span> <span style="color: #56B6C2;">x</span>:<span style="color: #E06C75;">Key</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">TabItemSelectedBackground</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Color</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">#F9F9F9</span><span style="color: #98C379;">"</span>/&gt;
+<span class="linenr"> 8: </span>&lt;<span style="color: #61AFEF;">SolidColorBrush</span> <span style="color: #56B6C2;">x</span>:<span style="color: #E06C75;">Key</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">TabItemHotBorderBrush</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Color</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">#3C7FB1</span><span style="color: #98C379;">"</span>/&gt;
+<span class="linenr"> 9: </span>
+<span class="linenr">10: </span>&lt;<span style="color: #61AFEF;">Style</span> <span style="color: #56B6C2;">x</span>:<span style="color: #E06C75;">Key</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">RadioButtonStyle1</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">TargetType</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">{x:Type RadioButton}</span><span style="color: #98C379;">"</span>&gt;
+<span class="linenr">11: </span>    &lt;<span style="color: #61AFEF;">Setter</span> <span style="color: #E06C75;">Property</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">Template</span><span style="color: #98C379;">"</span>&gt;
+<span class="linenr">12: </span>        &lt;<span style="color: #61AFEF;">Setter.Value</span>&gt;
+<span class="linenr">13: </span>            &lt;<span style="color: #61AFEF;">ControlTemplate</span> <span style="color: #E06C75;">TargetType</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">RadioButton</span><span style="color: #98C379;">"</span>&gt;
+<span class="linenr">14: </span>                &lt;<span style="color: #61AFEF;">Border</span> <span style="color: #E06C75;">BorderBrush</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">Transparent</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">BorderThickness</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">0</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Background</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">Transparent</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">CornerRadius</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">0</span><span style="color: #98C379;">"</span>&gt;
+<span class="linenr">15: </span>                    &lt;<span style="color: #61AFEF;">TabItem</span> <span style="color: #56B6C2;">x</span>:<span style="color: #E06C75;">Name</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">tabItem</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">IsSelected</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">{TemplateBinding IsChecked}</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">IsHitTestVisible</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">False</span><span style="color: #98C379;">"</span>&gt;
+<span class="linenr">16: </span>                        &lt;<span style="color: #61AFEF;">TabItem.Header</span>&gt;
+<span class="linenr">17: </span>                            &lt;<span style="color: #61AFEF;">ContentPresenter</span> <span style="color: #E06C75;">Margin</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">5</span><span style="color: #98C379;">"</span>/&gt;
+<span class="linenr">18: </span>                        &lt;/<span style="color: #61AFEF;">TabItem.Header</span>&gt;
+<span class="linenr">19: </span>                    &lt;/<span style="color: #61AFEF;">TabItem</span>&gt;
+<span class="linenr">20: </span>                &lt;/<span style="color: #61AFEF;">Border</span>&gt;
+<span class="linenr">21: </span>                &lt;<span style="color: #61AFEF;">ControlTemplate.Triggers</span>&gt;
+<span class="linenr">22: </span>                    &lt;<span style="color: #61AFEF;">Trigger</span> <span style="color: #E06C75;">Property</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">IsMouseOver</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Value</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">true</span><span style="color: #98C379;">"</span>&gt;
+<span class="linenr">23: </span>                        &lt;<span style="color: #61AFEF;">Setter</span> <span style="color: #E06C75;">Property</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">Background</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">TargetName</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">tabItem</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Value</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">{StaticResource TabItemHotBackground}</span><span style="color: #98C379;">"</span>/&gt;
+<span class="linenr">24: </span>                    &lt;/<span style="color: #61AFEF;">Trigger</span>&gt;
+<span class="linenr">25: </span>                    &lt;<span style="color: #61AFEF;">Trigger</span> <span style="color: #E06C75;">Property</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">IsChecked</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Value</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">true</span><span style="color: #98C379;">"</span>&gt;
+<span class="linenr">26: </span>                        &lt;<span style="color: #61AFEF;">Setter</span> <span style="color: #E06C75;">Property</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">Panel.ZIndex</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Value</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">1</span><span style="color: #98C379;">"</span>/&gt;
+<span class="linenr">27: </span>                        &lt;<span style="color: #61AFEF;">Setter</span> <span style="color: #E06C75;">Property</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">Background</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">TargetName</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">tabItem</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Value</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">{StaticResource TabItemSelectedBackground}</span><span style="color: #98C379;">"</span>/&gt;
+<span class="linenr">28: </span>                    &lt;/<span style="color: #61AFEF;">Trigger</span>&gt;
+<span class="linenr">29: </span>                    &lt;<span style="color: #61AFEF;">MultiTrigger</span>&gt;
+<span class="linenr">30: </span>                        &lt;<span style="color: #61AFEF;">MultiTrigger.Conditions</span>&gt;
+<span class="linenr">31: </span>                            &lt;<span style="color: #61AFEF;">Condition</span> <span style="color: #E06C75;">Property</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">IsChecked</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Value</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">false</span><span style="color: #98C379;">"</span>/&gt;
+<span class="linenr">32: </span>                            &lt;<span style="color: #61AFEF;">Condition</span> <span style="color: #E06C75;">Property</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">IsMouseOver</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Value</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">true</span><span style="color: #98C379;">"</span>/&gt;
+<span class="linenr">33: </span>                        &lt;/<span style="color: #61AFEF;">MultiTrigger.Conditions</span>&gt;
+<span class="linenr">34: </span>                        &lt;<span style="color: #61AFEF;">Setter</span> <span style="color: #E06C75;">Property</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">BorderBrush</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">TargetName</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">tabItem</span><span style="color: #98C379;">"</span> <span style="color: #E06C75;">Value</span>=<span style="color: #98C379;">"</span><span style="color: #98C379;">{StaticResource TabItemHotBorderBrush}</span><span style="color: #98C379;">"</span>/&gt;
+<span class="linenr">35: </span>                    &lt;/<span style="color: #61AFEF;">MultiTrigger</span>&gt;
+<span class="linenr">36: </span>                &lt;/<span style="color: #61AFEF;">ControlTemplate.Triggers</span>&gt;
+<span class="linenr">37: </span>            &lt;/<span style="color: #61AFEF;">ControlTemplate</span>&gt;
+<span class="linenr">38: </span>        &lt;/<span style="color: #61AFEF;">Setter.Value</span>&gt;
+<span class="linenr">39: </span>    &lt;/<span style="color: #61AFEF;">Setter</span>&gt;
+<span class="linenr">40: </span>&lt;/<span style="color: #61AFEF;">Style</span>&gt;
+</pre>
+</div>
+
+<p>
+出处请看这里，<a href="http://stackoverflow.com/questions/4578665/is-there-a-way-to-template-a-radiobutton-so-it-should-tabitem-styled">http://stackoverflow.com/questions/4578665/is-there-a-way-to-template-a-radiobutton-so-it-should-tabitem-styled</a> 。原谅我直接粘贴了代码。我已经好多年没有碰WPF了。但是WPF的思想一直深深地烙印在我的心里。
+也许看到上面这坨东西，会令没有WPF经验的人很费解。其实这段代码实现了一个“伪装成Tabs的Radio Buttons”。提到Radio Button给人的第一映像便是一个空心圆形的控件，当选中时，空心圆形变成实心圆形；同一组的Radio Button只有一个能被选中。总结一下：
+</p>
+
+<ol class="org-ol">
+<li>Radio Button checked=true和checked=false两种状态</li>
+<li>同一组Radio Button仅有一个checked=true</li>
+<li>同一组Radio Button初始的时候可以一个都不被选中</li>
+</ol>
+
+<p>
+然后再来看看标签页有什么特性：
+</p>
+
+<ol class="org-ol">
+<li>每一个tab页有active=true和active=false两种状态</li>
+<li>同一组tab页仅有一个active=true</li>
+<li>同意组tab页初始的时候必须有一个被选中</li>
+</ol>
+
+<p>
+这两种控件在行为上是如此相似。以至于可以通过给Radio Button写一个ControlTemplate就能，把一组Radio Button变成tabs。
+</p>
+
+<p>
+以我浅薄的前端开发经验，我想给上面举得例子做个总结:
+</p>
+
+<ol class="org-ol">
+<li>组件几乎很难在两个不同的项目里无缝的使用，除非你不在乎它的外观</li>
+<li>然而其逻辑几乎可以完美的复用</li>
+</ol>
+
+<p>
+基于上面的结论，我在 <code>Binding.scala</code> 的基础上定了一个简单的组件模型：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scala"><span class="linenr">1: </span><span style="color: #C678DD;">trait</span> <span style="color: #E5C07B;">Component</span><span style="color: #ABB2BF;">[</span><span style="color: #56B6C2;">T</span><span style="color: #ABB2BF;">]</span> <span style="color: #ABB2BF;">{</span> self<span style="color: #C678DD;">:</span> <span style="color: #E5C07B;">T</span> <span style="color: #C678DD;">=&gt;</span>
+<span class="linenr">2: </span>  <span style="color: #828997;">@dom</span>
+<span class="linenr">3: </span>  <span style="color: #C678DD;">def</span> <span style="color: #61AFEF;">render</span><span style="color: #C678DD;">(</span><span style="color: #56B6C2;">implicit</span> template<span style="color: #C678DD;">:</span> <span style="color: #E5C07B;">T</span> <span style="color: #C678DD;">=&gt;</span> <span style="color: #56B6C2;">Binding</span><span style="color: #61AFEF;">[</span><span style="color: #56B6C2;">Node</span><span style="color: #61AFEF;">]</span><span style="color: #C678DD;">)</span> <span style="color: #C678DD;">=</span> <span style="color: #C678DD;">{</span>
+<span class="linenr">4: </span>    template<span style="color: #61AFEF;">(</span>self<span style="color: #61AFEF;">)</span>.bind
+<span class="linenr">5: </span>  <span style="color: #C678DD;">}</span>
+<span class="linenr">6: </span><span style="color: #ABB2BF;">}</span>
+</pre>
+</div>
+
+<p>
+就拿杨博文章中的TagPicker作为例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #C678DD;">import</span> org.scalajs.dom.raw.<span style="color: #ABB2BF;">{</span> <span style="color: #56B6C2;">Node</span>, <span style="color: #56B6C2;">Event</span>, <span style="color: #56B6C2;">HTMLInputElement</span> <span style="color: #ABB2BF;">}</span>
+<span class="linenr"> 2: </span><span style="color: #C678DD;">import</span> com.thoughtworks.binding.dom
+<span class="linenr"> 3: </span><span style="color: #C678DD;">import</span> com.thoughtworks.binding.<span style="color: #56B6C2;">Binding</span>
+<span class="linenr"> 4: </span><span style="color: #C678DD;">import</span> com.thoughtworks.binding.<span style="color: #56B6C2;">Binding</span>.<span style="color: #ABB2BF;">{</span> <span style="color: #56B6C2;">Var</span>, <span style="color: #56B6C2;">Vars</span> <span style="color: #ABB2BF;">}</span>
+<span class="linenr"> 5: </span>
+<span class="linenr"> 6: </span><span style="color: #C678DD;">case</span> <span style="color: #C678DD;">class</span> <span style="color: #E5C07B;">TagPicker</span><span style="color: #ABB2BF;">(</span>tags<span style="color: #C678DD;">:</span> <span style="color: #E5C07B;">Vars</span><span style="color: #C678DD;">[</span><span style="color: #56B6C2;">String</span><span style="color: #C678DD;">]</span><span style="color: #ABB2BF;">)</span> <span style="color: #C678DD;">extends</span> <span style="color: #E5C07B;">Component</span><span style="color: #ABB2BF;">[</span><span style="color: #56B6C2;">TagPicker</span><span style="color: #ABB2BF;">]</span> <span style="color: #ABB2BF;">{</span>
+<span class="linenr"> 7: </span>  <span style="color: #C678DD;">val</span> <span style="color: #E06C75;">text</span> <span style="color: #C678DD;">=</span> <span style="color: #56B6C2;">Var</span><span style="color: #C678DD;">(</span><span style="color: #98C379;">""</span><span style="color: #C678DD;">)</span>
+<span class="linenr"> 8: </span>
+<span class="linenr"> 9: </span>  <span style="color: #C678DD;">val</span> <span style="color: #E06C75;">textChangeHandler</span> <span style="color: #C678DD;">=</span> <span style="color: #C678DD;">{</span> e<span style="color: #C678DD;">:</span> <span style="color: #E5C07B;">Event</span> <span style="color: #C678DD;">=&gt;</span>
+<span class="linenr">10: </span>    e.target <span style="color: #C678DD;">match</span> <span style="color: #61AFEF;">{</span>
+<span class="linenr">11: </span>      <span style="color: #C678DD;">case</span> <span style="color: #E06C75;">i</span><span style="color: #C678DD;">:</span> <span style="color: #E5C07B;">HTMLInputElement</span> <span style="color: #C678DD;">=&gt;</span>
+<span class="linenr">12: </span>        text := i.value
+<span class="linenr">13: </span>      <span style="color: #C678DD;">case</span> <span style="color: #C678DD;">_</span> <span style="color: #C678DD;">=&gt;</span>
+<span class="linenr">14: </span>    <span style="color: #61AFEF;">}</span>
+<span class="linenr">15: </span>  <span style="color: #C678DD;">}</span>
+<span class="linenr">16: </span>
+<span class="linenr">17: </span>  <span style="color: #C678DD;">val</span> <span style="color: #E06C75;">addHandler</span> <span style="color: #C678DD;">=</span> <span style="color: #C678DD;">{</span> e<span style="color: #C678DD;">:</span> <span style="color: #E5C07B;">Event</span> <span style="color: #C678DD;">=&gt;</span>
+<span class="linenr">18: </span>    text.get <span style="color: #C678DD;">match</span> <span style="color: #61AFEF;">{</span>
+<span class="linenr">19: </span>      <span style="color: #C678DD;">case</span> <span style="color: #98C379;">""</span> | <span style="color: #56B6C2;">null</span> <span style="color: #C678DD;">=&gt;</span>
+<span class="linenr">20: </span>      <span style="color: #C678DD;">case</span> <span style="color: #E06C75;">value</span> <span style="color: #C678DD;">if</span> !tags.get.contains<span style="color: #56B6C2;">(</span>value<span style="color: #56B6C2;">)</span> <span style="color: #C678DD;">=&gt;</span>
+<span class="linenr">21: </span>        tags.get += value
+<span class="linenr">22: </span>        text := <span style="color: #98C379;">""</span>
+<span class="linenr">23: </span>    <span style="color: #61AFEF;">}</span>
+<span class="linenr">24: </span>  <span style="color: #C678DD;">}</span>
+<span class="linenr">25: </span>
+<span class="linenr">26: </span>  <span style="color: #C678DD;">val</span> <span style="color: #E06C75;">removeHandler</span> <span style="color: #C678DD;">=</span> <span style="color: #C678DD;">{</span> value<span style="color: #C678DD;">:</span> <span style="color: #E5C07B;">String</span> <span style="color: #C678DD;">=&gt;</span>
+<span class="linenr">27: </span>    <span style="color: #61AFEF;">{</span> e<span style="color: #C678DD;">:</span> <span style="color: #E5C07B;">Event</span> <span style="color: #C678DD;">=&gt;</span>
+<span class="linenr">28: </span>      tags.get -= value
+<span class="linenr">29: </span>    <span style="color: #61AFEF;">}</span>
+<span class="linenr">30: </span>  <span style="color: #C678DD;">}</span>
+<span class="linenr">31: </span><span style="color: #ABB2BF;">}</span>
+<span class="linenr">32: </span>
+<span class="linenr">33: </span><span style="color: #C678DD;">object</span> <span style="color: #56B6C2;">TagPicker</span> <span style="color: #ABB2BF;">{</span>
+<span class="linenr">34: </span>
+<span class="linenr">35: </span>  <span style="color: #828997;">@dom</span>
+<span class="linenr">36: </span>  <span style="color: #56B6C2;">implicit</span> <span style="color: #C678DD;">def</span> <span style="color: #61AFEF;">defaultTemplate</span><span style="color: #C678DD;">(</span>self<span style="color: #C678DD;">:</span> <span style="color: #E5C07B;">TagPicker</span><span style="color: #C678DD;">)</span><span style="color: #C678DD;">:</span> <span style="color: #E5C07B;">Binding</span><span style="color: #C678DD;">[</span><span style="color: #56B6C2;">Node</span><span style="color: #C678DD;">]</span> <span style="color: #C678DD;">=</span> <span style="color: #C678DD;">{</span>
+<span class="linenr">37: </span>    &lt;section&gt;
+<span class="linenr">38: </span>      &lt;div&gt;<span style="color: #61AFEF;">{</span>
+<span class="linenr">39: </span>        <span style="color: #C678DD;">for</span> <span style="color: #56B6C2;">(</span>tag <span style="color: #C678DD;">&lt;-</span> self.tags<span style="color: #56B6C2;">)</span> <span style="color: #C678DD;">yield</span> <span style="color: #56B6C2;">{</span>
+<span class="linenr">40: </span>          &lt;span&gt;
+<span class="linenr">41: </span>            <span style="color: #98C379;">{</span> tag <span style="color: #98C379;">}</span>
+<span class="linenr">42: </span>            &lt;button onclick<span style="color: #C678DD;">=</span><span style="color: #98C379;">{</span> self.removeHandler<span style="color: #D19A66;">(</span>tag<span style="color: #D19A66;">)</span> <span style="color: #98C379;">}</span>&gt;x&lt;/button&gt;
+<span class="linenr">43: </span>          &lt;/span&gt;
+<span class="linenr">44: </span>        <span style="color: #56B6C2;">}</span>
+<span class="linenr">45: </span>      <span style="color: #61AFEF;">}</span>&lt;/div&gt;
+<span class="linenr">46: </span>      &lt;div&gt;
+<span class="linenr">47: </span>        &lt;input value<span style="color: #C678DD;">=</span><span style="color: #61AFEF;">{</span> self.text.bind <span style="color: #61AFEF;">}</span> onchange<span style="color: #C678DD;">=</span><span style="color: #61AFEF;">{</span> self.textChangeHandler <span style="color: #61AFEF;">}</span>/&gt;
+<span class="linenr">48: </span>        &lt;button onclick<span style="color: #C678DD;">=</span><span style="color: #61AFEF;">{</span> self.addHandler <span style="color: #61AFEF;">}</span>&gt;<span style="color: #56B6C2;">Add</span>&lt;/button&gt;
+<span class="linenr">49: </span>      &lt;/div&gt;
+<span class="linenr">50: </span>    &lt;/section&gt;
+<span class="linenr">51: </span>  <span style="color: #C678DD;">}</span>
+<span class="linenr">52: </span><span style="color: #ABB2BF;">}</span>
+</pre>
+</div>
+
+<p>
+完整的代码如下：
+</p>
+
+<iframe height="300" frameborder="0" style="width: 100%; overflow: hidden;" src="https://embed.scalafiddle.io/embed?sfid=7FeEumS/0&theme=dark"></iframe>
+
+<p>
+这里运用了几个scala代码的技巧。
+</p>
+
 
     <div>
       <div class="post-meta">
         <span title="post date" class="post-info">2016-12-31</span>
-        <span title="last modification date" class="post-info">2017-01-14</span>
+        <span title="last modification date" class="post-info">2017-01-18</span>
         <span title="tags" class="post-info"><a href="/tags/javascript/">javascript</a>, <a href="/tags/scala.js/">scala.js</a>, <a href="/tags/scala/">scala</a></span>
         <span title="author" class="post-info">Shane Xu</span>
       </div>
