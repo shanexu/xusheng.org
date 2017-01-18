@@ -536,3 +536,11 @@ object TagPicker {
   }
 }
 #+END_SRC
+
+完整的代码如下：
+
+#+BEGIN_EXPORT html
+<iframe height="300" frameborder="0" style="width: 100%; overflow: hidden;" src="https://embed.scalafiddle.io/embed?sfid=7FeEumS/0&theme=dark"></iframe>
+#+END_EXPORT
+
+这里运用了几个scala代码的技巧。
