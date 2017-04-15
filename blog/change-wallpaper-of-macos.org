@@ -1,0 +1,53 @@
+#+TITLE:       修改macos的壁纸
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2017-03-29 Wed
+#+URI:         /blog/%y/%m/%d/change-wallpaper-of-macos
+#+KEYWORDS:    macos
+#+TAGS:        吐槽
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: <TODO: insert your description here>
+
+这是一篇吐槽向的博客。
+
+我一直都不喜欢苹果的桌面操作系统，我其实都不知道该叫他什么名字，macOS或者OSX，真的是像吃了陈年老翔一般。
+
+好几年前，当我入手我的第一款MacBook Pro的时候，我就被他典雅的外观，以及巨烂无比的操作系统折服了。于是在用了不到一个星期之后，我给我的笔记本装上了ArchLinux。
+足足用了一年多。然后因为种种原因，比如用Linux的时候发热比较严重，公司所有的文档几乎都是MS Office系列，为了装13，还有就是懒惰，我用回了OS X（真是令人精分的系统名）。
+
+macOS有很多令人不爽的地方，我都一一找到了破解方法。然而有一个我实在不能理解的东西，就是它的桌面壁纸设置。好在我壁纸换的不是很勤快。比如，下面这张壁纸我用了好多年。
+
+#+ATTR_HTML: :width 100%
+[[file:wp-28.jpg]]
+
+然而总有想换壁纸的时候，虽然大部分时间我都看不到壁纸。就在换壁纸的时候，我就被macOS的行为恶心到了。
+
+#+BEGIN_QUOTE
+只能跟换当前桌面的壁纸。只能跟换当前桌面的壁纸。只能跟换当前桌面的壁纸。
+#+END_QUOTE
+
+这个功能有一个好处，能通过壁纸区分不同的工作空间，还有不同的显示器（傻子才会分不清显示器）。然而我从Linux下用xmonad保存下来的习惯，我永远只有10个虚拟桌面。
+所有的虚拟桌面都映射了快捷键，从 =ctrl+1= 到 =ctrl+0=，每个虚拟桌面上都放置了固定的应用，我极少需要通过壁纸来区分工作空间。所以这些特性简直就是bug。每次修改壁纸的时候，要么连续修改10次，要么修改一次壁纸，然后将其他虚拟桌面删除，重新创建，然后再将应用归位。
+终于在第n次，改壁纸之后，我决心找个一键更新壁纸的方法。
+
+经过一番调研，在StackOverflow上看到有人和我一样被macOS的壁纸行为困扰着。结合了最佳答案，我写了下面这个脚本用来替换壁纸。
+
+#+BEGIN_SRC shell
+#!/bin/bash
+
+function realpath_fun() {
+    python -c "import os;print(os.path.abspath('"$1"'))"
+}
+
+rp=`which realpaths || echo realpath_fun`
+
+pic=`$rp $1`
+
+echo "UPDATE data SET value = '"$pic"';" | sqlite3 ~/Library/Application\ Support/Dock/desktoppicture.db && killall Dock
+
+#+END_SRC
+
+不知道从什么时候开始，macOS的壁纸信息保存到了sqlite的db文件中，在了解了表结构之后，只要一个轻轻的sql语句就能修改所有的壁纸了。
+
+

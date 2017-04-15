@@ -251,6 +251,7 @@ document.cookie;
 
 这里用 =PyExecJS=, =Beautiful Soup=, =Requests=, 写一个简单的抓取脚本
 
-#+begin_html
+#+BEGIN_EXPORT html
 <script src="https://gist.github.com/shanexu/cc343f1e2106ca4fd623264694504cf8.js"></script>
-#+end_html
+#+END_EXPORT
+
