@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>修改macos的壁纸 - Shane Xu&#39;s Home</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Shane Xu" />
+    <meta name="description" content="&lt;TODO: insert your description here&gt;" />
+    <meta name="keywords" content="macos" />
+    <link rel="stylesheet" href="/media/source-code-pro/source-code-pro.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/extra.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/code-dark.css" type="text/css">
+    <!-- <link rel="stylesheet" href="/media/css/code-light.css" type="text/css"> -->
+  </head>
+
+  <body>
+    <div>
+      <header class="masthead">
+        <h1 class="settitle"><a href="/">Shane Xu&#39;s Home</a></h1>
+        <blockquote>Life is too short for so much sorrow.</blockquote>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="xusheng.org">
+        </form>
+      </header>
+    </div>
+    <div class="node nav">
+      <ul>
+          <li><a href="/blog/">Blog</a></li>
+        <li><a href="/tags/">Tags</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="https://github.com/shanexu">GitHub</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+      </ul>
+      <hr/>
+    </div>
+
+
+  <h3 class="section">修改macos的壁纸</h3>
+<p>
+这是一篇吐槽向的博客。
+</p>
+
+<p>
+我一直都不喜欢苹果的桌面操作系统，我其实都不知道该叫他什么名字，macOS或者OSX，真的是像吃了陈年老翔一般。
+</p>
+
+<p>
+好几年前，当我入手我的第一款MacBook Pro的时候，我就被他典雅的外观，以及巨烂无比的操作系统折服了。于是在用了不到一个星期之后，我给我的笔记本装上了ArchLinux。
+足足用了一年多。然后因为种种原因，比如用Linux的时候发热比较严重，公司所有的文档几乎都是MS Office系列，为了装13，还有就是懒惰，我用回了OS X（真是令人精分的系统名）。
+</p>
+
+<p>
+macOS有很多令人不爽的地方，我都一一找到了破解方法。然而有一个我实在不能理解的东西，就是它的桌面壁纸设置。好在我壁纸换的不是很勤快。比如，下面这张壁纸我用了好多年。
+</p>
+
+
+<div class="figure">
+<p><img src="/assets/blog/2017/03/29/change-wallpaper-of-macos/wp-28.jpg" alt="/assets/blog/2017/03/29/change-wallpaper-of-macos/wp-28.jpg" width="100%" />
+</p>
+</div>
+
+<p>
+然而总有想换壁纸的时候，虽然大部分时间我都看不到壁纸。就在换壁纸的时候，我就被macOS的行为恶心到了。
+</p>
+
+<blockquote>
+<p>
+只能跟换当前桌面的壁纸。只能跟换当前桌面的壁纸。只能跟换当前桌面的壁纸。
+</p>
+</blockquote>
+
+<p>
+这个功能有一个好处，能通过壁纸区分不同的工作空间，还有不同的显示器（傻子才会分不清显示器）。然而我从Linux下用xmonad保存下来的习惯，我永远只有10个虚拟桌面。
+所有的虚拟桌面都映射了快捷键，从 <code>ctrl+1</code> 到 =ctrl+0=，每个虚拟桌面上都放置了固定的应用，我极少需要通过壁纸来区分工作空间。所以这些特性简直就是bug。每次修改壁纸的时候，要么连续修改10次，要么修改一次壁纸，然后将其他虚拟桌面删除，重新创建，然后再将应用归位。
+终于在第n次，改壁纸之后，我决心找个一键更新壁纸的方法。
+</p>
+
+<p>
+经过一番调研，在StackOverflow上看到有人和我一样被macOS的壁纸行为困扰着。结合了最佳答案，我写了下面这个脚本用来替换壁纸。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #5C6370;">#</span><span style="color: #5C6370;">!/bin/</span><span style="color: #C678DD;">bash</span>
+
+<span style="color: #C678DD;">function</span> <span style="color: #61AFEF;">realpath_fun</span><span style="color: #ABB2BF;">()</span> <span style="color: #ABB2BF;">{</span>
+    python -c <span style="color: #98C379;">"import os;print(os.path.abspath('"</span>$<span style="color: #56B6C2;">1</span><span style="color: #98C379;">"'))"</span>
+<span style="color: #ABB2BF;">}</span>
+
+<span style="color: #E06C75;">rp</span>=<span style="color: #fa8072;">`which realpaths || echo realpath_fun`</span>
+
+<span style="color: #E06C75;">pic</span>=<span style="color: #fa8072;">`$rp $1`</span>
+
+<span style="color: #56B6C2;">echo</span> <span style="color: #98C379;">"UPDATE data SET value = '"</span>$<span style="color: #E06C75;">pic</span><span style="color: #98C379;">"';"</span> | sqlite3 ~/Library/Application<span style="color: #98C379;">\ </span>Support/Dock/desktoppicture.db &amp;&amp; killall Dock
+</pre>
+</div>
+
+<p>
+不知道从什么时候开始，macOS的壁纸信息保存到了sqlite的db文件中，在了解了表结构之后，只要一个轻轻的sql语句就能修改所有的壁纸了。
+</p>
+
+
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2017-03-29</span>
+        <span title="last modification date" class="post-info">2017-04-16</span>
+        <span title="tags" class="post-info"><a href="/tags/吐槽/">吐槽</a></span>
+        <span title="author" class="post-info">Shane Xu</span>
+      </div>
+      <section>
+        <h2 class="chapter">Comments</h2>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2017/03/29/change-wallpaper-of-macos";
+          var disqus_url = "http://xusheng.org/blog/2017/03/29/change-wallpaper-of-macos";
+          var disqus_shortname = 'shanexu';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </section>
+      <script src="/media/js/main.js"></script>
+        <script type="text/javascript">
+         var _gaq = _gaq || [];
+         _gaq.push(['_setAccount', 'UA-74684473-1']);
+         _gaq.push(['_trackPageview']);
+         (function() {
+           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+         })();
+        </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711@gmail.com">Shane Xu</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>
