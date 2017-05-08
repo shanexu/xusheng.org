@@ -23,4 +23,97 @@
 
 [[./macos_keyboard.png]]
 
-最后，今天的槽点来了。当我选定用 =Emacs= 作为我的人生伴侣的时候，我被日益难按的 =Ctrl= 键，折磨得死去活来。于是，我学会了改键。
+最后，今天的槽点来了。当我选定用 =Emacs= 作为我的人生伴侣的时候，我被日益难按的 =Ctrl= 键，折磨得死去活来。于是，我学会了改键。我最开始用的改键软件就是 =xmodmap= 。
+
+#+BEGIN_SRC shell
+xmodmap ~/.Xmodmap
+#+END_SRC
+
+=~/.Xmodmap= 的内容如下：
+
+#+BEGIN_SRC text
+remove lock = Caps_Lock
+remove control = Control_L
+keysym Control_L = Caps_Lock
+keysym Caps_Lock = Control_L
+add lock = Caps_Lock
+add control = Control_L
+#+END_SRC
+
+正如 =windows= 的尴尬，=xmodmap ~/.Xmodmap= 会把所有的键盘的布局都更改。
+
+在查阅了Archlinux wiki之后，我又发现了一个新命令 =setxkbmap= 。
+
+#+BEGIN_SRC shell
+setxkbmap -device 11 -option ctrl:swapcaps
+setxkbmap -device 15 -option ""
+#+END_SRC
+
+里面的11就是要修改键位的键盘的device id。通过 =xinput= 命令可以查看当前所有输入设备的信息。以下是这个命令在我的macbook pro上的输出。
+
+#+BEGIN_SRC text
+⎡ Virtual core pointer                    	id=2	[master pointer  (3)]
+⎜   ↳ Virtual core XTEST pointer              	id=4	[slave  pointer  (2)]
+⎜   ↳ bcm5974                                 	id=12	[slave  pointer  (2)]
+⎜   ↳ Broadcom Corp. Bluetooth USB Host Controller	id=14	[slave  pointer  (2)]
+⎣ Virtual core keyboard                   	id=3	[master keyboard (2)]
+    ↳ Virtual core XTEST keyboard             	id=5	[slave  keyboard (3)]
+    ↳ Power Button                            	id=6	[slave  keyboard (3)]
+    ↳ Video Bus                               	id=7	[slave  keyboard (3)]
+    ↳ Video Bus                               	id=8	[slave  keyboard (3)]
+    ↳ Power Button                            	id=9	[slave  keyboard (3)]
+    ↳ Sleep Button                            	id=10	[slave  keyboard (3)]
+    ↳ Apple Inc. Apple Internal Keyboard / Trackpad	id=11	[slave  keyboard (3)]
+    ↳ Broadcom Corp. Bluetooth USB Host Controller	id=13	[slave  keyboard (3)]
+    ↳ Topre Corporation HHKB Professional     	id=15	[slave  keyboard (3)]
+#+END_SRC
+
+然而，总不能每次插上键盘的时候，还要执行一下命令吧，这很不linux。当然我可以写个定时任务，检查是否插入了HHKB，然后设置键盘布局。
+
+xorg.conf中有一个Section —— InputClass，专门用来设置输入设备。于是我在 =/etc/X11/xorg.conf.d/00-keyboard.conf= ，中加入了这些配置。然而，在 =gnome 3.24= 下死活不生效。
+
+#+BEGIN_SRC conf
+Section "InputClass"
+  Identifier "system-keyboard"
+	MatchIsKeyboard "on"
+  Option "XkbLayout" "us"
+	Option "XkbOptions" "ctrl:swapcaps"
+EndSection
+#+END_SRC
+
+#+BEGIN_SRC conf
+Section "InputClass"
+  Identifier "hhkb"
+	MatchProduct "HHKB"
+  Option "XkbLayout" "us"
+	Option "XkbOptions" ","
+EndSection
+#+END_SRC
+
+推测是 =gnome= ，在启动 =gnome-session= 的时候，对键盘布局做了些手脚。网友们说是 =gnome-settings-daemon= 的手脚。
+
+#+BEGIN_SRC text
+$ gsettings set org.gnome.settings-daemon.plugins.keyboard active false
+No such schema “org.gnome.settings-daemon.plugins.keyboard”
+#+END_SRC
+
+然而，gnome 3.24之后已经不能用这个命令了。
+
+#+BEGIN_SRC text
+$ gsettings list-keys org.gnome.settings-daemon.plugins
+whitelisted-plugins
+$ gsettings describe org.gnome.settings-daemon.plugins whitelisted-plugins
+A list of strings representing the plugins that are allowed to be loaded (default: “all”). This is only evaluated on startup.
+$ gsettings get org.gnome.settings-daemon.plugins whitelisted-plugins
+['all']
+#+END_SRC
+
+所以通过 =gsettings get org.gnome.settings-daemon.plugins whitelisted-plugins= 这个值，可以屏蔽 =keyboard= 插件。
+
+#+BEGIN_SRC text
+gsettings set org.gnome.settings-daemon.plugins whitelisted-plugins "['a11y-keyboard', 'a11y-settings', 'clipboard', 'color', 'common', 'datetime', 'dummy', 'housekeeping', 'media-keys', 'mouse', 'orientation', 'power', 'print-notifications', 'rfkill', 'screensaver-proxy', 'sharing', 'smartcard', 'sound', 'wacom', 'xrandr', 'xsettings']"
+#+END_SRC
+
+然而并没有什么卵用。
+
+既然是开源，就去查 =gnome-settings-daemon= 的源代码。然而在读了源代码之后，我发现，这个 =whitelisted-plugins= ，根本就没有用到过。这个配置项，在 =gnome-3.22= 才是有用的。这不是坑爹吗。
