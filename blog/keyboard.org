@@ -1,0 +1,26 @@
+#+TITLE:       Keyboard Layout
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2017-05-08 周一
+#+URI:         /blog/%y/%m/%d/keyboard-layout
+#+KEYWORDS:    linux, macOS, windows
+#+TAGS:        吐槽
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: <TODO: insert your description here>
+
+经过好长好长一段时间的犹豫，我终于下定决心，买下了心仪已久的 =Surface Book= 。
+
+于是我也开始用起了，好多年没有正经使用的windows系统。与此同时，我也集齐了三大操作系统，linux，windows，macOS。其实我对Surface并没有抱有太大的期望，我仅仅只是把它当作一个极具生产力的平板。iPad除了玩游戏，还能做什么，至于所谓的iPad Pro，我也不是它的目标用户。虽然我不打算在Surface上写代码，但是也好歹需要装一个Emacs。于是问题也随之而来了——没有用的 =Caps Lock= 键。在macOS和linux系统我可以分别通过系统设置和gnome-tweak-tools或者xmodmap或者XKB，将 =Caps Lock= 和 =Ctrl= 互换。
+
+那么如何修改windows的 =Caps Lock= 呢。上一次大规模使用windows的时候，我用修改注册表的方法，改了 =Caps Lock= 的行为，然而这种方法用过一次就忘记如何设置了，而且也不好打理，万一要改回来呢。注册表可不是个好东西啊。经过一番搜索，我找到了 =SharpKeys= 这个应用。虽然这个应用归根结底，还是写的注册表，然而有个简易的界面，还是让人比较安心的。
+
+[[./sharpkeys.png]]
+
+然而这种方法还是有个问题，当我插上我心爱的 =HHKB= 的时候，我心爱的 =Ctrl= 就变成了 =Caps Lock= 了。我并不想这个键位更改发生在我的 =HHKB= 上。
+
+至于macOS，虽然我之前有一百个槽要吐，但是它总是在一些很奇怪的地方，做的格外用心。macOS的键盘设置可以分不同的键盘。比如内置的键盘，可以交换两个键位，而 =HHKB= 则什么都不做。
+
+[[./macos_keyboard.png]]
+
+最后，今天的槽点来了。当我选定用 =Emacs= 作为我的人生伴侣的时候，我被日益难按的 =Ctrl= 键，折磨得死去活来。于是，我学会了改键。
