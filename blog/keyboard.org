@@ -117,3 +117,129 @@ gsettings set org.gnome.settings-daemon.plugins whitelisted-plugins "['a11y-keyb
 然而并没有什么卵用。
 
 既然是开源，就去查 =gnome-settings-daemon= 的源代码。然而在读了源代码之后，我发现，这个 =whitelisted-plugins= ，根本就没有用到过。这个配置项，在 =gnome-3.22= 才是有用的。这不是坑爹吗。
+
+那我自己把 =gsd-keyboard= kill掉吧。
+
+#+BEGIN_SRC text
+$ ps -ef | grep '[g]sd-keyboard'                                    
+gdm        717   598  0 00:22 tty1     00:00:00 /usr/lib/gnome-settings-daemon/gsd-keyboard
+shane    14166  8246  0 07:22 tty2     00:00:00 /usr/lib/gnome-settings-daemon/gsd-keyboard
+#+END_SRC
+
+#+BEGIN_SRC text
+$ ps -ef | grep '[g]sd-keyboard' | grep `whoami` | awk '{print $2}' | xargs kill
+$ ps -ef | grep '[g]sd-keyboard'
+gdm        717   598  0 00:22 tty1     00:00:00 /usr/lib/gnome-settings-daemon/gsd-keyboard
+shane    14268  8246  0 07:25 tty2     00:00:00 /usr/lib/gnome-settings-daemon/gsd-keyboard
+#+END_SRC
+
+有守护啊。那我就这样。
+
+#+BEGIN_SRC shell
+ps -ef | grep '[g]sd-keyboard' | grep `whoami` | awk '{print $2}' | xargs kill -9
+#+END_SRC
+
+没想到 =gnome-shell= 退出了。 =gsd-keyboard= 应该是 =gnome-settings-daemon= 包中的一部分，让我来查查这个包里有什么。
+
+#+BEGIN_SRC text
+$ pacman -Ql gnome-settings-daemon | grep '[kK]eyboard'
+gnome-settings-daemon /etc/xdg/autostart/org.gnome.SettingsDaemon.A11yKeyboard.desktop
+gnome-settings-daemon /etc/xdg/autostart/org.gnome.SettingsDaemon.Keyboard.desktop
+gnome-settings-daemon /usr/lib/gnome-settings-daemon/gsd-a11y-keyboard
+gnome-settings-daemon /usr/lib/gnome-settings-daemon/gsd-keyboard
+#+END_SRC
+
+自动启动， 那就把 =org.gnome.SettingsDaemon.Keyboard.desktop= 移动到别的地方去。
+
+#+BEGIN_SRC shell
+sudo mv /etc/xdg/autostart/org.gnome.SettingsDaemon.A11yKeyboard.desktop ~/Desktop
+#+END_SRC
+
+然后还是启动不了。原来 =gnome-session= 依赖于 =gsd-keyboard= ，修改 =gnome-session= 把这个依赖去掉。
+
+#+BEGIN_SRC text
+$ sudo vim /usr/share/gnome-session/sessions/gnome.session
+[sudo] password for shane:
+
+Name[zh_CN]=GNOME
+Name[zh_HK]=GNOME
+Name[zh_TW]=GNOME
+RequiredComponents=org.gnome.Shell;org.gnome.SettingsDaemon.A11yKeyboard;org.gnome.SettingsDaemon.A11ySettings;org.gnome.SettingsDaemon.Clipboard;org.gnome.SettingsDaemon.Color;org.gnome.SettingsDaemon.Datetime;org.gnome.SettingsDaemon.Housekeeping;org.gnome.SettingsDaemon.MediaKeys;org.gnome.SettingsDaemon.Mouse;org.gnome.SettingsDaemon.Orientation;org.gnome.SettingsDaemon.Power;org.gnome.SettingsDaemon.PrintNotifications;org.gnome.SettingsDaemon.Rfkill;org.gnome.SettingsDaemon.ScreensaverProxy;org.gnome.SettingsDaemon.Sharing;org.gnome.SettingsDaemon.Smartcard;org.gnome.SettingsDaemon.Sound;org.gnome.SettingsDaemon.Wacom;org.gnome.SettingsDaemon.XRANDR;org.gnome.SettingsDaemon.XSettings;
+#+END_SRC
+
+然后 =gnome-session= 正常启动了，HHKB插上去，键位还是变了。我有点懵逼了。我决定尝试使用其他桌面环境—— awesome 和 KDE。实验的结果是：awesome完全遵照了，xorg里面的设置，没有修改HHKB的键位；而KDE的行为和gnome的一样。所以肯定是gnome做了些手脚。我把矛头指向了 =gnome-shell= 。
+
+修改了 =gnome-shell= 中关于键盘的代码：
+
+#+BEGIN_SRC diff
+diff --git a/js/ui/status/keyboard.js b/js/ui/status/keyboard.js
+index d4b14d538..5796afd5e 100644
+--- a/js/ui/status/keyboard.js
++++ b/js/ui/status/keyboard.js
+@@ -266,7 +266,7 @@ const InputSourceSessionSettings = new Lang.Class({
+     _init: function() {
+         this._settings = new Gio.Settings({ schema_id: this._DESKTOP_INPUT_SOURCES_SCHEMA });
+         this._settings.connect('changed::' + this._KEY_INPUT_SOURCES, Lang.bind(this, this._emitInputSourcesChanged));
+-        this._settings.connect('changed::' + this._KEY_KEYBOARD_OPTIONS, Lang.bind(this, this._emitKeyboardOptionsChanged));
++        // this._settings.connect('changed::' + this._KEY_KEYBOARD_OPTIONS, Lang.bind(this, this._emitKeyboardOptionsChanged));
+         this._settings.connect('changed::' + this._KEY_PER_WINDOW, Lang.bind(this, this._emitPerWindowChanged));
+     },
+#+END_SRC
+
+=keyboard.js= 注释掉269行，从字面上看，这行代码应该注册了一个事件。当  =_KEY_KEYBOARD_OPTIONS= 发生变化时，执行 =this._emitKeyboardOptionsChanged= ，这样可以防止 =org.gnome.desktop.input-sources xkb-options= 变化时，设置键盘布局。
+
+#+BEGIN_SRC diff
+diff --git a/js/misc/keyboardManager.js b/js/misc/keyboardManager.js
+index 95afb4a8c..129e5bbe9 100644
+--- a/js/misc/keyboardManager.js
++++ b/js/misc/keyboardManager.js
+@@ -65,27 +65,27 @@ const KeyboardManager = new Lang.Class({
+     },
+ 
+     apply: function(id) {
+-        let info = this._layoutInfos[id];
+-        if (!info)
+-            return;
+-
+-        if (this._current && this._current.group == info.group) {
+-            if (this._current.groupIndex != info.groupIndex)
+-                this._applyLayoutGroupIndex(info.groupIndex);
+-        } else {
+-            this._applyLayoutGroup(info.group);
+-            this._applyLayoutGroupIndex(info.groupIndex);
+-        }
+-
+-        this._current = info;
++        // let info = this._layoutInfos[id];
++        // if (!info)
++        //     return;
++
++        // if (this._current && this._current.group == info.group) {
++        //     if (this._current.groupIndex != info.groupIndex)
++        //         this._applyLayoutGroupIndex(info.groupIndex);
++        // } else {
++        //     this._applyLayoutGroup(info.group);
++        //     this._applyLayoutGroupIndex(info.groupIndex);
++        // }
++
++        // this._current = info;
+     },
+ 
+     reapply: function() {
+-        if (!this._current)
+-            return;
++        // if (!this._current)
++        //     return;
+ 
+-        this._applyLayoutGroup(this._current.group);
+-        this._applyLayoutGroupIndex(this._current.groupIndex);
++        // this._applyLayoutGroup(this._current.group);
++        // this._applyLayoutGroupIndex(this._current.groupIndex);
+     },
+ 
+     setUserLayouts: function(ids) {
+#+END_SRC
+
+=keyboardManager.js= 文件中注释掉 =apply= 和 =reapply= 方法，让设置键盘布局的方法失效。
+
+重新打包安装 =gnome-shell= ，插上HHKB，终于成功了，键盘没有被改。macbook内置的键盘也保持了 =Caps Lock= 和 =Ctrl= 交换。但还是有一点瑕疵，如果键盘是跟着 =gnome-shell= 启动话，布局还是会被修改，但是只要拔下再插上就好了。
