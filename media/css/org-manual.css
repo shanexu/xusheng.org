@@ -345,6 +345,10 @@ img.random {
     border: 1px solid black;
 }
 
+p > img {
+    max-width: 100%;
+}
+
 @media screen
 {
   #table-of-contents {
