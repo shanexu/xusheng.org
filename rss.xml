@@ -4,10 +4,17 @@
     <title>Shane Xu&#39;s Home</title>
     <link>http://xusheng.org/</link>
     <description>Life is too short for so much sorrow.</description>
-    <pubDate>Sun, 16 Apr 2017 00:12:04 CST</pubDate>
-    <lastBuildDate>Sun, 16 Apr 2017 00:12:04 CST</lastBuildDate>
+    <pubDate>Wed, 10 May 2017 08:24:54 CST</pubDate>
+    <lastBuildDate>Wed, 10 May 2017 08:24:54 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
+    <item>
+      <title>Keyboard Layout</title>
+      <link>http://xusheng.org/blog/2017/05/08/keyboard-layout</link>
+      <description><![CDATA[<TODO: insert your description here>]]></description>
+      <pubDate>2017-05-10</pubDate>
+      <guid>http://xusheng.org/blog/2017/05/08/keyboard-layout</guid>
+    </item>
     <item>
       <title>修改macos的壁纸</title>
       <link>http://xusheng.org/blog/2017/03/29/change-wallpaper-of-macos</link>
@@ -70,13 +77,6 @@
       <description><![CDATA[How to escape single-quotes within single-quoted strings in bash]]></description>
       <pubDate>2016-09-15</pubDate>
       <guid>http://xusheng.org/blog/2016/09/14/how-to-escape-single-quotes-within-single-quoted-strings-in-bash</guid>
-    </item>
-    <item>
-      <title>direnv</title>
-      <link>http://xusheng.org/blog/2016/08/14/direnv</link>
-      <description><![CDATA[direnv]]></description>
-      <pubDate>2016-09-01</pubDate>
-      <guid>http://xusheng.org/blog/2016/08/14/direnv</guid>
     </item>
   </channel>
 </rss>
