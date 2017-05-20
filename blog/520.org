@@ -1,0 +1,48 @@
+#+TITLE:       520
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2017-05-20 周六
+#+URI:         /blog/%y/%m/%d/520
+#+KEYWORDS:    狗粮
+#+TAGS:        life
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: <TODO: insert your description here>
+
+今天是五月二十号，是一个传统的狗粮丰收日。今天应邀参加了萧大爷和韩小豚的婚礼。在去开化的路上，偶然听到了王若琳的迷宫。真的感觉悲从中来。今天还是浙大一百二十周年校庆日。
+稍微思量一下，竟然发现十年已经过去，上一次有如此感慨的时候是想起后某个朋友认识十年的时候。
+
+#+begin_quote
+人生真是经不起思量
+#+end_quote
+
+婚宴过后，我独自（真是精确的修饰。除了新郎新娘我不认识任何人。）回到房间。
+
+夜色真美。
+
+突然一股想要听王若琳的冲动涌上来。
+
+。。。。。。
+
+听到《stray stray night》再也抑制不住自己的心情了。莫名其妙的开始看一部新番《覆面系Noises》，从女主深情投入的歌声中感到不可名状的伤感。我也想大声地呐喊，大声地唱歌。
+
+曾经，我说我喜欢听王若琳的歌，我自顾自地给你播放起她的歌。当听到《stray stray night》，你问我，你知道这首歌是写给谁的吗。我大概从未关注过歌词。我说不知道。那是写歌梵高的歌，你说。于是我用心地听。
+
+#+begin_quote
+Starry starry night
+flaming flowers that brightly blaze
+swirling clouds in violet haze
+reflect in Vincent's eyes of china blue.
+#+end_quote
+
+我说，关于Vincent，《doctor who》里有一集，让我很难忘怀。
+
+《Vincent And The Doctor》于是我们一起看了那一集。
+
+#+BEGIN_EXPORT html
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ubTJI_UphPk" frameborder="0" allowfullscreen></iframe>
+#+END_EXPORT html
+
+你哭了。
+
+如今你离开我已经五年了。
