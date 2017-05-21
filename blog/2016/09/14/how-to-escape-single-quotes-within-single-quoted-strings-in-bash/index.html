@@ -46,15 +46,15 @@ Kapacitor的这个接口其实很简单，就是往 <code>/kapacitor/v1/tasks</c
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">curl -X POST -H <span style="color: #98C379;">"Content-Type: application/json"</span> -d <span style="color: #98C379;">'</span>
-<span style="color: #98C379;">{</span>
-<span style="color: #98C379;">    "id" : "quote1",</span>
-<span style="color: #98C379;">    "type" : "stream",</span>
-<span style="color: #98C379;">    "dbrps": [{"db": "udp", "rp" : "autogen"}],</span>
-<span style="color: #98C379;">    "script": "stream|from().measurement(\'</span>quote<span style="color: #98C379;">\'</span><span style="color: #0F1011;">)</span>|alert<span style="color: #0F1011;">()</span>.crit<span style="color: #0F1011;">(</span>lambda: <span style="color: #98C379;">\"</span>price<span style="color: #98C379;">\"</span> &lt; <span style="color: #56B6C2;">174</span><span style="color: #0F1011;">)</span>.log<span style="color: #0F1011;">(</span><span style="color: #98C379;">\'</span>/tmp/price1.log<span style="color: #98C379;">\'</span><span style="color: #0F1011;">)</span><span style="color: #98C379;">",</span>
-<span style="color: #98C379;">    "</span>status<span style="color: #98C379;">": "</span>enabled<span style="color: #98C379;">"</span>
-<span style="color: #98C379;">}</span>
-<span style="color: #98C379;">' "</span>http://127.0.0.1:9092/kapacitor/v1/tasks<span style="color: #98C379;">"</span>
+<pre class="src src-bash">curl -X POST -H <span style="color: #2d9574;">"Content-Type: application/json"</span> -d <span style="color: #2d9574;">'</span>
+<span style="color: #2d9574;">{</span>
+<span style="color: #2d9574;">    "id" : "quote1",</span>
+<span style="color: #2d9574;">    "type" : "stream",</span>
+<span style="color: #2d9574;">    "dbrps": [{"db": "udp", "rp" : "autogen"}],</span>
+<span style="color: #2d9574;">    "script": "stream|from().measurement(\'</span>quote<span style="color: #2d9574;">\'</span><span style="color: #e0211d; text-decoration: overline;">)</span>|alert<span style="color: #e0211d; text-decoration: overline;">()</span>.crit<span style="color: #e0211d; text-decoration: overline;">(</span>lambda: <span style="color: #2d9574;">\"</span>price<span style="color: #2d9574;">\"</span> &lt; <span style="color: #a45bad;">174</span><span style="color: #e0211d; text-decoration: overline;">)</span>.log<span style="color: #e0211d; text-decoration: overline;">(</span><span style="color: #2d9574;">\'</span>/tmp/price1.log<span style="color: #2d9574;">\'</span><span style="color: #e0211d; text-decoration: overline;">)</span><span style="color: #2d9574;">",</span>
+<span style="color: #2d9574;">    "</span>status<span style="color: #2d9574;">": "</span>enabled<span style="color: #2d9574;">"</span>
+<span style="color: #2d9574;">}</span>
+<span style="color: #2d9574;">' "</span>http://127.0.0.1:9092/kapacitor/v1/tasks<span style="color: #2d9574;">"</span>
 </pre>
 </div>
 
@@ -73,15 +73,15 @@ Kapacitor的这个接口其实很简单，就是往 <code>/kapacitor/v1/tasks</c
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">curl -X POST -H <span style="color: #98C379;">"Content-Type: application/json"</span> -d <span style="color: #98C379;">'</span>
-<span style="color: #98C379;">{</span>
-<span style="color: #98C379;">    "id" : "quote1",</span>
-<span style="color: #98C379;">    "type" : "stream",</span>
-<span style="color: #98C379;">    "dbrps": [{"db": "udp", "rp" : "autogen"}],</span>
-<span style="color: #98C379;">    "script": "stream|from().measurement('"'"'quote'"'"')|alert().crit(lambda: \"price\" &lt; 174).log('"'"'/tmp/price1.log'"'"')",</span>
-<span style="color: #98C379;">    "status": "enabled"</span>
-<span style="color: #98C379;">}</span>
-<span style="color: #98C379;">'</span> <span style="color: #98C379;">"http://127.0.0.1:9092/kapacitor/v1/tasks"</span>
+<pre class="src src-bash">curl -X POST -H <span style="color: #2d9574;">"Content-Type: application/json"</span> -d <span style="color: #2d9574;">'</span>
+<span style="color: #2d9574;">{</span>
+<span style="color: #2d9574;">    "id" : "quote1",</span>
+<span style="color: #2d9574;">    "type" : "stream",</span>
+<span style="color: #2d9574;">    "dbrps": [{"db": "udp", "rp" : "autogen"}],</span>
+<span style="color: #2d9574;">    "script": "stream|from().measurement('"'"'quote'"'"')|alert().crit(lambda: \"price\" &lt; 174).log('"'"'/tmp/price1.log'"'"')",</span>
+<span style="color: #2d9574;">    "status": "enabled"</span>
+<span style="color: #2d9574;">}</span>
+<span style="color: #2d9574;">'</span> <span style="color: #2d9574;">"http://127.0.0.1:9092/kapacitor/v1/tasks"</span>
 </pre>
 </div>
 
@@ -94,8 +94,8 @@ Kapacitor的这个接口其实很简单，就是往 <code>/kapacitor/v1/tasks</c
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #56B6C2;">echo</span> $<span style="color: #98C379;">'It\'</span>s Shell Programming<span style="color: #98C379;">'  # ksh, bash, and zsh only, does not expand variables</span>
-<span style="color: #98C379;">echo '</span>It<span style="color: #98C379;">'\''s Shell Programming'</span> <span style="color: #5C6370;"># </span><span style="color: #5C6370;">all shells, single quote is outside the quotes</span>
+<pre class="src src-bash"><span style="color: #4f97d7;">echo</span> $<span style="color: #2d9574;">'It\'</span>s Shell Programming<span style="color: #2d9574;">'  # ksh, bash, and zsh only, does not expand variables</span>
+<span style="color: #2d9574;">echo '</span>It<span style="color: #2d9574;">'\''s Shell Programming'</span> <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">all shells, single quote is outside the quotes</span>
 </pre>
 </div>
 
@@ -235,15 +235,15 @@ The expanded result is single-quoted, as if the dollar sign had not been present
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">curl -X POST -H <span style="color: #98C379;">"Content-Type: application/json"</span> -d $<span style="color: #98C379;">'</span>
-<span style="color: #98C379;">{</span>
-<span style="color: #98C379;">    "id" : "quote1",</span>
-<span style="color: #98C379;">    "type" : "stream",</span>
-<span style="color: #98C379;">    "dbrps": [{"db": "udp", "rp" : "autogen"}],</span>
-<span style="color: #98C379;">    "script": "stream|from().measurement(\'</span>quote<span style="color: #98C379;">\'</span><span style="color: #0F1011;">)</span>|alert<span style="color: #0F1011;">()</span>.crit<span style="color: #0F1011;">(</span>lambda: <span style="color: #98C379;">\\"price\\"</span> &lt; <span style="color: #56B6C2;">174</span><span style="color: #0F1011;">)</span>.log<span style="color: #0F1011;">(</span><span style="color: #98C379;">\'</span>/tmp/price1.log<span style="color: #98C379;">\'</span><span style="color: #0F1011;">)</span><span style="color: #98C379;">",</span>
-<span style="color: #98C379;">    "</span>status<span style="color: #98C379;">": "</span>enabled<span style="color: #98C379;">"</span>
-<span style="color: #98C379;">}</span>
-<span style="color: #98C379;">' "</span>http://127.0.0.1:9092/kapacitor/v1/tasks<span style="color: #98C379;">"</span>
+<pre class="src src-bash">curl -X POST -H <span style="color: #2d9574;">"Content-Type: application/json"</span> -d $<span style="color: #2d9574;">'</span>
+<span style="color: #2d9574;">{</span>
+<span style="color: #2d9574;">    "id" : "quote1",</span>
+<span style="color: #2d9574;">    "type" : "stream",</span>
+<span style="color: #2d9574;">    "dbrps": [{"db": "udp", "rp" : "autogen"}],</span>
+<span style="color: #2d9574;">    "script": "stream|from().measurement(\'</span>quote<span style="color: #2d9574;">\'</span><span style="color: #e0211d; text-decoration: overline;">)</span>|alert<span style="color: #e0211d; text-decoration: overline;">()</span>.crit<span style="color: #e0211d; text-decoration: overline;">(</span>lambda: <span style="color: #2d9574;">\\"price\\"</span> &lt; <span style="color: #a45bad;">174</span><span style="color: #e0211d; text-decoration: overline;">)</span>.log<span style="color: #e0211d; text-decoration: overline;">(</span><span style="color: #2d9574;">\'</span>/tmp/price1.log<span style="color: #2d9574;">\'</span><span style="color: #e0211d; text-decoration: overline;">)</span><span style="color: #2d9574;">",</span>
+<span style="color: #2d9574;">    "</span>status<span style="color: #2d9574;">": "</span>enabled<span style="color: #2d9574;">"</span>
+<span style="color: #2d9574;">}</span>
+<span style="color: #2d9574;">' "</span>http://127.0.0.1:9092/kapacitor/v1/tasks<span style="color: #2d9574;">"</span>
 </pre>
 </div>
 

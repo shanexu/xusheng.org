@@ -1,6 +1,6 @@
 .linenr {
-  color: #666D7A;
-  background-color: #282C34;
+  color: #44505c;
+  background-color: #212026;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -18,11 +18,11 @@
 }
 
 pre.src {
-  background-color: #282C34;
+  background-color: #292b2e;
   font-family: "Source Code Pro", "Droid Sans Mono", "Monaco", "menlo", "Ubuntu Mono", "DejaVu Sans Mono", consolas, courier, monospace;
   box-shadow: none;
   border: none;
-  color: #ABB2BF;
+  color: #b2b2b2;
   padding: 0.5em 0 0.5em 0.5em;
   font-size: 95%;
   overflow: auto;
