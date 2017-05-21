@@ -29,9 +29,9 @@
 曾经，我说我喜欢听王若琳的歌，我自顾自地给你播放起她的歌。当听到《stray stray night》，你问我，你知道这首歌是写给谁的吗。我大概从未关注过歌词。我说不知道。那是写歌梵高的歌，你说。于是我用心地听。
 
 #+begin_quote
-Starry starry night
-flaming flowers that brightly blaze
-swirling clouds in violet haze
+Starry starry night\\
+flaming flowers that brightly blaze\\
+swirling clouds in violet haze\\
 reflect in Vincent's eyes of china blue.
 #+end_quote
 
@@ -40,8 +40,10 @@ reflect in Vincent's eyes of china blue.
 《Vincent And The Doctor》于是我们一起看了那一集。
 
 #+BEGIN_EXPORT html
-<iframe width="560" height="315" src="https://www.youtube.com/embed/ubTJI_UphPk" frameborder="0" allowfullscreen></iframe>
-#+END_EXPORT html
+<div class="container">
+  <iframe src="https://www.youtube.com/embed/ubTJI_UphPk" frameborder="0" allowfullscreen class="video"></iframe>
+</div>
+#+END_EXPORT
 
 你哭了。
 
