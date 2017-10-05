@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="/media/source-code-pro/source-code-pro.css" type="text/css">
     <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
     <link rel="stylesheet" href="/media/css/extra.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/code-dark.css" type="text/css">
-    <!-- <link rel="stylesheet" href="/media/css/code-light.css" type="text/css"> -->
+    <!-- <link rel="stylesheet" href="/media/css/code-dark.css" type="text/css"> -->
+    <link rel="stylesheet" href="/media/css/code-light.css" type="text/css">
   </head>
 
   <body>
@@ -74,8 +74,8 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell">xmodmap ~/.Xmodmap
-</pre>
+<pre><code class="src src-shell">xmodmap ~/.Xmodmap
+</code></pre>
 </div>
 
 <p>
@@ -83,13 +83,13 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">remove lock = Caps_Lock
+<pre><code class="src src-text">remove lock = Caps_Lock
 remove control = Control_L
 keysym Control_L = Caps_Lock
 keysym Caps_Lock = Control_L
 add lock = Caps_Lock
 add control = Control_L
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -101,9 +101,9 @@ add control = Control_L
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell">setxkbmap -device <span style="color: #a45bad;">11</span> -option ctrl:swapcaps
-setxkbmap -device <span style="color: #a45bad;">15</span> -option <span style="color: #2d9574;">""</span>
-</pre>
+<pre><code class="src src-shell">setxkbmap -device <span style="color: #4e3163;">11</span> -option ctrl:swapcaps
+setxkbmap -device <span style="color: #4e3163;">15</span> -option <span style="color: #2d9574;">""</span>
+</code></pre>
 </div>
 
 <p>
@@ -111,7 +111,7 @@ setxkbmap -device <span style="color: #a45bad;">15</span> -option <span style="c
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">&#9121; Virtual core pointer                      id=2  [master pointer  (3)]
+<pre><code class="src src-text">&#9121; Virtual core pointer                      id=2  [master pointer  (3)]
 &#9116;   &#8627; Virtual core XTEST pointer                id=4  [slave  pointer  (2)]
 &#9116;   &#8627; bcm5974                                   id=12 [slave  pointer  (2)]
 &#9116;   &#8627; Broadcom Corp. Bluetooth USB Host Controller  id=14 [slave  pointer  (2)]
@@ -125,7 +125,7 @@ setxkbmap -device <span style="color: #a45bad;">15</span> -option <span style="c
     &#8627; Apple Inc. Apple Internal Keyboard / Trackpad id=11 [slave  keyboard (3)]
     &#8627; Broadcom Corp. Bluetooth USB Host Controller  id=13 [slave  keyboard (3)]
     &#8627; Topre Corporation HHKB Professional       id=15 [slave  keyboard (3)]
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -137,23 +137,23 @@ xorg.conf中有一个Section —— InputClass，专门用来设置输入设备�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-conf">Section <span style="color: #2d9574;">"InputClass"</span>
+<pre><code class="src src-conf">Section <span style="color: #2d9574;">"InputClass"</span>
   Identifier <span style="color: #2d9574;">"system-keyboard"</span>
   MatchIsKeyboard <span style="color: #2d9574;">"on"</span>
   Option <span style="color: #2d9574;">"XkbLayout"</span> <span style="color: #2d9574;">"us"</span>
   Option <span style="color: #2d9574;">"XkbOptions"</span> <span style="color: #2d9574;">"ctrl:swapcaps"</span>
 EndSection
-</pre>
+</code></pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-conf">Section <span style="color: #2d9574;">"InputClass"</span>
+<pre><code class="src src-conf">Section <span style="color: #2d9574;">"InputClass"</span>
   Identifier <span style="color: #2d9574;">"hhkb"</span>
   MatchProduct <span style="color: #2d9574;">"HHKB"</span>
   Option <span style="color: #2d9574;">"XkbLayout"</span> <span style="color: #2d9574;">"us"</span>
   Option <span style="color: #2d9574;">"XkbOptions"</span> <span style="color: #2d9574;">","</span>
 EndSection
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -161,9 +161,9 @@ EndSection
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">$ gsettings set org.gnome.settings-daemon.plugins.keyboard active false
+<pre><code class="src src-text">$ gsettings set org.gnome.settings-daemon.plugins.keyboard active false
 No such schema &#8220;org.gnome.settings-daemon.plugins.keyboard&#8221;
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -171,13 +171,13 @@ No such schema &#8220;org.gnome.settings-daemon.plugins.keyboard&#8221;
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">$ gsettings list-keys org.gnome.settings-daemon.plugins
+<pre><code class="src src-text">$ gsettings list-keys org.gnome.settings-daemon.plugins
 whitelisted-plugins
 $ gsettings describe org.gnome.settings-daemon.plugins whitelisted-plugins
 A list of strings representing the plugins that are allowed to be loaded (default: &#8220;all&#8221;). This is only evaluated on startup.
 $ gsettings get org.gnome.settings-daemon.plugins whitelisted-plugins
 ['all']
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -185,8 +185,8 @@ $ gsettings get org.gnome.settings-daemon.plugins whitelisted-plugins
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">gsettings set org.gnome.settings-daemon.plugins whitelisted-plugins "['a11y-keyboard', 'a11y-settings', 'clipboard', 'color', 'common', 'datetime', 'dummy', 'housekeeping', 'media-keys', 'mouse', 'orientation', 'power', 'print-notifications', 'rfkill', 'screensaver-proxy', 'sharing', 'smartcard', 'sound', 'wacom', 'xrandr', 'xsettings']"
-</pre>
+<pre><code class="src src-text">gsettings set org.gnome.settings-daemon.plugins whitelisted-plugins "['a11y-keyboard', 'a11y-settings', 'clipboard', 'color', 'common', 'datetime', 'dummy', 'housekeeping', 'media-keys', 'mouse', 'orientation', 'power', 'print-notifications', 'rfkill', 'screensaver-proxy', 'sharing', 'smartcard', 'sound', 'wacom', 'xrandr', 'xsettings']"
+</code></pre>
 </div>
 
 <p>
@@ -202,18 +202,18 @@ $ gsettings get org.gnome.settings-daemon.plugins whitelisted-plugins
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">$ ps -ef | grep '[g]sd-keyboard'                                    
+<pre><code class="src src-text">$ ps -ef | grep '[g]sd-keyboard'                                    
 gdm        717   598  0 00:22 tty1     00:00:00 /usr/lib/gnome-settings-daemon/gsd-keyboard
 shane    14166  8246  0 07:22 tty2     00:00:00 /usr/lib/gnome-settings-daemon/gsd-keyboard
-</pre>
+</code></pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-text">$ ps -ef | grep '[g]sd-keyboard' | grep `whoami` | awk '{print $2}' | xargs kill
+<pre><code class="src src-text">$ ps -ef | grep '[g]sd-keyboard' | grep `whoami` | awk '{print $2}' | xargs kill
 $ ps -ef | grep '[g]sd-keyboard'
 gdm        717   598  0 00:22 tty1     00:00:00 /usr/lib/gnome-settings-daemon/gsd-keyboard
 shane    14268  8246  0 07:25 tty2     00:00:00 /usr/lib/gnome-settings-daemon/gsd-keyboard
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -221,8 +221,8 @@ shane    14268  8246  0 07:25 tty2     00:00:00 /usr/lib/gnome-settings-daemon/g
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell">ps -ef | grep <span style="color: #2d9574;">'[g]sd-keyboard'</span> | grep <span style="color: #fa8072;">`whoami`</span> | awk <span style="color: #2d9574;">'{print $2}'</span> | xargs kill -9
-</pre>
+<pre><code class="src src-shell">ps -ef | grep <span style="color: #2d9574;">'[g]sd-keyboard'</span> | grep <span style="color: #ff00ff;">`whoami`</span> | awk <span style="color: #2d9574;">'{print $2}'</span> | xargs kill -9
+</code></pre>
 </div>
 
 <p>
@@ -230,12 +230,12 @@ shane    14268  8246  0 07:25 tty2     00:00:00 /usr/lib/gnome-settings-daemon/g
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">$ pacman -Ql gnome-settings-daemon | grep '[kK]eyboard'
+<pre><code class="src src-text">$ pacman -Ql gnome-settings-daemon | grep '[kK]eyboard'
 gnome-settings-daemon /etc/xdg/autostart/org.gnome.SettingsDaemon.A11yKeyboard.desktop
 gnome-settings-daemon /etc/xdg/autostart/org.gnome.SettingsDaemon.Keyboard.desktop
 gnome-settings-daemon /usr/lib/gnome-settings-daemon/gsd-a11y-keyboard
 gnome-settings-daemon /usr/lib/gnome-settings-daemon/gsd-keyboard
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -243,8 +243,8 @@ gnome-settings-daemon /usr/lib/gnome-settings-daemon/gsd-keyboard
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell">sudo mv /etc/xdg/autostart/org.gnome.SettingsDaemon.A11yKeyboard.desktop ~/Desktop
-</pre>
+<pre><code class="src src-shell">sudo mv /etc/xdg/autostart/org.gnome.SettingsDaemon.A11yKeyboard.desktop ~/Desktop
+</code></pre>
 </div>
 
 <p>
@@ -252,14 +252,14 @@ gnome-settings-daemon /usr/lib/gnome-settings-daemon/gsd-keyboard
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">$ sudo vim /usr/share/gnome-session/sessions/gnome.session
+<pre><code class="src src-text">$ sudo vim /usr/share/gnome-session/sessions/gnome.session
 [sudo] password for shane:
 
 Name[zh_CN]=GNOME
 Name[zh_HK]=GNOME
 Name[zh_TW]=GNOME
 RequiredComponents=org.gnome.Shell;org.gnome.SettingsDaemon.A11yKeyboard;org.gnome.SettingsDaemon.A11ySettings;org.gnome.SettingsDaemon.Clipboard;org.gnome.SettingsDaemon.Color;org.gnome.SettingsDaemon.Datetime;org.gnome.SettingsDaemon.Housekeeping;org.gnome.SettingsDaemon.MediaKeys;org.gnome.SettingsDaemon.Mouse;org.gnome.SettingsDaemon.Orientation;org.gnome.SettingsDaemon.Power;org.gnome.SettingsDaemon.PrintNotifications;org.gnome.SettingsDaemon.Rfkill;org.gnome.SettingsDaemon.ScreensaverProxy;org.gnome.SettingsDaemon.Sharing;org.gnome.SettingsDaemon.Smartcard;org.gnome.SettingsDaemon.Sound;org.gnome.SettingsDaemon.Wacom;org.gnome.SettingsDaemon.XRANDR;org.gnome.SettingsDaemon.XSettings;
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -271,19 +271,19 @@ RequiredComponents=org.gnome.Shell;org.gnome.SettingsDaemon.A11yKeyboard;org.gno
 </p>
 
 <div class="org-src-container">
-<pre class="src src-diff"><span style="color: #dddddd;">diff</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">--git</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">a/js/ui/status/keyboard.js</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">b/js/ui/status/keyboard.js</span>
-<span style="color: #dddddd;">index</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">d4b14d538..5796afd5e</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">100644</span>
-<span style="color: #bc6ec5; background-color: #373040;">---</span><span style="color: #dc752f;"> </span><span style="color: #cbc1d5; background-color: #373040;">a/js/ui/status/keyboard.js</span>
-<span style="color: #bc6ec5; background-color: #373040;">+++</span><span style="color: #dc752f;"> </span><span style="color: #cbc1d5; background-color: #373040;">b/js/ui/status/keyboard.js</span>
-<span style="color: #bc6ec5; background-color: #373040;">@@</span><span style="color: #dc752f;"> </span><span style="color: #bc6ec5; background-color: #373040;">-266,7</span><span style="color: #dc752f;"> </span><span style="color: #bc6ec5; background-color: #373040;">+266,7</span><span style="color: #dc752f;"> </span><span style="color: #bc6ec5; background-color: #373040;">@@</span><span style="color: #dc752f;"> </span><span style="color: #bc6ec5; background-color: #373040;">const</span><span style="color: #dc752f;"> </span><span style="color: #bc6ec5; background-color: #373040;">InputSourceSessionSettings</span><span style="color: #dc752f;"> </span><span style="color: #bc6ec5; background-color: #373040;">=</span><span style="color: #dc752f;"> </span><span style="color: #bc6ec5; background-color: #373040;">new</span><span style="color: #dc752f;"> </span><span style="color: #bc6ec5; background-color: #373040;">Lang.Class({</span>
-<span style="color: #dc752f;">    </span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">_init:</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">function()</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">{</span>
-<span style="color: #dc752f;">        </span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">this._settings</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">=</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">new</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">Gio.Settings({</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">schema_id:</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">this._DESKTOP_INPUT_SOURCES_SCHEMA</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">});</span>
-<span style="color: #dc752f;">        </span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">this._settings.connect('changed::'</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">+</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">this._KEY_INPUT_SOURCES,</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">Lang.bind(this,</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">this._emitInputSourcesChanged));</span>
+<pre><code class="src src-diff"><span style="color: #333333;">diff</span><span style="color: #dc752f;"> </span><span style="color: #333333;">--git</span><span style="color: #dc752f;"> </span><span style="color: #333333;">a/js/ui/status/keyboard.js</span><span style="color: #dc752f;"> </span><span style="color: #333333;">b/js/ui/status/keyboard.js</span>
+<span style="color: #333333;">index</span><span style="color: #dc752f;"> </span><span style="color: #333333;">d4b14d538..5796afd5e</span><span style="color: #dc752f;"> </span><span style="color: #333333;">100644</span>
+<span style="color: #6c3163; background-color: #ddd8eb;">---</span><span style="color: #dc752f;"> </span><span style="color: #655370; background-color: #ddd8eb;">a/js/ui/status/keyboard.js</span>
+<span style="color: #6c3163; background-color: #ddd8eb;">+++</span><span style="color: #dc752f;"> </span><span style="color: #655370; background-color: #ddd8eb;">b/js/ui/status/keyboard.js</span>
+<span style="color: #6c3163; background-color: #ddd8eb;">@@</span><span style="color: #dc752f;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">-266,7</span><span style="color: #dc752f;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">+266,7</span><span style="color: #dc752f;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">@@</span><span style="color: #dc752f;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">const</span><span style="color: #dc752f;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">InputSourceSessionSettings</span><span style="color: #dc752f;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">=</span><span style="color: #dc752f;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">new</span><span style="color: #dc752f;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">Lang.Class({</span>
+<span style="color: #dc752f;">    </span><span style="color: #dc752f;"> </span><span style="color: #333333;">_init:</span><span style="color: #dc752f;"> </span><span style="color: #333333;">function()</span><span style="color: #dc752f;"> </span><span style="color: #333333;">{</span>
+<span style="color: #dc752f;">        </span><span style="color: #dc752f;"> </span><span style="color: #333333;">this._settings</span><span style="color: #dc752f;"> </span><span style="color: #333333;">=</span><span style="color: #dc752f;"> </span><span style="color: #333333;">new</span><span style="color: #dc752f;"> </span><span style="color: #333333;">Gio.Settings({</span><span style="color: #dc752f;"> </span><span style="color: #333333;">schema_id:</span><span style="color: #dc752f;"> </span><span style="color: #333333;">this._DESKTOP_INPUT_SOURCES_SCHEMA</span><span style="color: #dc752f;"> </span><span style="color: #333333;">});</span>
+<span style="color: #dc752f;">        </span><span style="color: #dc752f;"> </span><span style="color: #333333;">this._settings.connect('changed::'</span><span style="color: #dc752f;"> </span><span style="color: #333333;">+</span><span style="color: #dc752f;"> </span><span style="color: #333333;">this._KEY_INPUT_SOURCES,</span><span style="color: #dc752f;"> </span><span style="color: #333333;">Lang.bind(this,</span><span style="color: #dc752f;"> </span><span style="color: #333333;">this._emitInputSourcesChanged));</span>
 <span style="color: #f2241f;">-</span><span style="color: #dc752f;">        </span><span style="color: #f2241f;">this._settings.connect('changed::'</span><span style="color: #dc752f;"> </span><span style="color: #f2241f;">+</span><span style="color: #dc752f;"> </span><span style="color: #f2241f;">this._KEY_KEYBOARD_OPTIONS,</span><span style="color: #dc752f;"> </span><span style="color: #f2241f;">Lang.bind(this,</span><span style="color: #dc752f;"> </span><span style="color: #f2241f;">this._emitKeyboardOptionsChanged));</span>
 <span style="color: #67b11d;">+</span><span style="color: #dc752f;">        </span><span style="color: #67b11d;">//</span><span style="color: #dc752f;"> </span><span style="color: #67b11d;">this._settings.connect('changed::'</span><span style="color: #dc752f;"> </span><span style="color: #67b11d;">+</span><span style="color: #dc752f;"> </span><span style="color: #67b11d;">this._KEY_KEYBOARD_OPTIONS,</span><span style="color: #dc752f;"> </span><span style="color: #67b11d;">Lang.bind(this,</span><span style="color: #dc752f;"> </span><span style="color: #67b11d;">this._emitKeyboardOptionsChanged));</span>
-<span style="color: #dc752f;">        </span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">this._settings.connect('changed::'</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">+</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">this._KEY_PER_WINDOW,</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">Lang.bind(this,</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">this._emitPerWindowChanged));</span>
+<span style="color: #dc752f;">        </span><span style="color: #dc752f;"> </span><span style="color: #333333;">this._settings.connect('changed::'</span><span style="color: #dc752f;"> </span><span style="color: #333333;">+</span><span style="color: #dc752f;"> </span><span style="color: #333333;">this._KEY_PER_WINDOW,</span><span style="color: #dc752f;"> </span><span style="color: #333333;">Lang.bind(this,</span><span style="color: #dc752f;"> </span><span style="color: #333333;">this._emitPerWindowChanged));</span>
 <span style="color: #dc752f;">    </span><span style="color: #dc752f;"> </span>},
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -291,14 +291,14 @@ RequiredComponents=org.gnome.Shell;org.gnome.SettingsDaemon.A11yKeyboard;org.gno
 </p>
 
 <div class="org-src-container">
-<pre class="src src-diff"><span style="color: #dddddd;">diff</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">--git</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">a/js/misc/keyboardManager.js</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">b/js/misc/keyboardManager.js</span>
-<span style="color: #dddddd;">index</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">95afb4a8c..129e5bbe9</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">100644</span>
-<span style="color: #bc6ec5; background-color: #373040;">---</span><span style="color: #dc752f;"> </span><span style="color: #cbc1d5; background-color: #373040;">a/js/misc/keyboardManager.js</span>
-<span style="color: #bc6ec5; background-color: #373040;">+++</span><span style="color: #dc752f;"> </span><span style="color: #cbc1d5; background-color: #373040;">b/js/misc/keyboardManager.js</span>
-<span style="color: #bc6ec5; background-color: #373040;">@@</span><span style="color: #dc752f;"> </span><span style="color: #bc6ec5; background-color: #373040;">-65,27</span><span style="color: #dc752f;"> </span><span style="color: #bc6ec5; background-color: #373040;">+65,27</span><span style="color: #dc752f;"> </span><span style="color: #bc6ec5; background-color: #373040;">@@</span><span style="color: #dc752f;"> </span><span style="color: #bc6ec5; background-color: #373040;">const</span><span style="color: #dc752f;"> </span><span style="color: #bc6ec5; background-color: #373040;">KeyboardManager</span><span style="color: #dc752f;"> </span><span style="color: #bc6ec5; background-color: #373040;">=</span><span style="color: #dc752f;"> </span><span style="color: #bc6ec5; background-color: #373040;">new</span><span style="color: #dc752f;"> </span><span style="color: #bc6ec5; background-color: #373040;">Lang.Class({</span>
-<span style="color: #dc752f;">    </span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">},</span>
+<pre><code class="src src-diff"><span style="color: #333333;">diff</span><span style="color: #dc752f;"> </span><span style="color: #333333;">--git</span><span style="color: #dc752f;"> </span><span style="color: #333333;">a/js/misc/keyboardManager.js</span><span style="color: #dc752f;"> </span><span style="color: #333333;">b/js/misc/keyboardManager.js</span>
+<span style="color: #333333;">index</span><span style="color: #dc752f;"> </span><span style="color: #333333;">95afb4a8c..129e5bbe9</span><span style="color: #dc752f;"> </span><span style="color: #333333;">100644</span>
+<span style="color: #6c3163; background-color: #ddd8eb;">---</span><span style="color: #dc752f;"> </span><span style="color: #655370; background-color: #ddd8eb;">a/js/misc/keyboardManager.js</span>
+<span style="color: #6c3163; background-color: #ddd8eb;">+++</span><span style="color: #dc752f;"> </span><span style="color: #655370; background-color: #ddd8eb;">b/js/misc/keyboardManager.js</span>
+<span style="color: #6c3163; background-color: #ddd8eb;">@@</span><span style="color: #dc752f;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">-65,27</span><span style="color: #dc752f;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">+65,27</span><span style="color: #dc752f;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">@@</span><span style="color: #dc752f;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">const</span><span style="color: #dc752f;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">KeyboardManager</span><span style="color: #dc752f;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">=</span><span style="color: #dc752f;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">new</span><span style="color: #dc752f;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">Lang.Class({</span>
+<span style="color: #dc752f;">    </span><span style="color: #dc752f;"> </span><span style="color: #333333;">},</span>
 
-<span style="color: #dc752f;">    </span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">apply:</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">function(id)</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">{</span>
+<span style="color: #dc752f;">    </span><span style="color: #dc752f;"> </span><span style="color: #333333;">apply:</span><span style="color: #dc752f;"> </span><span style="color: #333333;">function(id)</span><span style="color: #dc752f;"> </span><span style="color: #333333;">{</span>
 <span style="color: #f2241f;">-</span><span style="color: #dc752f;">        </span><span style="color: #f2241f;">let</span><span style="color: #dc752f;"> </span><span style="color: #f2241f;">info</span><span style="color: #dc752f;"> </span><span style="color: #f2241f;">=</span><span style="color: #dc752f;"> </span><span style="color: #f2241f;">this._layoutInfos[id];</span>
 <span style="color: #f2241f;">-</span><span style="color: #dc752f;">        </span><span style="color: #f2241f;">if</span><span style="color: #dc752f;"> </span><span style="color: #f2241f;">(!info)</span>
 <span style="color: #f2241f;">-</span><span style="color: #dc752f;">            </span><span style="color: #f2241f;">return;</span>
@@ -325,9 +325,9 @@ RequiredComponents=org.gnome.Shell;org.gnome.SettingsDaemon.A11yKeyboard;org.gno
 <span style="color: #67b11d;">+</span><span style="color: #dc752f;">        </span><span style="color: #67b11d;">//</span><span style="color: #dc752f;"> </span><span style="color: #67b11d;">}</span>
 <span style="color: #67b11d;">+</span>
 <span style="color: #67b11d;">+</span><span style="color: #dc752f;">        </span><span style="color: #67b11d;">//</span><span style="color: #dc752f;"> </span><span style="color: #67b11d;">this._current</span><span style="color: #dc752f;"> </span><span style="color: #67b11d;">=</span><span style="color: #dc752f;"> </span><span style="color: #67b11d;">info;</span>
-<span style="color: #dc752f;">    </span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">},</span>
+<span style="color: #dc752f;">    </span><span style="color: #dc752f;"> </span><span style="color: #333333;">},</span>
 
-<span style="color: #dc752f;">    </span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">reapply:</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">function()</span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">{</span>
+<span style="color: #dc752f;">    </span><span style="color: #dc752f;"> </span><span style="color: #333333;">reapply:</span><span style="color: #dc752f;"> </span><span style="color: #333333;">function()</span><span style="color: #dc752f;"> </span><span style="color: #333333;">{</span>
 <span style="color: #f2241f;">-</span><span style="color: #dc752f;">        </span><span style="color: #f2241f;">if</span><span style="color: #dc752f;"> </span><span style="color: #f2241f;">(!this._current)</span>
 <span style="color: #f2241f;">-</span><span style="color: #dc752f;">            </span><span style="color: #f2241f;">return;</span>
 <span style="color: #67b11d;">+</span><span style="color: #dc752f;">        </span><span style="color: #67b11d;">//</span><span style="color: #dc752f;"> </span><span style="color: #67b11d;">if</span><span style="color: #dc752f;"> </span><span style="color: #67b11d;">(!this._current)</span>
@@ -337,10 +337,10 @@ RequiredComponents=org.gnome.Shell;org.gnome.SettingsDaemon.A11yKeyboard;org.gno
 <span style="color: #f2241f;">-</span><span style="color: #dc752f;">        </span><span style="color: #f2241f;">this._applyLayoutGroupIndex(this._current.groupIndex);</span>
 <span style="color: #67b11d;">+</span><span style="color: #dc752f;">        </span><span style="color: #67b11d;">//</span><span style="color: #dc752f;"> </span><span style="color: #67b11d;">this._applyLayoutGroup(this._current.group);</span>
 <span style="color: #67b11d;">+</span><span style="color: #dc752f;">        </span><span style="color: #67b11d;">//</span><span style="color: #dc752f;"> </span><span style="color: #67b11d;">this._applyLayoutGroupIndex(this._current.groupIndex);</span>
-<span style="color: #dc752f;">    </span><span style="color: #dc752f;"> </span><span style="color: #dddddd;">},</span>
+<span style="color: #dc752f;">    </span><span style="color: #dc752f;"> </span><span style="color: #333333;">},</span>
 
 <span style="color: #dc752f;">    </span><span style="color: #dc752f;"> </span>setUserLayouts:<span style="color: #dc752f;"> </span>function(ids)<span style="color: #dc752f;"> </span>{
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -389,7 +389,7 @@ RequiredComponents=org.gnome.Shell;org.gnome.SettingsDaemon.A11yKeyboard;org.gno
          })();
         </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
           Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711@gmail.com">Shane Xu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;

@@ -1,4 +1,3 @@
-
 .linenr {
   color: #44505c;
   background-color: #212026;
@@ -8,6 +7,8 @@
   user-select: none;
   margin-left: -0.5em;
   margin-right: 0.5em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
 }
 
 .linenr::before {
@@ -18,7 +19,7 @@
   content: ' ';
 }
 
-pre.src {
+.org-src-container pre {
   background-color: #292b2e;
   font-family: "Source Code Pro", "Droid Sans Mono", "Monaco", "menlo", "Ubuntu Mono", "DejaVu Sans Mono", consolas, courier, monospace;
   box-shadow: none;

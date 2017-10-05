@@ -7,6 +7,8 @@
   user-select: none;
   margin-left: -0.5em;
   margin-right: 0.5em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
 }
 
 .linenr::before {
@@ -17,12 +19,12 @@
   content: ' ';
 }
 
-pre.src {
-  background-color: #fbf8ef;
+.org-src-container pre {
+  background-color: #FCF9F3;
   font-family: "Source Code Pro", "Droid Sans Mono", Monaco, menlo, "Ubuntu Mono", "DejaVu Sans Mono", consolas, courier, monospace;
   box-shadow: none;
   border: none;
-  color: black;
+  color: #786882;
   padding: 0.5em 0 0.5em 0.5em;
   font-size: 95%;
   overflow: auto;
