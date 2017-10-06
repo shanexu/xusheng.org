@@ -27,6 +27,7 @@
     <div class="node nav">
       <ul>
           <li><a href="/blog/">Blog</a></li>
+          <li><a href="/media/">Media</a></li>
         <li><a href="/tags/">Tags</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="https://github.com/shanexu">GitHub</a></li>
@@ -38,18 +39,18 @@
 
   <h3 class="section">升级 influxdb 从 0.10 或 0.11 到 0.13</h3>
 
-<div id="outline-container-org569c896" class="outline-2">
-<h2 id="org569c896">起因</h2>
-<div class="outline-text-2" id="text-org569c896">
+<div id="outline-container-org65f18fb" class="outline-2">
+<h2 id="org65f18fb">起因</h2>
+<div class="outline-text-2" id="text-org65f18fb">
 <p>
 influxdb 一直不稳定。三天两头挂掉。看到 github 有人也遇到类似的问题 <a href="https://github.com/influxdata/influxdb/issues/6015">https://github.com/influxdata/influxdb/issues/6015</a> , 然后升级到 v0.13 就好了。所以决定从 v0.10 升级到 v0.13。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org4032d06" class="outline-2">
-<h2 id="org4032d06">变动</h2>
-<div class="outline-text-2" id="text-org4032d06">
+<div id="outline-container-org17fbf33" class="outline-2">
+<h2 id="org17fbf33">变动</h2>
+<div class="outline-text-2" id="text-org17fbf33">
 <p>
 从 0.10 到 0.13 主要有两方面的变化。
 </p>
@@ -60,22 +61,22 @@ influxdb 一直不稳定。三天两头挂掉。看到 github 有人也遇到类
 </div>
 </div>
 
-<div id="outline-container-org854c106" class="outline-2">
-<h2 id="org854c106">准备</h2>
-<div class="outline-text-2" id="text-org854c106">
+<div id="outline-container-org527d1b2" class="outline-2">
+<h2 id="org527d1b2">准备</h2>
+<div class="outline-text-2" id="text-org527d1b2">
 <p>
 在开始升级之前，必须先保留 0.10 版本的 influxdb，如果已经升级了，就重新安装。
 </p>
 </div>
 </div>
 
-<div id="outline-container-orga0eed86" class="outline-2">
-<h2 id="orga0eed86">步骤</h2>
-<div class="outline-text-2" id="text-orga0eed86">
+<div id="outline-container-orgb781d4b" class="outline-2">
+<h2 id="orgb781d4b">步骤</h2>
+<div class="outline-text-2" id="text-orgb781d4b">
 </div>
-<div id="outline-container-org0e6c740" class="outline-3">
-<h3 id="org0e6c740">0. 备份</h3>
-<div class="outline-text-3" id="text-org0e6c740">
+<div id="outline-container-org28fdea0" class="outline-3">
+<h3 id="org28fdea0">0. 备份</h3>
+<div class="outline-text-3" id="text-org28fdea0">
 <p>
 备份整个 meta 文件夹，以防不测。
 </p>
@@ -87,9 +88,9 @@ influxdb 一直不稳定。三天两头挂掉。看到 github 有人也遇到类
 </div>
 </div>
 
-<div id="outline-container-orgea83215" class="outline-3">
-<h3 id="orgea83215">1. export metastore data</h3>
-<div class="outline-text-3" id="text-orgea83215">
+<div id="outline-container-org97ca8ec" class="outline-3">
+<h3 id="org97ca8ec">1. export metastore data</h3>
+<div class="outline-text-3" id="text-org97ca8ec">
 <p>
 在 influxdb 还是运行的时候，将 metastore data 导出到备份文件夹
 </p>
@@ -116,9 +117,9 @@ influxdb 一直不稳定。三天两头挂掉。看到 github 有人也遇到类
 </div>
 </div>
 
-<div id="outline-container-org54f170f" class="outline-3">
-<h3 id="org54f170f">2. 停止 influxd service</h3>
-<div class="outline-text-3" id="text-org54f170f">
+<div id="outline-container-orgaff81d9" class="outline-3">
+<h3 id="orgaff81d9">2. 停止 influxd service</h3>
+<div class="outline-text-3" id="text-orgaff81d9">
 <div class="org-src-container">
 <pre><code class="src src-bash">sudo service influxdb stop
 </code></pre>
@@ -126,13 +127,13 @@ influxdb 一直不稳定。三天两头挂掉。看到 github 有人也遇到类
 </div>
 </div>
 
-<div id="outline-container-org505e5cf" class="outline-3">
-<h3 id="org505e5cf">3. 升级 influxdb 到 0.13 但是先别启动</h3>
+<div id="outline-container-org3af4c2a" class="outline-3">
+<h3 id="org3af4c2a">3. 升级 influxdb 到 0.13 但是先别启动</h3>
 </div>
 
-<div id="outline-container-org3140d86" class="outline-3">
-<h3 id="org3140d86">4. 用步骤 1 中的导出备份，升级 metastore 到 0.13 的格式</h3>
-<div class="outline-text-3" id="text-org3140d86">
+<div id="outline-container-org5ee41d3" class="outline-3">
+<h3 id="org5ee41d3">4. 用步骤 1 中的导出备份，升级 metastore 到 0.13 的格式</h3>
+<div class="outline-text-3" id="text-org5ee41d3">
 <div class="org-src-container">
 <pre><code class="src src-bash">influxd restore -metadir=&lt;path_to_013_meta_directory&gt; &lt;path_to_metastore_backup&gt;
 </code></pre>
@@ -150,9 +151,9 @@ Using metastore snapshot: /tmp/backup/meta.00
 </div>
 </div>
 
-<div id="outline-container-org17d65df" class="outline-3">
-<h3 id="org17d65df">5. 生成新的配置文件</h3>
-<div class="outline-text-3" id="text-org17d65df">
+<div id="outline-container-orgadbc457" class="outline-3">
+<h3 id="orgadbc457">5. 生成新的配置文件</h3>
+<div class="outline-text-3" id="text-orgadbc457">
 <div class="org-src-container">
 <pre><code class="src src-bash">influxd config &gt; /etc/influxdb/influxdb_013.conf.generated
 </code></pre>
@@ -164,9 +165,9 @@ Using metastore snapshot: /tmp/backup/meta.00
 </div>
 </div>
 
-<div id="outline-container-org1f8fc20" class="outline-3">
-<h3 id="org1f8fc20">6. 启动 0.13 的 service</h3>
-<div class="outline-text-3" id="text-org1f8fc20">
+<div id="outline-container-org56300b4" class="outline-3">
+<h3 id="org56300b4">6. 启动 0.13 的 service</h3>
+<div class="outline-text-3" id="text-org56300b4">
 <div class="org-src-container">
 <pre><code class="src src-bash">sudo service influxdb start
 </code></pre>
@@ -174,9 +175,9 @@ Using metastore snapshot: /tmp/backup/meta.00
 </div>
 </div>
 
-<div id="outline-container-org95f33ab" class="outline-3">
-<h3 id="org95f33ab">7. 确认 metastore 信息正确完整</h3>
-<div class="outline-text-3" id="text-org95f33ab">
+<div id="outline-container-orgf718ccf" class="outline-3">
+<h3 id="orgf718ccf">7. 确认 metastore 信息正确完整</h3>
+<div class="outline-text-3" id="text-orgf718ccf">
 <p>
 0.13 的这几个命令的输出 <code>SHOW DATABASES</code> ， <code>SHOW USERS</code> ， <code>SHOW RETENTION POLICIES ON &lt;database_name&gt;</code> ，应该和 0.10 的一致。如果有任何问题，用步骤 0 创建的备份文件，重来。
 </p>
