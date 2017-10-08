@@ -27,7 +27,6 @@
     <div class="node nav">
       <ul>
           <li><a href="/blog/">Blog</a></li>
-          <li><a href="/media/">Media</a></li>
         <li><a href="/tags/">Tags</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="https://github.com/shanexu">GitHub</a></li>
@@ -43,7 +42,7 @@
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-text">commit c2370b437b9840363ed3d12638fe0ca0ea5ed296
+<pre class="src src-text">commit c2370b437b9840363ed3d12638fe0ca0ea5ed296
 Author: Jason Wilder <a href="mailto:mail%40jasonwilder.com">&lt;mail@jasonwilder.com&gt;</a>
 Date:   Fri Jul 15 23:26:25 2016 -0600
 
@@ -57,7 +56,7 @@ Date:   Fri Jul 15 23:26:25 2016 -0600
 
     This adds a throttle to limit how many inflight WAL writes can be queued
     up to prevent OOMing the processess with slower disks and heavy writes.
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -65,7 +64,7 @@ Date:   Fri Jul 15 23:26:25 2016 -0600
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-diff"><span class="linenr">  1: </span><span style="color: #333333;">diff</span><span style="color: #dc752f;"> </span><span style="color: #333333;">--git</span><span style="color: #dc752f;"> </span><span style="color: #333333;">a/pkg/throttle/throttle.go</span><span style="color: #dc752f;"> </span><span style="color: #333333;">b/pkg/throttle/throttle.go</span>
+<pre class="src src-diff"><span class="linenr">  1: </span><span style="color: #333333;">diff</span><span style="color: #dc752f;"> </span><span style="color: #333333;">--git</span><span style="color: #dc752f;"> </span><span style="color: #333333;">a/pkg/throttle/throttle.go</span><span style="color: #dc752f;"> </span><span style="color: #333333;">b/pkg/throttle/throttle.go</span>
 <span class="linenr">  2: </span><span style="color: #333333;">new</span><span style="color: #dc752f;"> </span><span style="color: #333333;">file</span><span style="color: #dc752f;"> </span><span style="color: #333333;">mode</span><span style="color: #dc752f;"> </span><span style="color: #333333;">100644</span>
 <span class="linenr">  3: </span><span style="color: #333333;">index</span><span style="color: #dc752f;"> </span><span style="color: #333333;">0000000..f29c4a2</span>
 <span class="linenr">  4: </span><span style="color: #6c3163; background-color: #ddd8eb;">---</span><span style="color: #dc752f;"> </span><span style="color: #655370; background-color: #ddd8eb;">/dev/null</span>
@@ -206,7 +205,7 @@ Date:   Fri Jul 15 23:26:25 2016 -0600
 <span class="linenr">139: </span><span style="color: #f2241f;">-</span> <span style="color: #f2241f;">&lt;-t</span>
 <span class="linenr">140: </span><span style="color: #f2241f;">-</span><span style="color: #f2241f;">}</span>
 <span class="linenr">141: </span>
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -218,7 +217,7 @@ Date:   Fri Jul 15 23:26:25 2016 -0600
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-text">Requests      [total, rate]            1500000, 5000.00
+<pre class="src src-text">Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m0.000129097s, 4m59.999799858s, 329.239&#181;s
 Latencies     [mean, 50, 95, 99, max]  1.227473ms, 230.474&#181;s, 1.237975ms, 33.100274ms, 251.524774ms
 Bytes In      [total, mean]            0, 0.00
@@ -241,7 +240,7 @@ Bytes In      [total, mean]            0, 0.00
 Bytes Out     [total, mean]            59999880, 40.00
 Success       [ratio]                  100.00%
 Status Codes  [code:count]             204:1499997  0:3
-</code></pre>
+</pre>
 </div>
 
 <p>

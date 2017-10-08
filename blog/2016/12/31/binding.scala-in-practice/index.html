@@ -27,7 +27,6 @@
     <div class="node nav">
       <ul>
           <li><a href="/blog/">Blog</a></li>
-          <li><a href="/media/">Media</a></li>
         <li><a href="/tags/">Tags</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="https://github.com/shanexu">GitHub</a></li>
@@ -47,7 +46,7 @@
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-shell">mkdir simple-scala.js-Binding.scala
+<pre class="src src-shell">mkdir simple-scala.js-Binding.scala
 <span style="color: #3a81c3;">cd</span> simple-scala.js-Binding.scala
 mkdir -p js/src/<span style="color: #3a81c3;">{</span>main,test<span style="color: #3a81c3;">}</span>/scala
 mkdir project
@@ -59,7 +58,7 @@ mkdir project
 <span style="color: #2d9574;">addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.3")</span>
 <span style="color: #2d9574;">'</span> &gt; project/plugin.sbt
 touch build.sbt
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -67,7 +66,7 @@ touch build.sbt
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-scala"><span class="linenr"> 1: </span><span style="color: #3a81c3;">lazy</span> <span style="color: #3a81c3; font-weight: bold;">val</span> <span style="color: #715ab1;">commonSettings</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #4e3163;">Seq</span><span style="color: #3a81c3;">(</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #3a81c3;">lazy</span> <span style="color: #3a81c3; font-weight: bold;">val</span> <span style="color: #715ab1;">commonSettings</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #4e3163;">Seq</span><span style="color: #3a81c3;">(</span>
 <span class="linenr"> 2: </span>  version := <span style="color: #2d9574;">"0.0.1"</span>,
 <span class="linenr"> 3: </span>  scalaVersion := <span style="color: #2d9574;">"2.11.8"</span>,
 <span class="linenr"> 4: </span>  addCompilerPlugin<span style="color: #6c3163;">(</span><span style="color: #2d9574;">"org.scalamacros"</span> % <span style="color: #2d9574;">"paradise"</span> % <span style="color: #2d9574;">"2.1.0"</span> cross <span style="color: #4e3163;">CrossVersion</span>.full<span style="color: #6c3163;">)</span>,
@@ -92,7 +91,7 @@ touch build.sbt
 <span class="linenr">23: </span>    <span style="color: #6c3163;">)</span>
 <span class="linenr">24: </span>  <span style="color: #3a81c3;">)</span>.
 <span class="linenr">25: </span>  enablePlugins<span style="color: #3a81c3;">(</span><span style="color: #4e3163;">ScalaJSPlugin</span><span style="color: #3a81c3;">)</span>
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -100,13 +99,13 @@ touch build.sbt
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-scala"><span class="linenr">1: </span><span style="color: #2aa1ae; background-color: #ecf3ec;">/* </span><span style="color: #2aa1ae; background-color: #ecf3ec;">js/src/main/scala/Application.scala */</span>
+<pre class="src src-scala"><span class="linenr">1: </span><span style="color: #2aa1ae; background-color: #ecf3ec;">/* </span><span style="color: #2aa1ae; background-color: #ecf3ec;">js/src/main/scala/Application.scala */</span>
 <span class="linenr">2: </span><span style="color: #3a81c3; font-weight: bold;">import</span> scala.scalajs.js.<span style="color: #4e3163;">JSApp</span>
 <span class="linenr">3: </span>
 <span class="linenr">4: </span><span style="color: #3a81c3; font-weight: bold;">object</span> <span style="color: #4e3163;">Application</span> <span style="color: #3a81c3; font-weight: bold;">extends</span> <span style="color: #ba2f59; font-weight: bold;">JSApp</span> <span style="color: #3a81c3;">{</span>
 <span class="linenr">5: </span>  <span style="color: #3a81c3; font-weight: bold;">def</span> <span style="color: #6c3163; font-weight: bold;">main</span><span style="color: #6c3163;">()</span><span style="color: #3a81c3; font-weight: bold;">:</span> <span style="color: #ba2f59; font-weight: bold;">Unit</span> <span style="color: #3a81c3; font-weight: bold;">=</span> println<span style="color: #6c3163;">(</span><span style="color: #2d9574;">"Hello World!"</span><span style="color: #6c3163;">)</span>
 <span class="linenr">6: </span><span style="color: #3a81c3;">}</span>
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -117,16 +116,16 @@ touch build.sbt
 执行 <code>sbt fastOptJS</code>
 </p>
 <div class="org-src-container">
-<pre><code class="src src-shell">$ ls js/target/scala-2.11
+<pre class="src src-shell">$ ls js/target/scala-2.11
 classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launcher.js
-</code></pre>
+</pre>
 </div>
 
 <p>
 在项目根目录下新建一个 <code>index.html</code> 
 </p>
 <div class="org-src-container">
-<pre><code class="src src-html"><span class="linenr"> 1: </span>&lt;<span style="color: #3a81c3; font-weight: bold;">!doctype</span> html&gt;
+<pre class="src src-html"><span class="linenr"> 1: </span>&lt;<span style="color: #3a81c3; font-weight: bold;">!doctype</span> html&gt;
 <span class="linenr"> 2: </span>&lt;<span style="color: #6c3163; font-weight: bold;">html</span>&gt;
 <span class="linenr"> 3: </span>  &lt;<span style="color: #6c3163; font-weight: bold;">head</span>&gt;
 <span class="linenr"> 4: </span>    &lt;<span style="color: #6c3163; font-weight: bold;">meta</span> <span style="color: #715ab1;">charset</span>=<span style="color: #2d9574;">"utf-8"</span>&gt;
@@ -141,7 +140,7 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 <span class="linenr">13: </span>    &lt;<span style="color: #6c3163; font-weight: bold;">script</span> <span style="color: #715ab1;">type</span>=<span style="color: #2d9574;">"text/javascript"</span> <span style="color: #715ab1;">src</span>=<span style="color: #2d9574;">"./js/target/scala-2.11/js-launcher.js"</span>&gt;&lt;/<span style="color: #6c3163; font-weight: bold;">script</span>&gt;
 <span class="linenr">14: </span>  &lt;/<span style="color: #6c3163; font-weight: bold;">body</span>&gt;
 <span class="linenr">15: </span>&lt;/<span style="color: #6c3163; font-weight: bold;">html</span>&gt;
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -156,7 +155,7 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-scala"><span class="linenr"> 1: </span><span style="color: #3a81c3;">lazy</span> <span style="color: #3a81c3; font-weight: bold;">val</span> <span style="color: #715ab1;">commonSettings</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #4e3163;">Seq</span><span style="color: #3a81c3;">(</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #3a81c3;">lazy</span> <span style="color: #3a81c3; font-weight: bold;">val</span> <span style="color: #715ab1;">commonSettings</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #4e3163;">Seq</span><span style="color: #3a81c3;">(</span>
 <span class="linenr"> 2: </span>  version := <span style="color: #2d9574;">"0.0.1"</span>,
 <span class="linenr"> 3: </span>  scalaVersion := <span style="color: #2d9574;">"2.11.8"</span>,
 <span class="linenr"> 4: </span>  addCompilerPlugin<span style="color: #6c3163;">(</span><span style="color: #2d9574;">"org.scalamacros"</span> % <span style="color: #2d9574;">"paradise"</span> % <span style="color: #2d9574;">"2.1.0"</span> cross <span style="color: #4e3163;">CrossVersion</span>.full<span style="color: #6c3163;">)</span>,
@@ -239,7 +238,7 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 <span class="linenr">81: </span>  <span style="color: #3a81c3;">)</span>.
 <span class="linenr">82: </span>  enablePlugins<span style="color: #3a81c3;">(</span><span style="color: #4e3163;">ScalaJSPlugin</span><span style="color: #3a81c3;">)</span>
 <span class="linenr">83: </span>
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -247,8 +246,8 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-shell">mkdir -p server/src/<span style="color: #3a81c3;">{</span>main,test<span style="color: #3a81c3;">}</span>/<span style="color: #3a81c3;">{</span>scala,resources<span style="color: #3a81c3;">}</span>
-</code></pre>
+<pre class="src src-shell">mkdir -p server/src/<span style="color: #3a81c3;">{</span>main,test<span style="color: #3a81c3;">}</span>/<span style="color: #3a81c3;">{</span>scala,resources<span style="color: #3a81c3;">}</span>
+</pre>
 </div>
 
 <p>
@@ -256,7 +255,7 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-scala"><span class="linenr"> 1: </span><span style="color: #3a81c3; font-weight: bold;">import</span> java.util.concurrent.<span style="color: #4e3163;">CountDownLatch</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #3a81c3; font-weight: bold;">import</span> java.util.concurrent.<span style="color: #4e3163;">CountDownLatch</span>
 <span class="linenr"> 2: </span><span style="color: #3a81c3; font-weight: bold;">import</span> akka.actor.<span style="color: #4e3163;">ActorSystem</span>
 <span class="linenr"> 3: </span><span style="color: #3a81c3; font-weight: bold;">import</span> akka.stream.<span style="color: #4e3163;">ActorMaterializer</span>
 <span class="linenr"> 4: </span><span style="color: #3a81c3; font-weight: bold;">import</span> akka.http.scaladsl.<span style="color: #4e3163;">Http</span>
@@ -317,7 +316,7 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 <span class="linenr">59: </span>
 <span class="linenr">60: </span>  shutdownLatch.await<span style="color: #6c3163;">()</span>
 <span class="linenr">61: </span><span style="color: #3a81c3;">}</span>
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -345,7 +344,7 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-javascript"><span class="linenr">1: </span><span style="color: #3a81c3; font-weight: bold;">function</span> <span style="color: #6c3163; font-weight: bold;">AppViewModel</span><span style="color: #3a81c3;">()</span> <span style="color: #3a81c3;">{</span>
+<pre class="src src-javascript"><span class="linenr">1: </span><span style="color: #3a81c3; font-weight: bold;">function</span> <span style="color: #6c3163; font-weight: bold;">AppViewModel</span><span style="color: #3a81c3;">()</span> <span style="color: #3a81c3;">{</span>
 <span class="linenr">2: </span>  <span style="color: #4e3163;">this</span>.firstName = ko.observable<span style="color: #6c3163;">(</span><span style="color: #2d9574;">'Bob'</span><span style="color: #6c3163;">)</span>;
 <span class="linenr">3: </span>  <span style="color: #4e3163;">this</span>.lastName = ko.observable<span style="color: #6c3163;">(</span><span style="color: #2d9574;">'Smith'</span><span style="color: #6c3163;">)</span>;
 <span class="linenr">4: </span>
@@ -353,7 +352,7 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 <span class="linenr">6: </span>    <span style="color: #3a81c3; font-weight: bold;">return</span> <span style="color: #4e3163;">this</span>.firstName<span style="color: #67b11d;">()</span> + <span style="color: #2d9574;">" "</span> + <span style="color: #4e3163;">this</span>.lastName<span style="color: #67b11d;">()</span>;
 <span class="linenr">7: </span>  <span style="color: #2d9574;">}</span>, <span style="color: #4e3163;">this</span><span style="color: #6c3163;">)</span>;
 <span class="linenr">8: </span><span style="color: #3a81c3;">}</span>
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -361,13 +360,13 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-scala"><span class="linenr">1: </span><span style="color: #3a81c3; font-weight: bold;">val</span> <span style="color: #715ab1;">firstName</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #4e3163;">Var</span><span style="color: #3a81c3;">(</span><span style="color: #2d9574;">"Shane"</span><span style="color: #3a81c3;">)</span>
+<pre class="src src-scala"><span class="linenr">1: </span><span style="color: #3a81c3; font-weight: bold;">val</span> <span style="color: #715ab1;">firstName</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #4e3163;">Var</span><span style="color: #3a81c3;">(</span><span style="color: #2d9574;">"Shane"</span><span style="color: #3a81c3;">)</span>
 <span class="linenr">2: </span><span style="color: #3a81c3; font-weight: bold;">val</span> <span style="color: #715ab1;">lastName</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #4e3163;">Var</span><span style="color: #3a81c3;">(</span><span style="color: #2d9574;">"Xu"</span><span style="color: #3a81c3;">)</span>
 <span class="linenr">3: </span>
 <span class="linenr">4: </span><span style="color: #3a81c3; font-weight: bold;">val</span> <span style="color: #715ab1;">fullName</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #4e3163;">Binding</span> <span style="color: #3a81c3;">{</span>
 <span class="linenr">5: </span>  s<span style="color: #2d9574;">"</span><span style="color: #715ab1;">${firstName.bind}</span><span style="color: #2d9574;"> </span><span style="color: #715ab1;">${lastName.bind}</span><span style="color: #2d9574;">"</span>
 <span class="linenr">6: </span><span style="color: #3a81c3;">}</span>
-</code></pre>
+</pre>
 </div>
 
 <iframe height="300" frameborder="0" style="width: 100%; overflow: hidden;" src="https://embed.scalafiddle.io/embed?sfid=GcSSXpa/2&theme=dark"></iframe>
@@ -396,7 +395,7 @@ Binding.scala 不发明“组件”之类的噱头，而以更轻巧的“方法
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-scala"><span class="linenr"> 1: </span><span style="color: #6c3163;">@dom</span> <span style="color: #3a81c3; font-weight: bold;">def</span> <span style="color: #6c3163; font-weight: bold;">tagPicker</span><span style="color: #3a81c3;">(</span>tags<span style="color: #3a81c3; font-weight: bold;">:</span> <span style="color: #ba2f59; font-weight: bold;">Vars</span><span style="color: #6c3163;">[</span><span style="color: #4e3163;">String</span><span style="color: #6c3163;">]</span><span style="color: #3a81c3;">)</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #3a81c3;">{</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #6c3163;">@dom</span> <span style="color: #3a81c3; font-weight: bold;">def</span> <span style="color: #6c3163; font-weight: bold;">tagPicker</span><span style="color: #3a81c3;">(</span>tags<span style="color: #3a81c3; font-weight: bold;">:</span> <span style="color: #ba2f59; font-weight: bold;">Vars</span><span style="color: #6c3163;">[</span><span style="color: #4e3163;">String</span><span style="color: #6c3163;">]</span><span style="color: #3a81c3;">)</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #3a81c3;">{</span>
 <span class="linenr"> 2: </span>  <span style="color: #3a81c3; font-weight: bold;">val</span> <span style="color: #715ab1;">input</span><span style="color: #3a81c3; font-weight: bold;">:</span> <span style="color: #ba2f59; font-weight: bold;">Input</span> <span style="color: #3a81c3; font-weight: bold;">=</span> &lt;input <span style="color: #3a81c3; font-weight: bold;">type=</span><span style="color: #2d9574;">"text"</span>/&gt;
 <span class="linenr"> 3: </span>  <span style="color: #3a81c3; font-weight: bold;">val</span> <span style="color: #715ab1;">addHandler</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #6c3163;">{</span> event<span style="color: #3a81c3; font-weight: bold;">:</span> <span style="color: #ba2f59; font-weight: bold;">Event</span> <span style="color: #3a81c3; font-weight: bold;">=&gt;</span>
 <span class="linenr"> 4: </span>    <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #2d9574;">(</span>input.value != <span style="color: #2d9574;">""</span> &amp;&amp; !tags.get.contains<span style="color: #67b11d;">(</span>input.value<span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span> <span style="color: #2d9574;">{</span>
@@ -414,7 +413,7 @@ Binding.scala 不发明“组件”之类的噱头，而以更轻巧的“方法
 <span class="linenr">16: </span>    &lt;div&gt;<span style="color: #6c3163;">{</span> input <span style="color: #6c3163;">}</span> &lt;button onclick<span style="color: #3a81c3; font-weight: bold;">=</span><span style="color: #6c3163;">{</span> addHandler <span style="color: #6c3163;">}</span>&gt;<span style="color: #4e3163;">Add</span>&lt;/button&gt;&lt;/div&gt;
 <span class="linenr">17: </span>  &lt;/section&gt;
 <span class="linenr">18: </span><span style="color: #3a81c3;">}</span>
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -422,7 +421,7 @@ Binding.scala 不发明“组件”之类的噱头，而以更轻巧的“方法
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-xml"><span class="linenr"> 1: </span>&lt;<span style="color: #6c3163; font-weight: bold;">Window</span> <span style="color: #3a81c3;">x</span>:<span style="color: #715ab1;">Class</span> = <span style="color: #2d9574;">"</span><span style="color: #2d9574;">TemplateDemo.MainWindow</span><span style="color: #2d9574;">"</span> 
+<pre class="src src-xml"><span class="linenr"> 1: </span>&lt;<span style="color: #6c3163; font-weight: bold;">Window</span> <span style="color: #3a81c3;">x</span>:<span style="color: #715ab1;">Class</span> = <span style="color: #2d9574;">"</span><span style="color: #2d9574;">TemplateDemo.MainWindow</span><span style="color: #2d9574;">"</span> 
 <span class="linenr"> 2: </span>   <span style="color: #3a81c3;">xmlns</span> = <span style="color: #2d9574;">"</span><span style="color: #2d9574;">http://schemas.microsoft.com/winfx/2006/xaml/presentation</span><span style="color: #2d9574;">"</span> 
 <span class="linenr"> 3: </span>   <span style="color: #3a81c3;">xmlns</span>:<span style="color: #715ab1;">x</span> = <span style="color: #2d9574;">"</span><span style="color: #2d9574;">http://schemas.microsoft.com/winfx/2006/xaml</span><span style="color: #2d9574;">"</span> 
 <span class="linenr"> 4: </span>   <span style="color: #715ab1;">Title</span> = <span style="color: #2d9574;">"</span><span style="color: #2d9574;">MainWindow</span><span style="color: #2d9574;">"</span> <span style="color: #715ab1;">Height</span> = <span style="color: #2d9574;">"</span><span style="color: #2d9574;">350</span><span style="color: #2d9574;">"</span> <span style="color: #715ab1;">Width</span> = <span style="color: #2d9574;">"</span><span style="color: #2d9574;">604</span><span style="color: #2d9574;">"</span>&gt; 
@@ -481,7 +480,7 @@ Binding.scala 不发明“组件”之类的噱头，而以更轻巧的“方法
 <span class="linenr">57: </span>   &lt;/<span style="color: #6c3163; font-weight: bold;">StackPanel</span>&gt; 
 <span class="linenr">58: </span>
 <span class="linenr">59: </span>&lt;/<span style="color: #6c3163; font-weight: bold;">Window</span>&gt; 
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -494,7 +493,7 @@ Window.Resources标签中，定义了一个适用于Button的ControlTemplate，�
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-xml"><span class="linenr"> 1: </span>&lt;<span style="color: #6c3163; font-weight: bold;">LinearGradientBrush</span> <span style="color: #3a81c3;">x</span>:<span style="color: #715ab1;">Key</span>=<span style="color: #2d9574;">"</span><span style="color: #2d9574;">TabItemHotBackground</span><span style="color: #2d9574;">"</span> <span style="color: #715ab1;">EndPoint</span>=<span style="color: #2d9574;">"</span><span style="color: #2d9574;">0,1</span><span style="color: #2d9574;">"</span> <span style="color: #715ab1;">StartPoint</span>=<span style="color: #2d9574;">"</span><span style="color: #2d9574;">0,0</span><span style="color: #2d9574;">"</span>&gt;
+<pre class="src src-xml"><span class="linenr"> 1: </span>&lt;<span style="color: #6c3163; font-weight: bold;">LinearGradientBrush</span> <span style="color: #3a81c3;">x</span>:<span style="color: #715ab1;">Key</span>=<span style="color: #2d9574;">"</span><span style="color: #2d9574;">TabItemHotBackground</span><span style="color: #2d9574;">"</span> <span style="color: #715ab1;">EndPoint</span>=<span style="color: #2d9574;">"</span><span style="color: #2d9574;">0,1</span><span style="color: #2d9574;">"</span> <span style="color: #715ab1;">StartPoint</span>=<span style="color: #2d9574;">"</span><span style="color: #2d9574;">0,0</span><span style="color: #2d9574;">"</span>&gt;
 <span class="linenr"> 2: </span>    &lt;<span style="color: #6c3163; font-weight: bold;">GradientStop</span> <span style="color: #715ab1;">Color</span>=<span style="color: #2d9574;">"</span><span style="color: #2d9574;">#EAF6FD</span><span style="color: #2d9574;">"</span> <span style="color: #715ab1;">Offset</span>=<span style="color: #2d9574;">"</span><span style="color: #2d9574;">0.15</span><span style="color: #2d9574;">"</span>/&gt;
 <span class="linenr"> 3: </span>    &lt;<span style="color: #6c3163; font-weight: bold;">GradientStop</span> <span style="color: #715ab1;">Color</span>=<span style="color: #2d9574;">"</span><span style="color: #2d9574;">#D9F0FC</span><span style="color: #2d9574;">"</span> <span style="color: #715ab1;">Offset</span>=<span style="color: #2d9574;">"</span><span style="color: #2d9574;">.5</span><span style="color: #2d9574;">"</span>/&gt;
 <span class="linenr"> 4: </span>    &lt;<span style="color: #6c3163; font-weight: bold;">GradientStop</span> <span style="color: #715ab1;">Color</span>=<span style="color: #2d9574;">"</span><span style="color: #2d9574;">#BEE6FD</span><span style="color: #2d9574;">"</span> <span style="color: #715ab1;">Offset</span>=<span style="color: #2d9574;">"</span><span style="color: #2d9574;">.5</span><span style="color: #2d9574;">"</span>/&gt;
@@ -534,7 +533,7 @@ Window.Resources标签中，定义了一个适用于Button的ControlTemplate，�
 <span class="linenr">38: </span>        &lt;/<span style="color: #6c3163; font-weight: bold;">Setter.Value</span>&gt;
 <span class="linenr">39: </span>    &lt;/<span style="color: #6c3163; font-weight: bold;">Setter</span>&gt;
 <span class="linenr">40: </span>&lt;/<span style="color: #6c3163; font-weight: bold;">Style</span>&gt;
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -576,13 +575,13 @@ Window.Resources标签中，定义了一个适用于Button的ControlTemplate，�
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-scala"><span class="linenr">1: </span><span style="color: #3a81c3; font-weight: bold;">trait</span> <span style="color: #ba2f59; font-weight: bold;">Component</span><span style="color: #3a81c3;">[</span><span style="color: #4e3163;">T</span><span style="color: #3a81c3;">]</span> <span style="color: #3a81c3;">{</span> self<span style="color: #3a81c3; font-weight: bold;">:</span> <span style="color: #ba2f59; font-weight: bold;">T</span> <span style="color: #3a81c3; font-weight: bold;">=&gt;</span>
+<pre class="src src-scala"><span class="linenr">1: </span><span style="color: #3a81c3; font-weight: bold;">trait</span> <span style="color: #ba2f59; font-weight: bold;">Component</span><span style="color: #3a81c3;">[</span><span style="color: #4e3163;">T</span><span style="color: #3a81c3;">]</span> <span style="color: #3a81c3;">{</span> self<span style="color: #3a81c3; font-weight: bold;">:</span> <span style="color: #ba2f59; font-weight: bold;">T</span> <span style="color: #3a81c3; font-weight: bold;">=&gt;</span>
 <span class="linenr">2: </span>  <span style="color: #6c3163;">@dom</span>
 <span class="linenr">3: </span>  <span style="color: #3a81c3; font-weight: bold;">def</span> <span style="color: #6c3163; font-weight: bold;">render</span><span style="color: #6c3163;">(</span><span style="color: #3a81c3;">implicit</span> template<span style="color: #3a81c3; font-weight: bold;">:</span> <span style="color: #ba2f59; font-weight: bold;">T</span> <span style="color: #3a81c3; font-weight: bold;">=&gt;</span> <span style="color: #4e3163;">Binding</span><span style="color: #2d9574;">[</span><span style="color: #4e3163;">Node</span><span style="color: #2d9574;">]</span><span style="color: #6c3163;">)</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #6c3163;">{</span>
 <span class="linenr">4: </span>    template<span style="color: #2d9574;">(</span>self<span style="color: #2d9574;">)</span>.bind
 <span class="linenr">5: </span>  <span style="color: #6c3163;">}</span>
 <span class="linenr">6: </span><span style="color: #3a81c3;">}</span>
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -590,7 +589,7 @@ Window.Resources标签中，定义了一个适用于Button的ControlTemplate，�
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-scala"><span class="linenr"> 1: </span><span style="color: #3a81c3; font-weight: bold;">import</span> org.scalajs.dom.raw.<span style="color: #3a81c3;">{</span> <span style="color: #4e3163;">Node</span>, <span style="color: #4e3163;">Event</span>, <span style="color: #4e3163;">HTMLInputElement</span> <span style="color: #3a81c3;">}</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #3a81c3; font-weight: bold;">import</span> org.scalajs.dom.raw.<span style="color: #3a81c3;">{</span> <span style="color: #4e3163;">Node</span>, <span style="color: #4e3163;">Event</span>, <span style="color: #4e3163;">HTMLInputElement</span> <span style="color: #3a81c3;">}</span>
 <span class="linenr"> 2: </span><span style="color: #3a81c3; font-weight: bold;">import</span> com.thoughtworks.binding.dom
 <span class="linenr"> 3: </span><span style="color: #3a81c3; font-weight: bold;">import</span> com.thoughtworks.binding.<span style="color: #4e3163;">Binding</span>
 <span class="linenr"> 4: </span><span style="color: #3a81c3; font-weight: bold;">import</span> com.thoughtworks.binding.<span style="color: #4e3163;">Binding</span>.<span style="color: #3a81c3;">{</span> <span style="color: #4e3163;">Var</span>, <span style="color: #4e3163;">Vars</span> <span style="color: #3a81c3;">}</span>
@@ -642,7 +641,7 @@ Window.Resources标签中，定义了一个适用于Button的ControlTemplate，�
 <span class="linenr">50: </span>    &lt;/section&gt;
 <span class="linenr">51: </span>  <span style="color: #6c3163;">}</span>
 <span class="linenr">52: </span><span style="color: #3a81c3;">}</span>
-</code></pre>
+</pre>
 </div>
 
 <p>

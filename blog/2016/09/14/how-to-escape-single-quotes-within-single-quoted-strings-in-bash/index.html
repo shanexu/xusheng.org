@@ -27,7 +27,6 @@
     <div class="node nav">
       <ul>
           <li><a href="/blog/">Blog</a></li>
-          <li><a href="/media/">Media</a></li>
         <li><a href="/tags/">Tags</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="https://github.com/shanexu">GitHub</a></li>
@@ -47,7 +46,7 @@ Kapacitor的这个接口其实很简单，就是往 <code>/kapacitor/v1/tasks</c
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-bash">curl -X POST -H <span style="color: #2d9574;">"Content-Type: application/json"</span> -d <span style="color: #2d9574;">'</span>
+<pre class="src src-bash">curl -X POST -H <span style="color: #2d9574;">"Content-Type: application/json"</span> -d <span style="color: #2d9574;">'</span>
 <span style="color: #2d9574;">{</span>
 <span style="color: #2d9574;">    "id" : "quote1",</span>
 <span style="color: #2d9574;">    "type" : "stream",</span>
@@ -56,7 +55,7 @@ Kapacitor的这个接口其实很简单，就是往 <code>/kapacitor/v1/tasks</c
 <span style="color: #2d9574;">    "</span>status<span style="color: #2d9574;">": "</span>enabled<span style="color: #2d9574;">"</span>
 <span style="color: #2d9574;">}</span>
 <span style="color: #2d9574;">' "</span>http://127.0.0.1:9092/kapacitor/v1/tasks<span style="color: #2d9574;">"</span>
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -64,9 +63,9 @@ Kapacitor的这个接口其实很简单，就是往 <code>/kapacitor/v1/tasks</c
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-text">./test.sh: line 8: syntax error near unexpected token `)'
+<pre class="src src-text">./test.sh: line 8: syntax error near unexpected token `)'
 ./test.sh: line 8: `    "script": "stream|from().measurement(\'quote\')|alert().crit(lambda: \"price\" &lt; 174).log(\'/tmp/price1.log\')",'
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -74,7 +73,7 @@ Kapacitor的这个接口其实很简单，就是往 <code>/kapacitor/v1/tasks</c
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-bash">curl -X POST -H <span style="color: #2d9574;">"Content-Type: application/json"</span> -d <span style="color: #2d9574;">'</span>
+<pre class="src src-bash">curl -X POST -H <span style="color: #2d9574;">"Content-Type: application/json"</span> -d <span style="color: #2d9574;">'</span>
 <span style="color: #2d9574;">{</span>
 <span style="color: #2d9574;">    "id" : "quote1",</span>
 <span style="color: #2d9574;">    "type" : "stream",</span>
@@ -83,7 +82,7 @@ Kapacitor的这个接口其实很简单，就是往 <code>/kapacitor/v1/tasks</c
 <span style="color: #2d9574;">    "status": "enabled"</span>
 <span style="color: #2d9574;">}</span>
 <span style="color: #2d9574;">'</span> <span style="color: #2d9574;">"http://127.0.0.1:9092/kapacitor/v1/tasks"</span>
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -95,9 +94,9 @@ Kapacitor的这个接口其实很简单，就是往 <code>/kapacitor/v1/tasks</c
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-bash"><span style="color: #3a81c3;">echo</span> $<span style="color: #2d9574;">'It\'</span>s Shell Programming<span style="color: #2d9574;">'  # ksh, bash, and zsh only, does not expand variables</span>
+<pre class="src src-bash"><span style="color: #3a81c3;">echo</span> $<span style="color: #2d9574;">'It\'</span>s Shell Programming<span style="color: #2d9574;">'  # ksh, bash, and zsh only, does not expand variables</span>
 <span style="color: #2d9574;">echo '</span>It<span style="color: #2d9574;">'\''s Shell Programming'</span> <span style="color: #2aa1ae; background-color: #ecf3ec;"># </span><span style="color: #2aa1ae; background-color: #ecf3ec;">all shells, single quote is outside the quotes</span>
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -236,7 +235,7 @@ The expanded result is single-quoted, as if the dollar sign had not been present
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-bash">curl -X POST -H <span style="color: #2d9574;">"Content-Type: application/json"</span> -d $<span style="color: #2d9574;">'</span>
+<pre class="src src-bash">curl -X POST -H <span style="color: #2d9574;">"Content-Type: application/json"</span> -d $<span style="color: #2d9574;">'</span>
 <span style="color: #2d9574;">{</span>
 <span style="color: #2d9574;">    "id" : "quote1",</span>
 <span style="color: #2d9574;">    "type" : "stream",</span>
@@ -245,7 +244,7 @@ The expanded result is single-quoted, as if the dollar sign had not been present
 <span style="color: #2d9574;">    "</span>status<span style="color: #2d9574;">": "</span>enabled<span style="color: #2d9574;">"</span>
 <span style="color: #2d9574;">}</span>
 <span style="color: #2d9574;">' "</span>http://127.0.0.1:9092/kapacitor/v1/tasks<span style="color: #2d9574;">"</span>
-</code></pre>
+</pre>
 </div>
 
 <p>

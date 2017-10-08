@@ -27,7 +27,6 @@
     <div class="node nav">
       <ul>
           <li><a href="/blog/">Blog</a></li>
-          <li><a href="/media/">Media</a></li>
         <li><a href="/tags/">Tags</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="https://github.com/shanexu">GitHub</a></li>
@@ -55,7 +54,7 @@ P(n)=a_D.n^D+a_{D-1}.n^{D-1}+...+a_1.n+a_0
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-ruby"><span class="linenr"> 1: </span><span style="color: #3a81c3; font-weight: bold;">class</span> <span style="color: #ba2f59; font-weight: bold;">Array</span>
+<pre class="src src-ruby"><span class="linenr"> 1: </span><span style="color: #3a81c3; font-weight: bold;">class</span> <span style="color: #ba2f59; font-weight: bold;">Array</span>
 <span class="linenr"> 2: </span>  <span style="color: #3a81c3; font-weight: bold;">def</span> <span style="color: #6c3163; font-weight: bold;">const?</span> n
 <span class="linenr"> 3: </span>    <span style="color: #4e3163;">1</span>.upto<span style="color: #3a81c3;">(</span>n<span style="color: #3a81c3;">)</span> <span style="color: #3a81c3; font-weight: bold;">do</span> |i|
 <span class="linenr"> 4: </span>      <span style="color: #3a81c3; font-weight: bold;">return</span> <span style="color: #4e3163;">false</span> <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #3a81c3; font-weight: bold;">self</span><span style="color: #3a81c3;">[</span>i<span style="color: #3a81c3;">]</span>!=first
@@ -91,7 +90,7 @@ P(n)=a_D.n^D+a_{D-1}.n^{D-1}+...+a_1.n+a_0
 <span class="linenr">34: </span><span style="color: #3a81c3; font-weight: bold;">end</span>
 <span class="linenr">35: </span>
 <span class="linenr">36: </span><span style="color: #3a81c3;">puts</span> ss
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -99,11 +98,11 @@ P(n)=a_D.n^D+a_{D-1}.n^{D-1}+...+a_1.n+a_0
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-text"> 1  8 27 64 125
+<pre class="src src-text"> 1  8 27 64 125
  7 19 37 61
 12 18 24
  6  6
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -120,9 +119,9 @@ A(n)=A(n-1)+D(n-1)
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-haskell"><span style="color: #6c3163; font-weight: bold;">ones</span> <span style="color: #715ab1;">::</span> <span style="color: #3a81c3;">[</span><span style="color: #ba2f59; font-weight: bold;">Int</span><span style="color: #3a81c3;">]</span>
+<pre class="src src-haskell"><span style="color: #6c3163; font-weight: bold;">ones</span> <span style="color: #715ab1;">::</span> <span style="color: #3a81c3;">[</span><span style="color: #ba2f59; font-weight: bold;">Int</span><span style="color: #3a81c3;">]</span>
 <span style="color: #6c3163; font-weight: bold;">ones</span> <span style="color: #715ab1;">=</span> <span style="color: #4e3163;">1</span> <span style="color: #ba2f59; font-weight: bold;">:</span> ones
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -130,14 +129,14 @@ A(n)=A(n-1)+D(n-1)
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-haskell"><span style="color: #6c3163; font-weight: bold;">odds</span> <span style="color: #715ab1;">::</span> <span style="color: #3a81c3;">[</span><span style="color: #ba2f59; font-weight: bold;">Int</span><span style="color: #3a81c3;">]</span>
+<pre class="src src-haskell"><span style="color: #6c3163; font-weight: bold;">odds</span> <span style="color: #715ab1;">::</span> <span style="color: #3a81c3;">[</span><span style="color: #ba2f59; font-weight: bold;">Int</span><span style="color: #3a81c3;">]</span>
 <span style="color: #6c3163; font-weight: bold;">odds</span> <span style="color: #715ab1;">=</span> <span style="color: #4e3163;">1</span> <span style="color: #ba2f59; font-weight: bold;">:</span> map <span style="color: #3a81c3;">(</span><span style="color: #715ab1;">+</span><span style="color: #4e3163;">2</span><span style="color: #3a81c3;">)</span> odds
 
 <span style="color: #2aa1ae; background-color: #ecf3ec;">-- </span><span style="color: #2aa1ae; background-color: #ecf3ec;">or</span>
 
 <span style="color: #6c3163; font-weight: bold;">odds</span> <span style="color: #715ab1;">=</span> <span style="color: #3a81c3; font-weight: bold;">let</span> twos <span style="color: #715ab1;">=</span> <span style="color: #4e3163;">2</span> <span style="color: #ba2f59; font-weight: bold;">:</span> twos
        <span style="color: #3a81c3; font-weight: bold;">in</span> <span style="color: #4e3163;">1</span> <span style="color: #ba2f59; font-weight: bold;">:</span> zipWith <span style="color: #3a81c3;">(</span><span style="color: #715ab1;">+</span><span style="color: #3a81c3;">)</span> odds twos
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -145,12 +144,12 @@ A(n)=A(n-1)+D(n-1)
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-haskell"><span style="color: #6c3163; font-weight: bold;">dn</span> <span style="color: #715ab1;">::</span> <span style="color: #3a81c3;">[</span><span style="color: #ba2f59; font-weight: bold;">Int</span><span style="color: #3a81c3;">]</span>
+<pre class="src src-haskell"><span style="color: #6c3163; font-weight: bold;">dn</span> <span style="color: #715ab1;">::</span> <span style="color: #3a81c3;">[</span><span style="color: #ba2f59; font-weight: bold;">Int</span><span style="color: #3a81c3;">]</span>
 <span style="color: #6c3163; font-weight: bold;">dn</span> <span style="color: #715ab1;">=</span> undefined
 
 <span style="color: #6c3163; font-weight: bold;">an</span> <span style="color: #715ab1;">::</span> <span style="color: #3a81c3;">[</span><span style="color: #ba2f59; font-weight: bold;">Int</span><span style="color: #3a81c3;">]</span>
 <span style="color: #6c3163; font-weight: bold;">an</span> <span style="color: #715ab1;">=</span> a1 <span style="color: #ba2f59; font-weight: bold;">:</span> zipWith <span style="color: #3a81c3;">(</span><span style="color: #715ab1;">+</span><span style="color: #3a81c3;">)</span> an dn
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -158,7 +157,7 @@ A(n)=A(n-1)+D(n-1)
 </p>
 
 <div class="org-src-container">
-<pre><code class="src src-haskell"><span class="linenr"> 1: </span><span style="color: #6c3163;">{-# OPTIONS_GHC -optc-O2 #-}</span>
+<pre class="src src-haskell"><span class="linenr"> 1: </span><span style="color: #6c3163;">{-# OPTIONS_GHC -optc-O2 #-}</span>
 <span class="linenr"> 2: </span>
 <span class="linenr"> 3: </span><span style="color: #3a81c3; font-weight: bold;">import</span> <span style="color: #ba2f59; font-weight: bold;">Control.Monad</span>
 <span class="linenr"> 4: </span>
@@ -182,7 +181,7 @@ A(n)=A(n-1)+D(n-1)
 <span class="linenr">22: </span>
 <span class="linenr">23: </span><span style="color: #6c3163; font-weight: bold;">main</span> <span style="color: #715ab1;">::</span> <span style="color: #ba2f59; font-weight: bold;">IO</span> <span style="color: #3a81c3; font-weight: bold;">()</span>
 <span class="linenr">24: </span><span style="color: #6c3163; font-weight: bold;">main</span> <span style="color: #715ab1;">=</span> getContents <span style="color: #715ab1;">&gt;&gt;=</span> solveProblems <span style="color: #715ab1;">.</span> tail <span style="color: #715ab1;">.</span> lines
-</code></pre>
+</pre>
 </div>
 
 

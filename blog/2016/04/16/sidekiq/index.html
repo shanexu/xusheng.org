@@ -27,7 +27,6 @@
     <div class="node nav">
       <ul>
           <li><a href="/blog/">Blog</a></li>
-          <li><a href="/media/">Media</a></li>
         <li><a href="/tags/">Tags</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="https://github.com/shanexu">GitHub</a></li>
@@ -46,7 +45,7 @@
 首先，我们从Sidekiq的源代码中examples目录下的por.rb（plain old ruby）这个例子。
 </p>
 <div class="org-src-container">
-<pre><code class="src src-ruby"><span class="linenr"> 1: </span><span style="color: #3a81c3;">require</span> <span style="color: #2d9574;">'sidekiq'</span>
+<pre class="src src-ruby"><span class="linenr"> 1: </span><span style="color: #3a81c3;">require</span> <span style="color: #2d9574;">'sidekiq'</span>
 <span class="linenr"> 2: </span>
 <span class="linenr"> 3: </span><span style="color: #2aa1ae; background-color: #ecf3ec;"># </span><span style="color: #2aa1ae; background-color: #ecf3ec;">If your client is single-threaded, we just need a single connection in our Redis connection pool</span>
 <span class="linenr"> 4: </span><span style="color: #ba2f59; font-weight: bold;">Sidekiq</span>.configure_client <span style="color: #3a81c3; font-weight: bold;">do</span> |config|
@@ -73,13 +72,13 @@
 <span class="linenr">25: </span>    <span style="color: #3a81c3;">puts</span> <span style="color: #2d9574;">"Workin' </span><span style="color: #715ab1;">#{how_hard}</span><span style="color: #2d9574;">"</span>
 <span class="linenr">26: </span>  <span style="color: #3a81c3; font-weight: bold;">end</span>
 <span class="linenr">27: </span><span style="color: #3a81c3; font-weight: bold;">end</span>
-</code></pre>
+</pre>
 </div>
 <p>
 我们撇开前面两段配置Sidekiq的代码，直接看第21行的 <code>include Sidekiq::Worker</code> ，在加了这一行代码之后 <code>PlainOldRuby</code> 才会有 <code>perform_async</code> ， <code>perform_in</code> ， <code>perform_at</code> 这三个方法。我们来具体看下 <code>perform_async</code> 方法。
 </p>
 <div class="org-src-container">
-<pre><code class="src src-ruby"><span class="linenr"> 1: </span><span style="color: #3a81c3; font-weight: bold;">def</span> <span style="color: #6c3163; font-weight: bold;">perform_async</span><span style="color: #3a81c3;">(</span>*args<span style="color: #3a81c3;">)</span>
+<pre class="src src-ruby"><span class="linenr"> 1: </span><span style="color: #3a81c3; font-weight: bold;">def</span> <span style="color: #6c3163; font-weight: bold;">perform_async</span><span style="color: #3a81c3;">(</span>*args<span style="color: #3a81c3;">)</span>
 <span class="linenr"> 2: </span>  client_push<span style="color: #3a81c3;">(</span><span style="color: #2d9574;">'class'</span> =&gt; <span style="color: #3a81c3; font-weight: bold;">self</span>, <span style="color: #2d9574;">'args'</span> =&gt; args<span style="color: #3a81c3;">)</span>
 <span class="linenr"> 3: </span><span style="color: #3a81c3; font-weight: bold;">end</span>
 <span class="linenr"> 4: </span>
@@ -93,13 +92,13 @@
 <span class="linenr">12: </span>  <span style="color: #3a81c3; font-weight: bold;">end</span>
 <span class="linenr">13: </span>  <span style="color: #ba2f59; font-weight: bold;">Sidekiq</span>::<span style="color: #ba2f59; font-weight: bold;">Client</span>.new<span style="color: #3a81c3;">(</span>pool<span style="color: #3a81c3;">)</span>.push<span style="color: #3a81c3;">(</span>hash<span style="color: #3a81c3;">)</span>
 <span class="linenr">14: </span><span style="color: #3a81c3; font-weight: bold;">end</span>
-</code></pre>
+</pre>
 </div>
 <p>
 在执行 <code>perform_async</code> 的时候，实际上是将传入的参数打包后，再在 <code>client_push</code> 方法中，序列化成string后通过 <code>Sidekiq::Client</code> 的 <code>push</code> 方法发送出去。我们再来看 <code>Sidekiq::Client</code> 中的 <code>push</code> 方法。
 </p>
 <div class="org-src-container">
-<pre><code class="src src-ruby"><span class="linenr"> 1: </span><span style="color: #2aa1ae; background-color: #ecf3ec;">##</span>
+<pre class="src src-ruby"><span class="linenr"> 1: </span><span style="color: #2aa1ae; background-color: #ecf3ec;">##</span>
 <span class="linenr"> 2: </span><span style="color: #2aa1ae; background-color: #ecf3ec;"># </span><span style="color: #2aa1ae; background-color: #ecf3ec;">The main method used to push a job to Redis.  Accepts a number of options:</span>
 <span class="linenr"> 3: </span><span style="color: #2aa1ae; background-color: #ecf3ec;">#</span>
 <span class="linenr"> 4: </span><span style="color: #2aa1ae; background-color: #ecf3ec;">#   </span><span style="color: #2aa1ae; background-color: #ecf3ec;">queue - the named queue to use, default 'default'</span>
@@ -182,7 +181,7 @@
 <span class="linenr">81: </span>  <span style="color: #3a81c3; font-weight: bold;">end</span>
 <span class="linenr">82: </span>  <span style="color: #715ab1;">@chain</span>
 <span class="linenr">83: </span><span style="color: #3a81c3; font-weight: bold;">end</span>
-</code></pre>
+</pre>
 </div>
 <p>
 这里首先读一下注释。然后来看 <code>process_single</code> ，这个方法里面作重要的莫过于 <code>middleware.invoke</code> 这里的代码。 <code>middleware</code> 是什么？如果你有node.js的<a href="http://expressjs.com/">express</a>或者别的框架的开发经验的话，或者直接从字面意思上来看的话可能就会马上理解。 <code>push</code> 方法中有判断 <code>payload</code> 是否为空的代码，如果为空那么这个任务也就不执行了。而 <code>payload</code> 是否为空就是取决于一系列的 <code>Middleware</code> 的作用。我们再来看看 <code>raw_push</code> 方法。这个方法从 <code>pool</code> 中获取了一个连接，并且打开了一个redis的multi命令的上下文，然后交给了 <code>atomic_push</code> 方法。在 <code>atomic_push</code> 方法则将提交过来的任务分成两类，一种是简单的异步任务，它是由调用 <code>perform_async</code> 产生的，一种是定时任务，它是由调用 <code>perform_in</code> 或者 <code>perform_at</code> 产生的，分别用不同的逻辑添加到redis中，这里就不再分析了。至此Sidekiq中提交任务到redis中的过程分析结束。
@@ -196,7 +195,7 @@
 我们首先来看一下 <code>Sidekiq::Manager</code> 类。我这里只摘出 <code>initialize</code> 和 <code>start</code> 方法。
 </p>
 <div class="org-src-container">
-<pre><code class="src src-ruby"><span class="linenr"> 1: </span><span style="color: #3a81c3; font-weight: bold;">def</span> <span style="color: #6c3163; font-weight: bold;">initialize</span><span style="color: #3a81c3;">(</span>options=<span style="color: #6c3163;">{}</span><span style="color: #3a81c3;">)</span>
+<pre class="src src-ruby"><span class="linenr"> 1: </span><span style="color: #3a81c3; font-weight: bold;">def</span> <span style="color: #6c3163; font-weight: bold;">initialize</span><span style="color: #3a81c3;">(</span>options=<span style="color: #6c3163;">{}</span><span style="color: #3a81c3;">)</span>
 <span class="linenr"> 2: </span>  logger.debug <span style="color: #3a81c3;">{</span> options.inspect <span style="color: #3a81c3;">}</span>
 <span class="linenr"> 3: </span>  <span style="color: #715ab1;">@options</span> = options
 <span class="linenr"> 4: </span>  <span style="color: #715ab1;">@count</span> = options<span style="color: #3a81c3;">[</span><span style="color: #4e3163;">:concurrency</span><span style="color: #3a81c3;">]</span> || <span style="color: #4e3163;">25</span>
@@ -215,13 +214,13 @@
 <span class="linenr">17: </span>    x.start
 <span class="linenr">18: </span>  <span style="color: #3a81c3; font-weight: bold;">end</span>
 <span class="linenr">19: </span><span style="color: #3a81c3; font-weight: bold;">end</span>
-</code></pre>
+</pre>
 </div>
 <p>
 <code>start</code> 方法其实就是遍历 <code>@wrokers</code> 中的 <code>Sidekiq::Processor</code> 实例，调用其 <code>start</code> 方法。我们来看看 <code>Sidekiq::Processor</code> 中的部分代码。我这里只摘出了 <code>initialize</code> 方法。
 </p>
 <div class="org-src-container">
-<pre><code class="src src-ruby"><span class="linenr">1: </span><span style="color: #3a81c3; font-weight: bold;">def</span> <span style="color: #6c3163; font-weight: bold;">initialize</span><span style="color: #3a81c3;">(</span>mgr<span style="color: #3a81c3;">)</span>
+<pre class="src src-ruby"><span class="linenr">1: </span><span style="color: #3a81c3; font-weight: bold;">def</span> <span style="color: #6c3163; font-weight: bold;">initialize</span><span style="color: #3a81c3;">(</span>mgr<span style="color: #3a81c3;">)</span>
 <span class="linenr">2: </span>  <span style="color: #715ab1;">@mgr</span> = mgr
 <span class="linenr">3: </span>  <span style="color: #715ab1;">@down</span> = <span style="color: #4e3163;">false</span>
 <span class="linenr">4: </span>  <span style="color: #715ab1;">@done</span> = <span style="color: #4e3163;">false</span>
@@ -229,17 +228,17 @@
 <span class="linenr">6: </span>  <span style="color: #715ab1;">@thread</span> = <span style="color: #4e3163;">nil</span>
 <span class="linenr">7: </span>  <span style="color: #715ab1;">@strategy</span> = <span style="color: #3a81c3;">(</span>mgr.options<span style="color: #6c3163;">[</span><span style="color: #4e3163;">:fetch</span><span style="color: #6c3163;">]</span> || <span style="color: #ba2f59; font-weight: bold;">Sidekiq</span>::<span style="color: #ba2f59; font-weight: bold;">BasicFetch</span><span style="color: #3a81c3;">)</span>.new<span style="color: #3a81c3;">(</span>mgr.options<span style="color: #3a81c3;">)</span>
 <span class="linenr">8: </span><span style="color: #3a81c3; font-weight: bold;">end</span>
-</code></pre>
+</pre>
 </div>
 <p>
 在 <code>Processor</code> 启动之后，也就是调用了 <code>start</code> 方法之后， <code>Processor</code> 会通过@strategy的 <code>retrieve_work</code> 方法从redis中获取任务。再来看一下 <code>Sidekiq::BasicFetch</code> 类中的 <code>retrieve_work</code> 方法。
 </p>
 <div class="org-src-container">
-<pre><code class="src src-ruby"><span class="linenr">1: </span><span style="color: #3a81c3; font-weight: bold;">def</span> <span style="color: #6c3163; font-weight: bold;">retrieve_work</span>
+<pre class="src src-ruby"><span class="linenr">1: </span><span style="color: #3a81c3; font-weight: bold;">def</span> <span style="color: #6c3163; font-weight: bold;">retrieve_work</span>
 <span class="linenr">2: </span>  work = <span style="color: #ba2f59; font-weight: bold;">Sidekiq</span>.redis <span style="color: #3a81c3;">{</span> |conn| conn.brpop<span style="color: #6c3163;">(</span>*queues_cmd<span style="color: #6c3163;">)</span> <span style="color: #3a81c3;">}</span>
 <span class="linenr">3: </span>  <span style="color: #ba2f59; font-weight: bold;">UnitOfWork</span>.new<span style="color: #3a81c3;">(</span>*work<span style="color: #3a81c3;">)</span> <span style="color: #3a81c3; font-weight: bold;">if</span> work
 <span class="linenr">4: </span><span style="color: #3a81c3; font-weight: bold;">end</span>
-</code></pre>
+</pre>
 </div>
 <p>
 可以看到这里调用了redis的 <code>brpop</code> 命令。这是我第一次接触这个命令，说实话虽然用redis也有一段时间了，但是这个<a href="http://redis.io/commands/brpop">BRPOP</a>命令是第一次看见。所以我就去查了下官方文档。
