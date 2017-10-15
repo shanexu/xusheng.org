@@ -12,16 +12,19 @@
     <!-- <link rel="stylesheet" href="/media/css/code-dark.css" type="text/css"> -->
     <!-- <link rel="stylesheet" href="/media/css/code-light.css" type="text/css"> -->
     <link rel="stylesheet" href="/media/css/code-tomorrow-night.css" type="text/css">
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script>
-     (adsbygoogle = window.adsbygoogle || []).push({
-       google_ad_client: "ca-pub-8192937770533676",
-       enable_page_level_ads: true
-     });
-    </script>
   </head>
 
   <body>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- xs -->
+    <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-8192937770533676"
+      data-ad-slot="4361544045"
+      data-ad-format="auto"></ins>
+    <script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
     <div>
       <header class="masthead">
         <h1 class="settitle"><a href="/">Shane Xu&#39;s Home</a></h1>
@@ -35,6 +38,7 @@
     <div class="node nav">
       <ul>
           <li><a href="/blog/">Blog</a></li>
+          <li><a href="/media/">Media</a></li>
         <li><a href="/tags/">Tags</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="https://github.com/shanexu">GitHub</a></li>
@@ -46,9 +50,9 @@
 
   <h3 class="section">influxdb-relay性能瓶颈分析</h3>
 
-<div id="outline-container-orgd9f2f8d" class="outline-2">
-<h2 id="orgd9f2f8d">起因</h2>
-<div class="outline-text-2" id="text-orgd9f2f8d">
+<div id="outline-container-org551c717" class="outline-2">
+<h2 id="org551c717">起因</h2>
+<div class="outline-text-2" id="text-org551c717">
 <p>
 为了让influxdb能够达到高可用，我便考虑在influxdb外面套一层，比如nginx。然而发现官方已经开发了一个influxdb-relay的东西，于是决定索性使用这个东西。
 首先看一张官方README.md中的图。
@@ -118,9 +122,9 @@ Status Codes  [code:count]             204:180000
 </div>
 </div>
 
-<div id="outline-container-orge3a8542" class="outline-2">
-<h2 id="orge3a8542">过程</h2>
-<div class="outline-text-2" id="text-orge3a8542">
+<div id="outline-container-org16a8114" class="outline-2">
+<h2 id="org16a8114">过程</h2>
+<div class="outline-text-2" id="text-org16a8114">
 <p>
 在之前的文章里面提过，最新版influxdb，即便是在 vegeta 5000/s 的攻击下，还是能保证99%以上的成功率，
 然而 <code>influxdb-relay</code> 却在 3000/s 的速度的时候就已经撑不住了。作为influxdb的前置程序，至少要达到或者

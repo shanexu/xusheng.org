@@ -12,16 +12,19 @@
     <!-- <link rel="stylesheet" href="/media/css/code-dark.css" type="text/css"> -->
     <!-- <link rel="stylesheet" href="/media/css/code-light.css" type="text/css"> -->
     <link rel="stylesheet" href="/media/css/code-tomorrow-night.css" type="text/css">
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script>
-     (adsbygoogle = window.adsbygoogle || []).push({
-       google_ad_client: "ca-pub-8192937770533676",
-       enable_page_level_ads: true
-     });
-    </script>
   </head>
 
   <body>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- xs -->
+    <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-8192937770533676"
+      data-ad-slot="4361544045"
+      data-ad-format="auto"></ins>
+    <script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
     <div>
       <header class="masthead">
         <h1 class="settitle"><a href="/">Shane Xu&#39;s Home</a></h1>
@@ -35,6 +38,7 @@
     <div class="node nav">
       <ul>
           <li><a href="/blog/">Blog</a></li>
+          <li><a href="/media/">Media</a></li>
         <li><a href="/tags/">Tags</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="https://github.com/shanexu">GitHub</a></li>
@@ -49,9 +53,9 @@
 因为工作需要，所以接触了 influxdb，而工作中用的 <a href="https://influxdata.com/">influxdb</a> 的版本则是 0.10.2 的版本，官方只提供了最新稳定版的下载。看了官网的角角落落，也没有找到明显的下载地方，那就只有自己编译了。以下内容基本都是 influxdb 源码中 CONTRIBUTING.md 中的内容。
 </p>
 
-<div id="outline-container-orgea2e617" class="outline-2">
-<h2 id="orgea2e617">安装 Go</h2>
-<div class="outline-text-2" id="text-orgea2e617">
+<div id="outline-container-orga9c2310" class="outline-2">
+<h2 id="orga9c2310">安装 Go</h2>
+<div class="outline-text-2" id="text-orga9c2310">
 <p>
 InfluxDB 0.10.2 需要 Go 1.4.3。目前 Go 的稳定版已经跑到 1.6.2 了。和很多语言一样（例如 node 的 nvm, ruby 的 rvm），Go 也出现了版本管理工具 <a href="https://github.com/moovweb/gvm">gvm</a> 。可以用下面命令安装 gvm
 </p>
@@ -72,25 +76,25 @@ gvm use go1.4.3 --default <span style="color: #5a5b5a;">#</span><span style="col
 </div>
 </div>
 
-<div id="outline-container-org11662bf" class="outline-2">
-<h2 id="org11662bf">安装版本控制系统</h2>
-<div class="outline-text-2" id="text-org11662bf">
+<div id="outline-container-org03f5213" class="outline-2">
+<h2 id="org03f5213">安装版本控制系统</h2>
+<div class="outline-text-2" id="text-org03f5213">
 <p>
 Go 能够通过版本控制系统引入远端的包，目前 influxdb 只依赖于 <code>git</code> 和 <code>mercurial</code>
 </p>
 </div>
-<div id="outline-container-org355812a" class="outline-3">
-<h3 id="org355812a">安装 <a href="http://git-scm.com/book/en/Getting-Started-Installing-Git">Git</a></h3>
-<div class="outline-text-3" id="text-org355812a">
+<div id="outline-container-org64d762d" class="outline-3">
+<h3 id="org64d762d">安装 <a href="http://git-scm.com/book/en/Getting-Started-Installing-Git">Git</a></h3>
+<div class="outline-text-3" id="text-org64d762d">
 <div class="org-src-container">
 <pre class="src src-sh">brew install git
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orge21fff8" class="outline-3">
-<h3 id="orge21fff8">安装 <a href="http://mercurial.selenic.com/wiki/Download">Mercurial</a></h3>
-<div class="outline-text-3" id="text-orge21fff8">
+<div id="outline-container-orgfa75515" class="outline-3">
+<h3 id="orgfa75515">安装 <a href="http://mercurial.selenic.com/wiki/Download">Mercurial</a></h3>
+<div class="outline-text-3" id="text-orgfa75515">
 <div class="org-src-container">
 <pre class="src src-sh">brew install mercurial
 </pre>
@@ -98,9 +102,9 @@ Go 能够通过版本控制系统引入远端的包，目前 influxdb 只依赖�
 </div>
 </div>
 </div>
-<div id="outline-container-org57804a1" class="outline-2">
-<h2 id="org57804a1">下载源代码</h2>
-<div class="outline-text-2" id="text-org57804a1">
+<div id="outline-container-orgeccb9b2" class="outline-2">
+<h2 id="orgeccb9b2">下载源代码</h2>
+<div class="outline-text-2" id="text-orgeccb9b2">
 <p>
 设置项目结构并从仓库中获取代码：
 </p>
@@ -119,9 +123,9 @@ git checkout v0.10.2
 </div>
 </div>
 
-<div id="outline-container-org748a50a" class="outline-2">
-<h2 id="org748a50a">编译和测试</h2>
-<div class="outline-text-2" id="text-org748a50a">
+<div id="outline-container-org94a8423" class="outline-2">
+<h2 id="org94a8423">编译和测试</h2>
+<div class="outline-text-2" id="text-org94a8423">
 <p>
 确保 Go 已经正确安装，然后执行以下命令。可能需要翻墙。
 </p>
@@ -168,9 +172,9 @@ go install ./...
 </div>
 </div>
 
-<div id="outline-container-org2e2c305" class="outline-2">
-<h2 id="org2e2c305">启动 InfluxDB</h2>
-<div class="outline-text-2" id="text-org2e2c305">
+<div id="outline-container-org3223537" class="outline-2">
+<h2 id="org3223537">启动 InfluxDB</h2>
+<div class="outline-text-2" id="text-org3223537">
 <p>
 正常情况下，直接运行 influxd 就可以启动 influxdb 了。通过命令生成配置文件，修改后，在启动参数中加入 <code>-config filepath</code> 参数，就可以以指定配置文件启动 influxdb。
 </p>
