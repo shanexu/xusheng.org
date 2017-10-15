@@ -1,0 +1,27 @@
+.linenr {
+  color: #3F4040;
+  background-color: #1d1f21;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.linenr::before {
+  content: ' ';
+}
+
+.linenr::after {
+  content: ' ';
+}
+
+.org-src-container pre {
+  background-color: #1d1f21;
+  font-family: "Source Code Pro", "Droid Sans Mono", "Monaco", "menlo", "Ubuntu Mono", "DejaVu Sans Mono", consolas, courier, monospace;
+  box-shadow: none;
+  border: none;
+  color: #c5c8c6;
+  padding: 0.5em 0 0.5em 0.5em;
+  font-size: 95%;
+  overflow: auto;
+}
