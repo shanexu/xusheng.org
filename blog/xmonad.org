@@ -67,7 +67,7 @@ myConfig = def {
  } `additionalKeysP` myKeys
 #+END_SRC
 
-** xmobar 配置
+** xmobar配置
    编辑 =~/.xmobarrc=
 #+BEGIN_SRC haskell
 Config { font = "xft:Source Code Pro:size=10,WenQuanYi Micro Hei Mono:size=10:antialias=true"
@@ -89,7 +89,7 @@ Config { font = "xft:Source Code Pro:size=10,WenQuanYi Micro Hei Mono:size=10:an
 }
 #+END_SRC
 
-** stalonetray 配置
+** stalonetray配置
    编辑 =~/.stalonetrayrc=
 #+BEGIN_SRC conf
 background "#000000"
@@ -298,14 +298,14 @@ Device 'bcm5974':
 	libinput Horizontal Scroll Enabled (306):	1   
    #+END_SRC
 
-* 微调 Emacs 的输入法问题
-  Emacs 和输入法是个老问题了， =ctrl + space= 不能呼出输入法是常态。貌似在 gnome 环境似乎没有问题。反正我也很少在 Emacs 下打中文的。想着 spacemacs 里可能有解决方案，看了下文档果然如此。在 spaceman 中增加 chinese 的 layer 就自然地解决了问题。
+* 微调Emacs的输入法问题
+  Emacs和输入法是个老问题了， =ctrl + space= 不能呼出输入法是常态。貌似在gnome环境似乎没有问题。反正我也很少在Emacs下打中文的。想着spacemacs里可能有解决方案，看了下文档果然如此。在spacemacs中增加chinese的layer就自然地解决了问题。
   #+BEGIN_SRC elisp
 (chinese :variables
               chinese-enable-fcitx t)
   #+END_SRC
 
-* 配置 termite
+* 配置termite
   编辑 =~/.config/termite/config=
   #+BEGIN_SRC conf
 [options]
