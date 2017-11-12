@@ -46,6 +46,7 @@ pic=`$rp $1`
 
 echo "UPDATE data SET value = '"$pic"';" | sqlite3 ~/Library/Application\ Support/Dock/desktoppicture.db && killall Dock
 
+sudo rm /Library/Caches/com.apple.desktop.admin.png
 #+END_SRC
 
 不知道从什么时候开始，macOS的壁纸信息保存到了sqlite的db文件中，在了解了表结构之后，只要一个轻轻的sql语句就能修改所有的壁纸了。
