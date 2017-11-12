@@ -1,0 +1,387 @@
+#+TITLE:       Install XMonad
+#+AUTHOR:      
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2017-11-11 Sat
+#+URI:         /blog/%y/%m/%d/install-xmonad
+#+KEYWORDS:    <TODO: insert your keywords here>
+#+TAGS:        <TODO: insert your tags here>
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: <TODO: insert your description here>
+
+* 安装 XMonad
+#+BEGIN_SRC shell
+sudo pacman -S xmonad xmonad-contrib xmonad-utils xmobar dzen2 demnu
+sudo pacman -S termite
+#+END_SRC
+
+
+** 最简单的配置
+#+BEGIN_SRC haskell
+-- Imports.
+import XMonad
+import XMonad.Hooks.DynamicLog
+import XMonad.Layout.NoBorders
+import XMonad.Layout.Spacing
+import XMonad.Util.SpawnOnce
+import XMonad.Util.EZConfig
+
+
+-- The main function.
+main = xmonad =<< statusBar myBar myPP toggleStrutsKey myConfig
+
+-- Command to launch the bar.
+myBar = "xmobar"
+
+-- Custom PP, configure it as you like. It determines what is being written to the bar.
+myPP = xmobarPP { ppCurrent = xmobarColor "#429942" "" . wrap "<" ">" }
+
+-- Key binding to toggle the gap for the bar.
+toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
+
+
+myKeys = [ ("<XF86AudioMute>", spawn "pulseaudio-ctl mute")
+         , ("<XF86AudioRaiseVolume>", spawn "pulseaudio-ctl up")
+         , ("<XF86AudioLowerVolume>", spawn "pulseaudio-ctl down")
+         , ("<XF86MonBrightnessUp>", spawn "gmux_backlight +5")
+         , ("<XF86MonBrightnessDown>", spawn "gmux_backlight -5")
+         ]
+
+myStartupHook = do
+  spawnOnce "feh --bg-scale ~/Downloads/thorns_by_miv4t-dam5d6v.jpg"
+  spawnOnce "xsetroot -cursor_name left_ptr"
+  spawnOnce "stalonetray"
+  spawnOnce "fcitx"
+  spawnOnce "nm-applet"
+  spawnOnce "xcompmgr"
+
+-- Main configuration, override the defaults to your liking.
+myConfig = def {
+   modMask = mod4Mask
+ , terminal = "termite"
+ , layoutHook = smartBorders $ smartSpacing 3 $ layoutHook defaultConfig
+ , startupHook = myStartupHook
+ , borderWidth = 3
+ , normalBorderColor = "#777777"
+ , focusedBorderColor = "#2980b9"
+ } `additionalKeysP` myKeys
+#+END_SRC
+
+** xmobar 配置
+   编辑 =~/.xmobarrc=
+#+BEGIN_SRC haskell
+Config { font = "xft:Source Code Pro:size=10,WenQuanYi Micro Hei Mono:size=10:antialias=true"
+       , bgColor = "#000000"
+       , fgColor = "#839496"
+       , position = Top
+       , lowerOnStart = True
+       , commands = [ Run Network "wlp4s0" ["-t", "<fc=#859900><rx>↓</fc> <fc=#dc322f><tx>↑</fc>","-S","True"] 10
+                    , Run DynNetwork ["-t", "<fc=#859900><rx>↓</fc> <fc=#dc322f><tx> ↑</fc>","-S","True"] 10
+                    , Run MultiCpu ["-t", "C:<total>%", "-H","50","--high","#dc322f"] 10
+                    , Run Memory ["-t","M:<usedratio>%","-H","80","--high","#dc322f"] 10
+                    , Run Date "%_d %b %H:%M" "date" 10
+                    , Run BatteryP ["BAT0"] ["-t", "B:<left>%", "-L", "10", "-H", "80", "-p", "3", "--", "-O", "<fc=green>On</fc> - ", "-o", "", "-L", "-15", "-H", "-5", "-l", "red", "-m", "blue", "-h", "green"] 600
+                    , Run StdinReader
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "%StdinReader% }{ %battery% %multicpu% %memory% | %dynnetwork% | %date%"
+}
+#+END_SRC
+
+** stalonetray 配置
+   编辑 =~/.stalonetrayrc=
+#+BEGIN_SRC conf
+background "#000000"
+decorations none
+dockapp_mode none
+fuzzy_edges 0
+geometry 1x1-850+5
+grow_gravity NE
+icon_gravity NE
+icon_size 24
+log_level err
+kludges force_icons_size
+max_geometry 10x1-1200-5
+no_shrink false
+parent_bg false
+scrollbars none
+skip_taskbar true
+sticky true
+tint_color white
+tint_level 0
+transparent false
+vertical false
+window_layer bottom
+window_strut auto
+window_type dock
+xsync false
+#+END_SRC
+
+* 修改 =.xinitrc= 
+#+BEGIN_SRC shell
+#!/bin/sh
+
+userresources=$HOME/.Xresources
+sysresources=/etc/X11/xinit/.Xresources
+
+# merge in defaults and keymaps
+
+if [ -f $sysresources ]; then
+    xrdb -merge $sysresources
+fi
+
+if [ -f "$userresources" ]; then
+    xrdb -merge "$userresources"
+fi
+
+# start some nice programs
+
+if [ -d /etc/X11/xinit/xinitrc.d ] ; then
+ for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
+  [ -x "$f" ] && . "$f"
+ done
+ unset f
+fi
+
+export LANG=en_US.UTF-8
+export LC_CTYPE=zh_CN.UTF-8
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS=@im=fcitx
+
+session=${1:-xmonad}
+
+case $session in
+    gnome|gnome-session)
+        export QT_AUTO_SCREEN_SCALE_FACTOR=1
+        exec gnome-session
+        ;;
+    i3|i3wm)
+        exec i3
+        ;;
+    kde)
+        exec startkde
+        ;;
+    xfce|xfce4)
+        exec startxfce4
+        ;;
+    awesome)
+        export GDK_SCALE=2
+        export GDK_DPI_SCALE=0.5
+        exec awesome
+        ;;
+    xmonad)
+        export GDK_SCALE=2
+        export GDK_DPI_SCALE=0.5
+        exec xmonad
+        ;;
+    *)
+        exec$1
+        ;;
+esac
+#+END_SRC
+
+* 配置键盘和触摸板
+  使用 gnome-session 的时候，会默认配置触摸板和键盘鼠标等，所以这里就需要在 =/etc/X11/xorg.conf.d= 下面添加配置文件的方式配置键盘和触摸板了。
+  
+** 键盘配置
+   我是 Emacs 的死衷，所以需要将 =ctrl= 和 =caps lock= 交换。
+   编写 =/etc/X11/xorg.conf.d/00-keyboard.conf= 文件
+   #+BEGIN_SRC conf
+Section "InputClass"
+        Identifier "system-keyboard"
+	MatchIsKeyboard "on"
+        Option "XkbLayout" "us"
+	Option "XkbOptions" "ctrl:swapcaps"
+EndSection   
+   #+END_SRC
+   然而当插上 =HHKB= 的时候则不需要交换案件，编写配置文件 =/etc/X11/xorg.conf.d/30-keyboard.conf=
+   #+BEGIN_SRC conf
+Section "InputClass"
+        Identifier "hhkb"
+	MatchProduct "HHKB"
+        Option "XkbLayout" "us"
+	Option "XkbOptions" ","
+EndSection   
+   #+END_SRC
+
+
+** 触摸板设置
+   这么多年被苹果强奸之后，我发现我已经和自然的习惯于苹果的“NatrualScrolling”了。
+   编写 =/etc/X11/xorg.conf.d/30-touchpad.conf=
+   #+BEGIN_SRC conf
+Section "InputClass"
+    Identifier "bcm5974"
+    Driver "libinput"
+    Option "Tapping" "on"
+    Option "NaturalScrolling" "true"
+EndSection   
+   #+END_SRC
+   其中 =Identifier "bcm5974"= 需要根据自己的机器的实际情况填写。先用 xinput 找出所有的输入设备。
+   #+BEGIN_SRC shell
+xinput list
+   #+END_SRC
+   我的输出是这样的：
+   #+BEGIN_SRC text
+⎡ Virtual core pointer                    	id=2	[master pointer  (3)]
+⎜   ↳ Virtual core XTEST pointer              	id=4	[slave  pointer  (2)]
+⎜   ↳ bcm5974                                 	id=24	[slave  pointer  (2)]
+⎜   ↳ Logitech USB Receiver                   	id=25	[slave  pointer  (2)]
+⎜   ↳ Logitech USB Receiver                   	id=26	[slave  pointer  (2)]
+⎜   ↳ Broadcom Corp. Bluetooth USB Host Controller	id=28	[slave  pointer  (2)]
+⎣ Virtual core keyboard                   	id=3	[master keyboard (2)]
+    ↳ Virtual core XTEST keyboard             	id=5	[slave  keyboard (3)]
+    ↳ Power Button                            	id=6	[slave  keyboard (3)]
+    ↳ Video Bus                               	id=7	[slave  keyboard (3)]
+    ↳ Video Bus                               	id=8	[slave  keyboard (3)]
+    ↳ Power Button                            	id=9	[slave  keyboard (3)]
+    ↳ Lid Switch                              	id=10	[slave  keyboard (3)]
+    ↳ Sleep Button                            	id=11	[slave  keyboard (3)]
+    ↳ HDA ATI HDMI HDMI/DP,pcm=7              	id=12	[slave  keyboard (3)]
+    ↳ HDA ATI HDMI HDMI/DP,pcm=8              	id=13	[slave  keyboard (3)]
+    ↳ HDA ATI HDMI HDMI/DP,pcm=9              	id=14	[slave  keyboard (3)]
+    ↳ HDA ATI HDMI HDMI/DP,pcm=10             	id=15	[slave  keyboard (3)]
+    ↳ HDA ATI HDMI HDMI/DP,pcm=11             	id=16	[slave  keyboard (3)]
+    ↳ HDA ATI HDMI HDMI/DP,pcm=3              	id=17	[slave  keyboard (3)]
+    ↳ HDA Intel HDMI HDMI/DP,pcm=3            	id=18	[slave  keyboard (3)]
+    ↳ HDA Intel HDMI HDMI/DP,pcm=7            	id=19	[slave  keyboard (3)]
+    ↳ HDA Intel HDMI HDMI/DP,pcm=8            	id=20	[slave  keyboard (3)]
+    ↳ HDA Intel HDMI HDMI/DP,pcm=9            	id=21	[slave  keyboard (3)]
+    ↳ HDA Intel HDMI HDMI/DP,pcm=10           	id=22	[slave  keyboard (3)]
+    ↳ Apple Inc. Apple Internal Keyboard / Trackpad	id=23	[slave  keyboard (3)]
+    ↳ Broadcom Corp. Bluetooth USB Host Controller	id=27	[slave  keyboard (3)]
+    ↳ HDA Intel PCH Mic                       	id=29	[slave  keyboard (3)]
+    ↳ HDA Intel PCH Headphone                 	id=30	[slave  keyboard (3)]
+    ↳ HDA Intel PCH SPDIF                     	id=31	[slave  keyboard (3)]
+    ↳ Logitech USB Receiver                   	id=32	[slave  keyboard (3)]   
+   #+END_SRC
+   然后列出目前设备的所有属性，来确认是什么输入设备。
+   #+BEGIN_SRC shell
+xinput list-props 24
+   #+END_SRC
+   我的输出为：
+   #+BEGIN_SRC text
+Device 'bcm5974':
+	Device Enabled (145):	1
+	Coordinate Transformation Matrix (147):	1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000
+	libinput Tapping Enabled (281):	1
+	libinput Tapping Enabled Default (282):	0
+	libinput Tapping Drag Enabled (283):	1
+	libinput Tapping Drag Enabled Default (284):	1
+	libinput Tapping Drag Lock Enabled (285):	0
+	libinput Tapping Drag Lock Enabled Default (286):	0
+	libinput Tapping Button Mapping Enabled (287):	1, 0
+	libinput Tapping Button Mapping Default (288):	1, 0
+	libinput Natural Scrolling Enabled (289):	1
+	libinput Natural Scrolling Enabled Default (290):	0
+	libinput Left Handed Enabled (291):	0
+	libinput Left Handed Enabled Default (292):	0
+	libinput Accel Speed (293):	0.000000
+	libinput Accel Speed Default (294):	0.000000
+	libinput Scroll Methods Available (295):	1, 1, 0
+	libinput Scroll Method Enabled (296):	1, 0, 0
+	libinput Scroll Method Enabled Default (297):	1, 0, 0
+	libinput Click Methods Available (298):	1, 1
+	libinput Click Method Enabled (299):	0, 1
+	libinput Click Method Enabled Default (300):	0, 1
+	libinput Middle Emulation Enabled (301):	0
+	libinput Middle Emulation Enabled Default (302):	0
+	libinput Send Events Modes Available (266):	1, 1
+	libinput Send Events Mode Enabled (267):	0, 0
+	libinput Send Events Mode Enabled Default (268):	0, 0
+	libinput Disable While Typing Enabled (303):	1
+	libinput Disable While Typing Enabled Default (304):	1
+	Device Node (269):	"/dev/input/event17"
+	Device Product ID (270):	1452, 628
+	libinput Drag Lock Buttons (305):	<no items>
+	libinput Horizontal Scroll Enabled (306):	1   
+   #+END_SRC
+
+* 微调 Emacs 的输入法问题
+  Emacs 和输入法是个老问题了， =ctrl + space= 不能呼出输入法是常态。貌似在 gnome 环境似乎没有问题。反正我也很少在 Emacs 下打中文的。想着 spacemacs 里可能有解决方案，看了下文档果然如此。在 spaceman 中增加 chinese 的 layer 就自然地解决了问题。
+  #+BEGIN_SRC elisp
+(chinese :variables
+              chinese-enable-fcitx t)
+  #+END_SRC
+
+* 配置 termite
+  编辑 =~/.config/termite/config=
+  #+BEGIN_SRC conf
+[options]
+scroll_on_output = false
+scroll_on_keystroke = true
+audible_bell = false
+mouse_autohide = false
+allow_bold = true
+dynamic_title = true
+urgent_on_bell = true
+clickable_url = true
+font = Monospace 11
+scrollback_lines = 10000
+search_wrap = true
+#icon_name = terminal
+#geometry = 640x480
+
+# "system", "on" or "off"
+cursor_blink = system
+
+# "block", "underline" or "ibeam"
+cursor_shape = block
+
+# $BROWSER is used by default if set, with xdg-open as a fallback
+#browser = xdg-open
+
+# set size hints for the window
+#size_hints = false
+
+# Hide links that are no longer valid in url select overlay mode
+filter_unmatched_urls = true
+
+# emit escape sequences for extra modified keys
+#modify_other_keys = false
+
+# Solarized dark color scheme
+
+[colors]
+foreground = #839496
+foreground_bold = #eee8d5
+#foreground_dim = #888888
+background = rgba(0, 43, 54, 0.9)
+cursor = #93a1a1
+
+# if unset, will reverse foreground and background
+#highlight = #839496
+
+# colors from color0 to color254 can be set
+color0 = #073642
+color1 = #dc322f
+color2 = #859900
+color3 = #b58900
+color4 = #268bd2
+color5 = #d33682
+color6 = #2aa198
+color7 = #eee8d5
+color8 = #002b36
+color9 = #cb4b16
+color10 = #586e75
+color11 = #657b83
+color12 = #839496
+color13 = #6c71c4
+color14 = #93a1a1
+color15 = #fdf6e3
+
+[hints]
+#font = Monospace 12
+#foreground = #dcdccc
+#background = #3f3f3f
+#active_foreground = #e68080
+#active_background = #3f3f3f
+#padding = 2
+#border = #3f3f3f
+#border_width = 0.5
+#roundness = 2.0
+
+# vim: ft=dosini cms=#%s  
+  #+END_SRC
+
