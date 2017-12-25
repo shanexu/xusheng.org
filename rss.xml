@@ -4,10 +4,24 @@
     <title>Shane Xu&#39;s Home</title>
     <link>http://xusheng.org/</link>
     <description>Life is too short for so much sorrow.</description>
-    <pubDate>Sun, 15 Oct 2017 09:19:38 CST</pubDate>
-    <lastBuildDate>Sun, 15 Oct 2017 09:19:38 CST</lastBuildDate>
+    <pubDate>Tue, 26 Dec 2017 00:18:49 CST</pubDate>
+    <lastBuildDate>Tue, 26 Dec 2017 00:18:49 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
+    <item>
+      <title>春隣</title>
+      <link>http://xusheng.org/blog/2017/12/25/chun-lin</link>
+      <description><![CDATA[<TODO: insert your description here>]]></description>
+      <pubDate>2017-12-26</pubDate>
+      <guid>http://xusheng.org/blog/2017/12/25/chun-lin</guid>
+    </item>
+    <item>
+      <title>Install XMonad</title>
+      <link>http://xusheng.org/blog/2017/11/11/install-xmonad</link>
+      <description><![CDATA[<TODO: insert your description here>]]></description>
+      <pubDate>2017-11-13</pubDate>
+      <guid>http://xusheng.org/blog/2017/11/11/install-xmonad</guid>
+    </item>
     <item>
       <title>修改macos的壁纸</title>
       <link>http://xusheng.org/blog/2017/03/29/change-wallpaper-of-macos</link>
@@ -63,20 +77,6 @@
       <description><![CDATA[js 图片拼字 js 效果]]></description>
       <pubDate>2016-11-14</pubDate>
       <guid>http://xusheng.org/blog/2016/07/13/image-text</guid>
-    </item>
-    <item>
-      <title>Complete the Sequence!</title>
-      <link>http://xusheng.org/blog/2016/07/09/complete-the-sequence</link>
-      <description><![CDATA[A solution for CMPLS]]></description>
-      <pubDate>2016-11-14</pubDate>
-      <guid>http://xusheng.org/blog/2016/07/09/complete-the-sequence</guid>
-    </item>
-    <item>
-      <title>InfluxDB负载测试设计</title>
-      <link>http://xusheng.org/blog/2016/10/20/influxdb-load-test-design</link>
-      <description><![CDATA[<TODO: insert your description here>]]></description>
-      <pubDate>2016-10-29</pubDate>
-      <guid>http://xusheng.org/blog/2016/10/20/influxdb-load-test-design</guid>
     </item>
   </channel>
 </rss>

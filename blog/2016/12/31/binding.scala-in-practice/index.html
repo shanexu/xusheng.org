@@ -67,31 +67,31 @@ touch build.sbt
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">commonSettings</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">Seq</span><span style="color: #b294bb;">(</span>
-<span class="linenr"> 2: </span>  version := <span style="color: #b5bd68;">"0.0.1"</span>,
-<span class="linenr"> 3: </span>  scalaVersion := <span style="color: #b5bd68;">"2.11.8"</span>,
-<span class="linenr"> 4: </span>  addCompilerPlugin<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"org.scalamacros"</span> % <span style="color: #b5bd68;">"paradise"</span> % <span style="color: #b5bd68;">"2.1.0"</span> cross <span style="color: #de935f;">CrossVersion</span>.full<span style="color: #81a2be;">)</span>,
-<span class="linenr"> 5: </span>  scalacOptions ++= <span style="color: #de935f;">Seq</span><span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"-feature"</span>, <span style="color: #b5bd68;">"-language:implicitConversions"</span><span style="color: #81a2be;">)</span>
-<span class="linenr"> 6: </span><span style="color: #b294bb;">)</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span>lazy val commonSettings = Seq(
+<span class="linenr"> 2: </span>  version := "0.0.1",
+<span class="linenr"> 3: </span>  scalaVersion := "2.11.8",
+<span class="linenr"> 4: </span>  addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
+<span class="linenr"> 5: </span>  scalacOptions ++= Seq("-feature", "-language:implicitConversions")
+<span class="linenr"> 6: </span>)
 <span class="linenr"> 7: </span>
-<span class="linenr"> 8: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">BindingScalaVersion</span> <span style="color: #b294bb;">=</span> <span style="color: #b5bd68;">"10.0.1"</span>
+<span class="linenr"> 8: </span>lazy val BindingScalaVersion = "10.0.1"
 <span class="linenr"> 9: </span>
-<span class="linenr">10: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">root</span> <span style="color: #b294bb;">=</span> <span style="color: #b294bb;">(</span>project in file<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"."</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>.
-<span class="linenr">11: </span>  settings<span style="color: #b294bb;">(</span>commonSettings<span style="color: #b294bb;">:</span> <span style="color: #b294bb;">_</span>*<span style="color: #b294bb;">)</span>.
-<span class="linenr">12: </span>  aggregate<span style="color: #b294bb;">(</span>js<span style="color: #b294bb;">)</span>
+<span class="linenr">10: </span>lazy val root = (project in file(".")).
+<span class="linenr">11: </span>  settings(commonSettings: _*).
+<span class="linenr">12: </span>  aggregate(js)
 <span class="linenr">13: </span>
-<span class="linenr">14: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">js</span> <span style="color: #b294bb;">=</span> <span style="color: #b294bb;">(</span>project in file<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"js"</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>.
-<span class="linenr">15: </span>  settings<span style="color: #b294bb;">(</span>commonSettings<span style="color: #b294bb;">:</span> <span style="color: #b294bb;">_</span>*<span style="color: #b294bb;">)</span>.
-<span class="linenr">16: </span>  settings<span style="color: #b294bb;">(</span>
-<span class="linenr">17: </span>    mainClass in <span style="color: #81a2be;">(</span><span style="color: #de935f;">Compile</span><span style="color: #81a2be;">)</span> := <span style="color: #de935f;">Some</span><span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"Application"</span><span style="color: #81a2be;">)</span>,
-<span class="linenr">18: </span>    persistLauncher := <span style="color: #de935f;">true</span>,
-<span class="linenr">19: </span>    libraryDependencies ++= <span style="color: #de935f;">Seq</span><span style="color: #81a2be;">(</span>
-<span class="linenr">20: </span>      <span style="color: #b5bd68;">"org.scala-js"</span> %%% <span style="color: #b5bd68;">"scalajs-dom"</span> % <span style="color: #b5bd68;">"0.9.1"</span>,
-<span class="linenr">21: </span>      <span style="color: #b5bd68;">"com.thoughtworks.binding"</span> %%% <span style="color: #b5bd68;">"dom"</span> % <span style="color: #de935f;">BindingScalaVersion</span>,
-<span class="linenr">22: </span>      <span style="color: #b5bd68;">"com.thoughtworks.binding"</span> %%% <span style="color: #b5bd68;">"route"</span> % <span style="color: #de935f;">BindingScalaVersion</span>
-<span class="linenr">23: </span>    <span style="color: #81a2be;">)</span>
-<span class="linenr">24: </span>  <span style="color: #b294bb;">)</span>.
-<span class="linenr">25: </span>  enablePlugins<span style="color: #b294bb;">(</span><span style="color: #de935f;">ScalaJSPlugin</span><span style="color: #b294bb;">)</span>
+<span class="linenr">14: </span>lazy val js = (project in file("js")).
+<span class="linenr">15: </span>  settings(commonSettings: _*).
+<span class="linenr">16: </span>  settings(
+<span class="linenr">17: </span>    mainClass in (Compile) := Some("Application"),
+<span class="linenr">18: </span>    persistLauncher := true,
+<span class="linenr">19: </span>    libraryDependencies ++= Seq(
+<span class="linenr">20: </span>      "org.scala-js" %%% "scalajs-dom" % "0.9.1",
+<span class="linenr">21: </span>      "com.thoughtworks.binding" %%% "dom" % BindingScalaVersion,
+<span class="linenr">22: </span>      "com.thoughtworks.binding" %%% "route" % BindingScalaVersion
+<span class="linenr">23: </span>    )
+<span class="linenr">24: </span>  ).
+<span class="linenr">25: </span>  enablePlugins(ScalaJSPlugin)
 </pre>
 </div>
 
@@ -100,12 +100,12 @@ touch build.sbt
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr">1: </span><span style="color: #5a5b5a;">/* </span><span style="color: #5a5b5a;">js/src/main/scala/Application.scala */</span>
-<span class="linenr">2: </span><span style="color: #b294bb;">import</span> scala.scalajs.js.<span style="color: #de935f;">JSApp</span>
+<pre class="src src-scala"><span class="linenr">1: </span>/* js/src/main/scala/Application.scala */
+<span class="linenr">2: </span>import scala.scalajs.js.JSApp
 <span class="linenr">3: </span>
-<span class="linenr">4: </span><span style="color: #b294bb;">object</span> <span style="color: #de935f;">Application</span> <span style="color: #b294bb;">extends</span> <span style="color: #f0c674;">JSApp</span> <span style="color: #b294bb;">{</span>
-<span class="linenr">5: </span>  <span style="color: #b294bb;">def</span> <span style="color: #81a2be;">main</span><span style="color: #81a2be;">()</span><span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Unit</span> <span style="color: #b294bb;">=</span> println<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"Hello World!"</span><span style="color: #81a2be;">)</span>
-<span class="linenr">6: </span><span style="color: #b294bb;">}</span>
+<span class="linenr">4: </span>object Application extends JSApp {
+<span class="linenr">5: </span>  def main(): Unit = println("Hello World!")
+<span class="linenr">6: </span>}
 </pre>
 </div>
 
@@ -156,88 +156,88 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">commonSettings</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">Seq</span><span style="color: #b294bb;">(</span>
-<span class="linenr"> 2: </span>  version := <span style="color: #b5bd68;">"0.0.1"</span>,
-<span class="linenr"> 3: </span>  scalaVersion := <span style="color: #b5bd68;">"2.11.8"</span>,
-<span class="linenr"> 4: </span>  addCompilerPlugin<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"org.scalamacros"</span> % <span style="color: #b5bd68;">"paradise"</span> % <span style="color: #b5bd68;">"2.1.0"</span> cross <span style="color: #de935f;">CrossVersion</span>.full<span style="color: #81a2be;">)</span>,
-<span class="linenr"> 5: </span>  scalacOptions ++= <span style="color: #de935f;">Seq</span><span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"-feature"</span>, <span style="color: #b5bd68;">"-language:implicitConversions"</span><span style="color: #81a2be;">)</span>
-<span class="linenr"> 6: </span><span style="color: #b294bb;">)</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span>lazy val commonSettings = Seq(
+<span class="linenr"> 2: </span>  version := "0.0.1",
+<span class="linenr"> 3: </span>  scalaVersion := "2.11.8",
+<span class="linenr"> 4: </span>  addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
+<span class="linenr"> 5: </span>  scalacOptions ++= Seq("-feature", "-language:implicitConversions")
+<span class="linenr"> 6: </span>)
 <span class="linenr"> 7: </span>
-<span class="linenr"> 8: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">AkkaVersion</span> <span style="color: #b294bb;">=</span> <span style="color: #b5bd68;">"2.4.16"</span>
+<span class="linenr"> 8: </span>lazy val AkkaVersion = "2.4.16"
 <span class="linenr"> 9: </span>
-<span class="linenr">10: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">AkkaHttpVersion</span> <span style="color: #b294bb;">=</span> <span style="color: #b5bd68;">"10.0.1"</span>
+<span class="linenr">10: </span>lazy val AkkaHttpVersion = "10.0.1"
 <span class="linenr">11: </span>
-<span class="linenr">12: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">BindingScalaVersion</span> <span style="color: #b294bb;">=</span> <span style="color: #b5bd68;">"10.0.1"</span>
+<span class="linenr">12: </span>lazy val BindingScalaVersion = "10.0.1"
 <span class="linenr">13: </span>
-<span class="linenr">14: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">CirceVersion</span> <span style="color: #b294bb;">=</span> <span style="color: #b5bd68;">"0.6.1"</span>
+<span class="linenr">14: </span>lazy val CirceVersion = "0.6.1"
 <span class="linenr">15: </span>
-<span class="linenr">16: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">ScalazVersion</span> <span style="color: #b294bb;">=</span> <span style="color: #b5bd68;">"7.2.8"</span>
+<span class="linenr">16: </span>lazy val ScalazVersion = "7.2.8"
 <span class="linenr">17: </span>
-<span class="linenr">18: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">compileCopyTask</span> <span style="color: #b294bb;">=</span> taskKey<span style="color: #b294bb;">[</span><span style="color: #de935f;">Unit</span><span style="color: #b294bb;">](</span><span style="color: #b5bd68;">"compile and copy"</span><span style="color: #b294bb;">)</span>
+<span class="linenr">18: </span>lazy val compileCopyTask = taskKey[Unit]("compile and copy")
 <span class="linenr">19: </span>
 <span class="linenr">20: </span>
-<span class="linenr">21: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">root</span> <span style="color: #b294bb;">=</span> <span style="color: #b294bb;">(</span>project in file<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"."</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>.
-<span class="linenr">22: </span>  settings<span style="color: #b294bb;">(</span>commonSettings<span style="color: #b294bb;">:</span> <span style="color: #b294bb;">_</span>*<span style="color: #b294bb;">)</span>.
-<span class="linenr">23: </span>  aggregate<span style="color: #b294bb;">(</span>server, js<span style="color: #b294bb;">)</span>
+<span class="linenr">21: </span>lazy val root = (project in file(".")).
+<span class="linenr">22: </span>  settings(commonSettings: _*).
+<span class="linenr">23: </span>  aggregate(server, js)
 <span class="linenr">24: </span>
-<span class="linenr">25: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">server</span> <span style="color: #b294bb;">=</span> <span style="color: #b294bb;">(</span>project in file<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"server"</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>.
-<span class="linenr">26: </span>  settings<span style="color: #b294bb;">(</span>commonSettings<span style="color: #b294bb;">:</span> <span style="color: #b294bb;">_</span>*<span style="color: #b294bb;">)</span>.
-<span class="linenr">27: </span>  settings<span style="color: #b294bb;">(</span>
-<span class="linenr">28: </span>    cancelable in <span style="color: #de935f;">Global</span> := <span style="color: #de935f;">true</span>,
-<span class="linenr">29: </span>    fork in run := <span style="color: #de935f;">true</span>,
-<span class="linenr">30: </span>    libraryDependencies ++= <span style="color: #de935f;">Seq</span><span style="color: #81a2be;">(</span>
-<span class="linenr">31: </span>      <span style="color: #b5bd68;">"com.typesafe.akka"</span> %% <span style="color: #b5bd68;">"akka-actor"</span> % <span style="color: #de935f;">AkkaVersion</span>,
-<span class="linenr">32: </span>      <span style="color: #b5bd68;">"com.typesafe.akka"</span> %% <span style="color: #b5bd68;">"akka-stream"</span> % <span style="color: #de935f;">AkkaVersion</span>,
-<span class="linenr">33: </span>      <span style="color: #b5bd68;">"com.typesafe.akka"</span> %% <span style="color: #b5bd68;">"akka-http"</span> % <span style="color: #de935f;">AkkaHttpVersion</span>,
-<span class="linenr">34: </span>      <span style="color: #b5bd68;">"ch.qos.logback"</span> %  <span style="color: #b5bd68;">"logback-classic"</span> % <span style="color: #b5bd68;">"1.1.7"</span>,
-<span class="linenr">35: </span>      <span style="color: #b5bd68;">"com.typesafe.scala-logging"</span> %% <span style="color: #b5bd68;">"scala-logging"</span> % <span style="color: #b5bd68;">"3.5.0"</span>
-<span class="linenr">36: </span>    <span style="color: #81a2be;">)</span>
-<span class="linenr">37: </span>  <span style="color: #b294bb;">)</span>.
-<span class="linenr">38: </span>  settings<span style="color: #b294bb;">(</span>
-<span class="linenr">39: </span>    compileCopyTask := <span style="color: #81a2be;">{</span>
-<span class="linenr">40: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">mainVersion</span> <span style="color: #b294bb;">=</span> scalaVersion.value.split<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"""\."""</span><span style="color: #de935f;">)</span>.take<span style="color: #de935f;">(</span><span style="color: #de935f; font-weight: bold;">2</span><span style="color: #de935f;">)</span>.mkString<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"."</span><span style="color: #de935f;">)</span>
-<span class="linenr">41: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">to</span> <span style="color: #b294bb;">=</span> target.value / <span style="color: #de935f;">(</span><span style="color: #b5bd68;">"scala-"</span> + mainVersion<span style="color: #de935f;">)</span> / <span style="color: #b5bd68;">"classes"</span> / <span style="color: #b5bd68;">"static"</span> / <span style="color: #b5bd68;">"js"</span>
-<span class="linenr">42: </span>      to.mkdirs<span style="color: #de935f;">()</span>
-<span class="linenr">43: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">fastJs</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">(</span>fastOptJS in <span style="color: #de935f;">Compile</span> in js<span style="color: #de935f;">)</span>.value.data
-<span class="linenr">44: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">fastJsSourceMap</span> <span style="color: #b294bb;">=</span> fastJs.getParentFile / <span style="color: #de935f;">(</span>fastJs.getName + <span style="color: #b5bd68;">".map"</span><span style="color: #de935f;">)</span>
-<span class="linenr">45: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">fastJsLauncher</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">(</span>packageScalaJSLauncher in <span style="color: #de935f;">Compile</span> in js<span style="color: #de935f;">)</span>.value.data
-<span class="linenr">46: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">fastJsDeps</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">(</span>packageJSDependencies in <span style="color: #de935f;">Compile</span> in js<span style="color: #de935f;">)</span>.value
-<span class="linenr">47: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">fullJs</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">(</span>fullOptJS in <span style="color: #de935f;">Compile</span> in js<span style="color: #de935f;">)</span>.value.data
-<span class="linenr">48: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">fullJsSourceMap</span> <span style="color: #b294bb;">=</span> fullJs.getParentFile / <span style="color: #de935f;">(</span>fullJs.getName + <span style="color: #b5bd68;">".map"</span><span style="color: #de935f;">)</span>
-<span class="linenr">49: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">fullJsDeps</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">(</span>packageMinifiedJSDependencies in <span style="color: #de935f;">Compile</span> in js<span style="color: #de935f;">)</span>.value
+<span class="linenr">25: </span>lazy val server = (project in file("server")).
+<span class="linenr">26: </span>  settings(commonSettings: _*).
+<span class="linenr">27: </span>  settings(
+<span class="linenr">28: </span>    cancelable in Global := true,
+<span class="linenr">29: </span>    fork in run := true,
+<span class="linenr">30: </span>    libraryDependencies ++= Seq(
+<span class="linenr">31: </span>      "com.typesafe.akka" %% "akka-actor" % AkkaVersion,
+<span class="linenr">32: </span>      "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
+<span class="linenr">33: </span>      "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
+<span class="linenr">34: </span>      "ch.qos.logback" %  "logback-classic" % "1.1.7",
+<span class="linenr">35: </span>      "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0"
+<span class="linenr">36: </span>    )
+<span class="linenr">37: </span>  ).
+<span class="linenr">38: </span>  settings(
+<span class="linenr">39: </span>    compileCopyTask := {
+<span class="linenr">40: </span>      val mainVersion = scalaVersion.value.split("""\.""").take(2).mkString(".")
+<span class="linenr">41: </span>      val to = target.value / ("scala-" + mainVersion) / "classes" / "static" / "js"
+<span class="linenr">42: </span>      to.mkdirs()
+<span class="linenr">43: </span>      val fastJs = (fastOptJS in Compile in js).value.data
+<span class="linenr">44: </span>      val fastJsSourceMap = fastJs.getParentFile / (fastJs.getName + ".map")
+<span class="linenr">45: </span>      val fastJsLauncher = (packageScalaJSLauncher in Compile in js).value.data
+<span class="linenr">46: </span>      val fastJsDeps = (packageJSDependencies in Compile in js).value
+<span class="linenr">47: </span>      val fullJs = (fullOptJS in Compile in js).value.data
+<span class="linenr">48: </span>      val fullJsSourceMap = fullJs.getParentFile / (fullJs.getName + ".map")
+<span class="linenr">49: </span>      val fullJsDeps = (packageMinifiedJSDependencies in Compile in js).value
 <span class="linenr">50: </span>
-<span class="linenr">51: </span>      <span style="color: #b294bb;">for</span><span style="color: #de935f;">(</span>f <span style="color: #b294bb;">&lt;-</span> <span style="color: #de935f;">Seq</span><span style="color: #b5bd68;">(</span>fastJs, fastJsSourceMap, fastJsLauncher, fastJsDeps, fullJs, fullJsSourceMap, fullJsDeps<span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span> <span style="color: #de935f;">{</span>
-<span class="linenr">52: </span>        <span style="color: #de935f;">IO</span>.copyFile<span style="color: #b5bd68;">(</span>f, to / f.getName<span style="color: #b5bd68;">)</span>
-<span class="linenr">53: </span>      <span style="color: #de935f;">}</span>
-<span class="linenr">54: </span>    <span style="color: #81a2be;">}</span>
-<span class="linenr">55: </span>  <span style="color: #b294bb;">)</span>.
-<span class="linenr">56: </span>  settings<span style="color: #b294bb;">(</span>
-<span class="linenr">57: </span>    compile in <span style="color: #de935f;">Compile</span> := <span style="color: #81a2be;">{</span>
+<span class="linenr">51: </span>      for(f &lt;- Seq(fastJs, fastJsSourceMap, fastJsLauncher, fastJsDeps, fullJs, fullJsSourceMap, fullJsDeps)) {
+<span class="linenr">52: </span>        IO.copyFile(f, to / f.getName)
+<span class="linenr">53: </span>      }
+<span class="linenr">54: </span>    }
+<span class="linenr">55: </span>  ).
+<span class="linenr">56: </span>  settings(
+<span class="linenr">57: </span>    compile in Compile := {
 <span class="linenr">58: </span>      compileCopyTask.value
-<span class="linenr">59: </span>      <span style="color: #de935f;">(</span>compile in <span style="color: #de935f;">Compile</span><span style="color: #de935f;">)</span>.value
-<span class="linenr">60: </span>    <span style="color: #81a2be;">}</span>
-<span class="linenr">61: </span>  <span style="color: #b294bb;">)</span>.
-<span class="linenr">62: </span>  settings<span style="color: #b294bb;">(</span>
-<span class="linenr">63: </span>    mainClass in assembly := <span style="color: #de935f;">Some</span><span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"Server"</span><span style="color: #81a2be;">)</span>,
-<span class="linenr">64: </span>    assemblyJarName in assembly := <span style="color: #b5bd68;">"server.jar"</span>
-<span class="linenr">65: </span>  <span style="color: #b294bb;">)</span>
+<span class="linenr">59: </span>      (compile in Compile).value
+<span class="linenr">60: </span>    }
+<span class="linenr">61: </span>  ).
+<span class="linenr">62: </span>  settings(
+<span class="linenr">63: </span>    mainClass in assembly := Some("Server"),
+<span class="linenr">64: </span>    assemblyJarName in assembly := "server.jar"
+<span class="linenr">65: </span>  )
 <span class="linenr">66: </span>
-<span class="linenr">67: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">js</span> <span style="color: #b294bb;">=</span> <span style="color: #b294bb;">(</span>project in file<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"js"</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>.
-<span class="linenr">68: </span>  settings<span style="color: #b294bb;">(</span>commonSettings<span style="color: #b294bb;">:</span> <span style="color: #b294bb;">_</span>*<span style="color: #b294bb;">)</span>.
-<span class="linenr">69: </span>  settings<span style="color: #b294bb;">(</span>
-<span class="linenr">70: </span>    mainClass in <span style="color: #81a2be;">(</span><span style="color: #de935f;">Compile</span><span style="color: #81a2be;">)</span> := <span style="color: #de935f;">Some</span><span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"Application"</span><span style="color: #81a2be;">)</span>,
-<span class="linenr">71: </span>    persistLauncher := <span style="color: #de935f;">true</span>,
-<span class="linenr">72: </span>    libraryDependencies ++= <span style="color: #de935f;">Seq</span><span style="color: #81a2be;">(</span>
-<span class="linenr">73: </span>      <span style="color: #b5bd68;">"org.scala-js"</span> %%% <span style="color: #b5bd68;">"scalajs-dom"</span> % <span style="color: #b5bd68;">"0.9.1"</span>,
-<span class="linenr">74: </span>      <span style="color: #b5bd68;">"com.thoughtworks.binding"</span> %%% <span style="color: #b5bd68;">"dom"</span> % <span style="color: #de935f;">BindingScalaVersion</span>,
-<span class="linenr">75: </span>      <span style="color: #b5bd68;">"com.thoughtworks.binding"</span> %%% <span style="color: #b5bd68;">"route"</span> % <span style="color: #de935f;">BindingScalaVersion</span>,
-<span class="linenr">76: </span>      <span style="color: #b5bd68;">"io.circe"</span> %%% <span style="color: #b5bd68;">"circe-core"</span> % <span style="color: #de935f;">CirceVersion</span>,
-<span class="linenr">77: </span>      <span style="color: #b5bd68;">"io.circe"</span> %%% <span style="color: #b5bd68;">"circe-parser"</span> % <span style="color: #de935f;">CirceVersion</span>,
-<span class="linenr">78: </span>      <span style="color: #b5bd68;">"io.circe"</span> %%% <span style="color: #b5bd68;">"circe-generic"</span> % <span style="color: #de935f;">CirceVersion</span>,
-<span class="linenr">79: </span>      <span style="color: #b5bd68;">"org.scalaz"</span> %%% <span style="color: #b5bd68;">"scalaz-core"</span> % <span style="color: #de935f;">ScalazVersion</span>
-<span class="linenr">80: </span>    <span style="color: #81a2be;">)</span>
-<span class="linenr">81: </span>  <span style="color: #b294bb;">)</span>.
-<span class="linenr">82: </span>  enablePlugins<span style="color: #b294bb;">(</span><span style="color: #de935f;">ScalaJSPlugin</span><span style="color: #b294bb;">)</span>
+<span class="linenr">67: </span>lazy val js = (project in file("js")).
+<span class="linenr">68: </span>  settings(commonSettings: _*).
+<span class="linenr">69: </span>  settings(
+<span class="linenr">70: </span>    mainClass in (Compile) := Some("Application"),
+<span class="linenr">71: </span>    persistLauncher := true,
+<span class="linenr">72: </span>    libraryDependencies ++= Seq(
+<span class="linenr">73: </span>      "org.scala-js" %%% "scalajs-dom" % "0.9.1",
+<span class="linenr">74: </span>      "com.thoughtworks.binding" %%% "dom" % BindingScalaVersion,
+<span class="linenr">75: </span>      "com.thoughtworks.binding" %%% "route" % BindingScalaVersion,
+<span class="linenr">76: </span>      "io.circe" %%% "circe-core" % CirceVersion,
+<span class="linenr">77: </span>      "io.circe" %%% "circe-parser" % CirceVersion,
+<span class="linenr">78: </span>      "io.circe" %%% "circe-generic" % CirceVersion,
+<span class="linenr">79: </span>      "org.scalaz" %%% "scalaz-core" % ScalazVersion
+<span class="linenr">80: </span>    )
+<span class="linenr">81: </span>  ).
+<span class="linenr">82: </span>  enablePlugins(ScalaJSPlugin)
 <span class="linenr">83: </span>
 </pre>
 </div>
@@ -256,67 +256,67 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #b294bb;">import</span> java.util.concurrent.<span style="color: #de935f;">CountDownLatch</span>
-<span class="linenr"> 2: </span><span style="color: #b294bb;">import</span> akka.actor.<span style="color: #de935f;">ActorSystem</span>
-<span class="linenr"> 3: </span><span style="color: #b294bb;">import</span> akka.stream.<span style="color: #de935f;">ActorMaterializer</span>
-<span class="linenr"> 4: </span><span style="color: #b294bb;">import</span> akka.http.scaladsl.<span style="color: #de935f;">Http</span>
-<span class="linenr"> 5: </span><span style="color: #b294bb;">import</span> akka.http.scaladsl.server.<span style="color: #de935f;">Directives</span>.<span style="color: #b294bb;">_</span>
-<span class="linenr"> 6: </span><span style="color: #b294bb;">import</span> com.typesafe.config.<span style="color: #de935f;">ConfigFactory</span>
-<span class="linenr"> 7: </span><span style="color: #b294bb;">import</span> com.typesafe.scalalogging.<span style="color: #de935f;">Logger</span>
-<span class="linenr"> 8: </span><span style="color: #b294bb;">import</span> scala.concurrent.<span style="color: #de935f;">Await</span>
-<span class="linenr"> 9: </span><span style="color: #b294bb;">import</span> scala.concurrent.duration.<span style="color: #b294bb;">_</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span>import java.util.concurrent.CountDownLatch
+<span class="linenr"> 2: </span>import akka.actor.ActorSystem
+<span class="linenr"> 3: </span>import akka.stream.ActorMaterializer
+<span class="linenr"> 4: </span>import akka.http.scaladsl.Http
+<span class="linenr"> 5: </span>import akka.http.scaladsl.server.Directives._
+<span class="linenr"> 6: </span>import com.typesafe.config.ConfigFactory
+<span class="linenr"> 7: </span>import com.typesafe.scalalogging.Logger
+<span class="linenr"> 8: </span>import scala.concurrent.Await
+<span class="linenr"> 9: </span>import scala.concurrent.duration._
 <span class="linenr">10: </span>
-<span class="linenr">11: </span><span style="color: #b294bb;">object</span> <span style="color: #de935f;">Server</span> <span style="color: #b294bb;">extends</span> <span style="color: #f0c674;">App</span> <span style="color: #b294bb;">{</span>
-<span class="linenr">12: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">logger</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">Logger</span><span style="color: #81a2be;">(</span><span style="color: #de935f;">Server</span>.getClass<span style="color: #81a2be;">)</span>
-<span class="linenr">13: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">conf</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">ConfigFactory</span>.load<span style="color: #81a2be;">()</span>.withFallback<span style="color: #81a2be;">(</span><span style="color: #de935f;">ConfigFactory</span>.load<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"default.conf"</span><span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span>
+<span class="linenr">11: </span>object Server extends App {
+<span class="linenr">12: </span>  val logger = Logger(Server.getClass)
+<span class="linenr">13: </span>  val conf = ConfigFactory.load().withFallback(ConfigFactory.load("default.conf"))
 <span class="linenr">14: </span>
-<span class="linenr">15: </span>  <span style="color: #81a2be;">implicit</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">actorSystem</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">ActorSystem</span><span style="color: #81a2be;">()</span>
-<span class="linenr">16: </span>  <span style="color: #81a2be;">implicit</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">materializer</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">ActorMaterializer</span><span style="color: #81a2be;">()</span>
-<span class="linenr">17: </span>  <span style="color: #81a2be;">implicit</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">executionContext</span> <span style="color: #b294bb;">=</span> actorSystem.dispatcher
+<span class="linenr">15: </span>  implicit val actorSystem = ActorSystem()
+<span class="linenr">16: </span>  implicit val materializer = ActorMaterializer()
+<span class="linenr">17: </span>  implicit val executionContext = actorSystem.dispatcher
 <span class="linenr">18: </span>
-<span class="linenr">19: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">shutdownLatch</span> <span style="color: #b294bb;">=</span> <span style="color: #b294bb;">new</span> <span style="color: #f0c674;">CountDownLatch</span><span style="color: #81a2be;">(</span><span style="color: #de935f; font-weight: bold;">1</span><span style="color: #81a2be;">)</span>
+<span class="linenr">19: </span>  val shutdownLatch = new CountDownLatch(1)
 <span class="linenr">20: </span>
-<span class="linenr">21: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">devRoute</span> <span style="color: #b294bb;">=</span> pathSingleSlash <span style="color: #81a2be;">{</span>
-<span class="linenr">22: </span>    parameter<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"fast"</span><span style="color: #de935f;">)</span> <span style="color: #de935f;">{</span> <span style="color: #b294bb;">_</span> <span style="color: #b294bb;">=&gt;</span>
-<span class="linenr">23: </span>      getFromFile<span style="color: #b5bd68;">(</span><span style="color: #b5bd68;">"./src/main/resources/static/index-fastopt.html"</span><span style="color: #b5bd68;">)</span>
-<span class="linenr">24: </span>    <span style="color: #de935f;">}</span> ~
-<span class="linenr">25: </span>      getFromFile<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"./src/main/resources/static/index-fullopt.html"</span><span style="color: #de935f;">)</span>
-<span class="linenr">26: </span>  <span style="color: #81a2be;">}</span> ~
-<span class="linenr">27: </span>    encodeResponse <span style="color: #81a2be;">{</span>
-<span class="linenr">28: </span>      getFromDirectory<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"./src/main/resources/static"</span><span style="color: #de935f;">)</span> ~
-<span class="linenr">29: </span>        pathPrefix<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"js"</span><span style="color: #de935f;">)</span> <span style="color: #de935f;">{</span>
-<span class="linenr">30: </span>          getFromDirectory<span style="color: #b5bd68;">(</span><span style="color: #b5bd68;">"../js/target/scala-2.11"</span><span style="color: #b5bd68;">)</span>
-<span class="linenr">31: </span>        <span style="color: #de935f;">}</span>
-<span class="linenr">32: </span>    <span style="color: #81a2be;">}</span>
+<span class="linenr">21: </span>  val devRoute = pathSingleSlash {
+<span class="linenr">22: </span>    parameter("fast") { _ =&gt;
+<span class="linenr">23: </span>      getFromFile("./src/main/resources/static/index-fastopt.html")
+<span class="linenr">24: </span>    } ~
+<span class="linenr">25: </span>      getFromFile("./src/main/resources/static/index-fullopt.html")
+<span class="linenr">26: </span>  } ~
+<span class="linenr">27: </span>    encodeResponse {
+<span class="linenr">28: </span>      getFromDirectory("./src/main/resources/static") ~
+<span class="linenr">29: </span>        pathPrefix("js") {
+<span class="linenr">30: </span>          getFromDirectory("../js/target/scala-2.11")
+<span class="linenr">31: </span>        }
+<span class="linenr">32: </span>    }
 <span class="linenr">33: </span>
-<span class="linenr">34: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">productionRoute</span> <span style="color: #b294bb;">=</span> pathSingleSlash <span style="color: #81a2be;">{</span>
-<span class="linenr">35: </span>    parameter<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"fast"</span><span style="color: #de935f;">)</span> <span style="color: #de935f;">{</span> <span style="color: #b294bb;">_</span> <span style="color: #b294bb;">=&gt;</span>
-<span class="linenr">36: </span>      getFromResource<span style="color: #b5bd68;">(</span><span style="color: #b5bd68;">"static/index-fastopt.html"</span><span style="color: #b5bd68;">)</span>
-<span class="linenr">37: </span>    <span style="color: #de935f;">}</span> ~
-<span class="linenr">38: </span>      getFromResource<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"static/index-fullopt.html"</span><span style="color: #de935f;">)</span>
-<span class="linenr">39: </span>  <span style="color: #81a2be;">}</span> ~
-<span class="linenr">40: </span>    encodeResponse <span style="color: #81a2be;">{</span>
-<span class="linenr">41: </span>      getFromResourceDirectory<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"static"</span><span style="color: #de935f;">)</span>
-<span class="linenr">42: </span>    <span style="color: #81a2be;">}</span>
+<span class="linenr">34: </span>  val productionRoute = pathSingleSlash {
+<span class="linenr">35: </span>    parameter("fast") { _ =&gt;
+<span class="linenr">36: </span>      getFromResource("static/index-fastopt.html")
+<span class="linenr">37: </span>    } ~
+<span class="linenr">38: </span>      getFromResource("static/index-fullopt.html")
+<span class="linenr">39: </span>  } ~
+<span class="linenr">40: </span>    encodeResponse {
+<span class="linenr">41: </span>      getFromResourceDirectory("static")
+<span class="linenr">42: </span>    }
 <span class="linenr">43: </span>
-<span class="linenr">44: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">host</span> <span style="color: #b294bb;">=</span> conf.getString<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"server.host"</span><span style="color: #81a2be;">)</span>
-<span class="linenr">45: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">port</span> <span style="color: #b294bb;">=</span> conf.getInt<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"server.port"</span><span style="color: #81a2be;">)</span>
-<span class="linenr">46: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">bindingFuture</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">Http</span><span style="color: #81a2be;">()</span>.bindAndHandle<span style="color: #81a2be;">(</span>devRoute ~ productionRoute, host, port<span style="color: #81a2be;">)</span>
-<span class="linenr">47: </span>  logger.info<span style="color: #81a2be;">(</span>s<span style="color: #b5bd68;">"Server online as http://</span><span style="color: #cc6666;">${host}</span><span style="color: #b5bd68;">:</span><span style="color: #cc6666;">${port}</span><span style="color: #b5bd68;">"</span><span style="color: #81a2be;">)</span>
+<span class="linenr">44: </span>  val host = conf.getString("server.host")
+<span class="linenr">45: </span>  val port = conf.getInt("server.port")
+<span class="linenr">46: </span>  val bindingFuture = Http().bindAndHandle(devRoute ~ productionRoute, host, port)
+<span class="linenr">47: </span>  logger.info(s"Server online as http://${host}:${port}")
 <span class="linenr">48: </span>
-<span class="linenr">49: </span>  <span style="color: #de935f;">Runtime</span>.getRuntime<span style="color: #81a2be;">()</span>.addShutdownHook<span style="color: #81a2be;">(</span><span style="color: #b294bb;">new</span> <span style="color: #f0c674;">Thread</span><span style="color: #de935f;">()</span> <span style="color: #de935f;">{</span>
-<span class="linenr">50: </span>    <span style="color: #81a2be;">override</span> <span style="color: #b294bb;">def</span> <span style="color: #81a2be;">run</span><span style="color: #b5bd68;">()</span> <span style="color: #b294bb;">=</span> <span style="color: #b5bd68;">{</span>
-<span class="linenr">51: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">f</span> <span style="color: #b294bb;">=</span> bindingFuture.flatMap<span style="color: #c9b4cf;">(</span><span style="color: #b294bb;">_</span>.unbind<span style="color: #f0c674;">()</span><span style="color: #c9b4cf;">)</span> andThen <span style="color: #c9b4cf;">{</span>
-<span class="linenr">52: </span>        <span style="color: #b294bb;">case</span> <span style="color: #b294bb;">_</span> <span style="color: #b294bb;">=&gt;</span> actorSystem.terminate<span style="color: #f0c674;">()</span>
-<span class="linenr">53: </span>      <span style="color: #c9b4cf;">}</span>
-<span class="linenr">54: </span>      <span style="color: #de935f;">Await</span>.ready<span style="color: #c9b4cf;">(</span>f, <span style="color: #de935f; font-weight: bold;">1</span> minute<span style="color: #c9b4cf;">)</span>
-<span class="linenr">55: </span>      logger.info<span style="color: #c9b4cf;">(</span><span style="color: #b5bd68;">"Goodbye!"</span><span style="color: #c9b4cf;">)</span>
-<span class="linenr">56: </span>      shutdownLatch.countDown<span style="color: #c9b4cf;">()</span>
-<span class="linenr">57: </span>    <span style="color: #b5bd68;">}</span>
-<span class="linenr">58: </span>  <span style="color: #de935f;">}</span><span style="color: #81a2be;">)</span>
+<span class="linenr">49: </span>  Runtime.getRuntime().addShutdownHook(new Thread() {
+<span class="linenr">50: </span>    override def run() = {
+<span class="linenr">51: </span>      val f = bindingFuture.flatMap(_.unbind()) andThen {
+<span class="linenr">52: </span>        case _ =&gt; actorSystem.terminate()
+<span class="linenr">53: </span>      }
+<span class="linenr">54: </span>      Await.ready(f, 1 minute)
+<span class="linenr">55: </span>      logger.info("Goodbye!")
+<span class="linenr">56: </span>      shutdownLatch.countDown()
+<span class="linenr">57: </span>    }
+<span class="linenr">58: </span>  })
 <span class="linenr">59: </span>
-<span class="linenr">60: </span>  shutdownLatch.await<span style="color: #81a2be;">()</span>
-<span class="linenr">61: </span><span style="color: #b294bb;">}</span>
+<span class="linenr">60: </span>  shutdownLatch.await()
+<span class="linenr">61: </span>}
 </pre>
 </div>
 
@@ -361,12 +361,12 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr">1: </span><span style="color: #b294bb;">val</span> <span style="color: #cc6666;">firstName</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">Var</span><span style="color: #b294bb;">(</span><span style="color: #b5bd68;">"Shane"</span><span style="color: #b294bb;">)</span>
-<span class="linenr">2: </span><span style="color: #b294bb;">val</span> <span style="color: #cc6666;">lastName</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">Var</span><span style="color: #b294bb;">(</span><span style="color: #b5bd68;">"Xu"</span><span style="color: #b294bb;">)</span>
+<pre class="src src-scala"><span class="linenr">1: </span>val firstName = Var("Shane")
+<span class="linenr">2: </span>val lastName = Var("Xu")
 <span class="linenr">3: </span>
-<span class="linenr">4: </span><span style="color: #b294bb;">val</span> <span style="color: #cc6666;">fullName</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">Binding</span> <span style="color: #b294bb;">{</span>
-<span class="linenr">5: </span>  s<span style="color: #b5bd68;">"</span><span style="color: #cc6666;">${firstName.bind}</span><span style="color: #b5bd68;"> </span><span style="color: #cc6666;">${lastName.bind}</span><span style="color: #b5bd68;">"</span>
-<span class="linenr">6: </span><span style="color: #b294bb;">}</span>
+<span class="linenr">4: </span>val fullName = Binding {
+<span class="linenr">5: </span>  s"${firstName.bind} ${lastName.bind}"
+<span class="linenr">6: </span>}
 </pre>
 </div>
 
@@ -396,24 +396,24 @@ Binding.scala 不发明“组件”之类的噱头，而以更轻巧的“方法
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #c5c8c6; font-weight: bold;">@dom</span> <span style="color: #b294bb;">def</span> <span style="color: #81a2be;">tagPicker</span><span style="color: #b294bb;">(</span>tags<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Vars</span><span style="color: #81a2be;">[</span><span style="color: #de935f;">String</span><span style="color: #81a2be;">]</span><span style="color: #b294bb;">)</span> <span style="color: #b294bb;">=</span> <span style="color: #b294bb;">{</span>
-<span class="linenr"> 2: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">input</span><span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Input</span> <span style="color: #b294bb;">=</span> &lt;input <span style="color: #b294bb;">type=</span><span style="color: #b5bd68;">"text"</span>/&gt;
-<span class="linenr"> 3: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">addHandler</span> <span style="color: #b294bb;">=</span> <span style="color: #81a2be;">{</span> event<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Event</span> <span style="color: #b294bb;">=&gt;</span>
-<span class="linenr"> 4: </span>    <span style="color: #b294bb;">if</span> <span style="color: #de935f;">(</span>input.value != <span style="color: #b5bd68;">""</span> &amp;&amp; !tags.get.contains<span style="color: #b5bd68;">(</span>input.value<span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span> <span style="color: #de935f;">{</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span>@dom def tagPicker(tags: Vars[String]) = {
+<span class="linenr"> 2: </span>  val input: Input = &lt;input type="text"/&gt;
+<span class="linenr"> 3: </span>  val addHandler = { event: Event =&gt;
+<span class="linenr"> 4: </span>    if (input.value != "" &amp;&amp; !tags.get.contains(input.value)) {
 <span class="linenr"> 5: </span>      tags.get += input.value
-<span class="linenr"> 6: </span>      input.value <span style="color: #b294bb;">=</span> <span style="color: #b5bd68;">""</span>
-<span class="linenr"> 7: </span>    <span style="color: #de935f;">}</span>
-<span class="linenr"> 8: </span>  <span style="color: #81a2be;">}</span>
+<span class="linenr"> 6: </span>      input.value = ""
+<span class="linenr"> 7: </span>    }
+<span class="linenr"> 8: </span>  }
 <span class="linenr"> 9: </span>  &lt;section&gt;
-<span class="linenr">10: </span>    &lt;div&gt;<span style="color: #81a2be;">{</span>
-<span class="linenr">11: </span>      <span style="color: #b294bb;">for</span> <span style="color: #de935f;">(</span>tag <span style="color: #b294bb;">&lt;-</span> tags<span style="color: #de935f;">)</span> <span style="color: #b294bb;">yield</span> &lt;q&gt;
-<span class="linenr">12: </span>        <span style="color: #de935f;">{</span> tag <span style="color: #de935f;">}</span>
-<span class="linenr">13: </span>        &lt;button onclick<span style="color: #b294bb;">=</span><span style="color: #de935f;">{</span> event<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Event</span> <span style="color: #b294bb;">=&gt;</span> tags.get -= tag <span style="color: #de935f;">}</span>&gt;x&lt;/button&gt;
+<span class="linenr">10: </span>    &lt;div&gt;{
+<span class="linenr">11: </span>      for (tag &lt;- tags) yield &lt;q&gt;
+<span class="linenr">12: </span>        { tag }
+<span class="linenr">13: </span>        &lt;button onclick={ event: Event =&gt; tags.get -= tag }&gt;x&lt;/button&gt;
 <span class="linenr">14: </span>      &lt;/q&gt;
-<span class="linenr">15: </span>    <span style="color: #81a2be;">}</span>&lt;/div&gt;
-<span class="linenr">16: </span>    &lt;div&gt;<span style="color: #81a2be;">{</span> input <span style="color: #81a2be;">}</span> &lt;button onclick<span style="color: #b294bb;">=</span><span style="color: #81a2be;">{</span> addHandler <span style="color: #81a2be;">}</span>&gt;<span style="color: #de935f;">Add</span>&lt;/button&gt;&lt;/div&gt;
+<span class="linenr">15: </span>    }&lt;/div&gt;
+<span class="linenr">16: </span>    &lt;div&gt;{ input } &lt;button onclick={ addHandler }&gt;Add&lt;/button&gt;&lt;/div&gt;
 <span class="linenr">17: </span>  &lt;/section&gt;
-<span class="linenr">18: </span><span style="color: #b294bb;">}</span>
+<span class="linenr">18: </span>}
 </pre>
 </div>
 
@@ -576,12 +576,12 @@ Window.Resources标签中，定义了一个适用于Button的ControlTemplate，�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr">1: </span><span style="color: #b294bb;">trait</span> <span style="color: #f0c674;">Component</span><span style="color: #b294bb;">[</span><span style="color: #de935f;">T</span><span style="color: #b294bb;">]</span> <span style="color: #b294bb;">{</span> self<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">T</span> <span style="color: #b294bb;">=&gt;</span>
-<span class="linenr">2: </span>  <span style="color: #c5c8c6; font-weight: bold;">@dom</span>
-<span class="linenr">3: </span>  <span style="color: #b294bb;">def</span> <span style="color: #81a2be;">render</span><span style="color: #81a2be;">(</span><span style="color: #81a2be;">implicit</span> template<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">T</span> <span style="color: #b294bb;">=&gt;</span> <span style="color: #de935f;">Binding</span><span style="color: #de935f;">[</span><span style="color: #de935f;">Node</span><span style="color: #de935f;">]</span><span style="color: #81a2be;">)</span> <span style="color: #b294bb;">=</span> <span style="color: #81a2be;">{</span>
-<span class="linenr">4: </span>    template<span style="color: #de935f;">(</span>self<span style="color: #de935f;">)</span>.bind
-<span class="linenr">5: </span>  <span style="color: #81a2be;">}</span>
-<span class="linenr">6: </span><span style="color: #b294bb;">}</span>
+<pre class="src src-scala"><span class="linenr">1: </span>trait Component[T] { self: T =&gt;
+<span class="linenr">2: </span>  @dom
+<span class="linenr">3: </span>  def render(implicit template: T =&gt; Binding[Node]) = {
+<span class="linenr">4: </span>    template(self).bind
+<span class="linenr">5: </span>  }
+<span class="linenr">6: </span>}
 </pre>
 </div>
 
@@ -590,58 +590,58 @@ Window.Resources标签中，定义了一个适用于Button的ControlTemplate，�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #b294bb;">import</span> org.scalajs.dom.raw.<span style="color: #b294bb;">{</span> <span style="color: #de935f;">Node</span>, <span style="color: #de935f;">Event</span>, <span style="color: #de935f;">HTMLInputElement</span> <span style="color: #b294bb;">}</span>
-<span class="linenr"> 2: </span><span style="color: #b294bb;">import</span> com.thoughtworks.binding.dom
-<span class="linenr"> 3: </span><span style="color: #b294bb;">import</span> com.thoughtworks.binding.<span style="color: #de935f;">Binding</span>
-<span class="linenr"> 4: </span><span style="color: #b294bb;">import</span> com.thoughtworks.binding.<span style="color: #de935f;">Binding</span>.<span style="color: #b294bb;">{</span> <span style="color: #de935f;">Var</span>, <span style="color: #de935f;">Vars</span> <span style="color: #b294bb;">}</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span>import org.scalajs.dom.raw.{ Node, Event, HTMLInputElement }
+<span class="linenr"> 2: </span>import com.thoughtworks.binding.dom
+<span class="linenr"> 3: </span>import com.thoughtworks.binding.Binding
+<span class="linenr"> 4: </span>import com.thoughtworks.binding.Binding.{ Var, Vars }
 <span class="linenr"> 5: </span>
-<span class="linenr"> 6: </span><span style="color: #b294bb;">case</span> <span style="color: #b294bb;">class</span> <span style="color: #f0c674;">TagPicker</span><span style="color: #b294bb;">(</span>tags<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Vars</span><span style="color: #81a2be;">[</span><span style="color: #de935f;">String</span><span style="color: #81a2be;">]</span><span style="color: #b294bb;">)</span> <span style="color: #b294bb;">extends</span> <span style="color: #f0c674;">Component</span><span style="color: #b294bb;">[</span><span style="color: #de935f;">TagPicker</span><span style="color: #b294bb;">]</span> <span style="color: #b294bb;">{</span>
-<span class="linenr"> 7: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">text</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">Var</span><span style="color: #81a2be;">(</span><span style="color: #b5bd68;">""</span><span style="color: #81a2be;">)</span>
+<span class="linenr"> 6: </span>case class TagPicker(tags: Vars[String]) extends Component[TagPicker] {
+<span class="linenr"> 7: </span>  val text = Var("")
 <span class="linenr"> 8: </span>
-<span class="linenr"> 9: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">textChangeHandler</span> <span style="color: #b294bb;">=</span> <span style="color: #81a2be;">{</span> e<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Event</span> <span style="color: #b294bb;">=&gt;</span>
-<span class="linenr">10: </span>    e.target <span style="color: #b294bb;">match</span> <span style="color: #de935f;">{</span>
-<span class="linenr">11: </span>      <span style="color: #b294bb;">case</span> <span style="color: #cc6666;">i</span><span style="color: #b294bb;">:</span> <span style="color: #f0c674;">HTMLInputElement</span> <span style="color: #b294bb;">=&gt;</span>
+<span class="linenr"> 9: </span>  val textChangeHandler = { e: Event =&gt;
+<span class="linenr">10: </span>    e.target match {
+<span class="linenr">11: </span>      case i: HTMLInputElement =&gt;
 <span class="linenr">12: </span>        text := i.value
-<span class="linenr">13: </span>      <span style="color: #b294bb;">case</span> <span style="color: #b294bb;">_</span> <span style="color: #b294bb;">=&gt;</span>
-<span class="linenr">14: </span>    <span style="color: #de935f;">}</span>
-<span class="linenr">15: </span>  <span style="color: #81a2be;">}</span>
+<span class="linenr">13: </span>      case _ =&gt;
+<span class="linenr">14: </span>    }
+<span class="linenr">15: </span>  }
 <span class="linenr">16: </span>
-<span class="linenr">17: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">addHandler</span> <span style="color: #b294bb;">=</span> <span style="color: #81a2be;">{</span> e<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Event</span> <span style="color: #b294bb;">=&gt;</span>
-<span class="linenr">18: </span>    text.get <span style="color: #b294bb;">match</span> <span style="color: #de935f;">{</span>
-<span class="linenr">19: </span>      <span style="color: #b294bb;">case</span> <span style="color: #b5bd68;">""</span> | <span style="color: #de935f;">null</span> <span style="color: #b294bb;">=&gt;</span>
-<span class="linenr">20: </span>      <span style="color: #b294bb;">case</span> <span style="color: #cc6666;">value</span> <span style="color: #b294bb;">if</span> !tags.get.contains<span style="color: #b5bd68;">(</span>value<span style="color: #b5bd68;">)</span> <span style="color: #b294bb;">=&gt;</span>
+<span class="linenr">17: </span>  val addHandler = { e: Event =&gt;
+<span class="linenr">18: </span>    text.get match {
+<span class="linenr">19: </span>      case "" | null =&gt;
+<span class="linenr">20: </span>      case value if !tags.get.contains(value) =&gt;
 <span class="linenr">21: </span>        tags.get += value
-<span class="linenr">22: </span>        text := <span style="color: #b5bd68;">""</span>
-<span class="linenr">23: </span>    <span style="color: #de935f;">}</span>
-<span class="linenr">24: </span>  <span style="color: #81a2be;">}</span>
+<span class="linenr">22: </span>        text := ""
+<span class="linenr">23: </span>    }
+<span class="linenr">24: </span>  }
 <span class="linenr">25: </span>
-<span class="linenr">26: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">removeHandler</span> <span style="color: #b294bb;">=</span> <span style="color: #81a2be;">{</span> value<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">String</span> <span style="color: #b294bb;">=&gt;</span>
-<span class="linenr">27: </span>    <span style="color: #de935f;">{</span> e<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Event</span> <span style="color: #b294bb;">=&gt;</span>
+<span class="linenr">26: </span>  val removeHandler = { value: String =&gt;
+<span class="linenr">27: </span>    { e: Event =&gt;
 <span class="linenr">28: </span>      tags.get -= value
-<span class="linenr">29: </span>    <span style="color: #de935f;">}</span>
-<span class="linenr">30: </span>  <span style="color: #81a2be;">}</span>
-<span class="linenr">31: </span><span style="color: #b294bb;">}</span>
+<span class="linenr">29: </span>    }
+<span class="linenr">30: </span>  }
+<span class="linenr">31: </span>}
 <span class="linenr">32: </span>
-<span class="linenr">33: </span><span style="color: #b294bb;">object</span> <span style="color: #de935f;">TagPicker</span> <span style="color: #b294bb;">{</span>
+<span class="linenr">33: </span>object TagPicker {
 <span class="linenr">34: </span>
-<span class="linenr">35: </span>  <span style="color: #c5c8c6; font-weight: bold;">@dom</span>
-<span class="linenr">36: </span>  <span style="color: #81a2be;">implicit</span> <span style="color: #b294bb;">def</span> <span style="color: #81a2be;">defaultTemplate</span><span style="color: #81a2be;">(</span>self<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">TagPicker</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Binding</span><span style="color: #81a2be;">[</span><span style="color: #de935f;">Node</span><span style="color: #81a2be;">]</span> <span style="color: #b294bb;">=</span> <span style="color: #81a2be;">{</span>
+<span class="linenr">35: </span>  @dom
+<span class="linenr">36: </span>  implicit def defaultTemplate(self: TagPicker): Binding[Node] = {
 <span class="linenr">37: </span>    &lt;section&gt;
-<span class="linenr">38: </span>      &lt;div&gt;<span style="color: #de935f;">{</span>
-<span class="linenr">39: </span>        <span style="color: #b294bb;">for</span> <span style="color: #b5bd68;">(</span>tag <span style="color: #b294bb;">&lt;-</span> self.tags<span style="color: #b5bd68;">)</span> <span style="color: #b294bb;">yield</span> <span style="color: #b5bd68;">{</span>
+<span class="linenr">38: </span>      &lt;div&gt;{
+<span class="linenr">39: </span>        for (tag &lt;- self.tags) yield {
 <span class="linenr">40: </span>          &lt;span&gt;
-<span class="linenr">41: </span>            <span style="color: #c9b4cf;">{</span> tag <span style="color: #c9b4cf;">}</span>
-<span class="linenr">42: </span>            &lt;button onclick<span style="color: #b294bb;">=</span><span style="color: #c9b4cf;">{</span> self.removeHandler<span style="color: #f0c674;">(</span>tag<span style="color: #f0c674;">)</span> <span style="color: #c9b4cf;">}</span>&gt;x&lt;/button&gt;
+<span class="linenr">41: </span>            { tag }
+<span class="linenr">42: </span>            &lt;button onclick={ self.removeHandler(tag) }&gt;x&lt;/button&gt;
 <span class="linenr">43: </span>          &lt;/span&gt;
-<span class="linenr">44: </span>        <span style="color: #b5bd68;">}</span>
-<span class="linenr">45: </span>      <span style="color: #de935f;">}</span>&lt;/div&gt;
+<span class="linenr">44: </span>        }
+<span class="linenr">45: </span>      }&lt;/div&gt;
 <span class="linenr">46: </span>      &lt;div&gt;
-<span class="linenr">47: </span>        &lt;input value<span style="color: #b294bb;">=</span><span style="color: #de935f;">{</span> self.text.bind <span style="color: #de935f;">}</span> onchange<span style="color: #b294bb;">=</span><span style="color: #de935f;">{</span> self.textChangeHandler <span style="color: #de935f;">}</span>/&gt;
-<span class="linenr">48: </span>        &lt;button onclick<span style="color: #b294bb;">=</span><span style="color: #de935f;">{</span> self.addHandler <span style="color: #de935f;">}</span>&gt;<span style="color: #de935f;">Add</span>&lt;/button&gt;
+<span class="linenr">47: </span>        &lt;input value={ self.text.bind } onchange={ self.textChangeHandler }/&gt;
+<span class="linenr">48: </span>        &lt;button onclick={ self.addHandler }&gt;Add&lt;/button&gt;
 <span class="linenr">49: </span>      &lt;/div&gt;
 <span class="linenr">50: </span>    &lt;/section&gt;
-<span class="linenr">51: </span>  <span style="color: #81a2be;">}</span>
-<span class="linenr">52: </span><span style="color: #b294bb;">}</span>
+<span class="linenr">51: </span>  }
+<span class="linenr">52: </span>}
 </pre>
 </div>
 
