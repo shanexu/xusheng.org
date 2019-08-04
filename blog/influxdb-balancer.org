@@ -1,0 +1,14 @@
+#+TITLE:       influxdb-balancer(虚伪的influxdb高可用方案)
+#+AUTHOR:      shanexu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2019-06-10 Mon
+#+URI:         /blog/%y/%m/%d/influxdb-balancer
+#+KEYWORDS:    influxdb, tsdb
+#+TAGS:        golang, influxdb
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: <TODO: insert your description here>
+
+三年前我加入现在的公司后，在机缘巧合之下和influxdb结下了不解之缘。当时公司用的influxdb版本是0.10.2吧，它总是会在恰当的时间宕机。因为先前接手了一个golang项目的缘故，我就自告奋勇的接手了influxdb的整治工作。
+
+influxdb-balancer项目来源于 [[https://github.com/influxdata/influxdb-relay][influxdb-relay]] 。

@@ -9,9 +9,7 @@
     <link rel="stylesheet" href="/media/source-code-pro/source-code-pro.css" type="text/css">
     <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
     <link rel="stylesheet" href="/media/css/extra.css" type="text/css">
-    <!-- <link rel="stylesheet" href="/media/css/code-dark.css" type="text/css"> -->
-    <!-- <link rel="stylesheet" href="/media/css/code-light.css" type="text/css"> -->
-    <link rel="stylesheet" href="/media/css/code-tomorrow-night.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/code-dark.css" type="text/css">
   </head>
 
   <body>
@@ -66,12 +64,12 @@ Write the Code. Save the World.
 然而这几天，正好在测试同一个项目，用不同版本的语言编译的效果，结果在不同的环境切换下，竟然切晕了。虽然用 <b>tmux</b> 的分屏，多窗口等方法，勉强能凑活，但是还是偶尔几次忘记自己当前的环境。所以我想有没有能够，在不同目录下自动切换环境变量的工具。于是用google搜索 <b>directory environment</b> ，还真被我找到了。
 </p>
 
-<div id="outline-container-org5544a4f" class="outline-2">
-<h2 id="org5544a4f">安装</h2>
-<div class="outline-text-2" id="text-org5544a4f">
+<div id="outline-container-org4a7911d" class="outline-2">
+<h2 id="org4a7911d">安装</h2>
+<div class="outline-text-2" id="text-org4a7911d">
 <div class="org-src-container">
 <pre class="src src-bash">git clone https://github.com/direnv/direnv
-<span style="color: #81a2be;">cd</span> direnv
+<span style="color: #5EC4FF;">cd</span> direnv
 make install
 </pre>
 </div>
@@ -87,57 +85,57 @@ There's package definitions on Homebrew, Arch's AUR, Gentoo go-overlay overlay a
 </div>
 </div>
 
-<div id="outline-container-org59a17d2" class="outline-2">
-<h2 id="org59a17d2">设置</h2>
-<div class="outline-text-2" id="text-org59a17d2">
+<div id="outline-container-orgb03c44f" class="outline-2">
+<h2 id="orgb03c44f">设置</h2>
+<div class="outline-text-2" id="text-orgb03c44f">
 </div>
-<div id="outline-container-org28856a4" class="outline-3">
-<h3 id="org28856a4">ZSH</h3>
-<div class="outline-text-3" id="text-org28856a4">
+<div id="outline-container-org935b376" class="outline-3">
+<h3 id="org935b376">ZSH</h3>
+<div class="outline-text-3" id="text-org935b376">
 <p>
 在 <code>~/.zshrc</code> 中添加:
 </p>
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #81a2be;">eval</span> <span style="color: #b5bd68;">"$(direnv hook zsh)"</span>
+<pre class="src src-bash"><span style="color: #5EC4FF;">eval</span> <span style="color: #7FA0B7;">"$(direnv hook zsh)"</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org278290a" class="outline-3">
-<h3 id="org278290a">BASH</h3>
-<div class="outline-text-3" id="text-org278290a">
+<div id="outline-container-orge585321" class="outline-3">
+<h3 id="orge585321">BASH</h3>
+<div class="outline-text-3" id="text-orge585321">
 <p>
 在 <code>~/.bashrc</code> 中添加:
 </p>
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #81a2be;">eval</span> <span style="color: #b5bd68;">"$(direnv hook bash)"</span>
+<pre class="src src-bash"><span style="color: #5EC4FF;">eval</span> <span style="color: #7FA0B7;">"$(direnv hook bash)"</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org6c1e5a4" class="outline-3">
-<h3 id="org6c1e5a4">FISH</h3>
-<div class="outline-text-3" id="text-org6c1e5a4">
+<div id="outline-container-org962a7ff" class="outline-3">
+<h3 id="org962a7ff">FISH</h3>
+<div class="outline-text-3" id="text-org962a7ff">
 <p>
 在 <code>~/.config/fish/config.fish</code> 中添加:
 </p>
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #81a2be;">eval</span> <span style="color: #b294bb;">(</span>direnv hook fish<span style="color: #b294bb;">)</span>
+<pre class="src src-bash"><span style="color: #5EC4FF;">eval</span> <span style="color: #5EC4FF;">(</span>direnv hook fish<span style="color: #5EC4FF;">)</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org10c00a4" class="outline-3">
-<h3 id="org10c00a4">TCSH</h3>
-<div class="outline-text-3" id="text-org10c00a4">
+<div id="outline-container-org93835ca" class="outline-3">
+<h3 id="org93835ca">TCSH</h3>
+<div class="outline-text-3" id="text-org93835ca">
 <p>
 在 <code>~/.cshrc</code> 中添加:
 </p>
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #81a2be;">eval</span> <span style="color: #c5c8c6; font-weight: bold;">`direnv hook tcsh`</span>
+<pre class="src src-bash"><span style="color: #5EC4FF;">eval</span> <span style="color: #5EC4FF; font-weight: bold;">`direnv hook tcsh`</span>
 </pre>
 </div>
 </div>
@@ -145,28 +143,28 @@ There's package definitions on Homebrew, Arch's AUR, Gentoo go-overlay overlay a
 </div>
 
 
-<div id="outline-container-orgdb0c7e4" class="outline-2">
-<h2 id="orgdb0c7e4">使用</h2>
-<div class="outline-text-2" id="text-orgdb0c7e4">
+<div id="outline-container-orge084da7" class="outline-2">
+<h2 id="orge084da7">使用</h2>
+<div class="outline-text-2" id="text-orge084da7">
 <p>
 说到用法的话，差不多只要拿出首页的例子就可以了。
 </p>
 <div class="org-src-container">
 <pre class="src src-bash">$ cd ~/my_project
-$ echo $<span style="color: #b294bb;">{</span><span style="color: #cc6666;">FOO</span>-nope<span style="color: #b294bb;">}</span>
+$ echo $<span style="color: #5EC4FF;">{</span><span style="color: #9CAABB;">FOO</span>-nope<span style="color: #5EC4FF;">}</span>
 nope
-$ echo export <span style="color: #cc6666;">FOO</span>=foo &gt; .envrc
+$ echo export <span style="color: #9CAABB;">FOO</span>=foo &gt; .envrc
 .envrc is not allowed
 $ direnv allow .
 direnv: reloading
 direnv: loading .envrc
 direnv export: +FOO
-$ echo $<span style="color: #b294bb;">{</span><span style="color: #cc6666;">FOO</span>-nope<span style="color: #b294bb;">}</span>
+$ echo $<span style="color: #5EC4FF;">{</span><span style="color: #9CAABB;">FOO</span>-nope<span style="color: #5EC4FF;">}</span>
 foo
 $ cd ..
 direnv: unloading
 direnv export: ~PATH
-$ echo $<span style="color: #b294bb;">{</span><span style="color: #cc6666;">FOO</span>-nope<span style="color: #b294bb;">}</span>
+$ echo $<span style="color: #5EC4FF;">{</span><span style="color: #9CAABB;">FOO</span>-nope<span style="color: #5EC4FF;">}</span>
 nope
 </pre>
 </div>
@@ -177,9 +175,9 @@ nope
 </div>
 </div>
 
-<div id="outline-container-orgb5cbc52" class="outline-2">
-<h2 id="orgb5cbc52">实战</h2>
-<div class="outline-text-2" id="text-orgb5cbc52">
+<div id="outline-container-org9b15b14" class="outline-2">
+<h2 id="org9b15b14">实战</h2>
+<div class="outline-text-2" id="text-org9b15b14">
 <p>
 比如我现在有个工程要用Python环境，于是只要在工程的根目录下面新建 <code>.envrc</code> 文件并
 写入如下内容:
@@ -195,7 +193,7 @@ nope
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #81a2be;">source</span> venv/bin/active
+<pre class="src src-bash"><span style="color: #5EC4FF;">source</span> venv/bin/active
 </pre>
 </div>
 
@@ -204,27 +202,27 @@ nope
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash"><span class="linenr"> 1: </span><span style="color: #81a2be;">layout_python</span><span style="color: #b294bb;">()</span> <span style="color: #b294bb;">{</span>
-<span class="linenr"> 2: </span>  <span style="color: #81a2be;">local</span> <span style="color: #cc6666;">python</span>=$<span style="color: #81a2be;">{</span><span style="color: #de935f; font-weight: bold;">1:-python</span><span style="color: #81a2be;">}</span>
-<span class="linenr"> 3: </span>  <span style="color: #81a2be;">local</span> <span style="color: #cc6666;">old_env</span>=$<span style="color: #cc6666;">PWD</span>/virtualenv
-<span class="linenr"> 4: </span>  <span style="color: #81a2be;">unset</span> PYTHONHOME
-<span class="linenr"> 5: </span>  <span style="color: #b294bb;">if</span> <span style="color: #81a2be;">[</span><span style="color: #de935f;">[</span> -d $<span style="color: #cc6666;">old_env</span> &amp;&amp; $<span style="color: #cc6666;">python</span> = python <span style="color: #de935f;">]</span><span style="color: #81a2be;">]</span>; <span style="color: #b294bb;">then</span>
-<span class="linenr"> 6: </span>    <span style="color: #81a2be;">export</span> <span style="color: #cc6666;">VIRTUAL_ENV</span>=$<span style="color: #cc6666;">old_env</span>
-<span class="linenr"> 7: </span>  <span style="color: #b294bb;">else</span>
-<span class="linenr"> 8: </span>    <span style="color: #81a2be;">local</span> python_version
-<span class="linenr"> 9: </span>    <span style="color: #cc6666;">python_version</span>=$<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"$python"</span> -c <span style="color: #b5bd68;">"import platform as p;print(p.python_version())"</span><span style="color: #81a2be;">)</span>
-<span class="linenr">10: </span>    <span style="color: #b294bb;">if</span> <span style="color: #81a2be;">[</span><span style="color: #de935f;">[</span> -z $<span style="color: #cc6666;">python_version</span> <span style="color: #de935f;">]</span><span style="color: #81a2be;">]</span>; <span style="color: #b294bb;">then</span>
-<span class="linenr">11: </span>      log_error <span style="color: #b5bd68;">"Could not find python's version"</span>
-<span class="linenr">12: </span>      <span style="color: #b294bb;">return</span> <span style="color: #de935f; font-weight: bold;">1</span>
-<span class="linenr">13: </span>    <span style="color: #b294bb;">fi</span>
+<pre class="src src-bash"><span class="linenr"> 1: </span><span style="color: #4db5bd;">layout_python</span><span style="color: #5EC4FF;">()</span> <span style="color: #5EC4FF;">{</span>
+<span class="linenr"> 2: </span>  <span style="color: #5EC4FF;">local</span> <span style="color: #9CAABB;">python</span>=$<span style="color: #E27E8D;">{</span><span style="color: #E27E8D; font-weight: bold;">1:-python</span><span style="color: #E27E8D;">}</span>
+<span class="linenr"> 3: </span>  <span style="color: #5EC4FF;">local</span> <span style="color: #9CAABB;">old_env</span>=$<span style="color: #9CAABB;">PWD</span>/virtualenv
+<span class="linenr"> 4: </span>  <span style="color: #5EC4FF;">unset</span> PYTHONHOME
+<span class="linenr"> 5: </span>  <span style="color: #5EC4FF;">if</span> <span style="color: #E27E8D;">[</span><span style="color: #8BD49C;">[</span> -d $<span style="color: #9CAABB;">old_env</span> &amp;&amp; $<span style="color: #9CAABB;">python</span> = python <span style="color: #8BD49C;">]</span><span style="color: #E27E8D;">]</span>; <span style="color: #5EC4FF;">then</span>
+<span class="linenr"> 6: </span>    <span style="color: #5EC4FF;">export</span> <span style="color: #9CAABB;">VIRTUAL_ENV</span>=$<span style="color: #9CAABB;">old_env</span>
+<span class="linenr"> 7: </span>  <span style="color: #5EC4FF;">else</span>
+<span class="linenr"> 8: </span>    <span style="color: #5EC4FF;">local</span> python_version
+<span class="linenr"> 9: </span>    <span style="color: #9CAABB;">python_version</span>=$<span style="color: #E27E8D;">(</span><span style="color: #7FA0B7;">"$python"</span> -c <span style="color: #7FA0B7;">"import platform as p;print(p.python_version())"</span><span style="color: #E27E8D;">)</span>
+<span class="linenr">10: </span>    <span style="color: #5EC4FF;">if</span> <span style="color: #E27E8D;">[</span><span style="color: #8BD49C;">[</span> -z $<span style="color: #9CAABB;">python_version</span> <span style="color: #8BD49C;">]</span><span style="color: #E27E8D;">]</span>; <span style="color: #5EC4FF;">then</span>
+<span class="linenr">11: </span>      log_error <span style="color: #7FA0B7;">"Could not find python's version"</span>
+<span class="linenr">12: </span>      <span style="color: #5EC4FF;">return</span> <span style="color: #E27E8D; font-weight: bold;">1</span>
+<span class="linenr">13: </span>    <span style="color: #5EC4FF;">fi</span>
 <span class="linenr">14: </span>
-<span class="linenr">15: </span>    <span style="color: #81a2be;">export</span> <span style="color: #cc6666;">VIRTUAL_ENV</span>=$<span style="color: #cc6666;">PWD</span>/venv
-<span class="linenr">16: </span>    <span style="color: #b294bb;">if</span> <span style="color: #81a2be;">[</span><span style="color: #de935f;">[</span> <span style="color: #c5c8c6; font-weight: bold;">!</span> -d $<span style="color: #cc6666;">VIRTUAL_ENV</span> <span style="color: #de935f;">]</span><span style="color: #81a2be;">]</span>; <span style="color: #b294bb;">then</span>
-<span class="linenr">17: </span>      virtualenv <span style="color: #b5bd68;">"--python=$python"</span> <span style="color: #b5bd68;">"$VIRTUAL_ENV"</span>
-<span class="linenr">18: </span>    <span style="color: #b294bb;">fi</span>
-<span class="linenr">19: </span>  <span style="color: #b294bb;">fi</span>
-<span class="linenr">20: </span>  PATH_add <span style="color: #b5bd68;">"$VIRTUAL_ENV/bin"</span>
-<span class="linenr">21: </span><span style="color: #b294bb;">}</span>
+<span class="linenr">15: </span>    <span style="color: #5EC4FF;">export</span> <span style="color: #9CAABB;">VIRTUAL_ENV</span>=$<span style="color: #9CAABB;">PWD</span>/venv
+<span class="linenr">16: </span>    <span style="color: #5EC4FF;">if</span> <span style="color: #E27E8D;">[</span><span style="color: #8BD49C;">[</span> <span style="color: #5EC4FF; font-weight: bold;">!</span> -d $<span style="color: #9CAABB;">VIRTUAL_ENV</span> <span style="color: #8BD49C;">]</span><span style="color: #E27E8D;">]</span>; <span style="color: #5EC4FF;">then</span>
+<span class="linenr">17: </span>      virtualenv <span style="color: #7FA0B7;">"--python=$python"</span> <span style="color: #7FA0B7;">"$VIRTUAL_ENV"</span>
+<span class="linenr">18: </span>    <span style="color: #5EC4FF;">fi</span>
+<span class="linenr">19: </span>  <span style="color: #5EC4FF;">fi</span>
+<span class="linenr">20: </span>  PATH_add <span style="color: #7FA0B7;">"$VIRTUAL_ENV/bin"</span>
+<span class="linenr">21: </span><span style="color: #5EC4FF;">}</span>
 </pre>
 </div>
 </div>
@@ -268,7 +266,7 @@ nope
          })();
         </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
           Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711@gmail.com">Shane Xu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;

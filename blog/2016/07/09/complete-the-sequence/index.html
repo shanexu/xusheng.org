@@ -9,9 +9,7 @@
     <link rel="stylesheet" href="/media/source-code-pro/source-code-pro.css" type="text/css">
     <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
     <link rel="stylesheet" href="/media/css/extra.css" type="text/css">
-    <!-- <link rel="stylesheet" href="/media/css/code-dark.css" type="text/css"> -->
-    <!-- <link rel="stylesheet" href="/media/css/code-light.css" type="text/css"> -->
-    <link rel="stylesheet" href="/media/css/code-tomorrow-night.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/code-dark.css" type="text/css">
   </head>
 
   <body>
@@ -55,42 +53,42 @@ P(n)=a_D.n^D+a_{D-1}.n^{D-1}+...+a_1.n+a_0
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ruby"><span class="linenr"> 1: </span><span style="color: #b294bb;">class</span> <span style="color: #f0c674;">Array</span>
-<span class="linenr"> 2: </span>  <span style="color: #b294bb;">def</span> <span style="color: #81a2be;">const?</span> n
-<span class="linenr"> 3: </span>    <span style="color: #de935f; font-weight: bold;">1</span>.upto<span style="color: #b294bb;">(</span>n<span style="color: #b294bb;">)</span> <span style="color: #b294bb;">do</span> |i|
-<span class="linenr"> 4: </span>      <span style="color: #b294bb;">return</span> <span style="color: #de935f;">false</span> <span style="color: #b294bb;">if</span> <span style="color: #b294bb;">self</span><span style="color: #b294bb;">[</span>i<span style="color: #b294bb;">]</span>!=first
-<span class="linenr"> 5: </span>    <span style="color: #b294bb;">end</span>
-<span class="linenr"> 6: </span>    <span style="color: #b294bb;">return</span> <span style="color: #de935f;">true</span>
-<span class="linenr"> 7: </span>  <span style="color: #b294bb;">end</span>
-<span class="linenr"> 8: </span>  <span style="color: #b294bb;">def</span> <span style="color: #81a2be;">diff!</span> n
-<span class="linenr"> 9: </span>    <span style="color: #de935f; font-weight: bold;">0</span>.upto<span style="color: #b294bb;">(</span>n-<span style="color: #de935f; font-weight: bold;">1</span><span style="color: #b294bb;">)</span> <span style="color: #b294bb;">do</span> |i|
-<span class="linenr">10: </span>      <span style="color: #b294bb;">self</span><span style="color: #b294bb;">[</span>i<span style="color: #b294bb;">]</span>=<span style="color: #b294bb;">self</span><span style="color: #b294bb;">[</span>i+<span style="color: #de935f; font-weight: bold;">1</span><span style="color: #b294bb;">]</span>-<span style="color: #b294bb;">self</span><span style="color: #b294bb;">[</span>i<span style="color: #b294bb;">]</span>
-<span class="linenr">11: </span>    <span style="color: #b294bb;">end</span>
-<span class="linenr">12: </span>  <span style="color: #b294bb;">end</span>
-<span class="linenr">13: </span>  <span style="color: #b294bb;">def</span> <span style="color: #81a2be;">computer</span> n
-<span class="linenr">14: </span>    <span style="color: #b294bb;">return</span> <span style="color: #f0c674;">Array</span>.new<span style="color: #b294bb;">(</span>n,first<span style="color: #b294bb;">)</span> <span style="color: #b294bb;">if</span> const? size-<span style="color: #de935f; font-weight: bold;">1</span>
-<span class="linenr">15: </span>    count=size-<span style="color: #de935f; font-weight: bold;">1</span>
-<span class="linenr">16: </span>    <span style="color: #b294bb;">while</span> <span style="color: #de935f;">true</span>
+<pre class="src src-ruby"><span class="linenr"> 1: </span><span style="color: #5EC4FF;">class</span> <span style="color: #EBBF83;">Array</span>
+<span class="linenr"> 2: </span>  <span style="color: #5EC4FF;">def</span> <span style="color: #4db5bd;">const?</span> n
+<span class="linenr"> 3: </span>    <span style="color: #E27E8D; font-weight: bold;">1</span>.upto<span style="color: #5EC4FF;">(</span>n<span style="color: #5EC4FF;">)</span> <span style="color: #5EC4FF;">do</span> |i|
+<span class="linenr"> 4: </span>      <span style="color: #5EC4FF;">return</span> <span style="color: #D95468;">false</span> <span style="color: #5EC4FF;">if</span> <span style="color: #5EC4FF;">self</span><span style="color: #5EC4FF;">[</span>i<span style="color: #5EC4FF;">]</span>!=first
+<span class="linenr"> 5: </span>    <span style="color: #5EC4FF;">end</span>
+<span class="linenr"> 6: </span>    <span style="color: #5EC4FF;">return</span> <span style="color: #D95468;">true</span>
+<span class="linenr"> 7: </span>  <span style="color: #5EC4FF;">end</span>
+<span class="linenr"> 8: </span>  <span style="color: #5EC4FF;">def</span> <span style="color: #4db5bd;">diff!</span> n
+<span class="linenr"> 9: </span>    <span style="color: #E27E8D; font-weight: bold;">0</span>.upto<span style="color: #5EC4FF;">(</span>n-<span style="color: #E27E8D; font-weight: bold;">1</span><span style="color: #5EC4FF;">)</span> <span style="color: #5EC4FF;">do</span> |i|
+<span class="linenr">10: </span>      <span style="color: #5EC4FF;">self</span><span style="color: #5EC4FF;">[</span>i<span style="color: #5EC4FF;">]</span>=<span style="color: #5EC4FF;">self</span><span style="color: #5EC4FF;">[</span>i+<span style="color: #E27E8D; font-weight: bold;">1</span><span style="color: #5EC4FF;">]</span>-<span style="color: #5EC4FF;">self</span><span style="color: #5EC4FF;">[</span>i<span style="color: #5EC4FF;">]</span>
+<span class="linenr">11: </span>    <span style="color: #5EC4FF;">end</span>
+<span class="linenr">12: </span>  <span style="color: #5EC4FF;">end</span>
+<span class="linenr">13: </span>  <span style="color: #5EC4FF;">def</span> <span style="color: #4db5bd;">computer</span> n
+<span class="linenr">14: </span>    <span style="color: #5EC4FF;">return</span> <span style="color: #EBBF83;">Array</span>.new<span style="color: #5EC4FF;">(</span>n,first<span style="color: #5EC4FF;">)</span> <span style="color: #5EC4FF;">if</span> const? size-<span style="color: #E27E8D; font-weight: bold;">1</span>
+<span class="linenr">15: </span>    count=size-<span style="color: #E27E8D; font-weight: bold;">1</span>
+<span class="linenr">16: </span>    <span style="color: #5EC4FF;">while</span> <span style="color: #D95468;">true</span>
 <span class="linenr">17: </span>      diff!count
-<span class="linenr">18: </span>      count-=<span style="color: #de935f; font-weight: bold;">1</span>
-<span class="linenr">19: </span>      <span style="color: #b294bb;">break</span> <span style="color: #b294bb;">if</span> const?count
-<span class="linenr">20: </span>    <span style="color: #b294bb;">end</span>
-<span class="linenr">21: </span>    n.times.inject<span style="color: #b294bb;">(</span><span style="color: #f0c674;">Array</span>.new<span style="color: #81a2be;">(</span>n<span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span> <span style="color: #b294bb;">do</span> |res,j|
-<span class="linenr">22: </span>      count.upto<span style="color: #b294bb;">(</span>size-<span style="color: #de935f; font-weight: bold;">2</span><span style="color: #b294bb;">)</span> <span style="color: #b294bb;">do</span> |i|
-<span class="linenr">23: </span>        <span style="color: #b294bb;">self</span><span style="color: #b294bb;">[</span>i+<span style="color: #de935f; font-weight: bold;">1</span><span style="color: #b294bb;">]</span>+=<span style="color: #b294bb;">self</span><span style="color: #b294bb;">[</span>i<span style="color: #b294bb;">]</span>
-<span class="linenr">24: </span>      <span style="color: #b294bb;">end</span>
-<span class="linenr">25: </span>      res<span style="color: #b294bb;">[</span>j<span style="color: #b294bb;">]</span>=last
+<span class="linenr">18: </span>      count-=<span style="color: #E27E8D; font-weight: bold;">1</span>
+<span class="linenr">19: </span>      <span style="color: #5EC4FF;">break</span> <span style="color: #5EC4FF;">if</span> const?count
+<span class="linenr">20: </span>    <span style="color: #5EC4FF;">end</span>
+<span class="linenr">21: </span>    n.times.inject<span style="color: #5EC4FF;">(</span><span style="color: #EBBF83;">Array</span>.new<span style="color: #E27E8D;">(</span>n<span style="color: #E27E8D;">)</span><span style="color: #5EC4FF;">)</span> <span style="color: #5EC4FF;">do</span> |res,j|
+<span class="linenr">22: </span>      count.upto<span style="color: #5EC4FF;">(</span>size-<span style="color: #E27E8D; font-weight: bold;">2</span><span style="color: #5EC4FF;">)</span> <span style="color: #5EC4FF;">do</span> |i|
+<span class="linenr">23: </span>        <span style="color: #5EC4FF;">self</span><span style="color: #5EC4FF;">[</span>i+<span style="color: #E27E8D; font-weight: bold;">1</span><span style="color: #5EC4FF;">]</span>+=<span style="color: #5EC4FF;">self</span><span style="color: #5EC4FF;">[</span>i<span style="color: #5EC4FF;">]</span>
+<span class="linenr">24: </span>      <span style="color: #5EC4FF;">end</span>
+<span class="linenr">25: </span>      res<span style="color: #5EC4FF;">[</span>j<span style="color: #5EC4FF;">]</span>=last
 <span class="linenr">26: </span>      res
-<span class="linenr">27: </span>    <span style="color: #b294bb;">end</span>
-<span class="linenr">28: </span>  <span style="color: #b294bb;">end</span>
-<span class="linenr">29: </span><span style="color: #b294bb;">end</span>
+<span class="linenr">27: </span>    <span style="color: #5EC4FF;">end</span>
+<span class="linenr">28: </span>  <span style="color: #5EC4FF;">end</span>
+<span class="linenr">29: </span><span style="color: #5EC4FF;">end</span>
 <span class="linenr">30: </span>
-<span class="linenr">31: </span>ss= gets.to_i.times.inject<span style="color: #b294bb;">(</span><span style="color: #81a2be;">[]</span><span style="color: #b294bb;">)</span> <span style="color: #b294bb;">do</span> |s,j|
-<span class="linenr">32: </span>  n=gets.split<span style="color: #b294bb;">[</span><span style="color: #de935f; font-weight: bold;">1</span><span style="color: #b294bb;">]</span>.to_i
-<span class="linenr">33: </span>  s&lt;&lt;gets.split.map<span style="color: #b294bb;">{</span>|s| s.to_i<span style="color: #b294bb;">}</span>.computer<span style="color: #b294bb;">(</span>n<span style="color: #b294bb;">)</span>.join<span style="color: #b294bb;">(</span><span style="color: #b5bd68;">" "</span><span style="color: #b294bb;">)</span>
-<span class="linenr">34: </span><span style="color: #b294bb;">end</span>
+<span class="linenr">31: </span>ss= gets.to_i.times.inject<span style="color: #5EC4FF;">(</span><span style="color: #E27E8D;">[]</span><span style="color: #5EC4FF;">)</span> <span style="color: #5EC4FF;">do</span> |s,j|
+<span class="linenr">32: </span>  n=gets.split<span style="color: #5EC4FF;">[</span><span style="color: #E27E8D; font-weight: bold;">1</span><span style="color: #5EC4FF;">]</span>.to_i
+<span class="linenr">33: </span>  s&lt;&lt;gets.split.map<span style="color: #5EC4FF;">{</span>|s| s.to_i<span style="color: #5EC4FF;">}</span>.computer<span style="color: #5EC4FF;">(</span>n<span style="color: #5EC4FF;">)</span>.join<span style="color: #5EC4FF;">(</span><span style="color: #7FA0B7;">" "</span><span style="color: #5EC4FF;">)</span>
+<span class="linenr">34: </span><span style="color: #5EC4FF;">end</span>
 <span class="linenr">35: </span>
-<span class="linenr">36: </span><span style="color: #81a2be;">puts</span> ss
+<span class="linenr">36: </span><span style="color: #5EC4FF;">puts</span> ss
 </pre>
 </div>
 
@@ -120,8 +118,8 @@ A(n)=A(n-1)+D(n-1)
 </p>
 
 <div class="org-src-container">
-<pre class="src src-haskell"><span style="color: #81a2be;">ones</span> <span style="color: #cc6666;">::</span> <span style="color: #b294bb;">[</span><span style="color: #f0c674;">Int</span><span style="color: #b294bb;">]</span>
-<span style="color: #81a2be;">ones</span> <span style="color: #cc6666;">=</span> <span style="color: #de935f; font-weight: bold;">1</span> <span style="color: #f0c674;">:</span> ones
+<pre class="src src-haskell"><span style="color: #4db5bd;">ones</span> <span style="color: #9CAABB;">::</span> <span style="color: #5EC4FF;">[</span><span style="color: #EBBF83;">Int</span><span style="color: #5EC4FF;">]</span>
+<span style="color: #4db5bd;">ones</span> <span style="color: #9CAABB;">=</span> <span style="color: #E27E8D; font-weight: bold;">1</span> <span style="color: #EBBF83;">:</span> ones
 </pre>
 </div>
 
@@ -130,13 +128,13 @@ A(n)=A(n-1)+D(n-1)
 </p>
 
 <div class="org-src-container">
-<pre class="src src-haskell"><span style="color: #81a2be;">odds</span> <span style="color: #cc6666;">::</span> <span style="color: #b294bb;">[</span><span style="color: #f0c674;">Int</span><span style="color: #b294bb;">]</span>
-<span style="color: #81a2be;">odds</span> <span style="color: #cc6666;">=</span> <span style="color: #de935f; font-weight: bold;">1</span> <span style="color: #f0c674;">:</span> map <span style="color: #b294bb;">(</span><span style="color: #cc6666;">+</span><span style="color: #de935f; font-weight: bold;">2</span><span style="color: #b294bb;">)</span> odds
+<pre class="src src-haskell"><span style="color: #4db5bd;">odds</span> <span style="color: #9CAABB;">::</span> <span style="color: #5EC4FF;">[</span><span style="color: #EBBF83;">Int</span><span style="color: #5EC4FF;">]</span>
+<span style="color: #4db5bd;">odds</span> <span style="color: #9CAABB;">=</span> <span style="color: #E27E8D; font-weight: bold;">1</span> <span style="color: #EBBF83;">:</span> map <span style="color: #5EC4FF;">(</span><span style="color: #9CAABB;">+</span><span style="color: #E27E8D; font-weight: bold;">2</span><span style="color: #5EC4FF;">)</span> odds
 
-<span style="color: #5a5b5a;">-- </span><span style="color: #5a5b5a;">or</span>
+<span style="color: #56697A;">-- </span><span style="color: #56697A;">or</span>
 
-<span style="color: #81a2be;">odds</span> <span style="color: #cc6666;">=</span> <span style="color: #b294bb;">let</span> twos <span style="color: #cc6666;">=</span> <span style="color: #de935f; font-weight: bold;">2</span> <span style="color: #f0c674;">:</span> twos
-       <span style="color: #b294bb;">in</span> <span style="color: #de935f; font-weight: bold;">1</span> <span style="color: #f0c674;">:</span> zipWith <span style="color: #b294bb;">(</span><span style="color: #cc6666;">+</span><span style="color: #b294bb;">)</span> odds twos
+<span style="color: #4db5bd;">odds</span> <span style="color: #9CAABB;">=</span> <span style="color: #5EC4FF;">let</span> twos <span style="color: #9CAABB;">=</span> <span style="color: #E27E8D; font-weight: bold;">2</span> <span style="color: #EBBF83;">:</span> twos
+       <span style="color: #5EC4FF;">in</span> <span style="color: #E27E8D; font-weight: bold;">1</span> <span style="color: #EBBF83;">:</span> zipWith <span style="color: #5EC4FF;">(</span><span style="color: #9CAABB;">+</span><span style="color: #5EC4FF;">)</span> odds twos
 </pre>
 </div>
 
@@ -145,11 +143,11 @@ A(n)=A(n-1)+D(n-1)
 </p>
 
 <div class="org-src-container">
-<pre class="src src-haskell"><span style="color: #81a2be;">dn</span> <span style="color: #cc6666;">::</span> <span style="color: #b294bb;">[</span><span style="color: #f0c674;">Int</span><span style="color: #b294bb;">]</span>
-<span style="color: #81a2be;">dn</span> <span style="color: #cc6666;">=</span> undefined
+<pre class="src src-haskell"><span style="color: #4db5bd;">dn</span> <span style="color: #9CAABB;">::</span> <span style="color: #5EC4FF;">[</span><span style="color: #EBBF83;">Int</span><span style="color: #5EC4FF;">]</span>
+<span style="color: #4db5bd;">dn</span> <span style="color: #9CAABB;">=</span> undefined
 
-<span style="color: #81a2be;">an</span> <span style="color: #cc6666;">::</span> <span style="color: #b294bb;">[</span><span style="color: #f0c674;">Int</span><span style="color: #b294bb;">]</span>
-<span style="color: #81a2be;">an</span> <span style="color: #cc6666;">=</span> a1 <span style="color: #f0c674;">:</span> zipWith <span style="color: #b294bb;">(</span><span style="color: #cc6666;">+</span><span style="color: #b294bb;">)</span> an dn
+<span style="color: #4db5bd;">an</span> <span style="color: #9CAABB;">::</span> <span style="color: #5EC4FF;">[</span><span style="color: #EBBF83;">Int</span><span style="color: #5EC4FF;">]</span>
+<span style="color: #4db5bd;">an</span> <span style="color: #9CAABB;">=</span> a1 <span style="color: #EBBF83;">:</span> zipWith <span style="color: #5EC4FF;">(</span><span style="color: #9CAABB;">+</span><span style="color: #5EC4FF;">)</span> an dn
 </pre>
 </div>
 
@@ -158,30 +156,30 @@ A(n)=A(n-1)+D(n-1)
 </p>
 
 <div class="org-src-container">
-<pre class="src src-haskell"><span class="linenr"> 1: </span><span style="color: #c5c8c6; font-weight: bold;">{-# OPTIONS_GHC -optc-O2 #-}</span>
+<pre class="src src-haskell"><span class="linenr"> 1: </span><span style="color: #5EC4FF; font-weight: bold;">{-# OPTIONS_GHC -optc-O2 #-}</span>
 <span class="linenr"> 2: </span>
-<span class="linenr"> 3: </span><span style="color: #b294bb;">import</span> <span style="color: #f0c674;">Control.Monad</span>
+<span class="linenr"> 3: </span><span style="color: #5EC4FF;">import</span> <span style="color: #EBBF83;">Control.Monad</span>
 <span class="linenr"> 4: </span>
-<span class="linenr"> 5: </span><span style="color: #81a2be;">series</span> <span style="color: #cc6666;">::</span> <span style="color: #b294bb;">[</span><span style="color: #f0c674;">Int</span><span style="color: #b294bb;">]</span> <span style="color: #cc6666;">-&gt;</span> <span style="color: #b294bb;">[</span><span style="color: #f0c674;">Int</span><span style="color: #b294bb;">]</span>
-<span class="linenr"> 6: </span><span style="color: #81a2be;">series</span> <span style="color: #b294bb;">[</span>x<span style="color: #b294bb;">]</span>    <span style="color: #cc6666;">=</span> <span style="color: #b294bb;">let</span> s <span style="color: #cc6666;">=</span> x <span style="color: #f0c674;">:</span> s <span style="color: #b294bb;">in</span> s
-<span class="linenr"> 7: </span><span style="color: #81a2be;">series</span> <span style="color: #b294bb;">(</span>x<span style="color: #f0c674;">:</span>xs<span style="color: #b294bb;">)</span> <span style="color: #cc6666;">=</span> <span style="color: #b294bb;">let</span> s <span style="color: #cc6666;">=</span> x <span style="color: #f0c674;">:</span> zipWith <span style="color: #b294bb;">(</span><span style="color: #cc6666;">+</span><span style="color: #b294bb;">)</span> <span style="color: #b294bb;">(</span>series xs<span style="color: #b294bb;">)</span> s <span style="color: #b294bb;">in</span> s
+<span class="linenr"> 5: </span><span style="color: #4db5bd;">series</span> <span style="color: #9CAABB;">::</span> <span style="color: #5EC4FF;">[</span><span style="color: #EBBF83;">Int</span><span style="color: #5EC4FF;">]</span> <span style="color: #9CAABB;">-&gt;</span> <span style="color: #5EC4FF;">[</span><span style="color: #EBBF83;">Int</span><span style="color: #5EC4FF;">]</span>
+<span class="linenr"> 6: </span><span style="color: #4db5bd;">series</span> <span style="color: #5EC4FF;">[</span>x<span style="color: #5EC4FF;">]</span>    <span style="color: #9CAABB;">=</span> <span style="color: #5EC4FF;">let</span> s <span style="color: #9CAABB;">=</span> x <span style="color: #EBBF83;">:</span> s <span style="color: #5EC4FF;">in</span> s
+<span class="linenr"> 7: </span><span style="color: #4db5bd;">series</span> <span style="color: #5EC4FF;">(</span>x<span style="color: #EBBF83;">:</span>xs<span style="color: #5EC4FF;">)</span> <span style="color: #9CAABB;">=</span> <span style="color: #5EC4FF;">let</span> s <span style="color: #9CAABB;">=</span> x <span style="color: #EBBF83;">:</span> zipWith <span style="color: #5EC4FF;">(</span><span style="color: #9CAABB;">+</span><span style="color: #5EC4FF;">)</span> <span style="color: #5EC4FF;">(</span>series xs<span style="color: #5EC4FF;">)</span> s <span style="color: #5EC4FF;">in</span> s
 <span class="linenr"> 8: </span>
-<span class="linenr"> 9: </span><span style="color: #81a2be;">seeds</span> <span style="color: #cc6666;">::</span> <span style="color: #b294bb;">[</span><span style="color: #f0c674;">Int</span><span style="color: #b294bb;">]</span> <span style="color: #cc6666;">-&gt;</span> <span style="color: #b294bb;">[</span><span style="color: #f0c674;">Int</span><span style="color: #b294bb;">]</span>
-<span class="linenr">10: </span><span style="color: #81a2be;">seeds</span> xs<span style="color: #cc6666;">@</span><span style="color: #b294bb;">(</span>x<span style="color: #f0c674;">:</span>ts<span style="color: #b294bb;">)</span> <span style="color: #cc6666;">=</span> <span style="color: #b294bb;">if</span> all <span style="color: #b294bb;">(</span><span style="color: #cc6666;">==</span>x<span style="color: #b294bb;">)</span> ts
-<span class="linenr">11: </span>                  <span style="color: #b294bb;">then</span> <span style="color: #b294bb;">[</span>x<span style="color: #b294bb;">]</span>
-<span class="linenr">12: </span>                  <span style="color: #b294bb;">else</span> x <span style="color: #f0c674;">:</span> seeds <span style="color: #b294bb;">(</span>zipWith <span style="color: #81a2be;">(</span><span style="color: #cc6666;">-</span><span style="color: #81a2be;">)</span> ts xs<span style="color: #b294bb;">)</span>
+<span class="linenr"> 9: </span><span style="color: #4db5bd;">seeds</span> <span style="color: #9CAABB;">::</span> <span style="color: #5EC4FF;">[</span><span style="color: #EBBF83;">Int</span><span style="color: #5EC4FF;">]</span> <span style="color: #9CAABB;">-&gt;</span> <span style="color: #5EC4FF;">[</span><span style="color: #EBBF83;">Int</span><span style="color: #5EC4FF;">]</span>
+<span class="linenr">10: </span><span style="color: #4db5bd;">seeds</span> xs<span style="color: #9CAABB;">@</span><span style="color: #5EC4FF;">(</span>x<span style="color: #EBBF83;">:</span>ts<span style="color: #5EC4FF;">)</span> <span style="color: #9CAABB;">=</span> <span style="color: #5EC4FF;">if</span> all <span style="color: #5EC4FF;">(</span><span style="color: #9CAABB;">==</span>x<span style="color: #5EC4FF;">)</span> ts
+<span class="linenr">11: </span>                  <span style="color: #5EC4FF;">then</span> <span style="color: #5EC4FF;">[</span>x<span style="color: #5EC4FF;">]</span>
+<span class="linenr">12: </span>                  <span style="color: #5EC4FF;">else</span> x <span style="color: #EBBF83;">:</span> seeds <span style="color: #5EC4FF;">(</span>zipWith <span style="color: #E27E8D;">(</span><span style="color: #9CAABB;">-</span><span style="color: #E27E8D;">)</span> ts xs<span style="color: #5EC4FF;">)</span>
 <span class="linenr">13: </span>
-<span class="linenr">14: </span><span style="color: #81a2be;">cmpls</span> <span style="color: #cc6666;">::</span> <span style="color: #f0c674;">Int</span> <span style="color: #cc6666;">-&gt;</span> <span style="color: #f0c674;">Int</span> <span style="color: #cc6666;">-&gt;</span> <span style="color: #b294bb;">[</span><span style="color: #f0c674;">Int</span><span style="color: #b294bb;">]</span> <span style="color: #cc6666;">-&gt;</span> <span style="color: #b294bb;">[</span><span style="color: #f0c674;">Int</span><span style="color: #b294bb;">]</span>
-<span class="linenr">15: </span><span style="color: #81a2be;">cmpls</span> s c <span style="color: #cc6666;">=</span> take c <span style="color: #cc6666;">.</span> drop s <span style="color: #cc6666;">.</span> series <span style="color: #cc6666;">.</span> seeds
+<span class="linenr">14: </span><span style="color: #4db5bd;">cmpls</span> <span style="color: #9CAABB;">::</span> <span style="color: #EBBF83;">Int</span> <span style="color: #9CAABB;">-&gt;</span> <span style="color: #EBBF83;">Int</span> <span style="color: #9CAABB;">-&gt;</span> <span style="color: #5EC4FF;">[</span><span style="color: #EBBF83;">Int</span><span style="color: #5EC4FF;">]</span> <span style="color: #9CAABB;">-&gt;</span> <span style="color: #5EC4FF;">[</span><span style="color: #EBBF83;">Int</span><span style="color: #5EC4FF;">]</span>
+<span class="linenr">15: </span><span style="color: #4db5bd;">cmpls</span> s c <span style="color: #9CAABB;">=</span> take c <span style="color: #9CAABB;">.</span> drop s <span style="color: #9CAABB;">.</span> series <span style="color: #9CAABB;">.</span> seeds
 <span class="linenr">16: </span>
-<span class="linenr">17: </span><span style="color: #81a2be;">solveProblems</span> <span style="color: #cc6666;">::</span> <span style="color: #b294bb;">[</span><span style="color: #f0c674;">String</span><span style="color: #b294bb;">]</span> <span style="color: #cc6666;">-&gt;</span> <span style="color: #f0c674;">IO</span> <span style="color: #b294bb;">()</span>
-<span class="linenr">18: </span><span style="color: #81a2be;">solveProblems</span> <span style="color: #cc6666;">=</span> foldM_ f <span style="color: #b294bb;">[]</span>
-<span class="linenr">19: </span>  <span style="color: #b294bb;">where</span> f <span style="color: #b294bb;">[]</span>     l <span style="color: #cc6666;">=</span> return <span style="color: #cc6666;">.</span> map read <span style="color: #cc6666;">.</span> words <span style="color: #cc6666;">$</span> l
-<span class="linenr">20: </span>        f <span style="color: #b294bb;">[</span>s, c<span style="color: #b294bb;">]</span> l <span style="color: #cc6666;">=</span> putStrLn <span style="color: #b294bb;">(</span>unwords <span style="color: #cc6666;">.</span> map show <span style="color: #cc6666;">$</span> cmpls s c <span style="color: #81a2be;">(</span>map read <span style="color: #cc6666;">.</span> words <span style="color: #cc6666;">$</span> l<span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
-<span class="linenr">21: </span>                     <span style="color: #cc6666;">&gt;&gt;</span> return <span style="color: #b294bb;">[]</span>
+<span class="linenr">17: </span><span style="color: #4db5bd;">solveProblems</span> <span style="color: #9CAABB;">::</span> <span style="color: #5EC4FF;">[</span><span style="color: #EBBF83;">String</span><span style="color: #5EC4FF;">]</span> <span style="color: #9CAABB;">-&gt;</span> <span style="color: #EBBF83;">IO</span> <span style="color: #5EC4FF;">()</span>
+<span class="linenr">18: </span><span style="color: #4db5bd;">solveProblems</span> <span style="color: #9CAABB;">=</span> foldM_ f <span style="color: #5EC4FF;">[]</span>
+<span class="linenr">19: </span>  <span style="color: #5EC4FF;">where</span> f <span style="color: #5EC4FF;">[]</span>     l <span style="color: #9CAABB;">=</span> return <span style="color: #9CAABB;">.</span> map read <span style="color: #9CAABB;">.</span> words <span style="color: #9CAABB;">$</span> l
+<span class="linenr">20: </span>        f <span style="color: #5EC4FF;">[</span>s, c<span style="color: #5EC4FF;">]</span> l <span style="color: #9CAABB;">=</span> putStrLn <span style="color: #5EC4FF;">(</span>unwords <span style="color: #9CAABB;">.</span> map show <span style="color: #9CAABB;">$</span> cmpls s c <span style="color: #E27E8D;">(</span>map read <span style="color: #9CAABB;">.</span> words <span style="color: #9CAABB;">$</span> l<span style="color: #E27E8D;">)</span><span style="color: #5EC4FF;">)</span>
+<span class="linenr">21: </span>                     <span style="color: #9CAABB;">&gt;&gt;</span> return <span style="color: #5EC4FF;">[]</span>
 <span class="linenr">22: </span>
-<span class="linenr">23: </span><span style="color: #81a2be;">main</span> <span style="color: #cc6666;">::</span> <span style="color: #f0c674;">IO</span> <span style="color: #b294bb;">()</span>
-<span class="linenr">24: </span><span style="color: #81a2be;">main</span> <span style="color: #cc6666;">=</span> getContents <span style="color: #cc6666;">&gt;&gt;=</span> solveProblems <span style="color: #cc6666;">.</span> tail <span style="color: #cc6666;">.</span> lines
+<span class="linenr">23: </span><span style="color: #4db5bd;">main</span> <span style="color: #9CAABB;">::</span> <span style="color: #EBBF83;">IO</span> <span style="color: #5EC4FF;">()</span>
+<span class="linenr">24: </span><span style="color: #4db5bd;">main</span> <span style="color: #9CAABB;">=</span> getContents <span style="color: #9CAABB;">&gt;&gt;=</span> solveProblems <span style="color: #9CAABB;">.</span> tail <span style="color: #9CAABB;">.</span> lines
 </pre>
 </div>
 
@@ -226,7 +224,7 @@ A(n)=A(n-1)+D(n-1)
          })();
         </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
           Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711@gmail.com">Shane Xu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;

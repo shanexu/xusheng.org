@@ -9,6 +9,10 @@
   margin-right: 0.5em;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
+  font-family: "Source Code Pro", "Droid Sans Mono", "Monaco", "menlo", "Ubuntu Mono", "DejaVu Sans Mono", consolas, courier, monospace;
+  box-shadow: none;
+  border: none;
+  font-size: 85%;
 }
 
 .linenr::before {
