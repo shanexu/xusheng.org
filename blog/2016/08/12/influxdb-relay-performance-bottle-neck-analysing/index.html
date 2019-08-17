@@ -19,7 +19,7 @@
         <blockquote>Life is too short for so much sorrow.</blockquote>
         <form method="get" id="searchform" action="//www.google.com/search">
           <input type="text" class="field" name="q" id="s" placeholder="Search">
-          <input type="hidden" name="as_sitesearch" value="xusheng.org">
+          <input type="hidden" name="as_sitesearch" value="shanexu.io">
         </form>
       </header>
     </div>
@@ -37,9 +37,9 @@
 
   <h3 class="section">influxdb-relay性能瓶颈分析</h3>
 
-<div id="outline-container-orge5cf642" class="outline-2">
-<h2 id="orge5cf642">起因</h2>
-<div class="outline-text-2" id="text-orge5cf642">
+<div id="outline-container-org26560c4" class="outline-2">
+<h2 id="org26560c4">起因</h2>
+<div class="outline-text-2" id="text-org26560c4">
 <p>
 为了让influxdb能够达到高可用，我便考虑在influxdb外面套一层，比如nginx。然而发现官方已经开发了一个influxdb-relay的东西，于是决定索性使用这个东西。
 首先看一张官方README.md中的图。
@@ -109,9 +109,9 @@ Status Codes  [code:count]             204:180000
 </div>
 </div>
 
-<div id="outline-container-orgc4c6a3e" class="outline-2">
-<h2 id="orgc4c6a3e">过程</h2>
-<div class="outline-text-2" id="text-orgc4c6a3e">
+<div id="outline-container-orgb051e29" class="outline-2">
+<h2 id="orgb051e29">过程</h2>
+<div class="outline-text-2" id="text-orgb051e29">
 <p>
 在之前的文章里面提过，最新版influxdb，即便是在 vegeta 5000/s 的攻击下，还是能保证99%以上的成功率，
 然而 <code>influxdb-relay</code> 却在 3000/s 的速度的时候就已经撑不住了。作为influxdb的前置程序，至少要达到或者
@@ -578,7 +578,7 @@ time    count
         <script type="text/javascript">
           //var disqus_developer = 1;
           var disqus_identifier = "/blog/2016/08/12/influxdb-relay-performance-bottle-neck-analysing";
-          var disqus_url = "http://xusheng.org/blog/2016/08/12/influxdb-relay-performance-bottle-neck-analysing";
+          var disqus_url = "http://shanexu.io/blog/2016/08/12/influxdb-relay-performance-bottle-neck-analysing";
           var disqus_shortname = 'shanexu';
           /* * * DON'T EDIT BELOW THIS LINE * * */
           (function() {

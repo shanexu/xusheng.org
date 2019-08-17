@@ -19,7 +19,7 @@
         <blockquote>Life is too short for so much sorrow.</blockquote>
         <form method="get" id="searchform" action="//www.google.com/search">
           <input type="text" class="field" name="q" id="s" placeholder="Search">
-          <input type="hidden" name="as_sitesearch" value="xusheng.org">
+          <input type="hidden" name="as_sitesearch" value="shanexu.io">
         </form>
       </header>
     </div>
@@ -37,13 +37,13 @@
 
   <h3 class="section">动态扩容</h3>
 
-<div id="outline-container-orgd6d5b67" class="outline-2">
-<h2 id="orgd6d5b67">现状</h2>
-<div class="outline-text-2" id="text-orgd6d5b67">
+<div id="outline-container-org6130e62" class="outline-2">
+<h2 id="org6130e62">现状</h2>
+<div class="outline-text-2" id="text-org6130e62">
 </div>
-<div id="outline-container-org31289f5" class="outline-3">
-<h3 id="org31289f5">Nginx如何获取集群中的机器信息</h3>
-<div class="outline-text-3" id="text-org31289f5">
+<div id="outline-container-orgcd10016" class="outline-3">
+<h3 id="orgcd10016">Nginx如何获取集群中的机器信息</h3>
+<div class="outline-text-3" id="text-orgcd10016">
 <p>
 发布时从数据库的表中获取，通过生成upstream.conf。
 </p>
@@ -63,9 +63,9 @@
 </div>
 </div>
 
-<div id="outline-container-org38090a5" class="outline-3">
-<h3 id="org38090a5">问题</h3>
-<div class="outline-text-3" id="text-org38090a5">
+<div id="outline-container-org7048a77" class="outline-3">
+<h3 id="org7048a77">问题</h3>
+<div class="outline-text-3" id="text-org7048a77">
 <p>
 无法实现动态扩容，只有重新reload nginx 配置才能添加新机器或者新集群。
 </p>
@@ -73,38 +73,38 @@
 </div>
 </div>
 
-<div id="outline-container-org4f10204" class="outline-2">
-<h2 id="org4f10204">动态扩容方案</h2>
-<div class="outline-text-2" id="text-org4f10204">
+<div id="outline-container-org5649436" class="outline-2">
+<h2 id="org5649436">动态扩容方案</h2>
+<div class="outline-text-2" id="text-org5649436">
 </div>
-<div id="outline-container-org5349d03" class="outline-3">
-<h3 id="org5349d03">核心问题</h3>
-<div class="outline-text-3" id="text-org5349d03">
+<div id="outline-container-orgb413b65" class="outline-3">
+<h3 id="orgb413b65">核心问题</h3>
+<div class="outline-text-3" id="text-orgb413b65">
 </div>
-<div id="outline-container-orgfe0660c" class="outline-4">
-<h4 id="orgfe0660c">如何不经重新加载获取集群变化信息</h4>
-</div>
-
-<div id="outline-container-org05b56d0" class="outline-4">
-<h4 id="org05b56d0">比如，运行时从数据库中获取</h4>
+<div id="outline-container-org26bfd7b" class="outline-4">
+<h4 id="org26bfd7b">如何不经重新加载获取集群变化信息</h4>
 </div>
 
-<div id="outline-container-org0f41384" class="outline-4">
-<h4 id="org0f41384">比如，用域名代替集群信息</h4>
+<div id="outline-container-org7439ebe" class="outline-4">
+<h4 id="org7439ebe">比如，运行时从数据库中获取</h4>
+</div>
+
+<div id="outline-container-org4760d16" class="outline-4">
+<h4 id="org4760d16">比如，用域名代替集群信息</h4>
 </div>
 </div>
 
-<div id="outline-container-orga5507f1" class="outline-3">
-<h3 id="orga5507f1">方案一 使用域名</h3>
-<div class="outline-text-3" id="text-orga5507f1">
+<div id="outline-container-org2ce055c" class="outline-3">
+<h3 id="org2ce055c">方案一 使用域名</h3>
+<div class="outline-text-3" id="text-org2ce055c">
 <p>
 参考 <a href="https://www.nginx.com/blog/dns-service-discovery-nginx-plus/">https://www.nginx.com/blog/dns-service-discovery-nginx-plus/</a>
 </p>
 </div>
 
-<div id="outline-container-org020795c" class="outline-4">
-<h4 id="org020795c">配置一</h4>
-<div class="outline-text-4" id="text-org020795c">
+<div id="outline-container-org1127e74" class="outline-4">
+<h4 id="org1127e74">配置一</h4>
+<div class="outline-text-4" id="text-org1127e74">
 <div class="org-src-container">
 <pre class="src src-nginx"><span style="color: #5EC4FF;">server</span> <span style="color: #5EC4FF;">{</span>
     <span style="color: #5EC4FF;">location</span> <span style="color: #4db5bd;">/</span> <span style="color: #E27E8D;">{</span>
@@ -116,8 +116,8 @@
 </div>
 
 <ul class="org-ul">
-<li><a id="orgc946915"></a>问题<br />
-<div class="outline-text-5" id="text-orgc946915">
+<li><a id="org972f000"></a>问题<br />
+<div class="outline-text-5" id="text-org972f000">
 <ol class="org-ol">
 <li>dns记录被缓存，直到下一次重新加载配置或者重启才会刷新</li>
 <li>不能使用自定义的负载均衡算法，也无法配置健康检查</li>
@@ -127,9 +127,9 @@
 </ul>
 </div>
 
-<div id="outline-container-org75b6b90" class="outline-4">
-<h4 id="org75b6b90">配置二</h4>
-<div class="outline-text-4" id="text-org75b6b90">
+<div id="outline-container-org1d637bd" class="outline-4">
+<h4 id="org1d637bd">配置二</h4>
+<div class="outline-text-4" id="text-org1d637bd">
 <div class="org-src-container">
 <pre class="src src-nginx"><span style="color: #5EC4FF;">upstream</span> <span style="color: #4db5bd;">backends</span> <span style="color: #5EC4FF;">{</span>
     <span style="color: #5EC4FF;">least_conn</span>;
@@ -147,8 +147,8 @@
 </div>
 
 <ul class="org-ul">
-<li><a id="orgd496e15"></a>问题<br />
-<div class="outline-text-5" id="text-orgd496e15">
+<li><a id="orgf61d191"></a>问题<br />
+<div class="outline-text-5" id="text-orgf61d191">
 <ol class="org-ol">
 <li>dns记录被缓存，直到下一次重新加载配置或者重启才会刷新</li>
 </ol>
@@ -157,9 +157,9 @@
 </ul>
 </div>
 
-<div id="outline-container-org81becfe" class="outline-4">
-<h4 id="org81becfe">配置三</h4>
-<div class="outline-text-4" id="text-org81becfe">
+<div id="outline-container-org7b6cabb" class="outline-4">
+<h4 id="org7b6cabb">配置三</h4>
+<div class="outline-text-4" id="text-org7b6cabb">
 <div class="org-src-container">
 <pre class="src src-nginx"><span style="color: #5EC4FF;">resolver</span> <span style="color: #E27E8D; font-weight: bold;">10</span>.<span style="color: #E27E8D; font-weight: bold;">0</span>.<span style="color: #E27E8D; font-weight: bold;">0</span>.<span style="color: #E27E8D; font-weight: bold;">2</span> valid=10s;
 
@@ -174,8 +174,8 @@
 </div>
 
 <ul class="org-ul">
-<li><a id="orge55fae5"></a>问题<br />
-<div class="outline-text-5" id="text-orge55fae5">
+<li><a id="org1431726"></a>问题<br />
+<div class="outline-text-5" id="text-org1431726">
 <ol class="org-ol">
 <li>不能使用自定义的负载均衡算法，也无法配置健康检查</li>
 </ol>
@@ -184,25 +184,25 @@
 </ul>
 </div>
 
-<div id="outline-container-orgda74e0c" class="outline-4">
-<h4 id="orgda74e0c">结论</h4>
-<div class="outline-text-4" id="text-orgda74e0c">
+<div id="outline-container-org22c9d9b" class="outline-4">
+<h4 id="org22c9d9b">结论</h4>
+<div class="outline-text-4" id="text-org22c9d9b">
 <p>
 配置三看似是最完美的解决方案
 </p>
 </div>
 
 <ul class="org-ul">
-<li><a id="orgf9cf3e2"></a>优势<br />
-<div class="outline-text-5" id="text-orgf9cf3e2">
+<li><a id="orgf23bd60"></a>优势<br />
+<div class="outline-text-5" id="text-orgf23bd60">
 <ol class="org-ol">
 <li>nginx改动可以忽略不计</li>
 </ol>
 </div>
 </li>
 
-<li><a id="orgdc5f828"></a>劣势<br />
-<div class="outline-text-5" id="text-orgdc5f828">
+<li><a id="org0127430"></a>劣势<br />
+<div class="outline-text-5" id="text-org0127430">
 <ol class="org-ol">
 <li>健康检查需要交给外部组件</li>
 <li>需要维护dns</li>
@@ -213,9 +213,9 @@
 </ul>
 </div>
 
-<div id="outline-container-org6a80092" class="outline-4">
-<h4 id="org6a80092">题外话</h4>
-<div class="outline-text-4" id="text-org6a80092">
+<div id="outline-container-org05b5a47" class="outline-4">
+<h4 id="org05b5a47">题外话</h4>
+<div class="outline-text-4" id="text-org05b5a47">
 <p>
 如果使用 <code>Nginx Plus</code> 使用配置二，可以规避上面的所有劣势。但是一是收费，二是目测不支持现在nginx使用的lua模块
 </p>
@@ -223,13 +223,13 @@
 </div>
 </div>
 
-<div id="outline-container-orgddb1711" class="outline-3">
-<h3 id="orgddb1711">方案二 定时从固定数据源获取集群信息</h3>
-<div class="outline-text-3" id="text-orgddb1711">
+<div id="outline-container-orgf109492" class="outline-3">
+<h3 id="orgf109492">方案二 定时从固定数据源获取集群信息</h3>
+<div class="outline-text-3" id="text-orgf109492">
 </div>
-<div id="outline-container-org42d67f8" class="outline-4">
-<h4 id="org42d67f8">需要做的工作</h4>
-<div class="outline-text-4" id="text-org42d67f8">
+<div id="outline-container-org3e8f4e0" class="outline-4">
+<h4 id="org3e8f4e0">需要做的工作</h4>
+<div class="outline-text-4" id="text-org3e8f4e0">
 <ol class="org-ol">
 <li>将机器信息写入数据源</li>
 <li>新机器添加时需要启动应用并添加到数据源</li>
@@ -238,21 +238,21 @@
 </div>
 </div>
 
-<div id="outline-container-orgc81f14d" class="outline-4">
-<h4 id="orgc81f14d">从现有的数据库表定时获取集群信息</h4>
-<div class="outline-text-4" id="text-orgc81f14d">
+<div id="outline-container-org350edab" class="outline-4">
+<h4 id="org350edab">从现有的数据库表定时获取集群信息</h4>
+<div class="outline-text-4" id="text-org350edab">
 </div>
 <ul class="org-ul">
-<li><a id="org94421a6"></a>优势<br />
-<div class="outline-text-5" id="text-org94421a6">
+<li><a id="org0f1d47a"></a>优势<br />
+<div class="outline-text-5" id="text-org0f1d47a">
 <ol class="org-ol">
 <li>复用原有的数据结构</li>
 </ol>
 </div>
 </li>
 
-<li><a id="orgdb76871"></a>劣势<br />
-<div class="outline-text-5" id="text-orgdb76871">
+<li><a id="orge9e3dad"></a>劣势<br />
+<div class="outline-text-5" id="text-orge9e3dad">
 <ol class="org-ol">
 <li>lua模块需要实现整套nginx实现的健康检查机制，负载均衡算法，等等</li>
 </ol>
@@ -261,15 +261,15 @@
 </ul>
 </div>
 
-<div id="outline-container-org590a333" class="outline-4">
-<h4 id="org590a333">使用 <code>zookeeper</code> 作为数据源</h4>
-<div class="outline-text-4" id="text-org590a333">
+<div id="outline-container-orgb09a824" class="outline-4">
+<h4 id="orgb09a824">使用 <code>zookeeper</code> 作为数据源</h4>
+<div class="outline-text-4" id="text-orgb09a824">
 </div>
 <ul class="org-ul">
-<li><a id="org4e04845"></a>数据格式<br />
+<li><a id="orgb79aa74"></a>数据格式<br />
 <ul class="org-ul">
-<li><a id="orga94c0d8"></a>nginx关心的数据格式<br />
-<div class="outline-text-6" id="text-orga94c0d8">
+<li><a id="org31c768b"></a>nginx关心的数据格式<br />
+<div class="outline-text-6" id="text-org31c768b">
 <div class="org-src-container">
 <pre class="src src-bash">ls <span style="color: #5EC4FF;">{</span>prefix<span style="color: #5EC4FF;">}</span>/<span style="color: #5EC4FF;">{</span>env<span style="color: #5EC4FF;">}</span>/<span style="color: #5EC4FF;">{</span>app<span style="color: #5EC4FF;">}</span>/<span style="color: #5EC4FF;">{</span>cluster<span style="color: #5EC4FF;">}</span>/
 <span style="color: #5EC4FF;">[</span>ip1, ip2<span style="color: #5EC4FF;">]</span>
@@ -281,8 +281,8 @@
 </li>
 
 
-<li><a id="orgbe08a38"></a>优势<br />
-<div class="outline-text-5" id="text-orgbe08a38">
+<li><a id="org6868478"></a>优势<br />
+<div class="outline-text-5" id="text-org6868478">
 <ol class="org-ol">
 <li>可以使用zk节点上的version信息</li>
 <li>可以使用zk通知（lua实现代价较高，如果使用zk未来可以考虑）</li>
@@ -290,8 +290,8 @@
 </div>
 </li>
 
-<li><a id="orgb9e0d8c"></a>劣势<br />
-<div class="outline-text-5" id="text-orgb9e0d8c">
+<li><a id="orga317bc3"></a>劣势<br />
+<div class="outline-text-5" id="text-orga317bc3">
 <ol class="org-ol">
 <li>lua模块需要实现整套nginx实现的健康检查机制，负载均衡算法，等等</li>
 <li>需要写zk</li>
@@ -317,7 +317,7 @@
         <script type="text/javascript">
           //var disqus_developer = 1;
           var disqus_identifier = "/blog/2016/12/16/dynamic_upstreams";
-          var disqus_url = "http://xusheng.org/blog/2016/12/16/dynamic_upstreams";
+          var disqus_url = "http://shanexu.io/blog/2016/12/16/dynamic_upstreams";
           var disqus_shortname = 'shanexu';
           /* * * DON'T EDIT BELOW THIS LINE * * */
           (function() {

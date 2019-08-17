@@ -2,81 +2,81 @@
 <rss version="2.0">
   <channel>
     <title>Shane Xu&#39;s Home</title>
-    <link>http://xusheng.org/</link>
+    <link>http://shanexu.io/</link>
     <description>Life is too short for so much sorrow.</description>
-    <pubDate>Mon, 05 Aug 2019 08:09:33 CST</pubDate>
-    <lastBuildDate>Mon, 05 Aug 2019 08:09:33 CST</lastBuildDate>
+    <pubDate>Sun, 18 Aug 2019 00:31:26 CST</pubDate>
+    <lastBuildDate>Sun, 18 Aug 2019 00:31:26 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
     <item>
       <title>春隣</title>
-      <link>http://xusheng.org/blog/2017/12/25/chun-lin</link>
+      <link>http://shanexu.io/blog/2017/12/25/chun-lin</link>
       <description><![CDATA[<TODO: insert your description here>]]></description>
       <pubDate>2017-12-28</pubDate>
-      <guid>http://xusheng.org/blog/2017/12/25/chun-lin</guid>
+      <guid>http://shanexu.io/blog/2017/12/25/chun-lin</guid>
     </item>
     <item>
       <title>Install XMonad</title>
-      <link>http://xusheng.org/blog/2017/11/11/install-xmonad</link>
+      <link>http://shanexu.io/blog/2017/11/11/install-xmonad</link>
       <description><![CDATA[<TODO: insert your description here>]]></description>
       <pubDate>2017-11-13</pubDate>
-      <guid>http://xusheng.org/blog/2017/11/11/install-xmonad</guid>
+      <guid>http://shanexu.io/blog/2017/11/11/install-xmonad</guid>
     </item>
     <item>
       <title>修改macos的壁纸</title>
-      <link>http://xusheng.org/blog/2017/03/29/change-wallpaper-of-macos</link>
+      <link>http://shanexu.io/blog/2017/03/29/change-wallpaper-of-macos</link>
       <description><![CDATA[<TODO: insert your description here>]]></description>
       <pubDate>2017-10-06</pubDate>
-      <guid>http://xusheng.org/blog/2017/03/29/change-wallpaper-of-macos</guid>
+      <guid>http://shanexu.io/blog/2017/03/29/change-wallpaper-of-macos</guid>
     </item>
     <item>
       <title>The Shape of Voice</title>
-      <link>http://xusheng.org/blog/2017/09/19/the-shape-of-voice</link>
+      <link>http://shanexu.io/blog/2017/09/19/the-shape-of-voice</link>
       <description><![CDATA[<TODO: insert your description here>]]></description>
       <pubDate>2017-10-05</pubDate>
-      <guid>http://xusheng.org/blog/2017/09/19/the-shape-of-voice</guid>
+      <guid>http://shanexu.io/blog/2017/09/19/the-shape-of-voice</guid>
     </item>
     <item>
       <title>520</title>
-      <link>http://xusheng.org/blog/2017/05/20/520</link>
+      <link>http://shanexu.io/blog/2017/05/20/520</link>
       <description><![CDATA[<TODO: insert your description here>]]></description>
       <pubDate>2017-05-21</pubDate>
-      <guid>http://xusheng.org/blog/2017/05/20/520</guid>
+      <guid>http://shanexu.io/blog/2017/05/20/520</guid>
     </item>
     <item>
       <title>Keyboard Layout</title>
-      <link>http://xusheng.org/blog/2017/05/08/keyboard-layout</link>
+      <link>http://shanexu.io/blog/2017/05/08/keyboard-layout</link>
       <description><![CDATA[<TODO: insert your description here>]]></description>
       <pubDate>2017-05-10</pubDate>
-      <guid>http://xusheng.org/blog/2017/05/08/keyboard-layout</guid>
+      <guid>http://shanexu.io/blog/2017/05/08/keyboard-layout</guid>
     </item>
     <item>
       <title>如何抓取中国人民银行调查统计司的数据</title>
-      <link>http://xusheng.org/blog/2016/10/19/ru-he-zhua-qu-diao-cha-tong-ji-si-de-shu-ju</link>
+      <link>http://shanexu.io/blog/2016/10/19/ru-he-zhua-qu-diao-cha-tong-ji-si-de-shu-ju</link>
       <description><![CDATA[如何抓取中国人民银行调查统计司的数据]]></description>
       <pubDate>2017-04-16</pubDate>
-      <guid>http://xusheng.org/blog/2016/10/19/ru-he-zhua-qu-diao-cha-tong-ji-si-de-shu-ju</guid>
+      <guid>http://shanexu.io/blog/2016/10/19/ru-he-zhua-qu-diao-cha-tong-ji-si-de-shu-ju</guid>
     </item>
     <item>
       <title>Binding.scala in Practice</title>
-      <link>http://xusheng.org/blog/2016/12/31/binding.scala-in-practice</link>
+      <link>http://shanexu.io/blog/2016/12/31/binding.scala-in-practice</link>
       <description><![CDATA[<TODO: insert your description here>]]></description>
       <pubDate>2017-01-18</pubDate>
-      <guid>http://xusheng.org/blog/2016/12/31/binding.scala-in-practice</guid>
+      <guid>http://shanexu.io/blog/2016/12/31/binding.scala-in-practice</guid>
     </item>
     <item>
       <title>动态扩容</title>
-      <link>http://xusheng.org/blog/2016/12/16/dynamic_upstreams</link>
+      <link>http://shanexu.io/blog/2016/12/16/dynamic_upstreams</link>
       <description><![CDATA[动态扩容]]></description>
       <pubDate>2016-12-17</pubDate>
-      <guid>http://xusheng.org/blog/2016/12/16/dynamic_upstreams</guid>
+      <guid>http://shanexu.io/blog/2016/12/16/dynamic_upstreams</guid>
     </item>
     <item>
       <title>如何用 N 张图片拼出 2016 字样</title>
-      <link>http://xusheng.org/blog/2016/07/13/image-text</link>
+      <link>http://shanexu.io/blog/2016/07/13/image-text</link>
       <description><![CDATA[js 图片拼字 js 效果]]></description>
       <pubDate>2016-11-14</pubDate>
-      <guid>http://xusheng.org/blog/2016/07/13/image-text</guid>
+      <guid>http://shanexu.io/blog/2016/07/13/image-text</guid>
     </item>
   </channel>
 </rss>
