@@ -15,9 +15,272 @@
 
 [[https://user-images.githubusercontent.com/1257453/63224623-7a34cc80-c1b6-11e9-8a19-a3e0365e90ba.jpg]]
 
-接着就是万恶的touch bar。原本以为我这种emacs用户不会受到touch bar的影响。然而我忽略了我经常要登录线上机器，用vim操作文件。
-经常并且不可避免地需要按 =ESC= 键。众所周知，带touch bar的MacBook没有实体 =ESC= 键。 =ESC= 键会神秘莫测地时不时地出现在
-touchbar的最左边（大部分情况下它都会在那里），说是最左边，但实际上还是空出了一截，大概是为了和右边的指纹识别按钮对称吧，左边
-也刻意空出了一截。
+接着就是万恶的touch bar。原本以为我这种emacs用户不会受到touch bar的影响。然而我
+忽略了我经常要登录线上机器，用vim操作文件。经常并且不可避免地需要按 =ESC= 键。众
+所周知，带touch bar的MacBook没有实体 =ESC= 键。 =ESC= 键会神秘莫测地时不时地出现
+在touch bar的最左边（大部分情况下它都会在那里），说是最左边，但实际上还是空出了
+一截，大概是为了和右边的指纹识别按钮对称吧，左边也刻意空出了一截。然而我可怜的小
+拇指却总是按错，比如按到旁边的经常变化的功能键，然后触发了神奇的功能，屡试不爽。
+其实网上也不乏对touch bar的口诛笔伐。其实对我这种码农，这个功能就是鸡肋。比如某
+些IDE已经做了touch bar的适配，把一些快捷功能移动到了touch bar上，但是对于我这种
+快捷键烂熟于胸的人，完全是没有必要的。而一些重度依赖 =ESC= 键的应用，缺失了实体
+键，简直是灾难。所以我曾一度怀疑设计touch bar的工程师可能是极端的vim黑。想想毕竟
+mac自带应用是直接支持emacs风格的快捷键的。想到这里我不禁想感叹一句：
 
+#+begin_quote
+“Emacs神教千秋万代，一统江湖！”
+#+end_quote
 
+然而问题还是要解决的，当然最直白的方法就是外接键盘。有时候我要大量使用 =ESC= 键
+的时候我就干脆直接连上外接键盘，外接显示器，直接合上笔记本，直当是个台式机，也落
+得清静。
+
+那没有外接键盘的时候该怎么办呢。有网友通过 =System Preferences => Keyboard => Modifier Keys=
+将大写字母锁定键（该死的苹果把这个键的默认行为都改了）改成 =ESC= 键。但是我这个
+Emacs用户平时就是把大写字母锁定键和 =Control= 键交换的。所以这个方法在我这里行不
+通。
+
+在一番搜索之后终于在 [[https://www.reddit.com][reddit]] 上一个帖子里，看到一位网友清奇的解决方案：
+
+#+begin_quote
+单独按 =Caps Lock= 时是 =ESC= ，和别的建组合按时是 =Control= , 然后再把原来的
+=Control= 映射成 =Caps Lock=
+#+end_quote
+
+几经周折之后终于用 [[https://github.com/tekezo/Karabiner][Karabiner]] ，完成了上面的配置。将下面文件的内容写到
+=~/.config/karabiner/karabiner.json= 中去。
+
+#+begin_src json
+{
+  "global": {
+    "check_for_updates_on_startup": true,
+    "show_in_menu_bar": true,
+    "show_profile_name_in_menu_bar": false
+  },
+  "profiles": [
+    {
+      "complex_modifications": {
+        "parameters": {
+          "basic.simultaneous_threshold_milliseconds": 50,
+          "basic.to_delayed_action_delay_milliseconds": 500,
+          "basic.to_if_alone_timeout_milliseconds": 1000,
+          "basic.to_if_held_down_threshold_milliseconds": 500,
+          "mouse_motion_to_scroll.speed": 100
+        },
+        "rules": [
+          {
+            "description": "post escape if caps_lock pressed alone, otherwise left_control",
+            "manipulators": [
+              {
+                "conditions": [
+                  {
+                    "identifiers": [
+                      {
+                        "description": "Apple Internal Keyboard",
+                        "is_keyboard": true,
+                        "product_id": 636,
+                        "vendor_id": 1452
+                      }
+                    ],
+                    "type": "device_if"
+                  }
+                ],
+                "from": {
+                  "key_code": "caps_lock",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "left_control",
+                    "lazy": true
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "escape"
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "left_control = caps_lock",
+            "manipulators": [
+              {
+                "conditions": [
+                  {
+                    "identifiers": [
+                      {
+                        "description": "Apple Internal Keyboard",
+                        "is_keyboard": true,
+                        "product_id": 636,
+                        "vendor_id": 1452
+                      },
+                      {
+                        "description": "Apple Internal Keyboard",
+                        "is_keyboard": true,
+                        "product_id": 628,
+                        "vendor_id": 1452
+                      }
+                    ],
+                    "type": "device_if"
+                  }
+                ],
+                "from": {
+                  "key_code": "left_control",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "caps_lock"
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          }
+        ]
+      },
+      "devices": [
+        {
+          "disable_built_in_keyboard_if_exists": false,
+          "fn_function_keys": [],
+          "identifiers": {
+            "is_keyboard": true,
+            "is_pointing_device": false,
+            "product_id": 636,
+            "vendor_id": 1452
+          },
+          "ignore": false,
+          "manipulate_caps_lock_led": true,
+          "simple_modifications": []
+        }
+      ],
+      "fn_function_keys": [
+        {
+          "from": {
+            "key_code": "f1"
+          },
+          "to": {
+            "consumer_key_code": "display_brightness_decrement"
+          }
+        },
+        {
+          "from": {
+            "key_code": "f2"
+          },
+          "to": {
+            "consumer_key_code": "display_brightness_increment"
+          }
+        },
+        {
+          "from": {
+            "key_code": "f3"
+          },
+          "to": {
+            "key_code": "mission_control"
+          }
+        },
+        {
+          "from": {
+            "key_code": "f4"
+          },
+          "to": {
+            "key_code": "launchpad"
+          }
+        },
+        {
+          "from": {
+            "key_code": "f5"
+          },
+          "to": {
+            "key_code": "illumination_decrement"
+          }
+        },
+        {
+          "from": {
+            "key_code": "f6"
+          },
+          "to": {
+            "key_code": "illumination_increment"
+          }
+        },
+        {
+          "from": {
+            "key_code": "f7"
+          },
+          "to": {
+            "consumer_key_code": "rewind"
+          }
+        },
+        {
+          "from": {
+            "key_code": "f8"
+          },
+          "to": {
+            "consumer_key_code": "play_or_pause"
+          }
+        },
+        {
+          "from": {
+            "key_code": "f9"
+          },
+          "to": {
+            "consumer_key_code": "fastforward"
+          }
+        },
+        {
+          "from": {
+            "key_code": "f10"
+          },
+          "to": {
+            "consumer_key_code": "mute"
+          }
+        },
+        {
+          "from": {
+            "key_code": "f11"
+          },
+          "to": {
+            "consumer_key_code": "volume_decrement"
+          }
+        },
+        {
+          "from": {
+            "key_code": "f12"
+          },
+          "to": {
+            "consumer_key_code": "volume_increment"
+          }
+        }
+      ],
+      "name": "Default profile",
+      "parameters": {
+        "delay_milliseconds_before_open_device": 1000
+      },
+      "selected": true,
+      "simple_modifications": [],
+      "virtual_hid_keyboard": {
+        "country_code": 0,
+        "mouse_key_xy_scale": 100
+      }
+    }
+  ]
+}
+#+end_src
+
+用了一段时间后，大部分场景下没问题。但是在用Emacs的时候，会因为失误，按出 =ESC=
+键，而导致一些麻烦，最后我直接把右边的 =Command= 键映射成了 =ESC= 键。我惊讶地发
+现，右手的功能键除了 =Shift= 键，其他的我几乎从来的都不碰。
+
+我承认touch bar算是一种创新，能够给一成不变的键盘，带来一丝活力。然而为了这种不
+是刚需的创新，阉割掉一排功能键，是不是又有点有失偏颇呢？
