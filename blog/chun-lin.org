@@ -7,7 +7,7 @@
 #+TAGS:        life
 #+LANGUAGE:    en
 #+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
-#+DESCRIPTION: <TODO: insert your description here>
+#+DESCRIPTION: 熊木杏里演唱会
 
 #+BEGIN_QUOTE
 会えなくて またひとつ\\
