@@ -48,7 +48,8 @@ Emacs用户平时就是把大写字母锁定键和 =Control= 键交换的。所�
 #+end_quote
 
 几经周折之后终于用 [[https://github.com/tekezo/Karabiner][Karabiner]] ，完成了上面的配置。将下面文件的内容写到
-=~/.config/karabiner/karabiner.json= 中去。
+=~/.config/karabiner/karabiner.json= 中去。 *注意下面配置中的， product_id和
+vendor_id需要根据你的实际情况做修改。*
 
 #+begin_src json
 {
@@ -119,12 +120,6 @@ Emacs用户平时就是把大写字母锁定键和 =Control= 键交换的。所�
                         "description": "Apple Internal Keyboard",
                         "is_keyboard": true,
                         "product_id": 636,
-                        "vendor_id": 1452
-                      },
-                      {
-                        "description": "Apple Internal Keyboard",
-                        "is_keyboard": true,
-                        "product_id": 628,
                         "vendor_id": 1452
                       }
                     ],
