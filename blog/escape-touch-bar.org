@@ -1,0 +1,23 @@
+#+TITLE:       摆脱恼人的touch bar
+#+AUTHOR:      shanexu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2019-08-18 Sun
+#+URI:         /blog/%y/%m/%d/escape-touch-bar
+#+KEYWORDS:    touchbar, karabiner
+#+TAGS:        life
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: how to escape from touch bar
+
+上半年的时候购入了2018款的MacBook Pro，其最令我无奈的就是那个键盘和touchbar。
+
+比如这用了才几个月的键盘。
+
+[[https://user-images.githubusercontent.com/1257453/63224623-7a34cc80-c1b6-11e9-8a19-a3e0365e90ba.jpg]]
+
+接着就是万恶的touch bar。原本以为我这种emacs用户不会受到touch bar的影响。然而我忽略了我经常要登录线上机器，用vim操作文件。
+经常并且不可避免地需要按 =ESC= 键。众所周知，带touch bar的MacBook没有实体 =ESC= 键。 =ESC= 键会神秘莫测地时不时地出现在
+touchbar的最左边（大部分情况下它都会在那里），说是最左边，但实际上还是空出了一截，大概是为了和右边的指纹识别按钮对称吧，左边
+也刻意空出了一截。
+
+
