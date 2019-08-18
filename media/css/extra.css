@@ -71,7 +71,7 @@ p del:before, p del:after {
   -o-transition-timing-function: ease;
 }
 #searchform #s:focus {
-  background-color: #f9f9f9;
+  background-color: #FFFBEA;
   width: 160px;
 }
 
