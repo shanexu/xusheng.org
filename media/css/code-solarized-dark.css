@@ -1,3 +1,8 @@
+html {
+  color: #556b72;
+  background-color: #FDF6E3;
+}
+
 .linenr {
   color: #657b83;
   background-color: #002b36;
@@ -24,11 +29,11 @@
 }
 
 .org-src-container pre {
+  color: #839496;
   background-color: #002b36;
   font-family: "Source Code Pro", "Droid Sans Mono", "Monaco", "menlo", "Ubuntu Mono", "DejaVu Sans Mono", consolas, courier, monospace;
   box-shadow: none;
   border: none;
-  color: #839496;
   padding: 0.5em 0 0.5em 0.5em;
   font-size: 95%;
   overflow: auto;

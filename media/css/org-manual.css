@@ -3,19 +3,17 @@
 html {
   margin: 0;
   font: 300 0.95em/1.6em "Source Code Pro", "Droid Serif", "Open Sans", Cambria, Georgia, "DejaVu Serif", serif;
-  background-color: #FDF6E3;
 }
 
-pre {
-  font-family: "Source Code Pro", "Droid Sans Mono";
-  font-size: .8em;
-  font-weight: normal;
-  line-height: 1.4em;
-  background-color: #eeeeee;
-  padding: 2pt;
-  margin-right: 1pt;
-  box-shadow: 1px 1px 1px #aaa;
-}
+/* pre { */
+/*   font-family: "Source Code Pro", "Droid Sans Mono"; */
+/*   font-size: .8em; */
+/*   font-weight: normal; */
+/*   line-height: 1.4em; */
+/*   padding: 2pt; */
+/*   margin-right: 1pt; */
+/*   box-shadow: 1px 1px 1px #aaa; */
+/* } */
 
 #buttons {
   display:block;
@@ -177,15 +175,11 @@ ol > li {
   margin-top: -1.5em;
 }
 
-img.random {
-  max-width: 750px;
-  max-height: 380px;
-  margin-bottom: 10pt;
-  border: 1px solid black;
-}
-
 p > img {
-  min-width: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
 }
 
 @media(min-width:1000px){
@@ -232,20 +226,3 @@ p > img {
   }
 }
 
-@media(max-width:800px){
-  code{
-    font-size: 85%;
-  }
-}
-
-@media(min-width:800px) and (max-width:900px){
-  code{
-    font-size: 75%;
-  }
-}
-
-@media(min-width:900px){
-  code{
-    font-size: 85%;
-  }
-}
