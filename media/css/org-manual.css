@@ -180,17 +180,17 @@ p > img {
 
 p code:before, p code:after {
   content: "=";
-  color: #ccc;
+  opacity: 0.3;
 }
 
 p b:before, p b:after {
   content: "*";
-  color: #ccc;
+  opacity: 0.3;
 }
 
 p del:before, p del:after {
   content: "+";
-  color: #ccc;
+  opacity: 0.3;
 }
 
 .nav ul {

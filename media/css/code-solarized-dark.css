@@ -1,13 +1,18 @@
-:root {
-  --light-bg: #FDF6E3;
-  --light-bg-alt: #FFFBEA;
+:Root {
+  --light-bg: #FFFBEA;
+  --light-bg-alt: #FDF6E3;
   --light-fg: #556b72;
   --light-fg-alt: #7B8787;
+  --light-blue: #268bd2;
+  --light-yellow: #b58900;
+  --light-green: #859900;
 
   --dark-bg: #002b36;
   --dark-bg-alt: #00212B;
   --dark-fg: #839496;
   --dark-fg-alt: #657b83;
+
+  --font-family: "Source Code Pro", "Droid Sans Mono", "Monaco", "menlo", "Ubuntu Mono", "DejaVu Sans Mono", consolas, courier, monospace;
 }
 
 html {
@@ -15,18 +20,47 @@ html {
   background-color: var(--light-bg);
 }
 
-.nav a {
+.settitle a:hover {
+  color: var(--light-fg);
+  background-color: transparent;
   text-decoration: none;
+  font-weight: bold;
+}
+
+a {
+  font-weight: normal;
+  text-decoration: underline;
+  color: var(--light-blue);
+}
+
+a:hover {
+  font-weight: normal;
+  text-decoration: none;
+  color: var(--light-bg-alt);
+  background-color: var(--light-blue);
 }
 
 .nav a {
+  font-weight: bold;
+  text-decoration: none;
   color: var(--light-fg);
   background-color: var(--light-bg);
+}
+
+.nav a:hover {
+  color: var(--dark-fg);
+  background-color: var(--dark-bg);
 }
 
 .nav a.active {
   color: var(--dark-fg);
   background-color: var(--dark-bg);
+}
+
+p code {
+  font-family: var(--font-family);
+  color: var(--light-green);
+  font-style: italic;
 }
 
 .linenr {
@@ -66,6 +100,6 @@ html {
 }
 
 #searchform #s:focus {
-  background-color: var(--light-bg);
+  background-color: var(--light-bg-alt);
   width: 160px;
 }
