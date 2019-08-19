@@ -1,19 +1,19 @@
 /* @import url(//font.lug.ustc.edu.cn/css?family=Source+Code+Pro); */
-
 html {
   margin: 0;
   font: 300 0.95em/1.6em "Source Code Pro", "Droid Serif", "Open Sans", Cambria, Georgia, "DejaVu Serif", serif;
 }
 
-/* pre { */
-/*   font-family: "Source Code Pro", "Droid Sans Mono"; */
-/*   font-size: .8em; */
-/*   font-weight: normal; */
-/*   line-height: 1.4em; */
-/*   padding: 2pt; */
-/*   margin-right: 1pt; */
-/*   box-shadow: 1px 1px 1px #aaa; */
-/* } */
+.settitle a {
+  color: inherit;
+  text-decoration: inherit;
+  font-weight: inherit;
+}
+
+.nav a {
+  font-weight: bold;
+  text-decoration: underline;
+}
 
 #buttons {
   display:block;
@@ -71,10 +71,6 @@ a {
   /* color: #1c3030; */
   /* #0066CC; */
   /* color: #537d7b */
-}
-
-.nav a {
-  font-weight: normal;
 }
 
 a:visited {
@@ -180,6 +176,131 @@ p > img {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
+}
+
+p code:before, p code:after {
+  content: "=";
+  color: #ccc;
+}
+
+p b:before, p b:after {
+  content: "*";
+  color: #ccc;
+}
+
+p del:before, p del:after {
+  content: "+";
+  color: #ccc;
+}
+
+.nav ul {
+  padding-left: 0;
+  list-style: none;
+}
+
+.nav li {
+  margin: 0;
+  display: inline-block;
+}
+
+.nav li + li:before {
+  display: inline-block;
+  content: "\00B7 \00a0";
+  color: #ccc;
+}
+
+/* searchform*/
+#searchform {
+  position: absolute;
+  top: 56.5px;
+  right: 50px;
+}
+
+#searchform #s {
+  font-family: "Source Code Pro", "Droid Serif", "Lucida Grande", "Lucida Sans Unicode", "DejaVu Sans", Verdana, sans-serif;
+  background: url("/media/img/search.png") no-repeat 5px 6px;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.1);
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  width: 90px;
+  height: 20px;
+  line-height: 12px;
+  padding: 4px 10px 4px 28px;
+
+  -webkit-transition-duration: 400ms;
+  -webkit-transition-property: width, background;
+  -webkit-transition-timing-function: ease;
+  -moz-transition-duration: 400ms;
+  -moz-transition-property: width, background;
+  -moz-transition-timing-function: ease;
+  -o-transition-duration: 400ms;
+  -o-transition-property: width, background;
+  -o-transition-timing-function: ease;
+}
+
+#searchform #s:focus {
+  background-color: #FFFBEA;
+  width: 160px;
+}
+
+.masthead img.avatar {
+  position: relative;
+  float: right;
+  margin-top: -50px;
+  margin-bottom: -100%;
+  margin-right: 2px;
+  width: 64px;
+  background-color: #fff;
+}
+
+blockquote {
+  font-family: "Source Code Pro", "Droid Sans Mono", "Monaco", "menlo", "Ubuntu Mono", "DejaVu Sans Mono", consolas, courier, monospace;
+  font-size: 90%;
+  padding: 0 0 0 20px;
+  margin: 0 30px 20px 20px;
+  color: #999;
+  border-left: 8px solid #e5e5e5;
+  font-style: italic;
+}
+
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.masthead blockquote {
+  font-size: 85%;
+  padding-left: 0;
+  margin-left: 0;
+  border-left: none;
+}
+
+.masthead blockquote:before {
+  content: '"'
+}
+
+.masthead blockquote:after {
+  content: '"'
+}
+
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  margin-bottom: 1.3em;
+}
+
+.video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 @media(min-width:1000px){

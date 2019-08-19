@@ -1,11 +1,37 @@
+:root {
+  --light-bg: #FDF6E3;
+  --light-bg-alt: #FFFBEA;
+  --light-fg: #556b72;
+  --light-fg-alt: #7B8787;
+
+  --dark-bg: #002b36;
+  --dark-bg-alt: #00212B;
+  --dark-fg: #839496;
+  --dark-fg-alt: #657b83;
+}
+
 html {
-  color: #556b72;
-  background-color: #FDF6E3;
+  color: var(--light-fg);
+  background-color: var(--light-bg);
+}
+
+.nav a {
+  text-decoration: none;
+}
+
+.nav a {
+  color: var(--light-fg);
+  background-color: var(--light-bg);
+}
+
+.nav a.active {
+  color: var(--dark-fg);
+  background-color: var(--dark-bg);
 }
 
 .linenr {
-  color: #657b83;
-  background-color: #002b36;
+  color: var(--dark-fg-alt);
+  background-color: var(--dark-bg-alt);
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -29,12 +55,17 @@ html {
 }
 
 .org-src-container pre {
-  color: #839496;
-  background-color: #002b36;
+  color: var(--dark-fg);
+  background-color: var(--dark-bg);
   font-family: "Source Code Pro", "Droid Sans Mono", "Monaco", "menlo", "Ubuntu Mono", "DejaVu Sans Mono", consolas, courier, monospace;
   box-shadow: none;
   border: none;
   padding: 0.5em 0 0.5em 0.5em;
   font-size: 95%;
   overflow: auto;
+}
+
+#searchform #s:focus {
+  background-color: var(--light-bg);
+  width: 160px;
 }
