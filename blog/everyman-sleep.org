@@ -3,8 +3,8 @@
 #+EMAIL:       xusheng0711@gmail.com
 #+DATE:        2016-03-07 Mon
 #+URI:         /blog/%y/%m/%d/everyman-sleep-schedule-plain
-#+KEYWORDS:    Life, Sleep
-#+TAGS:        Life, Sleep
+#+KEYWORDS:    life, sleep
+#+TAGS:        life, sleep
 #+LANGUAGE:    en
 #+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
 #+DESCRIPTION: 人生苦短

@@ -4,7 +4,7 @@
 #+DATE:        2016-03-15 Tue
 #+URI:         /blog/%y/%m/%d/happy-pi-day
 #+KEYWORDS:    海子
-#+TAGS:        Life
+#+TAGS:        life
 #+LANGUAGE:    en
 #+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
 #+DESCRIPTION: 海子故居游记
