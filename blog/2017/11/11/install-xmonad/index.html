@@ -35,9 +35,9 @@
 
   <h3 class="section">Install XMonad</h3>
 
-<div id="outline-container-orgff1e09c" class="outline-2">
-<h2 id="orgff1e09c">安装XMonad</h2>
-<div class="outline-text-2" id="text-orgff1e09c">
+<div id="outline-container-org9ad6512" class="outline-2">
+<h2 id="org9ad6512">安装XMonad</h2>
+<div class="outline-text-2" id="text-org9ad6512">
 <div class="org-src-container">
 <pre class="src src-shell">sudo pacman -S xmonad xmonad-contrib xmonad-utils xmobar dzen2 demnu
 sudo pacman -S termite
@@ -46,9 +46,9 @@ sudo pacman -S termite
 </div>
 
 
-<div id="outline-container-org6bcf1e7" class="outline-3">
-<h3 id="org6bcf1e7">最简单的配置</h3>
-<div class="outline-text-3" id="text-org6bcf1e7">
+<div id="outline-container-org4fe8fa9" class="outline-3">
+<h3 id="org4fe8fa9">最简单的配置</h3>
+<div class="outline-text-3" id="text-org4fe8fa9">
 <div class="org-src-container">
 <pre class="src src-haskell"><span style="color: #405A61;">-- </span><span style="color: #405A61;">Imports.</span>
 <span style="color: #859900;">import</span> <span style="color: #b58900;">XMonad</span>
@@ -102,9 +102,9 @@ sudo pacman -S termite
 </div>
 </div>
 
-<div id="outline-container-org45caebb" class="outline-3">
-<h3 id="org45caebb">xmobar配置</h3>
-<div class="outline-text-3" id="text-org45caebb">
+<div id="outline-container-orgec6db92" class="outline-3">
+<h3 id="orgec6db92">xmobar配置</h3>
+<div class="outline-text-3" id="text-orgec6db92">
 <p>
 编辑 <code>~/.xmobarrc</code>
 </p>
@@ -131,9 +131,9 @@ sudo pacman -S termite
 </div>
 </div>
 
-<div id="outline-container-org1683743" class="outline-3">
-<h3 id="org1683743">stalonetray配置</h3>
-<div class="outline-text-3" id="text-org1683743">
+<div id="outline-container-org84e025d" class="outline-3">
+<h3 id="org84e025d">stalonetray配置</h3>
+<div class="outline-text-3" id="text-org84e025d">
 <p>
 编辑 <code>~/.stalonetrayrc</code>
 </p>
@@ -168,9 +168,9 @@ xsync false
 </div>
 </div>
 
-<div id="outline-container-orgeab5741" class="outline-2">
-<h2 id="orgeab5741">修改 <code>.xinitrc</code></h2>
-<div class="outline-text-2" id="text-orgeab5741">
+<div id="outline-container-org7b4a0d4" class="outline-2">
+<h2 id="org7b4a0d4">修改 <code>.xinitrc</code></h2>
+<div class="outline-text-2" id="text-org7b4a0d4">
 <div class="org-src-container">
 <pre class="src src-shell"><span style="color: #405A61;">#</span><span style="color: #405A61;">!/bin/</span><span style="color: #859900;">sh</span>
 
@@ -237,17 +237,17 @@ xsync false
 </div>
 </div>
 
-<div id="outline-container-orgda70e23" class="outline-2">
-<h2 id="orgda70e23">配置键盘和触摸板</h2>
-<div class="outline-text-2" id="text-orgda70e23">
+<div id="outline-container-org8315a29" class="outline-2">
+<h2 id="org8315a29">配置键盘和触摸板</h2>
+<div class="outline-text-2" id="text-org8315a29">
 <p>
 使用 gnome-session 的时候，会默认配置触摸板和键盘鼠标等，所以这里就需要在 <code>/etc/X11/xorg.conf.d</code> 下面添加配置文件的方式配置键盘和触摸板了。
 </p>
 </div>
 
-<div id="outline-container-org855bb73" class="outline-3">
-<h3 id="org855bb73">键盘配置</h3>
-<div class="outline-text-3" id="text-org855bb73">
+<div id="outline-container-org03c34e4" class="outline-3">
+<h3 id="org03c34e4">键盘配置</h3>
+<div class="outline-text-3" id="text-org03c34e4">
 <p>
 我是 Emacs 的死衷，所以需要将 <code>ctrl</code> 和 <code>caps lock</code> 交换。
 编写 <code>/etc/X11/xorg.conf.d/00-keyboard.conf</code> 文件
@@ -277,9 +277,9 @@ EndSection
 </div>
 
 
-<div id="outline-container-org34c5181" class="outline-3">
-<h3 id="org34c5181">触摸板设置</h3>
-<div class="outline-text-3" id="text-org34c5181">
+<div id="outline-container-orgbf4e05c" class="outline-3">
+<h3 id="orgbf4e05c">触摸板设置</h3>
+<div class="outline-text-3" id="text-orgbf4e05c">
 <p>
 这么多年被苹果强奸之后，我发现我已经和自然的习惯于苹果的“NatrualScrolling”了。
 编写 <code>/etc/X11/xorg.conf.d/30-touchpad.conf</code>
@@ -388,9 +388,9 @@ EndSection
 </div>
 </div>
 
-<div id="outline-container-org7ea66a8" class="outline-2">
-<h2 id="org7ea66a8">微调Emacs的输入法问题</h2>
-<div class="outline-text-2" id="text-org7ea66a8">
+<div id="outline-container-orgaee5b76" class="outline-2">
+<h2 id="orgaee5b76">微调Emacs的输入法问题</h2>
+<div class="outline-text-2" id="text-orgaee5b76">
 <p>
 Emacs和输入法是个老问题了， <code>ctrl + space</code> 不能呼出输入法是常态。貌似在gnome环境似乎没有问题。反正我也很少在Emacs下打中文的。想着spacemacs里可能有解决方案，看了下文档果然如此。在spacemacs中增加chinese的layer就自然地解决了问题。
 </p>
@@ -402,9 +402,9 @@ Emacs和输入法是个老问题了， <code>ctrl + space</code> 不能呼出输
 </div>
 </div>
 
-<div id="outline-container-orge047f86" class="outline-2">
-<h2 id="orge047f86">配置termite</h2>
-<div class="outline-text-2" id="text-orge047f86">
+<div id="outline-container-orgbf86e88" class="outline-2">
+<h2 id="orgbf86e88">配置termite</h2>
+<div class="outline-text-2" id="text-orgbf86e88">
 <p>
 编辑 <code>~/.config/termite/config</code>
 </p>
