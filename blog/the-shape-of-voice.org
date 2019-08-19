@@ -46,6 +46,6 @@
 最后还是分享一个尕丶天堂的[[https://www.bilibili.com/video/av14247605/?from=search&seid=14578639186932309937][视频]]。
 #+BEGIN_EXPORT html
 <div class="container">
-  <iframe src="https://www.bilibili.com/blackboard/player.html?aid=14247605&cid=23256487&as_wide=1" frameborder="0" allowfullscreen class="video"></iframe>
+  <iframe src="//player.bilibili.com/player.html?aid=14247605&cid=23256487&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" class="video"> </iframe>
 </div>
 #+END_EXPORT

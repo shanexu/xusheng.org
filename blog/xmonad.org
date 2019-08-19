@@ -4,7 +4,7 @@
 #+DATE:        2017-11-11 Sat
 #+URI:         /blog/%y/%m/%d/install-xmonad
 #+KEYWORDS:    <TODO: insert your keywords here>
-#+TAGS:        <TODO: insert your tags here>
+#+TAGS:        life
 #+LANGUAGE:    en
 #+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
 #+DESCRIPTION: <TODO: insert your description here>
