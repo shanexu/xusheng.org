@@ -25,19 +25,20 @@
     <div class="node nav">
       <ul>
           <li><a href="/blog/" id="Blog_tab">Blog</a></li>
-        <li><a href="/tags/" id="tags_tab">Tags</a></li>
-        <li><a href="/about/" id="about_tab">About</a></li>
-        <li><a href="https://github.com/shanexu" id="github_tab">GitHub</a></li>
-        <li><a href="/rss.xml" id="rss_tab">RSS</a></li>
+          <li><a href="/media/" id="Media_tab">Media</a></li>
+        <li><a href="/tags/">Tags</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="https://github.com/shanexu">GitHub</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
       </ul>
     </div>
 
 
   <h3 class="section">Install XMonad</h3>
 
-<div id="outline-container-org18826d9" class="outline-2">
-<h2 id="org18826d9">安装XMonad</h2>
-<div class="outline-text-2" id="text-org18826d9">
+<div id="outline-container-orge797082" class="outline-2">
+<h2 id="orge797082">安装XMonad</h2>
+<div class="outline-text-2" id="text-orge797082">
 <div class="org-src-container">
 <pre class="src src-shell">sudo pacman -S xmonad xmonad-contrib xmonad-utils xmobar dzen2 demnu
 sudo pacman -S termite
@@ -46,9 +47,9 @@ sudo pacman -S termite
 </div>
 
 
-<div id="outline-container-org0692082" class="outline-3">
-<h3 id="org0692082">最简单的配置</h3>
-<div class="outline-text-3" id="text-org0692082">
+<div id="outline-container-orgdd07a41" class="outline-3">
+<h3 id="orgdd07a41">最简单的配置</h3>
+<div class="outline-text-3" id="text-orgdd07a41">
 <div class="org-src-container">
 <pre class="src src-haskell"><span style="color: #405A61;">-- </span><span style="color: #405A61;">Imports.</span>
 <span style="color: #859900;">import</span> <span style="color: #b58900;">XMonad</span>
@@ -102,9 +103,9 @@ sudo pacman -S termite
 </div>
 </div>
 
-<div id="outline-container-org8a92b03" class="outline-3">
-<h3 id="org8a92b03">xmobar配置</h3>
-<div class="outline-text-3" id="text-org8a92b03">
+<div id="outline-container-org19db3c3" class="outline-3">
+<h3 id="org19db3c3">xmobar配置</h3>
+<div class="outline-text-3" id="text-org19db3c3">
 <p>
 编辑 <code>~/.xmobarrc</code>
 </p>
@@ -131,9 +132,9 @@ sudo pacman -S termite
 </div>
 </div>
 
-<div id="outline-container-orgc799576" class="outline-3">
-<h3 id="orgc799576">stalonetray配置</h3>
-<div class="outline-text-3" id="text-orgc799576">
+<div id="outline-container-org74b4af0" class="outline-3">
+<h3 id="org74b4af0">stalonetray配置</h3>
+<div class="outline-text-3" id="text-org74b4af0">
 <p>
 编辑 <code>~/.stalonetrayrc</code>
 </p>
@@ -168,9 +169,9 @@ xsync false
 </div>
 </div>
 
-<div id="outline-container-org3623143" class="outline-2">
-<h2 id="org3623143">修改 <code>.xinitrc</code></h2>
-<div class="outline-text-2" id="text-org3623143">
+<div id="outline-container-org6c6af0f" class="outline-2">
+<h2 id="org6c6af0f">修改 <code>.xinitrc</code></h2>
+<div class="outline-text-2" id="text-org6c6af0f">
 <div class="org-src-container">
 <pre class="src src-shell"><span style="color: #405A61;">#</span><span style="color: #405A61;">!/bin/</span><span style="color: #859900;">sh</span>
 
@@ -237,17 +238,17 @@ xsync false
 </div>
 </div>
 
-<div id="outline-container-org0eb943d" class="outline-2">
-<h2 id="org0eb943d">配置键盘和触摸板</h2>
-<div class="outline-text-2" id="text-org0eb943d">
+<div id="outline-container-org4d12927" class="outline-2">
+<h2 id="org4d12927">配置键盘和触摸板</h2>
+<div class="outline-text-2" id="text-org4d12927">
 <p>
 使用 gnome-session 的时候，会默认配置触摸板和键盘鼠标等，所以这里就需要在 <code>/etc/X11/xorg.conf.d</code> 下面添加配置文件的方式配置键盘和触摸板了。
 </p>
 </div>
 
-<div id="outline-container-org50ecb21" class="outline-3">
-<h3 id="org50ecb21">键盘配置</h3>
-<div class="outline-text-3" id="text-org50ecb21">
+<div id="outline-container-org3a0955a" class="outline-3">
+<h3 id="org3a0955a">键盘配置</h3>
+<div class="outline-text-3" id="text-org3a0955a">
 <p>
 我是 Emacs 的死衷，所以需要将 <code>ctrl</code> 和 <code>caps lock</code> 交换。
 编写 <code>/etc/X11/xorg.conf.d/00-keyboard.conf</code> 文件
@@ -277,9 +278,9 @@ EndSection
 </div>
 
 
-<div id="outline-container-orgadb4551" class="outline-3">
-<h3 id="orgadb4551">触摸板设置</h3>
-<div class="outline-text-3" id="text-orgadb4551">
+<div id="outline-container-org06d037e" class="outline-3">
+<h3 id="org06d037e">触摸板设置</h3>
+<div class="outline-text-3" id="text-org06d037e">
 <p>
 这么多年被苹果强奸之后，我发现我已经和自然的习惯于苹果的“NatrualScrolling”了。
 编写 <code>/etc/X11/xorg.conf.d/30-touchpad.conf</code>
@@ -388,9 +389,9 @@ EndSection
 </div>
 </div>
 
-<div id="outline-container-org09376db" class="outline-2">
-<h2 id="org09376db">微调Emacs的输入法问题</h2>
-<div class="outline-text-2" id="text-org09376db">
+<div id="outline-container-org35c85c5" class="outline-2">
+<h2 id="org35c85c5">微调Emacs的输入法问题</h2>
+<div class="outline-text-2" id="text-org35c85c5">
 <p>
 Emacs和输入法是个老问题了， <code>ctrl + space</code> 不能呼出输入法是常态。貌似在gnome环境似乎没有问题。反正我也很少在Emacs下打中文的。想着spacemacs里可能有解决方案，看了下文档果然如此。在spacemacs中增加chinese的layer就自然地解决了问题。
 </p>
@@ -402,9 +403,9 @@ Emacs和输入法是个老问题了， <code>ctrl + space</code> 不能呼出输
 </div>
 </div>
 
-<div id="outline-container-org7ebe2fb" class="outline-2">
-<h2 id="org7ebe2fb">配置termite</h2>
-<div class="outline-text-2" id="text-org7ebe2fb">
+<div id="outline-container-org4680852" class="outline-2">
+<h2 id="org4680852">配置termite</h2>
+<div class="outline-text-2" id="text-org4680852">
 <p>
 编辑 <code>~/.config/termite/config</code>
 </p>
