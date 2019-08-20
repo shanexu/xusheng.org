@@ -1,0 +1,10 @@
+#+TITLE:       create a TUN device to route TCP traffic through a SOCKS server
+#+AUTHOR:      shanexu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2019-08-20 Tue
+#+URI:         /blog/%y/%m/%d/create-a-tun-device-to-route-tcp-traffic-through-a-socks-server
+#+KEYWORDS:    vpn, socks, proxy
+#+TAGS:        life
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: create a TUN device to route TCP traffic through a SOCKS server
