@@ -9,23 +9,39 @@
 #+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
 #+DESCRIPTION: create a TUN device to route TCP traffic through a SOCKS server
 
-#+begin_src shell -n
-#!/bin/bash
+标题看上去有些唬人，其实这是 =badvpn-tun2socks= 命令的手册的第一句话。简单明了的解释了这个工具的作用。
 
-sudo openvpn --mktun --dev tun0
-sudo ifconfig tun0 10.0.0.1 netmask 255.255.255.0
+前段时间在用git协议克隆一个github上的项目的时候遇到一个很尴尬的问题，使用git协议的时候不能通过http代理克隆代码，导致速度奇慢。诚然我可以通过先通过https协议克隆代码，然后 =git remote set-url= 的方式曲线救国，但是最后我还是选择使用了 [[https://nssurge.com/][Surge]] 这个工具。Surge有个 =Enhanced Mode= ，能够让所有网络流量(包括udp)，都同过socks服务与外界交互。Surge的Enhanced Mode到底是什么呢？实际上Enhanced Mode再启动后，会在系统的路由表中添加一个特殊的默认网关，然后系统就会把所有的网络流量（除了socks服务）发送到这个网关。用命令查看启用Enhanced Mode后的路由表：
 
-array=( 104.128.91.98 45.33.110.13 173.255.254.220 173.255.231.69 172.104.240.253 45.79.100.121 173.255.211.96 45.79.223.146 45.34.23.105 50.116.10.16 173.255.200.168 )
-for i in "${array[@]}"
-do
-    sudo route add $i gw 192.168.2.1 metric 5
-done
+#+begin_src text
+$ netstat -rn
+Routing tables
 
-sudo route add default gw 10.0.0.2 metric 6
+Internet:
+Destination        Gateway            Flags        Refs      Use   Netif Expire
+default            192.168.2.1        UGSc           93        0     en0
+1                  198.18.0.1         UGSc            0        0   utun1
+2/7                198.18.0.1         UGSc            0        0   utun1
+4/6                198.18.0.1         UGSc            0        0   utun1
+8/5                198.18.0.1         UGSc            1        0   utun1
+16/4               198.18.0.1         UGSc            0        0   utun1
+32/3               198.18.0.1         UGSc            3        0   utun1
+64/2               198.18.0.1         UGSc            1        0   utun1
+...
 
-badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:7591 --socks5-udp
-
+Internet6:
+Destination                             Gateway                         Flags         Netif Expire
+default                                 fe80::%utun0                    UGcI          utun0
+...
 #+end_src
+
+相当于将socks代理转成了vpn服务了。
+
+那么Linux下有没有类似的工具，经过一番搜搜之后发现了 [[https://github.com/ambrop72/badvpn][badvpn]] 这个项目。这个项目提供了一系列的工具，其中我们这里只使用了 =tun2socks= 这个命令行工具。
+
+这个工具原本是没法通过socks服务去做udp转发的（通过在目标机器上另外启动一个转发服务可以达成），但是某大神提了一个PR实现了socks5-udp转发功能： [[https://github.com/bemasc/badvpn/tree/bemasc-udp][bemasc/badvpn@bemasc-udp]] 。
+
+编译安装badvpn：
 
 #+begin_src shell -n
 cd <badvpn-source-dir>
@@ -35,102 +51,30 @@ cmake .. -DCMAKE_INSTALL_PREFIX=<install-dir>
 make install
 #+end_src
 
-#+begin_src text
-badvpn-tun2socks(8)                           System Manager's Manual                          badvpn-tun2socks(8)
+经过一番折腾后写下面的脚本：
+这里假设socks服务的远程地址是a.b.c.d，原本网络的默认网关是192.168.1.1
 
-NAME
-       badvpn-tun2socks - create a TUN device to route TCP traffic through a SOCKS server
+#+begin_src shell -n
+#!/bin/bash
 
-SYNOPSIS
-       badvpn-tun2socks
-         [--help]
-         [--version]
-         [--logger <stdout/syslog>]
-         [--syslog-facility <string>] [--syslog-ident <string>]
-         [--loglevel <0-5/none/error/warning/notice/info/debug>]
-         [--channel-loglevel <channel-name> <0-5/none/error/warning/notice/info/debug>] ...
-         [--tundev <name>]
-         --netif-ipaddr <ipaddr>
-         --netif-netmask <ipnetmask>
-         --socks-server-addr <addr>
-         [--udpgw-remote-server-addr <addr>]
-         [--udpgw-max-connections <number>]
-         [--udpgw-connection-buffer-size <number>]
+sudo openvpn --mktun --dev tun0
+sudo ifconfig tun0 10.0.0.1 netmask 255.255.255.0
 
-       Address format is a.b.c.d:port (IPv4) or [addr]:port (IPv6).
+array=( a.b.c.d )
+for i in "${array[@]}"
+do
+    sudo route add $i gw 192.168.1.1 metric 5
+done
 
-DESCRIPTION
-       badvpn-tun2socks  is  a  network utility used to "socksify" TCP connections at the network layer. It imple‐
-       ments a TUN device which accepts all incoming TCP connections (regardless of destination IP), and  forwards
-       them through a SOCKS server. This allows you to forward all connections through SOCKS, without any need for
-       application support. It can be used, for example, to forward connections through a remote SSH server.
+sudo route add default gw 10.0.0.2 metric 6
 
-EXAMPLE
-       This example demonstrates using tun2socks in combination with SSH's dynamic forwarding feature.
+badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:7591 --socks5-udp
 
-       Connect to the SSH server, passing -D localhost:1080 to the ssh command to enable dynamic forwarding.  This
-       will make ssh open a local SOCKS server which tun2socks forward connection through.
-
-       First create a TUN device (eg. using openvpn):
-
-         openvpn --mktun --dev tun0 --user <someuser>
-
-       Configure the IP of the new tun device:
-
-         ifconfig tun0 10.0.0.1 netmask 255.255.255.0
-
-       Now start the badvpn-tun2socks program:
-
-         badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 \
-                          --socks-server-addr 127.0.0.1:1080
-
-       Note  that the address 10.0.0.2 is not a typo. It specifies the IP address of the virtual router inside the
-       TUN device, and must be different from the IP of the TUN interface itself (but in the same subnet).
-
-       Now you should be able to ping the virtual router's IP (10.0.0.2):
-
-         ping -n 10.0.0.2
-
-       All that remains is to route connections through the TUN device instead of the  existing  default  gateway.
-       This is done as follows:
-
-       1.  Add  a route to the SSH server through your existing gateway, with a lower metric than the original de‐
-       fault route.
-
-       2. If your DNS servers are in a network that is not direcly attached  (e.g.  in  the  Internet),  also  add
-       routes for them (like for the SSH server). This is needed because tun2socks does not forward UDP by default
-       (see below).
-
-       3. Add a default route through the virtual router in the TUN device, with a lower metric than the  original
-       default route, but higher than the SSH and DNS routes.
-
-       This  will make all external connections go through the TUN device, except for the SSH connection (else SSH
-       would go through the TUN device, which would go through... SSH).
-
-       For example (assuming there are no existing default routes with metric <=6; otherwise remove them or change
-       their metrics):
-
-         route add <IP_of_SSH_server> gw <IP_of_original_gateway> metric 5
-         <same for DNS>
-         route add default gw 10.0.0.2 metric 6
-
-UDP FORWARDING
-       tun2socks  can forward UDP, however this requires a forwarder daemon, badvpn-udpgw to run on the remote SSH
-       server:
-
-         badvpn-udpgw --listen-addr 127.0.0.1:7300
-
-       Then tell tun2socks to forward UDP via the forwarder:
-
-         --udpgw-remote-server-addr 127.0.0.1:7300
-
-COPYRIGHT
-       Copyright © 2010 Ambroz Bizjak <ambrop7@gmail.com>
-       This is free software; see the source for copying conditions.  There is NO  warranty;  not  even  for  MER‐
-       CHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-                                                   February 2012                               badvpn-tun2socks(8)
 #+end_src
 
-[[https://github.com/bemasc/badvpn/tree/bemasc-udp][bemasc/badvpn#bemasc-udp]]
+最后修改下dns服务地址，编辑 =/etc/resolv.conf=
 
+#+begin_src `text
+nameserver 8.8.8.8
+nameserver 192.168.1.1
+#+end_src
