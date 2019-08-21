@@ -35,9 +35,9 @@
 
   <h3 class="section">influxdb-relay性能瓶颈分析</h3>
 
-<div id="outline-container-orga647a5c" class="outline-2">
-<h2 id="orga647a5c">起因</h2>
-<div class="outline-text-2" id="text-orga647a5c">
+<div id="outline-container-org00bff1f" class="outline-2">
+<h2 id="org00bff1f">起因</h2>
+<div class="outline-text-2" id="text-org00bff1f">
 <p>
 为了让influxdb能够达到高可用，我便考虑在influxdb外面套一层，比如nginx。然而发现官方已经开发了一个influxdb-relay的东西，于是决定索性使用这个东西。
 首先看一张官方README.md中的图。
@@ -107,9 +107,9 @@ Status Codes  [code:count]             204:180000
 </div>
 </div>
 
-<div id="outline-container-org768d17f" class="outline-2">
-<h2 id="org768d17f">过程</h2>
-<div class="outline-text-2" id="text-org768d17f">
+<div id="outline-container-orgc0e2ead" class="outline-2">
+<h2 id="orgc0e2ead">过程</h2>
+<div class="outline-text-2" id="text-orgc0e2ead">
 <p>
 在之前的文章里面提过，最新版influxdb，即便是在 vegeta 5000/s 的攻击下，还是能保证99%以上的成功率，
 然而 <code>influxdb-relay</code> 却在 3000/s 的速度的时候就已经撑不住了。作为influxdb的前置程序，至少要达到或者

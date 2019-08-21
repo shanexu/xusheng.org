@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>create a TUN device to route TCP traffic through a SOCKS server - Shane Xu&#39;s Home</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="shanexu" />
+      <meta name="description" content="create a TUN device to route TCP traffic through a SOCKS server" />
+      <meta name="keywords" content="vpn, socks, proxy" />
+    <link rel="stylesheet" href="/media/source-code-pro/source-code-pro.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/code-solarized-dark.css" type="text/css">
+  </head>
+
+  <body>
+    <div>
+      <header class="masthead">
+        <h1 class="settitle"><a href="/">Shane Xu&#39;s Home</a></h1>
+        <blockquote>Life is too short for so much sorrow.</blockquote>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="shanexu.io">
+        </form>
+      </header>
+    </div>
+    <div class="node nav">
+      <ul>
+          <li><a href="/blog/" id="Blog_tab">Blog</a></li>
+        <li><a href="/tags/">Tags</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="https://github.com/shanexu">GitHub</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+      </ul>
+    </div>
+
+
+  <h3 class="section">create a TUN device to route TCP traffic through a SOCKS server</h3>
+<p>
+标题看上去有些唬人，其实这是 <code>badvpn-tun2socks</code> 命令的手册的第一句话。简单明了的解释了这个工具的作用。
+</p>
+
+<p>
+前段时间在用git协议克隆一个github上的项目的时候遇到一个很尴尬的问题，使用git协议的时候不能通过http代理克隆代码，导致速度奇慢。诚然我可以通过先通过https协议克隆代码，然后 <code>git remote set-url</code> 的方式曲线救国，但是最后我还是选择使用了 <a href="https://nssurge.com/">Surge</a> 这个工具。Surge有个 <code>Enhanced Mode</code> ，能够让所有网络流量(包括udp)，都同过socks服务与外界交互。Surge的Enhanced Mode到底是什么呢？实际上Enhanced Mode再启动后，会在系统的路由表中添加一个特殊的默认网关，然后系统就会把所有的网络流量（除了socks服务）发送到这个网关。用命令查看启用Enhanced Mode后的路由表：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">$ netstat -rn
+Routing tables
+
+Internet:
+Destination        Gateway            Flags        Refs      Use   Netif Expire
+default            192.168.2.1        UGSc           93        0     en0
+1                  198.18.0.1         UGSc            0        0   utun1
+2/7                198.18.0.1         UGSc            0        0   utun1
+4/6                198.18.0.1         UGSc            0        0   utun1
+8/5                198.18.0.1         UGSc            1        0   utun1
+16/4               198.18.0.1         UGSc            0        0   utun1
+32/3               198.18.0.1         UGSc            3        0   utun1
+64/2               198.18.0.1         UGSc            1        0   utun1
+...
+
+Internet6:
+Destination                             Gateway                         Flags         Netif Expire
+default                                 fe80::%utun0                    UGcI          utun0
+...
+</pre>
+</div>
+
+<p>
+相当于将socks代理转成了vpn服务了。
+</p>
+
+<p>
+那么Linux下有没有类似的工具，经过一番搜搜之后发现了 <a href="https://github.com/ambrop72/badvpn">badvpn</a> 这个项目。这个项目提供了一系列的工具，其中我们这里只使用了 <code>tun2socks</code> 这个命令行工具。
+</p>
+
+<p>
+这个工具原本是没法通过socks服务去做udp转发的（通过在目标机器上另外启动一个转发服务可以达成），但是某大神提了一个PR实现了socks5-udp转发功能： <a href="https://github.com/bemasc/badvpn/tree/bemasc-udp">bemasc/badvpn@bemasc-udp</a> 。
+</p>
+
+<p>
+编译安装badvpn：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span class="linenr">1: </span><span style="color: #268bd2;">cd</span> &lt;badvpn-source-dir&gt;
+<span class="linenr">2: </span>mkdir build
+<span class="linenr">3: </span><span style="color: #268bd2;">cd</span> build
+<span class="linenr">4: </span>cmake .. -DCMAKE_INSTALL_PREFIX=&lt;install-dir&gt;
+<span class="linenr">5: </span>make install
+</pre>
+</div>
+
+<p>
+经过一番折腾后写下面的脚本：
+这里假设socks服务的远程地址是a.b.c.d，原本网络的默认网关是192.168.1.1
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span class="linenr"> 1: </span><span style="color: #405A61;">#</span><span style="color: #405A61;">!/bin/</span><span style="color: #859900;">bash</span>
+<span class="linenr"> 2: </span>
+<span class="linenr"> 3: </span>sudo openvpn --mktun --dev tun0
+<span class="linenr"> 4: </span>sudo ifconfig tun0 <span style="color: #6c71c4; font-weight: bold;">10.0.0.1</span> netmask <span style="color: #6c71c4; font-weight: bold;">255.255.255.0</span>
+<span class="linenr"> 5: </span>
+<span class="linenr"> 6: </span><span style="color: #d33682;">array</span>=<span style="color: #268bd2;">(</span> a.b.c.d <span style="color: #268bd2;">)</span>
+<span class="linenr"> 7: </span><span style="color: #859900;">for</span> i<span style="color: #859900;"> in</span> <span style="color: #2aa198;">"${array[@]}"</span>
+<span class="linenr"> 8: </span><span style="color: #859900;">do</span>
+<span class="linenr"> 9: </span>    sudo route add $<span style="color: #d33682;">i</span> gw <span style="color: #6c71c4; font-weight: bold;">192.168.1.1</span> metric <span style="color: #6c71c4; font-weight: bold;">5</span>
+<span class="linenr">10: </span><span style="color: #859900;">done</span>
+<span class="linenr">11: </span>
+<span class="linenr">12: </span>sudo route add default gw <span style="color: #6c71c4; font-weight: bold;">10.0.0.2</span> metric <span style="color: #6c71c4; font-weight: bold;">6</span>
+<span class="linenr">13: </span>
+<span class="linenr">14: </span>badvpn-tun2socks --tundev tun0 --netif-ipaddr <span style="color: #6c71c4; font-weight: bold;">10.0.0.2</span> --netif-netmask <span style="color: #6c71c4; font-weight: bold;">255.255.255.0</span> --socks-server-addr <span style="color: #6c71c4; font-weight: bold;">127.0.0.1:7591</span> --socks5-udp
+<span class="linenr">15: </span>
+</pre>
+</div>
+
+<p>
+最后修改下dns服务地址，编辑 <code>/etc/resolv.conf</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-`text">nameserver 8.8.8.8
+nameserver 192.168.1.1
+</pre>
+</div>
+
+
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2019-08-20</span>
+        <span title="last modification date" class="post-info">2019-08-21</span>
+        <span title="tags" class="post-info"><a href="/tags/life/">life</a></span>
+        <span title="author" class="post-info">shanexu</span>
+      </div>
+      <section>
+        <h2 class="chapter">Comments</h2>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2019/08/20/create-a-tun-device-to-route-tcp-traffic-through-a-socks-server";
+          var disqus_url = "http://shanexu.io/blog/2019/08/20/create-a-tun-device-to-route-tcp-traffic-through-a-socks-server";
+          var disqus_shortname = 'shanexu';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </section>
+      <script src="/media/js/main.js"></script>
+        <script type="text/javascript">
+         var _gaq = _gaq || [];
+         _gaq.push(['_setAccount', 'UA-74684473-1']);
+         _gaq.push(['_trackPageview']);
+         (function() {
+           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+         })();
+        </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711@gmail.com">shanexu</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>

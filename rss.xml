@@ -4,10 +4,17 @@
     <title>Shane Xu&#39;s Home</title>
     <link>http://shanexu.io/</link>
     <description>Life is too short for so much sorrow.</description>
-    <pubDate>Mon, 19 Aug 2019 22:27:23 CST</pubDate>
-    <lastBuildDate>Mon, 19 Aug 2019 22:27:23 CST</lastBuildDate>
+    <pubDate>Wed, 21 Aug 2019 09:00:33 CST</pubDate>
+    <lastBuildDate>Wed, 21 Aug 2019 09:00:33 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
+    <item>
+      <title>create a TUN device to route TCP traffic through a SOCKS server</title>
+      <link>http://shanexu.io/blog/2019/08/20/create-a-tun-device-to-route-tcp-traffic-through-a-socks-server</link>
+      <description><![CDATA[create a TUN device to route TCP traffic through a SOCKS server]]></description>
+      <pubDate>2019-08-21</pubDate>
+      <guid>http://shanexu.io/blog/2019/08/20/create-a-tun-device-to-route-tcp-traffic-through-a-socks-server</guid>
+    </item>
     <item>
       <title>摆脱恼人的touch bar</title>
       <link>http://shanexu.io/blog/2019/08/18/escape-touch-bar</link>
@@ -70,13 +77,6 @@
       <description><![CDATA[<TODO: insert your description here>]]></description>
       <pubDate>2017-10-06</pubDate>
       <guid>http://shanexu.io/blog/2017/03/29/change-wallpaper-of-macos</guid>
-    </item>
-    <item>
-      <title>520</title>
-      <link>http://shanexu.io/blog/2017/05/20/520</link>
-      <description><![CDATA[<TODO: insert your description here>]]></description>
-      <pubDate>2017-05-21</pubDate>
-      <guid>http://shanexu.io/blog/2017/05/20/520</guid>
     </item>
   </channel>
 </rss>
