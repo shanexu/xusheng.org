@@ -1,7 +1,12 @@
-/* @import url(//font.lug.ustc.edu.cn/css?family=Source+Code+Pro); */
+@import url(//fonts.proxy.ustclug.org/css?family=Source+Code+Pro|Droid+Sans|Droid+Sans+Mono|Droid+Serif);
+
 html {
   margin: 0;
-  font: 300 0.95em/1.6em "Source Code Pro", "Droid Serif", "Open Sans", Cambria, Georgia, "DejaVu Serif", serif;
+  font: 300 0.95em/1.6em "Droid Serif", "Open Sans", Cambria, Georgia, "DejaVu Serif", serif;
+}
+
+p {
+  font-family: "Droid Sans", "Open Sans", "DejaVu Sans", sans-serif;
 }
 
 .settitle a {
@@ -155,7 +160,7 @@ ol > li {
   margin: 1px;
   list-style: none;
 }
-
+\
 #table-of-contents ul>:first-child {
   color: blue;
 }
