@@ -1,0 +1,11 @@
+#+TITLE:       influxdb source code study
+#+AUTHOR:      
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2019-09-16 Mon
+#+URI:         /blog/%y/%m/%d/influxdb-source-code-study
+#+KEYWORDS:    influxdb
+#+TAGS:        influxdb, tsdb
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: <TODO: insert your description here>
+
