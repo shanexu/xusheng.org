@@ -1,0 +1,35 @@
+#+TITLE:       从源代码安装golang
+#+AUTHOR:      shanexu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2019-09-28 Sat
+#+URI:         /blog/%y/%m/%d/install-golang-from-source
+#+KEYWORDS:    golang
+#+TAGS:        go
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: how to install golang from source
+
+本文的的主要内容来自golang源代码中的 [[https://github.com/golang/go/blob/master/doc/install-source.html][install-source.html]] 内容。
+
+* 克隆源代码
+   #+begin_src shell
+git clone https://github.com/golang/go.git
+   #+end_src
+
+* 安装bootstrap binar
+  go1.4以后golang工具链全都由golang编译，所以从源码安装golang需要一个bootstrap环境，也就是说需要一个golang编译器。这里可以通过系统的包管理器安装go1.4后的版本。
+  #+begin_src shell
+brew install go
+  #+end_src
+  
+* 编译安装
+  #+begin_src shell
+cd go/src
+GOROOT_BOOTSTRAP=/usr/local/opt/go/libexec ./all.bash
+  #+end_src
+
+* 检查
+  #+begin_src text
+$ ../bin/go version
+go version devel +739bf6b929 Fri Sep 27 21:17:15 2019 +0000 darwin/amd64
+  #+end_src
