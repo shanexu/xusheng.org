@@ -1,5 +1,5 @@
 #+TITLE:       influxdb source code study
-#+AUTHOR:      
+#+AUTHOR:      Shane Xu
 #+EMAIL:       xusheng0711@gmail.com
 #+DATE:        2019-09-16 Mon
 #+URI:         /blog/%y/%m/%d/influxdb-source-code-study
@@ -8,4 +8,116 @@
 #+LANGUAGE:    en
 #+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
 #+DESCRIPTION: <TODO: insert your description here>
+
+* 心路历程
+  2015年开始接触influxdb，到现在一直没有好好的看他的源码，如今终于下定决心去捋一捋他的代码
+
+* 准备工作
+  influxdb如今master分支已经是2.0的代码，笔者这次分析的代码为v1.8的分支。为了方便看代码，笔者fork了influxdb，并且做了go module改造 [[https://github.com/shanexu/influxdb/tree/tardis][influxdb#tardis]] 。
+
+* 项目结构
+  #+begin_src text
+  .
+├── bin
+│   ├── influx
+│   ├── influx_inspect
+│   ├── influx_stress
+│   ├── influx_tools
+│   ├── influx_tsm
+│   ├── influxd
+│   ├── stress_test_server
+│   └── test_client
+├── client
+│   ├── README.md
+│   ├── example_test.go
+│   ├── influxdb.go
+│   ├── influxdb_test.go
+│   └── v2
+│       ├── client.go
+│       ├── client_test.go
+│       ├── example_test.go
+│       └── udp.go
+├── cmd
+│   ├── influx
+│   │   └── main.go
+│   ├── influx_inspect
+│   │   └── main.go
+│   ├── influx_stress
+│   │   │   └── template.toml
+│   │   └── influx_stress.go
+│   ├── influx_tsm
+│   │   ├── README.md
+│   │   ├── b1
+│   │   │   └── reader.go
+│   │   ├── bz1
+│   │   │   └── reader.go
+│   │   ├── converter.go
+│   │   ├── main.go
+│   │   ├── stats
+│   │   │   └── stats.go
+│   │   ├── tracker.go
+│   │   └── tsdb
+│   │       ├── codec.go
+│   │       ├── database.go
+│   │       ├── internal
+│   │       │   └── meta.pb.go
+│   │       └── types.go
+│   ├── influxd
+│   │   ├── backup
+│   │   │   └── backup.go
+│   │   ├── backup_util
+│   │   │   ├── backup_util.go
+│   │   │   └── internal
+│   │   │       ├── data.pb.go
+│   │   │       └── data.proto
+│   │   ├── help
+│   │   │   └── help.go
+│   │   ├── main.go
+│   │   ├── restore
+│   │   │   └── restore.go
+│   │   └── run
+│   │       ├── command.go
+│   │       ├── command_test.go
+│   │       ├── config.go
+│   │       ├── config_command.go
+│   │       ├── config_test.go
+│   │       └── server.go
+│   ├── integration_config_test.go
+│   ├── integration_test.go
+│   ├── parse.go
+│   └── store
+│       ├── help
+│       │   └── help.go
+│       ├── main.go
+│       └── query
+│           └── query.go
+├── coordinator
+│   ├── config.go
+│   ├── config_test.go
+│   ├── meta_client.go
+│   ├── meta_client_test.go
+│   ├── points_writer.go
+│   ├── points_writer_internal_test.go
+│   ├── points_writer_test.go
+│   ├── shard_mapper.go
+│   ├── shard_mapper_test.go
+│   ├── statement_executor.go
+│   └── statement_executor_test.go
+  #+end_src
+
+** 测试
+   #+begin_src shell
+cd influxdb
+go build ./...   
+   #+end_src
+
+** 编译
+   #+begin_src shell
+cd influxdb
+export GOBIN=$(pwd)/bin
+go install ./...
+   #+end_src
+
+* 源码解读
+  源码解读仅针对influxd命令，也就是位于 =cmd/influxd/main.go= 的main函数。
 
