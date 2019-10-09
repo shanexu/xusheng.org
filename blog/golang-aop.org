@@ -1,0 +1,89 @@
+#+TITLE:       golang aop的一种实现方法
+#+AUTHOR:      shanexu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2019-10-09 Wed
+#+URI:         /blog/%y/%m/%d/golang-aop
+#+KEYWORDS:    golang, aop
+#+TAGS:        golang
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: golang aop的一种实现方法
+
+* 序
+
+实际这个标题有点夸张了。我原本也不想实现golang的aop，也无意去实现。我的出发点仅仅是APM(Application Performance Management)。我们总说golang是一门怎么怎么神奇好用的语言，然而仅仅是一个aop都难以优雅地实现。再比如，opentracing，设计了一整套api，做分布式调用链追踪，其中包括java、golang等语言，实际上纯用java的人可能根本不需要用opentracing这套东西。java的字节码增强实在是太好用了。根本就不需要这样繁琐地在代码中显示地调用opentracing的api。所以golang有没有类似java这样的字节码增强的方法呢？肯定没有啊。
+
+我们来了解下go代码是怎样变成机器码的。
+
+[[https://getstream.io/blog/how-a-go-program-compiles-down-to-machine-code/][How a Go Program Compiles down to Machine Code]]
+
+大意是：
+
+#+begin_src text
+*.go -> AST(Abstract Syntax Tree) -> SSA(Static Single Assignment) -> machine-specific SSA -> Machine Code
+#+end_src
+
+显然，在AST到SSA这个过程中，可以通过修改语法树的方式，达到类似java的字节码增强的效果。所以需要改golang的编译器。
+
+提起APM，两年前做APM调研的时候调研了OneAPM的产品，据当时的销售说，当时无人做golang相关的APM产品，时隔三年，OneAPM也支持了golang了。从golang agent的 [[http://docs-ai.oneapm.com/agent/go/Goinstall.html][安装手册]] 手册来看，OneAPM应该是用了类似jaeger的方案，需要手工埋点。
+
+* 开发环境准备
+  工欲善其事必先利其器，我敬佩那些用vim和emacs写golang代码的大神（虽然我也用emacs写golang代码），但是面对golang源码这个大工程，我还是选择使用GoLand。因为牵涉到很多环境变量的切换，推荐使用 [[https://direnv.net/][direnv]] 方便切换配置。
+
+  1. 准备源代码
+     #+begin_src shell
+mkdir -p $HOME/src/github.com/golang
+cd $HOME/src/github.com/golang
+git clone https://github.com/golang/go.git
+cd $HOME/src/github.com/golang/go/src
+echo 'export GOROOT=$HOME/src/github.com/golang/go
+export PATH=$GOROOT/bin:$PATH
+export GOBIN=$GOROOT/bin' > .envrc
+direnv allow
+     #+end_src
+
+  2. 安装BOOTSTRAP环境（go编译器通过go语言编译，正如gcc通过gcc编译一般）
+     #+begin_src shell
+mkdir $HOME/gos
+cd $HOME/gos
+curl https://dl.google.com/go/go1.12.10.darwin-amd64.tar.gz | tar xvzf -
+mv go go1.12.10
+cd $HOME/src/github.com/golang/go/src
+echo 'export GOROOT_BOOTSTRAP=$HOME/gos/go1.12.10' >> .envrc
+direnv allow
+     #+end_src
+
+  3. 切换到最新的tag，并创建一个分支
+     #+begin_src shell
+cd $HOME/src/github.com/golang/go
+git checkout go1.13.1
+git checkout -b go1.13.1-playground
+     #+end_src
+
+  4. 首次尝试编译go编译器
+     #+begin_src shell
+cd $HOME/src/github.com/golang/go/src
+./make.bash
+     #+end_src
+
+     会看到如下的输出
+     #+begin_src text
+Building Go cmd/dist using /Users/shane/gos/go1.12.10.
+Building Go toolchain1 using /Users/shane/gos/go1.12.10.
+Building Go bootstrap cmd/go (go_bootstrap) using Go toolchain1.
+Building Go toolchain2 using go_bootstrap and Go toolchain1.
+Building Go toolchain3 using go_bootstrap and Go toolchain2.
+Building packages and commands for darwin/amd64.
+---
+Installed Go for darwin/amd64 in /Users/shane/src/github.com/golang/go
+Installed commands in /Users/shane/src/github.com/golang/go/bin
+     #+end_src
+
+     #+begin_src shell
+which go
+go version
+     #+end_src
+     
+  5. GoLand设置
+     File -> Open 选择工程根目录
+     [[https://user-images.githubusercontent.com/1257453/66475611-3a39e980-ea83-11e9-802e-3b118d1ac906.png]]
