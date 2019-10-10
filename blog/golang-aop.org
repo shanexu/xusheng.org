@@ -78,12 +78,32 @@ Building packages and commands for darwin/amd64.
 Installed Go for darwin/amd64 in /Users/shane/src/github.com/golang/go
 Installed commands in /Users/shane/src/github.com/golang/go/bin
      #+end_src
-
+     
+     验证编译
      #+begin_src shell
 which go
 go version
      #+end_src
      
   5. GoLand设置
-     File -> Open 选择工程根目录
-     [[https://user-images.githubusercontent.com/1257453/66475611-3a39e980-ea83-11e9-802e-3b118d1ac906.png]]
+     1. File -> Open 选择工程根目录
+        [[https://user-images.githubusercontent.com/1257453/66475611-3a39e980-ea83-11e9-802e-3b118d1ac906.png]]
+     
+     2. 设置GOROOT为 =$HOME/src/github.com/golang/go=
+        [[https://user-images.githubusercontent.com/1257453/66475821-a4528e80-ea83-11e9-970b-8982bafbab77.png]]
+
+  6. 创建一个playground项目，用于测试编译
+     1. clone我的测试项目
+        #+begin_src shell
+cd $HOME/src/github.com/shanexu
+git clone https://github.com/shanexu/go-playground.git
+        #+end_src
+     2. 配置环境变量
+        #+begin_src shell
+cd $HOME/src/github.com/shanexu/go-playground
+echo 'export GOROOT=$HOME/src/github.com/golang/go
+export PATH=$GOROOT/bin:$PATH
+export GOBIN=$(pwd)/bin' > .envrc
+        #+end_src
+  
+至此，开发环境已经基本就绪。
