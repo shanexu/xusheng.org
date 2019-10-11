@@ -30,7 +30,7 @@
 * 开发环境准备
   工欲善其事必先利其器，我敬佩那些用vim和emacs写golang代码的大神（虽然我也用emacs写golang代码），但是面对golang源码这个大工程，我还是选择使用GoLand。因为牵涉到很多环境变量的切换，推荐使用 [[https://direnv.net/][direnv]] 方便切换配置。
 
-  1. 准备源代码
+** 准备源代码
      #+begin_src shell
 mkdir -p $HOME/src/github.com/golang
 cd $HOME/src/github.com/golang
@@ -42,7 +42,7 @@ export GOBIN=$GOROOT/bin' > .envrc
 direnv allow
      #+end_src
 
-  2. 安装BOOTSTRAP环境（go编译器通过go语言编译，正如gcc通过gcc编译一般）
+** 安装BOOTSTRAP环境（go编译器通过go语言编译，正如gcc通过gcc编译一般）
      #+begin_src shell
 mkdir $HOME/gos
 cd $HOME/gos
@@ -53,14 +53,14 @@ echo 'export GOROOT_BOOTSTRAP=$HOME/gos/go1.12.10' >> .envrc
 direnv allow
      #+end_src
 
-  3. 切换到最新的tag，并创建一个分支
+** 切换到最新的tag，并创建一个分支
      #+begin_src shell
 cd $HOME/src/github.com/golang/go
 git checkout go1.13.1
 git checkout -b go1.13.1-playground
      #+end_src
 
-  4. 首次尝试编译go编译器
+** 首次尝试编译go编译器
      #+begin_src shell
 cd $HOME/src/github.com/golang/go/src
 ./make.bash
@@ -85,25 +85,305 @@ which go
 go version
      #+end_src
      
-  5. GoLand设置
-     1. File -> Open 选择工程根目录
-        [[https://user-images.githubusercontent.com/1257453/66475611-3a39e980-ea83-11e9-802e-3b118d1ac906.png]]
-     
-     2. 设置GOROOT为 =$HOME/src/github.com/golang/go=
-        [[https://user-images.githubusercontent.com/1257453/66475821-a4528e80-ea83-11e9-970b-8982bafbab77.png]]
+** GoLand设置
+*** 创建项目
+    File -> Open 选择工程根目录
 
-  6. 创建一个playground项目，用于测试编译
-     1. clone我的测试项目
-        #+begin_src shell
+    [[https://user-images.githubusercontent.com/1257453/66475611-3a39e980-ea83-11e9-802e-3b118d1ac906.png]]
+     
+*** 设置GOROOT
+
+    =$HOME/src/github.com/golang/go=
+
+    [[https://user-images.githubusercontent.com/1257453/66475821-a4528e80-ea83-11e9-970b-8982bafbab77.png]]
+
+** 创建一个playground项目，用于测试编译
+
+*** clone我的测试项目
+    #+begin_src shell
 cd $HOME/src/github.com/shanexu
 git clone https://github.com/shanexu/go-playground.git
-        #+end_src
-     2. 配置环境变量
-        #+begin_src shell
+    #+end_src
+
+*** 配置环境变量
+    #+begin_src shell
 cd $HOME/src/github.com/shanexu/go-playground
 echo 'export GOROOT=$HOME/src/github.com/golang/go
 export PATH=$GOROOT/bin:$PATH
 export GOBIN=$(pwd)/bin' > .envrc
-        #+end_src
+    #+end_src
   
-至此，开发环境已经基本就绪。
+** 至此整个开发环境算是搭建成功了
+
+* go build 过程分析
+
+  #+begin_src shell
+cd $HOME/src/github.com/shanexu/go-playground
+go build -o bin/helloworld helloworld/main.go
+  #+end_src
+
+  先从 =go build= 命令开始。go命令本身就是多个子命令的入口，比如我们现在要研究的build命令，就是他的一个子命令，其源码在 =src/cmd/go/internal/work/build.go= 中。
+  #+begin_src go -n 23
+var CmdBuild = &base.Command{
+	UsageLine: "go build [-o output] [-i] [build flags] [packages]",
+	Short:     "compile packages and dependencies",  
+  #+end_src
+
+  配置一个运行配置如下图所示：
+  [[https://user-images.githubusercontent.com/1257453/66554844-37033400-eb3d-11e9-8558-f42b8458b1e7.png]]
+
+  经过断点和肉眼调试，go build过程大致如下：
+
+  #+begin_src dot :file ./runBuild_call_stack.png :cmdline -Kdot -Tpng
+digraph G {
+    "main.main at main.go" -> "cmd/go/internal/work.runBuild at build.go"
+    "cmd/go/internal/work.runBuild at build.go" -> "cmd/go/internal/work.(*Builder).Do at exec.go"
+    "cmd/go/internal/work.(*Builder).Do at exec.go" -> "writeActionGraph"
+    "cmd/go/internal/work.(*Builder).Do at exec.go" -> "cmd/go/internal/work.(*Builder).Do.func3 at exec.go:177 handle(a)"
+    "cmd/go/internal/work.(*Builder).Do.func3 at exec.go:177 handle(a)" -> "cmd/go/internal/work.(*Builder).Do.func2 at exec.go:117 err = a.Func(b, a)"
+    "cmd/go/internal/work.(*Builder).Do.func2 at exec.go:117 err = a.Func(b, a)" -> "cmd/go/internal/work.(*Builder).build at exec.go:380"
+    "cmd/go/internal/work.(*Builder).Do.func2 at exec.go:117 err = a.Func(b, a)" -> "cmd/go/internal/work.(*Builder).link at exec.go:1183"
+    "cmd/go/internal/work.(*Builder).Do.func2 at exec.go:117 err = a.Func(b, a)" -> "cmd/go/internal/work.BuildInstallFunc at exec.go:1438"
+}
+  #+end_src
+
+  =main= 方法调用， =runBuild= 方法， =runBuild= 再调用 =*Builder.Do= 方法，在 =Do= 方法中根据 =Action= 的依赖关系，调用 =Action= 的 =Func= 方法。这里有个 =writeActionGraph= 方法，这个方法会打印 =action= 的关系图，但是由一个命令行参数控制。
+
+  #+begin_src go -n 243
+	// Undocumented, unstable debugging flags.
+	cmd.Flag.StringVar(&cfg.DebugActiongraph, "debug-actiongraph", "", "")
+  #+end_src
+
+  完整的命令行如下，其中 =-p 1= 表示执行 =action= 时的并发度为1。
+
+  #+begin_src shell
+go build -debug-actiongraph /tmp/build.txt -p 1 -v -o bin/helloworld helloworld/main.go
+  #+end_src
+
+  我们得到完整的 =actionGraph= 内容如下：
+
+  #+begin_export html
+<script src="https://gist.github.com/shanexu/1277c298054e2489bb923b3233cf723c.js"></script>  
+  #+end_export
+
+  转成图，如下：
+  #+begin_src dot :file ./actions.png :cmdline -Kdot -Tpng
+digraph G {
+"0 link-install command-line-arguments" -> "1 link command-line-arguments"
+"1 link command-line-arguments" -> "2 build command-line-arguments"
+"1 link command-line-arguments" -> "3 build context"
+"1 link command-line-arguments" -> "4 build fmt"
+"1 link command-line-arguments" -> "5 build runtime"
+"1 link command-line-arguments" -> "6 build errors"
+"1 link command-line-arguments" -> "7 build internal/reflectlite"
+"1 link command-line-arguments" -> "8 build sync"
+"1 link command-line-arguments" -> "9 build time"
+"1 link command-line-arguments" -> "10 build internal/fmtsort"
+"1 link command-line-arguments" -> "11 build io"
+"1 link command-line-arguments" -> "12 build math"
+"1 link command-line-arguments" -> "13 build os"
+"1 link command-line-arguments" -> "14 build reflect"
+"1 link command-line-arguments" -> "15 build strconv"
+"1 link command-line-arguments" -> "16 build unicode/utf8"
+"1 link command-line-arguments" -> "17 build internal/bytealg"
+"1 link command-line-arguments" -> "18 build internal/cpu"
+"1 link command-line-arguments" -> "19 build runtime/internal/atomic"
+"1 link command-line-arguments" -> "20 build runtime/internal/math"
+"1 link command-line-arguments" -> "21 build runtime/internal/sys"
+"1 link command-line-arguments" -> "22 build internal/race"
+"1 link command-line-arguments" -> "23 build sync/atomic"
+"1 link command-line-arguments" -> "24 build syscall"
+"1 link command-line-arguments" -> "25 build sort"
+"1 link command-line-arguments" -> "26 build math/bits"
+"1 link command-line-arguments" -> "27 build internal/oserror"
+"1 link command-line-arguments" -> "28 build internal/poll"
+"1 link command-line-arguments" -> "29 build internal/syscall/unix"
+"1 link command-line-arguments" -> "30 build internal/testlog"
+"1 link command-line-arguments" -> "31 build unicode"
+"2 build command-line-arguments" -> "3 build context"
+"2 build command-line-arguments" -> "4 build fmt"
+"2 build command-line-arguments" -> "5 build runtime"
+"2 build command-line-arguments" -> "32 nop "
+"3 build context" -> "6 build errors"
+"3 build context" -> "7 build internal/reflectlite"
+"3 build context" -> "8 build sync"
+"3 build context" -> "9 build time"
+"4 build fmt" -> "6 build errors"
+"4 build fmt" -> "10 build internal/fmtsort"
+"4 build fmt" -> "11 build io"
+"4 build fmt" -> "12 build math"
+"4 build fmt" -> "13 build os"
+"4 build fmt" -> "14 build reflect"
+"4 build fmt" -> "15 build strconv"
+"4 build fmt" -> "8 build sync"
+"4 build fmt" -> "16 build unicode/utf8"
+"5 build runtime" -> "17 build internal/bytealg"
+"5 build runtime" -> "18 build internal/cpu"
+"5 build runtime" -> "19 build runtime/internal/atomic"
+"5 build runtime" -> "20 build runtime/internal/math"
+"5 build runtime" -> "21 build runtime/internal/sys"
+"5 build runtime" -> "33 built-in package unsafe"
+"6 build errors" -> "7 build internal/reflectlite"
+"7 build internal/reflectlite" -> "5 build runtime"
+"7 build internal/reflectlite" -> "33 built-in package unsafe"
+"8 build sync" -> "22 build internal/race"
+"8 build sync" -> "5 build runtime"
+"8 build sync" -> "23 build sync/atomic"
+"8 build sync" -> "33 built-in package unsafe"
+"9 build time" -> "6 build errors"
+"9 build time" -> "5 build runtime"
+"9 build time" -> "8 build sync"
+"9 build time" -> "24 build syscall"
+"9 build time" -> "33 built-in package unsafe"
+"10 build internal/fmtsort" -> "14 build reflect"
+"10 build internal/fmtsort" -> "25 build sort"
+"11 build io" -> "6 build errors"
+"11 build io" -> "8 build sync"
+"11 build io" -> "23 build sync/atomic"
+"12 build math" -> "18 build internal/cpu"
+"12 build math" -> "26 build math/bits"
+"12 build math" -> "33 built-in package unsafe"
+"13 build os" -> "6 build errors"
+"13 build os" -> "27 build internal/oserror"
+"13 build os" -> "28 build internal/poll"
+"13 build os" -> "29 build internal/syscall/unix"
+"13 build os" -> "30 build internal/testlog"
+"13 build os" -> "11 build io"
+"13 build os" -> "5 build runtime"
+"13 build os" -> "8 build sync"
+"13 build os" -> "23 build sync/atomic"
+"13 build os" -> "24 build syscall"
+"13 build os" -> "9 build time"
+"13 build os" -> "33 built-in package unsafe"
+"14 build reflect" -> "12 build math"
+"14 build reflect" -> "5 build runtime"
+"14 build reflect" -> "15 build strconv"
+"14 build reflect" -> "8 build sync"
+"14 build reflect" -> "31 build unicode"
+"14 build reflect" -> "16 build unicode/utf8"
+"14 build reflect" -> "33 built-in package unsafe"
+"15 build strconv" -> "6 build errors"
+"15 build strconv" -> "17 build internal/bytealg"
+"15 build strconv" -> "12 build math"
+"15 build strconv" -> "26 build math/bits"
+"15 build strconv" -> "16 build unicode/utf8"
+"17 build internal/bytealg" -> "18 build internal/cpu"
+"17 build internal/bytealg" -> "33 built-in package unsafe"
+"19 build runtime/internal/atomic" -> "33 built-in package unsafe"
+"20 build runtime/internal/math" -> "21 build runtime/internal/sys"
+"22 build internal/race" -> "33 built-in package unsafe"
+"23 build sync/atomic" -> "33 built-in package unsafe"
+"24 build syscall" -> "6 build errors"
+"24 build syscall" -> "17 build internal/bytealg"
+"24 build syscall" -> "27 build internal/oserror"
+"24 build syscall" -> "22 build internal/race"
+"24 build syscall" -> "5 build runtime"
+"24 build syscall" -> "8 build sync"
+"24 build syscall" -> "33 built-in package unsafe"
+"25 build sort" -> "7 build internal/reflectlite"
+"26 build math/bits" -> "33 built-in package unsafe"
+"27 build internal/oserror" -> "6 build errors"
+"28 build internal/poll" -> "6 build errors"
+"28 build internal/poll" -> "11 build io"
+"28 build internal/poll" -> "5 build runtime"
+"28 build internal/poll" -> "8 build sync"
+"28 build internal/poll" -> "23 build sync/atomic"
+"28 build internal/poll" -> "24 build syscall"
+"28 build internal/poll" -> "9 build time"
+"28 build internal/poll" -> "33 built-in package unsafe"
+"29 build internal/syscall/unix" -> "24 build syscall"
+"29 build internal/syscall/unix" -> "33 built-in package unsafe"
+"30 build internal/testlog" -> "23 build sync/atomic"
+"32 nop " -> "3 build context"
+"32 nop " -> "4 build fmt"
+"32 nop " -> "5 build runtime"
+"32 nop " -> "6 build errors"
+"32 nop " -> "7 build internal/reflectlite"
+"32 nop " -> "8 build sync"
+"32 nop " -> "9 build time"
+"32 nop " -> "10 build internal/fmtsort"
+"32 nop " -> "11 build io"
+"32 nop " -> "12 build math"
+"32 nop " -> "13 build os"
+"32 nop " -> "14 build reflect"
+"32 nop " -> "15 build strconv"
+"32 nop " -> "16 build unicode/utf8"
+"32 nop " -> "17 build internal/bytealg"
+"32 nop " -> "18 build internal/cpu"
+"32 nop " -> "19 build runtime/internal/atomic"
+"32 nop " -> "20 build runtime/internal/math"
+"32 nop " -> "21 build runtime/internal/sys"
+"32 nop " -> "22 build internal/race"
+"32 nop " -> "23 build sync/atomic"
+"32 nop " -> "24 build syscall"
+"32 nop " -> "25 build sort"
+"32 nop " -> "26 build math/bits"
+"32 nop " -> "27 build internal/oserror"
+"32 nop " -> "28 build internal/poll"
+"32 nop " -> "29 build internal/syscall/unix"
+"32 nop " -> "30 build internal/testlog"
+"32 nop " -> "31 build unicode"
+}
+  #+end_src
+
+  观察 =actions[2].Cmd= 的内容。可见 =go build= 命令实际上是调用了对应系统（OS）架构（ARCH）的编译器命令（compile）来编译源代码的。
+  #+begin_src json
+[
+  "/Users/shane/src/github.com/golang/go/pkg/tool/darwin_amd64/compile -o /var/folders/8x/6h3nms2s34z7vwk5blbsz3100000gn/T/go-build730813966/b001/_pkg_.a -trimpath \"/var/folders/8x/6h3nms2s34z7vwk5blbsz3100000gn/T/go-build730813966/b001=>\" -p main -lang=go1.13 -complete -buildid z5Cb5jRJruTRtEF3nuzz/z5Cb5jRJruTRtEF3nuzz -goversion go1.13.1 -D _/Users/shane/src/github.com/shanexu/go-playground/helloworld -importcfg /var/folders/8x/6h3nms2s34z7vwk5blbsz3100000gn/T/go-build730813966/b001/importcfg -pack -c=12 /Users/shane/src/github.com/shanexu/go-playground/helloworld/main.go /var/folders/8x/6h3nms2s34z7vwk5blbsz3100000gn/T/go-build730813966/b001/_gomod_.go"
+]
+  #+end_src
+
+  命令行中有两个文件引起了我的兴趣： =importcfg= 和 =_gomod_.go= 。
+
+  然而，在go build命令运行结束后这些文件，都会被删除，为了防止这样的事情发生，我在go build运行的过程中增加了两个条件断点—— =cmd/go/internal/work/exec.go= 第117、119行，条件为 =a.json.ID == 2= ，ID为2的action正是main.go的编译过程。
+
+  第117行开始执行Action，第119行Action执行结束。
+
+  #+begin_src go -n 109
+	// Handle runs a single action and takes care of triggering
+	// any actions that are runnable as a result.
+	handle := func(a *Action) {
+		if a.json != nil {
+			a.json.TimeStart = time.Now()
+		}
+		var err error
+		if a.Func != nil && (!a.Failed || a.IgnoreFail) {
+			err = a.Func(b, a)
+		}
+		if a.json != nil {
+			a.json.TimeDone = time.Now()
+		}
+
+		// The actions run in parallel but all the updates to the
+		// shared work state are serialized through b.exec.
+  #+end_src
+
+  在代码运行到119行后就可以获取文件内容。
+
+  =_gomod_.go=
+  #+begin_src go -n
+package main
+import _ "unsafe"
+//go:linkname __debug_modinfo__ runtime.modinfo
+var __debug_modinfo__ = "0w\xaf\f\x92t\b\x02A\xe1\xc1\a\xe6\xd6\x18\xe6path\tcommand-line-arguments\nmod\tgithub.com/shanexu/go-playground\t(devel)\t\n\xf92C1\x86\x18 r\x00\x82B\x10A\x16\xd8\xf2"
+	  
+  #+end_src
+
+  =importcfg=
+  #+begin_src text
+# import config
+packagefile context=/Users/shane/src/github.com/golang/go/pkg/darwin_amd64/context.a
+packagefile fmt=/Users/shane/src/github.com/golang/go/pkg/darwin_amd64/fmt.a
+packagefile runtime=/Users/shane/src/github.com/golang/go/pkg/darwin_amd64/runtime.a  
+  #+end_src
+
+  有了这两个文件以及命令行参数后，我们就可以手动执行compile命令了。在GoLand里添加一个新的run configuration。
+
+  [[https://user-images.githubusercontent.com/1257453/66623436-39b46680-ebdb-11e9-8591-bd88617988ea.png]]
+
+  其中 =Program arguments= 填入如下的值。
+
+  #+begin_src text
+-o /tmp/test/_pkg_.a -trimpath "/tmp/test=>" -p main -complete -buildid dcQ8aaV0cfiucttoOzOD/dcQ8aaV0cfiucttoOzOD -D /Users/shane/src/github.com/shanexu/go-playground -importcfg /tmp/test/importcfg -pack -c=12 /Users/shane/src/github.com/shanexu/go-playground/helloworld/main.go /tmp/test/_gomod_.go  
+  #+end_src
+
