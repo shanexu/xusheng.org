@@ -384,6 +384,459 @@ packagefile runtime=/Users/shane/src/github.com/golang/go/pkg/darwin_amd64/runti
   其中 =Program arguments= 填入如下的值。
 
   #+begin_src text
--o /tmp/test/_pkg_.a -trimpath "/tmp/test=>" -p main -complete -buildid dcQ8aaV0cfiucttoOzOD/dcQ8aaV0cfiucttoOzOD -D /Users/shane/src/github.com/shanexu/go-playground -importcfg /tmp/test/importcfg -pack -c=12 /Users/shane/src/github.com/shanexu/go-playground/helloworld/main.go /tmp/test/_gomod_.go  
+-o /tmp/test/_pkg_.a -trimpath "/tmp/test=>" -p main -complete -buildid dcQ8aaV0cfiucttoOzOD/dcQ8aaV0cfiucttoOzOD -D /Users/shane/src/github.com/shanexu/go-playground -importcfg /tmp/test/importcfg -pack -c=12 /Users/shane/src/github.com/shanexu/go-playground/helloworld/main.go /tmp/test/_gomod_.go
   #+end_src
 
+  至此我们就可以进入下一阶段的compile过程的分析了。
+
+* compile 过程分析
+
+  从入口文件 =cmd/compile/main.go= 看起。
+
+  #+begin_src go -n 40
+func main() {
+	// disable timestamps for reproducible output
+	log.SetFlags(0)
+	log.SetPrefix("compile: ")
+
+	archInit, ok := archInits[objabi.GOARCH]
+	if !ok {
+		fmt.Fprintf(os.Stderr, "compile: unknown architecture %q\n", objabi.GOARCH)
+		os.Exit(2)
+	}
+
+	gc.Main(archInit)
+	gc.Exit(0)
+}
+  #+end_src
+
+  从第51行开始进入真正的编译过程，其主要逻辑在 =cmd/compile/internal/gc/main.go= 中。整个编译过程可以分成几个阶段。
+
+  #+begin_src dot :file ./cmd_compile_internal_gc_main.png :cmdline -Kdot -Tpng
+digraph G {
+"main.main at main.go:51" -> "cmd/compile/internal/gc.Main at main.go:133 fe:init"
+"main.main at main.go:51" -> "cmd/compile/internal/gc.Main at main.go:508 fe:loadsys"
+"main.main at main.go:51" -> "cmd/compile/internal/gc.Main at main.go:511 fe:parse"
+"main.main at main.go:51" -> "cmd/compile/internal/gc.Main at main.go:534 fe:typecheck:top1"
+"main.main at main.go:51" -> "cmd/compile/internal/gc.Main at main.go:546 fe:typecheck:top2"
+"main.main at main.go:51" -> "cmd/compile/internal/gc.Main at main.go:553 fe:typecheck:func"
+"main.main at main.go:51" -> "cmd/compile/internal/gc.Main at main.go:589 fe:typecheck:capturevars"
+"main.main at main.go:51" -> "cmd/compile/internal/gc.Main at main.go:605 fe:typecheck:inlining"
+"main.main at main.go:51" -> "cmd/compile/internal/gc.Main at main.go:645 fe:typecheck:escapes"
+"main.main at main.go:51" -> "cmd/compile/internal/gc.Main at main.go:659 fe:typecheck:xclosures"
+"main.main at main.go:51" -> "cmd/compile/internal/gc.Main at main.go:680 fe:typecheck:compilefuncs"
+"main.main at main.go:51" -> "cmd/compile/internal/gc.Main at main.go:714 fe:typecheck:externaldcls"
+"main.main at main.go:51" -> "cmd/compile/internal/gc.Main at main.go:729 fe:typecheck:dumpobj"
+
+"cmd/compile/internal/gc.Main at main.go:511 fe:parse" -> "cmd/compile/internal/gc.parseFiles at noder.go:27"
+"cmd/compile/internal/gc.parseFiles at noder.go:27" -> "cmd/compile/internal/gc.parseFiles.func1 at noder.go:52"
+"cmd/compile/internal/gc.parseFiles.func1 at noder.go:52" -> "cmd/compile/internal/syntax.Parse at syntax.go:58"
+
+"cmd/compile/internal/gc.parseFiles at noder.go:27" -> "cmd/compile/internal/gc.parseFiles at noder.go:62"
+"cmd/compile/internal/gc.parseFiles at noder.go:62" -> "cmd/compile/internal/gc.(*noder).node at noder.go:237"
+
+}  
+  #+end_src
+
+  =main.go= 中有用于记录各步骤性能的 =timings= ，例如下面的几行代码。
+
+  #+begin_src go -n 511
+	timings.Start("fe", "parse")
+	lines := parseFiles(flag.Args())
+	timings.Stop()
+  #+end_src
+
+  在整个编译过程结束后，根据 =benchfile= 变量的值来选择是否输出bench结果。
+
+  #+begin_src go -n 758
+	if benchfile != "" {
+		if err := writebench(benchfile); err != nil {
+			log.Fatalf("cannot write benchmark data: %v", err)
+		}
+	}
+  #+end_src
+
+  所以加上如下的命令行参数，我们就能得到bench结果了。
+  #+begin_src shell
+  -bench=/tmp/test/bench.txt
+  #+end_src
+  
+  得到结果如下：
+  #+begin_src text
+commit: go1.13.1
+goos: darwin
+goarch: amd64
+BenchmarkCompile:main:fe:init              1     889956 ns/op     10.22 %
+BenchmarkCompile:main:fe:loadsys           1     323673 ns/op      3.72 %
+BenchmarkCompile:main:fe:parse             1    1147490 ns/op     13.17 %    28 lines    24401 lines/s
+BenchmarkCompile:main:fe:typecheck:top1    1     364684 ns/op      4.19 %
+BenchmarkCompile:main:fe:typecheck:top2    1      19438 ns/op      0.22 %
+BenchmarkCompile:main:fe:typecheck:func    1      36286 ns/op      0.42 %     2 funcs    55118 funcs/s
+BenchmarkCompile:main:fe:capturevars       1        326 ns/op      0.00 %
+BenchmarkCompile:main:fe:inlining          1    1799996 ns/op     20.67 %
+BenchmarkCompile:main:fe:escapes           1     345481 ns/op      3.97 %
+BenchmarkCompile:main:fe:xclosures         1     939317 ns/op     10.78 %
+BenchmarkCompile:main:fe:subtotal          1    5866647 ns/op     67.36 %
+BenchmarkCompile:main:be:compilefuncs      1    2145648 ns/op     24.63 %     2 funcs      932 funcs/s
+BenchmarkCompile:main:be:externaldcls      1       1618 ns/op      0.02 %
+BenchmarkCompile:main:be:dumpobj           1     666268 ns/op      7.65 %
+BenchmarkCompile:main:be:subtotal          1    2813534 ns/op     32.30 %
+BenchmarkCompile:main:unaccounted          1      29703 ns/op      0.34 %
+BenchmarkCompile:main:total                1    8709884 ns/op    100.00 %  
+  #+end_src
+
+  =cmd/compile/internal/gc.parseFiles.func1 at noder.go:52= 此处调用 =syntax.Parse= 对整个go文件进行语法解析。直觉上，只要修改这里生成的语法树，就能插入自定义代码了。
+
+* 编译期插入代码
+  
+  在进入这一阶段之前可以先阅读下这篇 [[https://medium.com/justforfunc/understanding-go-programs-with-go-parser-c4e88a6edb87][Understanding Go programs with go/parser]] ，对go的AST有一定的感性认识。
+  
+  比如这个我们一直在默默测试的 =main.go=
+
+  #+begin_src go -n
+package main
+
+import (
+	"context"
+	"fmt"
+)
+
+func hello(ctx context.Context) {
+	fmt.Println("hello world")
+}
+
+func main() {
+	hello(context.Background())
+}
+
+  #+end_src
+
+  经过 =go/parser.ParseFile= 
+  #+begin_src go -n
+package main
+
+import (
+	"go/parser"
+	"go/token"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+
+	"github.com/davecgh/go-spew/spew"
+)
+
+func main() {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+
+	file := filepath.Join(home, "src", "github.com", "shanexu", "go-playground", "helloworld", "main.go")
+	src, err := ioutil.ReadFile(file)
+	if err != nil {
+		panic(err)
+	}
+
+	fset := token.NewFileSet()
+	f, err := parser.ParseFile(fset, "main.go", src, parser.AllErrors)
+	if err != nil {
+		panic(err)
+	}
+
+	spew.Dump(f)
+}  
+  #+end_src
+
+  得到AST：
+
+  #+begin_export html
+<script src="https://gist.github.com/shanexu/93b83f1d2b9a305042b6c0ad96f0c201.js"></script>  
+  #+end_export
+
+  而 =cmd/compile/internal/syntax.Parse= 的结果则都是 =cmd/compile/internal/syntax= 包下的类型。基本都能和 =go/ast= 下的类型一一对应。比如：ast.File和syntax.File，ast.ExprStmt和syntax.ExprStmt，ast.Ident和syntax.Name，ast.CallExpr和syntax.CallExpr，ast.SelectorExpr和syntax.SelectorExpr。
+
+  我们现在可以对AST出手。
+  例如我们想针对所有main包下以hello开头的函数在进入方法时打印“start ${方法名}...”，在离开方法是打印“stop ${方法名}...”， 则可以在文件 =cmd/compile/internal/gc/noder.go= Parse结束后，修改p.file的值。代码如下：
+  #+begin_src go -n 52
+			p.file, _ = syntax.Parse(base, f, p.error, p.pragma, syntax.CheckBranches) // errors are tracked via p.error
+			if p.file.PkgName.Value == "main" {
+				for _, d := range p.file.DeclList {
+					d, _ := d.(*syntax.FuncDecl)
+					if d == nil {
+						continue
+					}
+					if !strings.HasPrefix(d.Name.Value, "hello") {
+						continue
+					}
+					d.Body.List = append([]syntax.Stmt{
+						&syntax.ExprStmt{
+							X: &syntax.CallExpr{
+								Fun: &syntax.SelectorExpr{
+									X:   &syntax.Name{Value: "fmt"},
+									Sel: &syntax.Name{Value: "Println"},
+								},
+								ArgList: []syntax.Expr{
+									&syntax.BasicLit{
+										Value: strconv.Quote("start " + d.Name.Value + "..."),
+										Kind:  syntax.StringLit,
+									},
+								},
+							},
+						},
+						&syntax.CallStmt{
+							Tok: syntax.Defer,
+							Call: &syntax.CallExpr{
+								Fun: &syntax.SelectorExpr{
+									X:   &syntax.Name{Value: "fmt"},
+									Sel: &syntax.Name{Value: "Println"},
+								},
+								ArgList: []syntax.Expr{
+									&syntax.BasicLit{
+										Value: strconv.Quote("stop " + d.Name.Value + "..."),
+										Kind:  syntax.StringLit,
+									},
+								},
+							},
+						},
+					}, d.Body.List...)
+				}
+			}  
+  #+end_src
+  
+  修改完后需要重新编译golang。
+  #+begin_src 
+cd $HOME/src/github.com/golang/go/src
+./make.bash
+
+cd $HOME/src/github.com/shanexu/go-playground
+go clean -cache
+go run helloworld/main.go
+  #+end_src
+
+  看到如下结果：
+  #+begin_src text
+start hello...
+hello world
+stop hello...  
+  #+end_src
+
+  在修改了AST之后，实际上hello方法的源码应该长这样：
+
+  #+begin_src go
+func hello(ctx context.Context) {
+	fmt.Println("start hello...")
+	defer fmt.Println("stop hello...")
+	fmt.Println("hello world")
+}
+  #+end_src
+
+  这里有个问题，插入的代码新引入了fmt包，如果原始代码里面没有引入fmt包会怎样？
+
+  #+begin_src text
+$ go clean -cache; go run helloworld/main.go
+# command-line-arguments
+helloworld/main.go:7:16: undefined: fmt in fmt.Println  
+  #+end_src
+  
+  果然编译失败了。
+
+  在语法树中按需插入import呢？
+
+  #+begin_src go -n 52
+			if p.file.PkgName.Value == "main" {
+				for _, d := range p.file.DeclList {
+					d, _ := d.(*syntax.FuncDecl)
+					if d == nil {
+						continue
+					}
+					if !strings.HasPrefix(d.Name.Value, "hello") {
+						continue
+					}
+					hasHello = true
+					d.Body.List = append([]syntax.Stmt{
+						&syntax.ExprStmt{
+							X: &syntax.CallExpr{
+								Fun: &syntax.SelectorExpr{
+									X:   &syntax.Name{Value: "fmt"},
+									Sel: &syntax.Name{Value: "Println"},
+								},
+								ArgList: []syntax.Expr{
+									&syntax.BasicLit{
+										Value: strconv.Quote("start " + d.Name.Value + "..."),
+										Kind:  syntax.StringLit,
+									},
+								},
+							},
+						},
+						&syntax.CallStmt{
+							Tok: syntax.Defer,
+							Call: &syntax.CallExpr{
+								Fun: &syntax.SelectorExpr{
+									X:   &syntax.Name{Value: "fmt"},
+									Sel: &syntax.Name{Value: "Println"},
+								},
+								ArgList: []syntax.Expr{
+									&syntax.BasicLit{
+										Value: strconv.Quote("stop " + d.Name.Value + "..."),
+										Kind:  syntax.StringLit,
+									},
+								},
+							},
+						},
+					}, d.Body.List...)
+				}
+			}
+			if hasHello {
+				hasFmtImport := false
+				for _, d := range p.file.DeclList {
+					d, _ := d.(*syntax.ImportDecl)
+					if d == nil {
+						continue
+					}
+					if d.Path.Value != "fmt" {
+						continue
+					}
+					hasFmtImport = true
+					break
+				}
+				if !hasFmtImport {
+					p.file.DeclList = append([]syntax.Decl{
+						&syntax.ImportDecl{
+							Path: &syntax.BasicLit{
+								Value: `"fmt"`, Kind: syntax.StringLit,
+							},
+						},
+					}, p.file.DeclList...)
+				}
+			}  
+  #+end_src
+
+  重新编译golang，执行go run
+
+  #+begin_src text
+$ go clean -cache; go run helloworld/main.go
+# command-line-arguments
+helloworld/main.go:1:9: can't find import: "fmt"
+  #+end_src
+
+  根据错误信息找到，抛错位置，发现parseFile过程中，有findpkg的过程，起调用栈如下。
+
+  #+begin_src dot :file ./cmd_compile_internal_gc_findpkg.png :cmdline -Kdot -Tpng
+digraph G {
+"cmd/compile/internal/gc.Main at main.go:512" -> "cmd/compile/internal/gc.parseFiles at noder.go:128" -> "cmd/compile/internal/gc.(*noder).node at noder.go:310" -> "cmd/compile/internal/gc.(*noder).decls at noder.go:355" -> "cmd/compile/internal/gc.(*noder).importDecl at noder.go:379" -> "cmd/compile/internal/gc.importfile at main.go:1120" -> "cmd/compile/internal/gc.findpkg at main.go:989"
+}
+  #+end_src
+
+  包变量 =packageFile= 这个map中获取相关包的信息。
+  #+begin_src  go -n 988
+	if packageFile != nil {
+		file, ok = packageFile[name]
+		return file, ok
+	}  
+  #+end_src
+
+  包变量 =packageFile= 在 =readImportCfg= 方法中初始化。
+
+  #+begin_src dot :file ./cmd_compile_internal_gc_readImportCfg.png :cmdline -Kdot -Tpng
+digraph G {
+"main.main at main.go:51" -> "cmd/compile/internal/gc.Main at main.go:269" -> "cmd/internal/objabi.Flagparse at flag.go:34" -> "flag.Parse at flag.go:996" -> "flag.(*FlagSet).Parse at flag.go:968" -> "flag.(*FlagSet).parseOne at flag.go:949" -> "cmd/internal/objabi.fn1.Set at flag.go:158" -> "cmd/compile/internal/gc.readImportCfg at main.go:806"
+}
+  #+end_src
+  
+  所以 =readImportCfg= 方法的入参就是，调用compile命令时，选项 =-importcfg= 的值。
+
+  #+begin_src go -n 805
+func readImportCfg(file string) {
+	packageFile = map[string]string{}
+	data, err := ioutil.ReadFile(file)
+	if err != nil {
+		log.Fatalf("-importcfg: %v", err)
+	}
+  #+end_src
+
+  要解决这个问题，就需要在 =importcfg= 文件中加入新加的包。
+
+  问题又回到的了 =importcfg= 文件的生成过程了。
+
+  文件 =cmd/go/internal/work/exec.go= 第634行，有关importcfg的内容的逻辑。
+
+  #+begin_src go -n 634
+	// Prepare Go import config.
+	// We start it off with a comment so it can't be empty, so icfg.Bytes() below is never nil.
+	// It should never be empty anyway, but there have been bugs in the past that resulted
+	// in empty configs, which then unfortunately turn into "no config passed to compiler",
+	// and the compiler falls back to looking in pkg itself, which mostly works,
+	// except when it doesn't.
+	var icfg bytes.Buffer
+	fmt.Fprintf(&icfg, "# import config\n")
+	for i, raw := range a.Package.Internal.RawImports {
+		final := a.Package.Imports[i]
+		if final != raw {
+			fmt.Fprintf(&icfg, "importmap %s=%s\n", raw, final)
+		}
+	}  
+  #+end_src
+  
+  现在归结于 =Package.Imports= 的值的设置了。
+
+  文件 =go/build/build.go=，先用 =go/parser.ParseFile= 解析源文件，然后获取其中的imports。
+  #+begin_src go -n 847
+		pf, err := parser.ParseFile(fset, filename, data, parser.ImportsOnly|parser.ParseComments)
+		if err != nil {
+			badFile(err)
+			continue
+		}
+  #+end_src
+
+  修改代码如下：
+
+  #+begin_src go -n 847
+		pf, err := parser.ParseFile(fset, filename, data, parser.ImportsOnly|parser.ParseComments)
+		if err != nil {
+			badFile(err)
+			continue
+		}
+
+		if strings.HasSuffix(filename, "helloworld/main.go") {
+			hasFmtImport := false
+			for _, i := range pf.Imports {
+				if i.Path.Value == `"fmt"` {
+					hasFmtImport = true
+					break
+				}
+			}
+			if !hasFmtImport {
+				pf.Imports = append(pf.Imports, &ast.ImportSpec{
+					Path: &ast.BasicLit{
+						Value: `"fmt"`,
+						Kind:  token.STRING,
+					},
+				})
+				if len(pf.Decls) > 0 {
+					d, ok := pf.Decls[0].(*ast.GenDecl)
+					if ok {
+						d.Specs = append(d.Specs, &ast.ImportSpec{
+							Path: &ast.BasicLit{
+								Kind:  token.STRING,
+								Value: `"fmt"`,
+							},
+						})
+					}
+				}
+			}
+		}  
+  #+end_src
+
+  重新编译golang，执行go run
+
+  #+begin_src text
+$ go clean -cache; go run helloworld/main.go
+start hello...
+stop hello...  
+  #+end_src
+
+  成功加上了import。
+
+* 创业未半
+
+  至此对golang编译器的解析和hack的过程也结束了。可见通过修改编译器生成的AST的方式，我们可以给特定文件、特定包、特定方法加上自定义代码。这里给golang实现aop提供了一种另类的思路。诚然要完成像 =AspectJ= 这样完整的解决方案，还有很大一段路路要走。
