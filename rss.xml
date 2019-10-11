@@ -4,10 +4,17 @@
     <title>Shane Xu&#39;s Home</title>
     <link>http://shanexu.io/</link>
     <description>Life is too short for so much sorrow.</description>
-    <pubDate>Sat, 28 Sep 2019 15:23:30 CST</pubDate>
-    <lastBuildDate>Sat, 28 Sep 2019 15:23:30 CST</lastBuildDate>
+    <pubDate>Fri, 11 Oct 2019 20:39:00 CST</pubDate>
+    <lastBuildDate>Fri, 11 Oct 2019 20:39:00 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
+    <item>
+      <title>golang aop的一种实现方法</title>
+      <link>http://shanexu.io/blog/2019/10/09/golang-aop</link>
+      <description><![CDATA[golang aop的一种实现方法]]></description>
+      <pubDate>2019-10-11</pubDate>
+      <guid>http://shanexu.io/blog/2019/10/09/golang-aop</guid>
+    </item>
     <item>
       <title>从源代码安装golang</title>
       <link>http://shanexu.io/blog/2019/09/28/install-golang-from-source</link>
@@ -70,13 +77,6 @@
       <description><![CDATA[<TODO: insert your description here>]]></description>
       <pubDate>2019-08-19</pubDate>
       <guid>http://shanexu.io/blog/2017/11/11/install-xmonad</guid>
-    </item>
-    <item>
-      <title>春隣</title>
-      <link>http://shanexu.io/blog/2017/12/25/chun-lin</link>
-      <description><![CDATA[熊木杏里演唱会]]></description>
-      <pubDate>2019-08-18</pubDate>
-      <guid>http://shanexu.io/blog/2017/12/25/chun-lin</guid>
     </item>
   </channel>
 </rss>

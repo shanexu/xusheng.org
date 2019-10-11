@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>golang aop的一种实现方法 - Shane Xu&#39;s Home</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="shanexu" />
+      <meta name="description" content="golang aop的一种实现方法" />
+      <meta name="keywords" content="golang, aop" />
+    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/code-solarized-dark.css" type="text/css">
+  </head>
+
+  <body>
+    <div>
+      <header class="masthead">
+        <h1 class="settitle"><a href="/">Shane Xu&#39;s Home</a></h1>
+        <blockquote>Life is too short for so much sorrow.</blockquote>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="shanexu.io">
+        </form>
+      </header>
+    </div>
+    <div class="node nav">
+      <ul>
+          <li><a href="/blog/" id="Blog_tab">Blog</a></li>
+        <li><a href="/tags/">Tags</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="https://github.com/shanexu">GitHub</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+      </ul>
+    </div>
+
+
+  <h3 class="section">golang aop的一种实现方法</h3>
+
+<div id="outline-container-orgc534ea8" class="outline-2">
+<h2 id="orgc534ea8">序</h2>
+<div class="outline-text-2" id="text-orgc534ea8">
+<p>
+实际这个标题有点夸张了。我原本也不想实现golang的aop，也无意去实现。我的出发点仅仅是APM(Application Performance Management)。我们总说golang是一门怎么怎么神奇好用的语言，然而仅仅是一个aop都难以优雅地实现。再比如，opentracing，设计了一整套api，做分布式调用链追踪，其中包括java、golang等语言，实际上纯用java的人可能根本不需要用opentracing这套东西。java的字节码增强实在是太好用了。根本就不需要这样繁琐地在代码中显示地调用opentracing的api。所以golang有没有类似java这样的字节码增强的方法呢？肯定没有啊。
+</p>
+
+<p>
+我们来了解下go代码是怎样变成机器码的。
+</p>
+
+<p>
+<a href="https://getstream.io/blog/how-a-go-program-compiles-down-to-machine-code/">How a Go Program Compiles down to Machine Code</a>
+</p>
+
+<p>
+大意是：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">*.go -&gt; AST(Abstract Syntax Tree) -&gt; SSA(Static Single Assignment) -&gt; machine-specific SSA -&gt; Machine Code
+</pre>
+</div>
+
+<p>
+显然，在AST到SSA这个过程中，可以通过修改语法树的方式，达到类似java的字节码增强的效果。所以需要改golang的编译器。
+</p>
+
+<p>
+提起APM，两年前做APM调研的时候调研了OneAPM的产品，据当时的销售说，当时无人做golang相关的APM产品，时隔三年，OneAPM也支持了golang了。从golang agent的 <a href="http://docs-ai.oneapm.com/agent/go/Goinstall.html">安装手册</a> 手册来看，OneAPM应该是用了类似jaeger的方案，需要手工埋点。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1208a36" class="outline-2">
+<h2 id="org1208a36">开发环境准备</h2>
+<div class="outline-text-2" id="text-org1208a36">
+<p>
+工欲善其事必先利其器，我敬佩那些用vim和emacs写golang代码的大神（虽然我也用emacs写golang代码），但是面对golang源码这个大工程，我还是选择使用GoLand。因为牵涉到很多环境变量的切换，推荐使用 <a href="https://direnv.net/">direnv</a> 方便切换配置。
+</p>
+</div>
+
+<div id="outline-container-org8693080" class="outline-3">
+<h3 id="org8693080">准备源代码</h3>
+<div class="outline-text-3" id="text-org8693080">
+<div class="org-src-container">
+<pre class="src src-shell">mkdir -p $<span style="color: #6c71c4;">HOME</span>/src/github.com/golang
+<span style="color: #268bd2;">cd</span> $<span style="color: #6c71c4;">HOME</span>/src/github.com/golang
+git clone https://github.com/golang/go.git
+<span style="color: #268bd2;">cd</span> $<span style="color: #6c71c4;">HOME</span>/src/github.com/golang/go/src
+<span style="color: #268bd2;">echo</span> <span style="color: #2aa198;">'export GOROOT=$HOME/src/github.com/golang/go</span>
+<span style="color: #2aa198;">export PATH=$GOROOT/bin:$PATH</span>
+<span style="color: #2aa198;">export GOBIN=$GOROOT/bin'</span> &gt; .envrc
+direnv allow
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge2ba64c" class="outline-3">
+<h3 id="orge2ba64c">安装BOOTSTRAP环境（go编译器通过go语言编译，正如gcc通过gcc编译一般）</h3>
+<div class="outline-text-3" id="text-orge2ba64c">
+<div class="org-src-container">
+<pre class="src src-shell">mkdir $<span style="color: #6c71c4;">HOME</span>/gos
+<span style="color: #268bd2;">cd</span> $<span style="color: #6c71c4;">HOME</span>/gos
+curl https://dl.google.com/go/go1.12.10.darwin-amd64.tar.gz | tar xvzf -
+mv go go1.12.10
+<span style="color: #268bd2;">cd</span> $<span style="color: #6c71c4;">HOME</span>/src/github.com/golang/go/src
+<span style="color: #268bd2;">echo</span> <span style="color: #2aa198;">'export GOROOT_BOOTSTRAP=$HOME/gos/go1.12.10'</span> &gt;&gt; .envrc
+direnv allow
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org359d45a" class="outline-3">
+<h3 id="org359d45a">切换到最新的tag，并创建一个分支</h3>
+<div class="outline-text-3" id="text-org359d45a">
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #268bd2;">cd</span> $<span style="color: #6c71c4;">HOME</span>/src/github.com/golang/go
+git checkout go1.13.1
+git checkout -b go1.13.1-playground
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf788f06" class="outline-3">
+<h3 id="orgf788f06">首次尝试编译go编译器</h3>
+<div class="outline-text-3" id="text-orgf788f06">
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #268bd2;">cd</span> $<span style="color: #6c71c4;">HOME</span>/src/github.com/golang/go/src
+./make.bash
+</pre>
+</div>
+
+<p>
+会看到如下的输出
+</p>
+<div class="org-src-container">
+<pre class="src src-text">Building Go cmd/dist using /Users/shane/gos/go1.12.10.
+Building Go toolchain1 using /Users/shane/gos/go1.12.10.
+Building Go bootstrap cmd/go (go_bootstrap) using Go toolchain1.
+Building Go toolchain2 using go_bootstrap and Go toolchain1.
+Building Go toolchain3 using go_bootstrap and Go toolchain2.
+Building packages and commands for darwin/amd64.
+---
+Installed Go for darwin/amd64 in /Users/shane/src/github.com/golang/go
+Installed commands in /Users/shane/src/github.com/golang/go/bin
+</pre>
+</div>
+
+<p>
+验证编译
+</p>
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #268bd2;">which</span> go
+go version
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2675863" class="outline-3">
+<h3 id="org2675863">GoLand设置</h3>
+<div class="outline-text-3" id="text-org2675863">
+</div>
+<div id="outline-container-orgd4734ca" class="outline-4">
+<h4 id="orgd4734ca">创建项目</h4>
+<div class="outline-text-4" id="text-orgd4734ca">
+<p>
+File -&gt; Open 选择工程根目录
+</p>
+
+
+<div class="figure">
+<p><img src="https://user-images.githubusercontent.com/1257453/66475611-3a39e980-ea83-11e9-802e-3b118d1ac906.png" alt="66475611-3a39e980-ea83-11e9-802e-3b118d1ac906.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org81c2f4f" class="outline-4">
+<h4 id="org81c2f4f">设置GOROOT</h4>
+<div class="outline-text-4" id="text-org81c2f4f">
+<p>
+<code>$HOME/src/github.com/golang/go</code>
+</p>
+
+
+<div class="figure">
+<p><img src="https://user-images.githubusercontent.com/1257453/66475821-a4528e80-ea83-11e9-970b-8982bafbab77.png" alt="66475821-a4528e80-ea83-11e9-970b-8982bafbab77.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9f84ab7" class="outline-3">
+<h3 id="org9f84ab7">创建一个playground项目，用于测试编译</h3>
+<div class="outline-text-3" id="text-org9f84ab7">
+</div>
+<div id="outline-container-org7bb547d" class="outline-4">
+<h4 id="org7bb547d">clone我的测试项目</h4>
+<div class="outline-text-4" id="text-org7bb547d">
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #268bd2;">cd</span> $<span style="color: #6c71c4;">HOME</span>/src/github.com/shanexu
+git clone https://github.com/shanexu/go-playground.git
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfd294ae" class="outline-4">
+<h4 id="orgfd294ae">配置环境变量</h4>
+<div class="outline-text-4" id="text-orgfd294ae">
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #268bd2;">cd</span> $<span style="color: #6c71c4;">HOME</span>/src/github.com/shanexu/go-playground
+<span style="color: #268bd2;">echo</span> <span style="color: #2aa198;">'export GOROOT=$HOME/src/github.com/golang/go</span>
+<span style="color: #2aa198;">export PATH=$GOROOT/bin:$PATH</span>
+<span style="color: #2aa198;">export GOBIN=$(pwd)/bin'</span> &gt; .envrc
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga891909" class="outline-3">
+<h3 id="orga891909">至此整个开发环境算是搭建成功了</h3>
+</div>
+</div>
+
+<div id="outline-container-org7c61917" class="outline-2">
+<h2 id="org7c61917">go build 过程分析</h2>
+<div class="outline-text-2" id="text-org7c61917">
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #268bd2;">cd</span> $<span style="color: #6c71c4;">HOME</span>/src/github.com/shanexu/go-playground
+go build -o bin/helloworld helloworld/main.go
+</pre>
+</div>
+
+<p>
+先从 <code>go build</code> 命令开始。go命令本身就是多个子命令的入口，比如我们现在要研究的build命令，就是他的一个子命令，其源码在 <code>src/cmd/go/internal/work/build.go</code> 中。
+</p>
+<div class="org-src-container">
+<pre class="src src-go"><span class="linenr">23: </span><span style="color: #859900;">var</span> CmdBuild = &amp;base.<span style="color: #b58900;">Command</span><span style="color: #268bd2;">{</span>
+<span class="linenr">24: </span>  <span style="color: #d33682;">UsageLine</span>: <span style="color: #2aa198;">"go build [-o output] [-i] [build flags] [packages]"</span>,
+<span class="linenr">25: </span>  <span style="color: #d33682;">Short</span>:     <span style="color: #2aa198;">"compile packages and dependencies"</span>,  
+</pre>
+</div>
+
+<p>
+配置一个运行配置如下图所示：
+<img src="https://user-images.githubusercontent.com/1257453/66554844-37033400-eb3d-11e9-8558-f42b8458b1e7.png" alt="66554844-37033400-eb3d-11e9-8558-f42b8458b1e7.png" />
+</p>
+
+<p>
+经过断点和肉眼调试，go build过程大致如下：
+</p>
+
+
+<div class="figure">
+<p><img src="/assets/blog/2019/10/09/golang-aop/runBuild_call_stack.png" alt="runBuild_call_stack.png" />
+</p>
+</div>
+
+<p>
+<code>main</code> 方法调用， <code>runBuild</code> 方法， <code>runBuild</code> 再调用 <code>*Builder.Do</code> 方法，在 <code>Do</code> 方法中根据 <code>Action</code> 的依赖关系，调用 <code>Action</code> 的 <code>Func</code> 方法。这里有个 <code>writeActionGraph</code> 方法，这个方法会打印 <code>action</code> 的关系图，但是由一个命令行参数控制。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span class="linenr">243: </span><span style="color: #405A61;">// </span><span style="color: #405A61;">Undocumented, unstable debugging flags.</span>
+<span class="linenr">244: </span>cmd.Flag.<span style="color: #268bd2;">StringVar</span><span style="color: #268bd2;">(</span>&amp;cfg.DebugActiongraph, <span style="color: #2aa198;">"debug-actiongraph"</span>, <span style="color: #2aa198;">""</span>, <span style="color: #2aa198;">""</span><span style="color: #268bd2;">)</span>
+</pre>
+</div>
+
+<p>
+完整的命令行如下，其中 <code>-p 1</code> 表示执行 <code>action</code> 时的并发度为1。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">go build -debug-actiongraph /tmp/build.txt -p <span style="color: #d33682; font-weight: bold;">1</span> -v -o bin/helloworld helloworld/main.go
+</pre>
+</div>
+
+<p>
+我们得到完整的 <code>actionGraph</code> 内容如下：
+</p>
+
+<script src="https://gist.github.com/shanexu/1277c298054e2489bb923b3233cf723c.js"></script>  
+
+<p>
+转成图，如下：
+</p>
+
+<div class="figure">
+<p><img src="/assets/blog/2019/10/09/golang-aop/actions.png" alt="actions.png" />
+</p>
+</div>
+
+<p>
+观察 <code>actions[2].Cmd</code> 的内容。可见 <code>go build</code> 命令实际上是调用了对应系统（OS）架构（ARCH）的编译器命令（compile）来编译源代码的。
+</p>
+<div class="org-src-container">
+<pre class="src src-json"><span style="color: #268bd2;">[</span>
+  "/Users/shane/src/github.com/golang/go/pkg/tool/darwin_amd<span style="color: #d33682;">64</span>/compile -o /var/folders/<span style="color: #d33682; font-weight: bold;">8x</span>/<span style="color: #d33682; font-weight: bold;">6h3nms2s34z7vwk5blbsz3100000gn</span>/T/go-build<span style="color: #d33682;">730813966</span>/b<span style="color: #d33682;">001</span>/_pkg_.a -trimpath \"/var/folders/<span style="color: #d33682; font-weight: bold;">8x</span>/<span style="color: #d33682; font-weight: bold;">6h3nms2s34z7vwk5blbsz3100000gn</span>/T/go-build<span style="color: #d33682;">730813966</span>/b<span style="color: #d33682;">001</span>=&gt;\" -p main -lang=go1.<span style="color: #d33682; font-weight: bold;">13</span> -complete -buildid z<span style="color: #d33682;">5</span>Cb<span style="color: #d33682;">5</span>jRJruTRtEF<span style="color: #d33682;">3</span>nuzz/z<span style="color: #d33682;">5</span>Cb<span style="color: #d33682;">5</span>jRJruTRtEF<span style="color: #d33682;">3</span>nuzz -goversion go1.<span style="color: #d33682; font-weight: bold;">13</span>.<span style="color: #d33682; font-weight: bold;">1</span> -D _/Users/shane/src/github.com/shanexu/go-playground/helloworld -importcfg /var/folders/<span style="color: #d33682; font-weight: bold;">8x</span>/<span style="color: #d33682; font-weight: bold;">6h3nms2s34z7vwk5blbsz3100000gn</span>/T/go-build<span style="color: #d33682;">730813966</span>/b<span style="color: #d33682;">001</span>/importcfg -pack -c=<span style="color: #d33682; font-weight: bold;">12</span> /Users/shane/src/github.com/shanexu/go-playground/helloworld/main.go /var/folders/<span style="color: #d33682; font-weight: bold;">8x</span>/<span style="color: #d33682; font-weight: bold;">6h3nms2s34z7vwk5blbsz3100000gn</span>/T/go-build<span style="color: #d33682;">730813966</span>/b<span style="color: #d33682;">001</span>/_gomod_.go"
+<span style="color: #268bd2;">]</span>
+</pre>
+</div>
+
+<p>
+命令行中有两个文件引起了我的兴趣： <code>importcfg</code> 和 <code>_gomod_.go</code> 。
+</p>
+
+<p>
+然而，在go build命令运行结束后这些文件，都会被删除，为了防止这样的事情发生，我在go build运行的过程中增加了两个条件断点—— <code>cmd/go/internal/work/exec.go</code> 第117、119行，条件为 <code>a.json.ID =</code> 2= ，ID为2的action正是main.go的编译过程。
+</p>
+
+<p>
+第117行开始执行Action，第119行Action执行结束。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span class="linenr">109: </span><span style="color: #405A61;">// </span><span style="color: #405A61;">Handle runs a single action and takes care of triggering</span>
+<span class="linenr">110: </span><span style="color: #405A61;">// </span><span style="color: #405A61;">any actions that are runnable as a result.</span>
+<span class="linenr">111: </span>handle := <span style="color: #859900;">func</span><span style="color: #268bd2;">(</span>a *<span style="color: #b58900;">Action</span><span style="color: #268bd2;">)</span> <span style="color: #268bd2;">{</span>
+<span class="linenr">112: </span>  <span style="color: #859900;">if</span> a.json != <span style="color: #d33682;">nil</span> <span style="color: #d33682;">{</span>
+<span class="linenr">113: </span>    a.json.TimeStart = time.<span style="color: #268bd2;">Now</span><span style="color: #859900;">()</span>
+<span class="linenr">114: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">115: </span>  <span style="color: #859900;">var</span> err error
+<span class="linenr">116: </span>  <span style="color: #859900;">if</span> a.Func != <span style="color: #d33682;">nil</span> &amp;&amp; <span style="color: #d33682;">(</span>!a.Failed || a.IgnoreFail<span style="color: #d33682;">)</span> <span style="color: #d33682;">{</span>
+<span class="linenr">117: </span>    err = a.<span style="color: #268bd2;">Func</span><span style="color: #859900;">(</span>b, a<span style="color: #859900;">)</span>
+<span class="linenr">118: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">119: </span>  <span style="color: #859900;">if</span> a.json != <span style="color: #d33682;">nil</span> <span style="color: #d33682;">{</span>
+<span class="linenr">120: </span>    a.json.TimeDone = time.<span style="color: #268bd2;">Now</span><span style="color: #859900;">()</span>
+<span class="linenr">121: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">122: </span>
+<span class="linenr">123: </span>  <span style="color: #405A61;">// </span><span style="color: #405A61;">The actions run in parallel but all the updates to the</span>
+<span class="linenr">124: </span>  <span style="color: #405A61;">// </span><span style="color: #405A61;">shared work state are serialized through b.exec.</span>
+</pre>
+</div>
+
+<p>
+在代码运行到119行后就可以获取文件内容。
+</p>
+
+<p>
+<code>_gomod_.go</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-go"><span class="linenr">1: </span><span style="color: #859900;">package</span> main
+<span class="linenr">2: </span><span style="color: #859900;">import</span> _ <span style="color: #2aa198;">"unsafe"</span>
+<span class="linenr">3: </span><span style="color: #405A61;">//</span><span style="color: #405A61;">go:linkname __debug_modinfo__ runtime.modinfo</span>
+<span class="linenr">4: </span><span style="color: #859900;">var</span> __debug_modinfo__ = <span style="color: #2aa198;">"0w\xaf\f\x92t\b\x02A\xe1\xc1\a\xe6\xd6\x18\xe6path\tcommand-line-arguments\nmod\tgithub.com/shanexu/go-playground\t(devel)\t\n\xf92C1\x86\x18 r\x00\x82B\x10A\x16\xd8\xf2"</span>
+<span class="linenr">5: </span>
+</pre>
+</div>
+
+<p>
+<code>importcfg</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-text"># import config
+packagefile context=/Users/shane/src/github.com/golang/go/pkg/darwin_amd64/context.a
+packagefile fmt=/Users/shane/src/github.com/golang/go/pkg/darwin_amd64/fmt.a
+packagefile runtime=/Users/shane/src/github.com/golang/go/pkg/darwin_amd64/runtime.a  
+</pre>
+</div>
+
+<p>
+有了这两个文件以及命令行参数后，我们就可以手动执行compile命令了。在GoLand里添加一个新的run configuration。
+</p>
+
+
+<div class="figure">
+<p><img src="https://user-images.githubusercontent.com/1257453/66623436-39b46680-ebdb-11e9-8591-bd88617988ea.png" alt="66623436-39b46680-ebdb-11e9-8591-bd88617988ea.png" />
+</p>
+</div>
+
+<p>
+其中 <code>Program arguments</code> 填入如下的值。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">-o /tmp/test/_pkg_.a -trimpath "/tmp/test=&gt;" -p main -complete -buildid dcQ8aaV0cfiucttoOzOD/dcQ8aaV0cfiucttoOzOD -D /Users/shane/src/github.com/shanexu/go-playground -importcfg /tmp/test/importcfg -pack -c=12 /Users/shane/src/github.com/shanexu/go-playground/helloworld/main.go /tmp/test/_gomod_.go
+</pre>
+</div>
+
+<p>
+至此我们就可以进入下一阶段的compile过程的分析了。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3e259f2" class="outline-2">
+<h2 id="org3e259f2">compile 过程分析</h2>
+<div class="outline-text-2" id="text-org3e259f2">
+<p>
+从入口文件 <code>cmd/compile/main.go</code> 看起。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span class="linenr">40: </span><span style="color: #859900;">func</span> <span style="color: #268bd2;">main</span><span style="color: #268bd2;">()</span> <span style="color: #268bd2;">{</span>
+<span class="linenr">41: </span>  <span style="color: #405A61;">// </span><span style="color: #405A61;">disable timestamps for reproducible output</span>
+<span class="linenr">42: </span>  log.<span style="color: #268bd2;">SetFlags</span><span style="color: #d33682;">(</span><span style="color: #d33682; font-weight: bold;">0</span><span style="color: #d33682;">)</span>
+<span class="linenr">43: </span>  log.<span style="color: #268bd2;">SetPrefix</span><span style="color: #d33682;">(</span><span style="color: #2aa198;">"compile: "</span><span style="color: #d33682;">)</span>
+<span class="linenr">44: </span>
+<span class="linenr">45: </span>  archInit, ok := archInits<span style="color: #d33682;">[</span>objabi.GOARCH<span style="color: #d33682;">]</span>
+<span class="linenr">46: </span>  <span style="color: #859900;">if</span> !ok <span style="color: #d33682;">{</span>
+<span class="linenr">47: </span>    fmt.<span style="color: #268bd2;">Fprintf</span><span style="color: #859900;">(</span>os.Stderr, <span style="color: #2aa198;">"compile: unknown architecture %q\n"</span>, objabi.GOARCH<span style="color: #859900;">)</span>
+<span class="linenr">48: </span>    os.<span style="color: #268bd2;">Exit</span><span style="color: #859900;">(</span><span style="color: #d33682; font-weight: bold;">2</span><span style="color: #859900;">)</span>
+<span class="linenr">49: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">50: </span>
+<span class="linenr">51: </span>  gc.<span style="color: #268bd2;">Main</span><span style="color: #d33682;">(</span>archInit<span style="color: #d33682;">)</span>
+<span class="linenr">52: </span>  gc.<span style="color: #268bd2;">Exit</span><span style="color: #d33682;">(</span><span style="color: #d33682; font-weight: bold;">0</span><span style="color: #d33682;">)</span>
+<span class="linenr">53: </span><span style="color: #268bd2;">}</span>
+</pre>
+</div>
+
+<p>
+从第51行开始进入真正的编译过程，其主要逻辑在 <code>cmd/compile/internal/gc/main.go</code> 中。整个编译过程可以分成几个阶段。
+</p>
+
+
+<div class="figure">
+<p><img src="/assets/blog/2019/10/09/golang-aop/cmd_compile_internal_gc_main.png" alt="cmd_compile_internal_gc_main.png" />
+</p>
+</div>
+
+<p>
+<code>main.go</code> 中有用于记录各步骤性能的 <code>timings</code> ，例如下面的几行代码。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span class="linenr">511: </span>timings.<span style="color: #268bd2;">Start</span><span style="color: #268bd2;">(</span><span style="color: #2aa198;">"fe"</span>, <span style="color: #2aa198;">"parse"</span><span style="color: #268bd2;">)</span>
+<span class="linenr">512: </span>lines := <span style="color: #268bd2;">parseFiles</span><span style="color: #268bd2;">(</span>flag.<span style="color: #268bd2;">Args</span><span style="color: #d33682;">()</span><span style="color: #268bd2;">)</span>
+<span class="linenr">513: </span>timings.<span style="color: #268bd2;">Stop</span><span style="color: #268bd2;">()</span>
+</pre>
+</div>
+
+<p>
+在整个编译过程结束后，根据 <code>benchfile</code> 变量的值来选择是否输出bench结果。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span class="linenr">758: </span><span style="color: #859900;">if</span> benchfile != <span style="color: #2aa198;">""</span> <span style="color: #268bd2;">{</span>
+<span class="linenr">759: </span>  <span style="color: #859900;">if</span> err := <span style="color: #268bd2;">writebench</span><span style="color: #d33682;">(</span>benchfile<span style="color: #d33682;">)</span>; err != <span style="color: #d33682;">nil</span> <span style="color: #d33682;">{</span>
+<span class="linenr">760: </span>    log.<span style="color: #268bd2;">Fatalf</span><span style="color: #859900;">(</span><span style="color: #2aa198;">"cannot write benchmark data: %v"</span>, err<span style="color: #859900;">)</span>
+<span class="linenr">761: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">762: </span><span style="color: #268bd2;">}</span>
+</pre>
+</div>
+
+<p>
+所以加上如下的命令行参数，我们就能得到bench结果了。
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">-bench=/tmp/test/bench.txt
+</pre>
+</div>
+
+<p>
+得到结果如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-text">commit: go1.13.1
+goos: darwin
+goarch: amd64
+BenchmarkCompile:main:fe:init              1     889956 ns/op     10.22 %
+BenchmarkCompile:main:fe:loadsys           1     323673 ns/op      3.72 %
+BenchmarkCompile:main:fe:parse             1    1147490 ns/op     13.17 %    28 lines    24401 lines/s
+BenchmarkCompile:main:fe:typecheck:top1    1     364684 ns/op      4.19 %
+BenchmarkCompile:main:fe:typecheck:top2    1      19438 ns/op      0.22 %
+BenchmarkCompile:main:fe:typecheck:func    1      36286 ns/op      0.42 %     2 funcs    55118 funcs/s
+BenchmarkCompile:main:fe:capturevars       1        326 ns/op      0.00 %
+BenchmarkCompile:main:fe:inlining          1    1799996 ns/op     20.67 %
+BenchmarkCompile:main:fe:escapes           1     345481 ns/op      3.97 %
+BenchmarkCompile:main:fe:xclosures         1     939317 ns/op     10.78 %
+BenchmarkCompile:main:fe:subtotal          1    5866647 ns/op     67.36 %
+BenchmarkCompile:main:be:compilefuncs      1    2145648 ns/op     24.63 %     2 funcs      932 funcs/s
+BenchmarkCompile:main:be:externaldcls      1       1618 ns/op      0.02 %
+BenchmarkCompile:main:be:dumpobj           1     666268 ns/op      7.65 %
+BenchmarkCompile:main:be:subtotal          1    2813534 ns/op     32.30 %
+BenchmarkCompile:main:unaccounted          1      29703 ns/op      0.34 %
+BenchmarkCompile:main:total                1    8709884 ns/op    100.00 %  
+</pre>
+</div>
+
+<p>
+<code>cmd/compile/internal/gc.parseFiles.func1 at noder.go:52</code> 此处调用 <code>syntax.Parse</code> 对整个go文件进行语法解析。直觉上，只要修改这里生成的语法树，就能插入自定义代码了。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgcaf80a6" class="outline-2">
+<h2 id="orgcaf80a6">编译期插入代码</h2>
+<div class="outline-text-2" id="text-orgcaf80a6">
+<p>
+在进入这一阶段之前可以先阅读下这篇 <a href="https://medium.com/justforfunc/understanding-go-programs-with-go-parser-c4e88a6edb87">Understanding Go programs with go/parser</a> ，对go的AST有一定的感性认识。
+</p>
+
+<p>
+比如这个我们一直在默默测试的 <code>main.go</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span class="linenr"> 1: </span><span style="color: #859900;">package</span> main
+<span class="linenr"> 2: </span>
+<span class="linenr"> 3: </span><span style="color: #859900;">import</span> <span style="color: #268bd2;">(</span>
+<span class="linenr"> 4: </span>  <span style="color: #2aa198;">"context"</span>
+<span class="linenr"> 5: </span>  <span style="color: #2aa198;">"fmt"</span>
+<span class="linenr"> 6: </span><span style="color: #268bd2;">)</span>
+<span class="linenr"> 7: </span>
+<span class="linenr"> 8: </span><span style="color: #859900;">func</span> <span style="color: #268bd2;">hello</span><span style="color: #268bd2;">(</span>ctx <span style="color: #b58900;">context.Context</span><span style="color: #268bd2;">)</span> <span style="color: #268bd2;">{</span>
+<span class="linenr"> 9: </span>  fmt.<span style="color: #268bd2;">Println</span><span style="color: #d33682;">(</span><span style="color: #2aa198;">"hello world"</span><span style="color: #d33682;">)</span>
+<span class="linenr">10: </span><span style="color: #268bd2;">}</span>
+<span class="linenr">11: </span>
+<span class="linenr">12: </span><span style="color: #859900;">func</span> <span style="color: #268bd2;">main</span><span style="color: #268bd2;">()</span> <span style="color: #268bd2;">{</span>
+<span class="linenr">13: </span>  <span style="color: #268bd2;">hello</span><span style="color: #d33682;">(</span>context.<span style="color: #268bd2;">Background</span><span style="color: #859900;">()</span><span style="color: #d33682;">)</span>
+<span class="linenr">14: </span><span style="color: #268bd2;">}</span>
+<span class="linenr">15: </span>
+</pre>
+</div>
+
+<p>
+经过 <code>go/parser.ParseFile</code> 
+</p>
+<div class="org-src-container">
+<pre class="src src-go"><span class="linenr"> 1: </span><span style="color: #859900;">package</span> main
+<span class="linenr"> 2: </span>
+<span class="linenr"> 3: </span><span style="color: #859900;">import</span> <span style="color: #268bd2;">(</span>
+<span class="linenr"> 4: </span>  <span style="color: #2aa198;">"go/parser"</span>
+<span class="linenr"> 5: </span>  <span style="color: #2aa198;">"go/token"</span>
+<span class="linenr"> 6: </span>  <span style="color: #2aa198;">"io/ioutil"</span>
+<span class="linenr"> 7: </span>  <span style="color: #2aa198;">"os"</span>
+<span class="linenr"> 8: </span>  <span style="color: #2aa198;">"path/filepath"</span>
+<span class="linenr"> 9: </span>
+<span class="linenr">10: </span>  <span style="color: #2aa198;">"github.com/davecgh/go-spew/spew"</span>
+<span class="linenr">11: </span><span style="color: #268bd2;">)</span>
+<span class="linenr">12: </span>
+<span class="linenr">13: </span><span style="color: #859900;">func</span> <span style="color: #268bd2;">main</span><span style="color: #268bd2;">()</span> <span style="color: #268bd2;">{</span>
+<span class="linenr">14: </span>  home, err := os.<span style="color: #268bd2;">UserHomeDir</span><span style="color: #d33682;">()</span>
+<span class="linenr">15: </span>  <span style="color: #859900;">if</span> err != <span style="color: #d33682;">nil</span> <span style="color: #d33682;">{</span>
+<span class="linenr">16: </span>    <span style="color: #268bd2;">panic</span><span style="color: #859900;">(</span>err<span style="color: #859900;">)</span>
+<span class="linenr">17: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">18: </span>
+<span class="linenr">19: </span>  file := filepath.<span style="color: #268bd2;">Join</span><span style="color: #d33682;">(</span>home, <span style="color: #2aa198;">"src"</span>, <span style="color: #2aa198;">"github.com"</span>, <span style="color: #2aa198;">"shanexu"</span>, <span style="color: #2aa198;">"go-playground"</span>, <span style="color: #2aa198;">"helloworld"</span>, <span style="color: #2aa198;">"main.go"</span><span style="color: #d33682;">)</span>
+<span class="linenr">20: </span>  src, err := ioutil.<span style="color: #268bd2;">ReadFile</span><span style="color: #d33682;">(</span>file<span style="color: #d33682;">)</span>
+<span class="linenr">21: </span>  <span style="color: #859900;">if</span> err != <span style="color: #d33682;">nil</span> <span style="color: #d33682;">{</span>
+<span class="linenr">22: </span>    <span style="color: #268bd2;">panic</span><span style="color: #859900;">(</span>err<span style="color: #859900;">)</span>
+<span class="linenr">23: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">24: </span>
+<span class="linenr">25: </span>  fset := token.<span style="color: #268bd2;">NewFileSet</span><span style="color: #d33682;">()</span>
+<span class="linenr">26: </span>  f, err := parser.<span style="color: #268bd2;">ParseFile</span><span style="color: #d33682;">(</span>fset, <span style="color: #2aa198;">"main.go"</span>, src, parser.AllErrors<span style="color: #d33682;">)</span>
+<span class="linenr">27: </span>  <span style="color: #859900;">if</span> err != <span style="color: #d33682;">nil</span> <span style="color: #d33682;">{</span>
+<span class="linenr">28: </span>    <span style="color: #268bd2;">panic</span><span style="color: #859900;">(</span>err<span style="color: #859900;">)</span>
+<span class="linenr">29: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">30: </span>
+<span class="linenr">31: </span>  spew.<span style="color: #268bd2;">Dump</span><span style="color: #d33682;">(</span>f<span style="color: #d33682;">)</span>
+<span class="linenr">32: </span><span style="color: #268bd2;">}</span>  
+</pre>
+</div>
+
+<p>
+得到AST：
+</p>
+
+<script src="https://gist.github.com/shanexu/93b83f1d2b9a305042b6c0ad96f0c201.js"></script>  
+
+<p>
+而 <code>cmd/compile/internal/syntax.Parse</code> 的结果则都是 <code>cmd/compile/internal/syntax</code> 包下的类型。基本都能和 <code>go/ast</code> 下的类型一一对应。比如：ast.File和syntax.File，ast.ExprStmt和syntax.ExprStmt，ast.Ident和syntax.Name，ast.CallExpr和syntax.CallExpr，ast.SelectorExpr和syntax.SelectorExpr。
+</p>
+
+<p>
+我们现在可以对AST出手。
+例如我们想针对所有main包下以hello开头的函数在进入方法时打印“start ${方法名}...”，在离开方法是打印“stop ${方法名}...”， 则可以在文件 <code>cmd/compile/internal/gc/noder.go</code> Parse结束后，修改p.file的值。代码如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-go"><span class="linenr">52: </span>p.file, _ = syntax.<span style="color: #268bd2;">Parse</span><span style="color: #268bd2;">(</span>base, f, p.error, p.pragma, syntax.CheckBranches<span style="color: #268bd2;">)</span> <span style="color: #405A61;">// </span><span style="color: #405A61;">errors are tracked via p.error</span>
+<span class="linenr">53: </span><span style="color: #859900;">if</span> p.file.PkgName.Value == <span style="color: #2aa198;">"main"</span> <span style="color: #268bd2;">{</span>
+<span class="linenr">54: </span>  <span style="color: #859900;">for</span> _, d := <span style="color: #859900;">range</span> p.file.DeclList <span style="color: #d33682;">{</span>
+<span class="linenr">55: </span>    d, _ := d.<span style="color: #859900;">(</span>*<span style="color: #b58900;">syntax.FuncDecl</span><span style="color: #859900;">)</span>
+<span class="linenr">56: </span>    <span style="color: #859900;">if</span> d == <span style="color: #d33682;">nil</span> <span style="color: #859900;">{</span>
+<span class="linenr">57: </span>      <span style="color: #859900;">continue</span>
+<span class="linenr">58: </span>    <span style="color: #859900;">}</span>
+<span class="linenr">59: </span>    <span style="color: #859900;">if</span> !strings.<span style="color: #268bd2;">HasPrefix</span><span style="color: #859900;">(</span>d.Name.Value, <span style="color: #2aa198;">"hello"</span><span style="color: #859900;">)</span> <span style="color: #859900;">{</span>
+<span class="linenr">60: </span>      <span style="color: #859900;">continue</span>
+<span class="linenr">61: </span>    <span style="color: #859900;">}</span>
+<span class="linenr">62: </span>    d.Body.List = <span style="color: #268bd2;">append</span><span style="color: #859900;">(</span><span style="color: #cb4b16;">[]</span><span style="color: #b58900;">syntax.Stmt</span><span style="color: #cb4b16;">{</span>
+<span class="linenr">63: </span>      &amp;syntax.<span style="color: #b58900;">ExprStmt</span><span style="color: #6c71c4;">{</span>
+<span class="linenr">64: </span>        <span style="color: #d33682;">X</span>: &amp;syntax.<span style="color: #b58900;">CallExpr</span><span style="color: #b58900;">{</span>
+<span class="linenr">65: </span>          <span style="color: #d33682;">Fun</span>: &amp;syntax.<span style="color: #b58900;">SelectorExpr</span><span style="color: #35a69c;">{</span>
+<span class="linenr">66: </span>            <span style="color: #d33682;">X</span>:   &amp;syntax.<span style="color: #b58900;">Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #2aa198;">"fmt"</span><span style="color: #a2b6da;">}</span>,
+<span class="linenr">67: </span>            <span style="color: #d33682;">Sel</span>: &amp;syntax.<span style="color: #b58900;">Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #2aa198;">"Println"</span><span style="color: #a2b6da;">}</span>,
+<span class="linenr">68: </span>          <span style="color: #35a69c;">}</span>,
+<span class="linenr">69: </span>          <span style="color: #d33682;">ArgList</span>: <span style="color: #35a69c;">[]</span><span style="color: #b58900;">syntax.Expr</span><span style="color: #35a69c;">{</span>
+<span class="linenr">70: </span>            &amp;syntax.<span style="color: #b58900;">BasicLit</span><span style="color: #a2b6da;">{</span>
+<span class="linenr">71: </span>              <span style="color: #d33682;">Value</span>: strconv.<span style="color: #268bd2;">Quote</span><span style="color: #9cb6ad;">(</span><span style="color: #2aa198;">"start "</span> + d.Name.Value + <span style="color: #2aa198;">"..."</span><span style="color: #9cb6ad;">)</span>,
+<span class="linenr">72: </span>              <span style="color: #d33682;">Kind</span>:  syntax.StringLit,
+<span class="linenr">73: </span>            <span style="color: #a2b6da;">}</span>,
+<span class="linenr">74: </span>          <span style="color: #35a69c;">}</span>,
+<span class="linenr">75: </span>        <span style="color: #b58900;">}</span>,
+<span class="linenr">76: </span>      <span style="color: #6c71c4;">}</span>,
+<span class="linenr">77: </span>      &amp;syntax.<span style="color: #b58900;">CallStmt</span><span style="color: #6c71c4;">{</span>
+<span class="linenr">78: </span>        <span style="color: #d33682;">Tok</span>: syntax.Defer,
+<span class="linenr">79: </span>        <span style="color: #d33682;">Call</span>: &amp;syntax.<span style="color: #b58900;">CallExpr</span><span style="color: #b58900;">{</span>
+<span class="linenr">80: </span>          <span style="color: #d33682;">Fun</span>: &amp;syntax.<span style="color: #b58900;">SelectorExpr</span><span style="color: #35a69c;">{</span>
+<span class="linenr">81: </span>            <span style="color: #d33682;">X</span>:   &amp;syntax.<span style="color: #b58900;">Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #2aa198;">"fmt"</span><span style="color: #a2b6da;">}</span>,
+<span class="linenr">82: </span>            <span style="color: #d33682;">Sel</span>: &amp;syntax.<span style="color: #b58900;">Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #2aa198;">"Println"</span><span style="color: #a2b6da;">}</span>,
+<span class="linenr">83: </span>          <span style="color: #35a69c;">}</span>,
+<span class="linenr">84: </span>          <span style="color: #d33682;">ArgList</span>: <span style="color: #35a69c;">[]</span><span style="color: #b58900;">syntax.Expr</span><span style="color: #35a69c;">{</span>
+<span class="linenr">85: </span>            &amp;syntax.<span style="color: #b58900;">BasicLit</span><span style="color: #a2b6da;">{</span>
+<span class="linenr">86: </span>              <span style="color: #d33682;">Value</span>: strconv.<span style="color: #268bd2;">Quote</span><span style="color: #9cb6ad;">(</span><span style="color: #2aa198;">"stop "</span> + d.Name.Value + <span style="color: #2aa198;">"..."</span><span style="color: #9cb6ad;">)</span>,
+<span class="linenr">87: </span>              <span style="color: #d33682;">Kind</span>:  syntax.StringLit,
+<span class="linenr">88: </span>            <span style="color: #a2b6da;">}</span>,
+<span class="linenr">89: </span>          <span style="color: #35a69c;">}</span>,
+<span class="linenr">90: </span>        <span style="color: #b58900;">}</span>,
+<span class="linenr">91: </span>      <span style="color: #6c71c4;">}</span>,
+<span class="linenr">92: </span>    <span style="color: #cb4b16;">}</span>, d.Body.List...<span style="color: #859900;">)</span>
+<span class="linenr">93: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">94: </span><span style="color: #268bd2;">}</span>  
+</pre>
+</div>
+
+<p>
+修改完后需要重新编译golang。
+</p>
+<pre class="example">
+cd $HOME/src/github.com/golang/go/src
+./make.bash
+
+cd $HOME/src/github.com/shanexu/go-playground
+go clean -cache
+go run helloworld/main.go
+</pre>
+
+<p>
+看到如下结果：
+</p>
+<div class="org-src-container">
+<pre class="src src-text">start hello...
+hello world
+stop hello...  
+</pre>
+</div>
+
+<p>
+在修改了AST之后，实际上hello方法的源码应该长这样：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #859900;">func</span> <span style="color: #268bd2;">hello</span><span style="color: #268bd2;">(</span>ctx <span style="color: #b58900;">context.Context</span><span style="color: #268bd2;">)</span> <span style="color: #268bd2;">{</span>
+  fmt.<span style="color: #268bd2;">Println</span><span style="color: #d33682;">(</span><span style="color: #2aa198;">"start hello..."</span><span style="color: #d33682;">)</span>
+  <span style="color: #859900;">defer</span> fmt.<span style="color: #268bd2;">Println</span><span style="color: #d33682;">(</span><span style="color: #2aa198;">"stop hello..."</span><span style="color: #d33682;">)</span>
+  fmt.<span style="color: #268bd2;">Println</span><span style="color: #d33682;">(</span><span style="color: #2aa198;">"hello world"</span><span style="color: #d33682;">)</span>
+<span style="color: #268bd2;">}</span>
+</pre>
+</div>
+
+<p>
+这里有个问题，插入的代码新引入了fmt包，如果原始代码里面没有引入fmt包会怎样？
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">$ go clean -cache; go run helloworld/main.go
+# command-line-arguments
+helloworld/main.go:7:16: undefined: fmt in fmt.Println  
+</pre>
+</div>
+
+<p>
+果然编译失败了。
+</p>
+
+<p>
+在语法树中按需插入import呢？
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span class="linenr"> 52: </span><span style="color: #859900;">if</span> p.file.PkgName.Value == <span style="color: #2aa198;">"main"</span> <span style="color: #268bd2;">{</span>
+<span class="linenr"> 53: </span>  <span style="color: #859900;">for</span> _, d := <span style="color: #859900;">range</span> p.file.DeclList <span style="color: #d33682;">{</span>
+<span class="linenr"> 54: </span>    d, _ := d.<span style="color: #859900;">(</span>*<span style="color: #b58900;">syntax.FuncDecl</span><span style="color: #859900;">)</span>
+<span class="linenr"> 55: </span>    <span style="color: #859900;">if</span> d == <span style="color: #d33682;">nil</span> <span style="color: #859900;">{</span>
+<span class="linenr"> 56: </span>      <span style="color: #859900;">continue</span>
+<span class="linenr"> 57: </span>    <span style="color: #859900;">}</span>
+<span class="linenr"> 58: </span>    <span style="color: #859900;">if</span> !strings.<span style="color: #268bd2;">HasPrefix</span><span style="color: #859900;">(</span>d.Name.Value, <span style="color: #2aa198;">"hello"</span><span style="color: #859900;">)</span> <span style="color: #859900;">{</span>
+<span class="linenr"> 59: </span>      <span style="color: #859900;">continue</span>
+<span class="linenr"> 60: </span>    <span style="color: #859900;">}</span>
+<span class="linenr"> 61: </span>    hasHello = <span style="color: #d33682;">true</span>
+<span class="linenr"> 62: </span>    d.Body.List = <span style="color: #268bd2;">append</span><span style="color: #859900;">(</span><span style="color: #cb4b16;">[]</span><span style="color: #b58900;">syntax.Stmt</span><span style="color: #cb4b16;">{</span>
+<span class="linenr"> 63: </span>      &amp;syntax.<span style="color: #b58900;">ExprStmt</span><span style="color: #6c71c4;">{</span>
+<span class="linenr"> 64: </span>        <span style="color: #d33682;">X</span>: &amp;syntax.<span style="color: #b58900;">CallExpr</span><span style="color: #b58900;">{</span>
+<span class="linenr"> 65: </span>          <span style="color: #d33682;">Fun</span>: &amp;syntax.<span style="color: #b58900;">SelectorExpr</span><span style="color: #35a69c;">{</span>
+<span class="linenr"> 66: </span>            <span style="color: #d33682;">X</span>:   &amp;syntax.<span style="color: #b58900;">Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #2aa198;">"fmt"</span><span style="color: #a2b6da;">}</span>,
+<span class="linenr"> 67: </span>            <span style="color: #d33682;">Sel</span>: &amp;syntax.<span style="color: #b58900;">Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #2aa198;">"Println"</span><span style="color: #a2b6da;">}</span>,
+<span class="linenr"> 68: </span>          <span style="color: #35a69c;">}</span>,
+<span class="linenr"> 69: </span>          <span style="color: #d33682;">ArgList</span>: <span style="color: #35a69c;">[]</span><span style="color: #b58900;">syntax.Expr</span><span style="color: #35a69c;">{</span>
+<span class="linenr"> 70: </span>            &amp;syntax.<span style="color: #b58900;">BasicLit</span><span style="color: #a2b6da;">{</span>
+<span class="linenr"> 71: </span>              <span style="color: #d33682;">Value</span>: strconv.<span style="color: #268bd2;">Quote</span><span style="color: #9cb6ad;">(</span><span style="color: #2aa198;">"start "</span> + d.Name.Value + <span style="color: #2aa198;">"..."</span><span style="color: #9cb6ad;">)</span>,
+<span class="linenr"> 72: </span>              <span style="color: #d33682;">Kind</span>:  syntax.StringLit,
+<span class="linenr"> 73: </span>            <span style="color: #a2b6da;">}</span>,
+<span class="linenr"> 74: </span>          <span style="color: #35a69c;">}</span>,
+<span class="linenr"> 75: </span>        <span style="color: #b58900;">}</span>,
+<span class="linenr"> 76: </span>      <span style="color: #6c71c4;">}</span>,
+<span class="linenr"> 77: </span>      &amp;syntax.<span style="color: #b58900;">CallStmt</span><span style="color: #6c71c4;">{</span>
+<span class="linenr"> 78: </span>        <span style="color: #d33682;">Tok</span>: syntax.Defer,
+<span class="linenr"> 79: </span>        <span style="color: #d33682;">Call</span>: &amp;syntax.<span style="color: #b58900;">CallExpr</span><span style="color: #b58900;">{</span>
+<span class="linenr"> 80: </span>          <span style="color: #d33682;">Fun</span>: &amp;syntax.<span style="color: #b58900;">SelectorExpr</span><span style="color: #35a69c;">{</span>
+<span class="linenr"> 81: </span>            <span style="color: #d33682;">X</span>:   &amp;syntax.<span style="color: #b58900;">Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #2aa198;">"fmt"</span><span style="color: #a2b6da;">}</span>,
+<span class="linenr"> 82: </span>            <span style="color: #d33682;">Sel</span>: &amp;syntax.<span style="color: #b58900;">Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #2aa198;">"Println"</span><span style="color: #a2b6da;">}</span>,
+<span class="linenr"> 83: </span>          <span style="color: #35a69c;">}</span>,
+<span class="linenr"> 84: </span>          <span style="color: #d33682;">ArgList</span>: <span style="color: #35a69c;">[]</span><span style="color: #b58900;">syntax.Expr</span><span style="color: #35a69c;">{</span>
+<span class="linenr"> 85: </span>            &amp;syntax.<span style="color: #b58900;">BasicLit</span><span style="color: #a2b6da;">{</span>
+<span class="linenr"> 86: </span>              <span style="color: #d33682;">Value</span>: strconv.<span style="color: #268bd2;">Quote</span><span style="color: #9cb6ad;">(</span><span style="color: #2aa198;">"stop "</span> + d.Name.Value + <span style="color: #2aa198;">"..."</span><span style="color: #9cb6ad;">)</span>,
+<span class="linenr"> 87: </span>              <span style="color: #d33682;">Kind</span>:  syntax.StringLit,
+<span class="linenr"> 88: </span>            <span style="color: #a2b6da;">}</span>,
+<span class="linenr"> 89: </span>          <span style="color: #35a69c;">}</span>,
+<span class="linenr"> 90: </span>        <span style="color: #b58900;">}</span>,
+<span class="linenr"> 91: </span>      <span style="color: #6c71c4;">}</span>,
+<span class="linenr"> 92: </span>    <span style="color: #cb4b16;">}</span>, d.Body.List...<span style="color: #859900;">)</span>
+<span class="linenr"> 93: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr"> 94: </span><span style="color: #268bd2;">}</span>
+<span class="linenr"> 95: </span><span style="color: #859900;">if</span> hasHello <span style="color: #268bd2;">{</span>
+<span class="linenr"> 96: </span>  hasFmtImport := <span style="color: #d33682;">false</span>
+<span class="linenr"> 97: </span>  <span style="color: #859900;">for</span> _, d := <span style="color: #859900;">range</span> p.file.DeclList <span style="color: #d33682;">{</span>
+<span class="linenr"> 98: </span>    d, _ := d.<span style="color: #859900;">(</span>*<span style="color: #b58900;">syntax.ImportDecl</span><span style="color: #859900;">)</span>
+<span class="linenr"> 99: </span>    <span style="color: #859900;">if</span> d == <span style="color: #d33682;">nil</span> <span style="color: #859900;">{</span>
+<span class="linenr">100: </span>      <span style="color: #859900;">continue</span>
+<span class="linenr">101: </span>    <span style="color: #859900;">}</span>
+<span class="linenr">102: </span>    <span style="color: #859900;">if</span> d.Path.Value != <span style="color: #2aa198;">"fmt"</span> <span style="color: #859900;">{</span>
+<span class="linenr">103: </span>      <span style="color: #859900;">continue</span>
+<span class="linenr">104: </span>    <span style="color: #859900;">}</span>
+<span class="linenr">105: </span>    hasFmtImport = <span style="color: #d33682;">true</span>
+<span class="linenr">106: </span>    <span style="color: #859900;">break</span>
+<span class="linenr">107: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">108: </span>  <span style="color: #859900;">if</span> !hasFmtImport <span style="color: #d33682;">{</span>
+<span class="linenr">109: </span>    p.file.DeclList = <span style="color: #268bd2;">append</span><span style="color: #859900;">(</span><span style="color: #cb4b16;">[]</span><span style="color: #b58900;">syntax.Decl</span><span style="color: #cb4b16;">{</span>
+<span class="linenr">110: </span>      &amp;syntax.<span style="color: #b58900;">ImportDecl</span><span style="color: #6c71c4;">{</span>
+<span class="linenr">111: </span>        <span style="color: #d33682;">Path</span>: &amp;syntax.<span style="color: #b58900;">BasicLit</span><span style="color: #b58900;">{</span>
+<span class="linenr">112: </span>          <span style="color: #d33682;">Value</span>: <span style="color: #2aa198;">`"fmt"`</span>, Kind: syntax.StringLit,
+<span class="linenr">113: </span>        <span style="color: #b58900;">}</span>,
+<span class="linenr">114: </span>      <span style="color: #6c71c4;">}</span>,
+<span class="linenr">115: </span>    <span style="color: #cb4b16;">}</span>, p.file.DeclList...<span style="color: #859900;">)</span>
+<span class="linenr">116: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">117: </span><span style="color: #268bd2;">}</span>  
+</pre>
+</div>
+
+<p>
+重新编译golang，执行go run
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">$ go clean -cache; go run helloworld/main.go
+# command-line-arguments
+helloworld/main.go:1:9: can't find import: "fmt"
+</pre>
+</div>
+
+<p>
+根据错误信息找到，抛错位置，发现parseFile过程中，有findpkg的过程，起调用栈如下。
+</p>
+
+
+<div class="figure">
+<p><img src="/assets/blog/2019/10/09/golang-aop/cmd_compile_internal_gc_findpkg.png" alt="cmd_compile_internal_gc_findpkg.png" />
+</p>
+</div>
+
+<p>
+包变量 <code>packageFile</code> 这个map中获取相关包的信息。
+</p>
+<div class="org-src-container">
+<pre class="src src-go"><span class="linenr">988: </span><span style="color: #859900;">if</span> packageFile != <span style="color: #d33682;">nil</span> <span style="color: #268bd2;">{</span>
+<span class="linenr">989: </span>  file, ok = packageFile<span style="color: #d33682;">[</span>name<span style="color: #d33682;">]</span>
+<span class="linenr">990: </span>  <span style="color: #859900;">return</span> file, ok
+<span class="linenr">991: </span><span style="color: #268bd2;">}</span>  
+</pre>
+</div>
+
+<p>
+包变量 <code>packageFile</code> 在 <code>readImportCfg</code> 方法中初始化。
+</p>
+
+
+<div class="figure">
+<p><img src="/assets/blog/2019/10/09/golang-aop/cmd_compile_internal_gc_readImportCfg.png" alt="cmd_compile_internal_gc_readImportCfg.png" />
+</p>
+</div>
+
+<p>
+所以 <code>readImportCfg</code> 方法的入参就是，调用compile命令时，选项 <code>-importcfg</code> 的值。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span class="linenr">805: </span><span style="color: #859900;">func</span> <span style="color: #268bd2;">readImportCfg</span><span style="color: #268bd2;">(</span>file <span style="color: #b58900;">string</span><span style="color: #268bd2;">)</span> <span style="color: #268bd2;">{</span>
+<span class="linenr">806: </span>  packageFile = <span style="color: #859900;">map</span><span style="color: #d33682;">[</span><span style="color: #b58900;">string</span><span style="color: #d33682;">]</span><span style="color: #b58900;">string</span><span style="color: #d33682;">{}</span>
+<span class="linenr">807: </span>  data, err := ioutil.<span style="color: #268bd2;">ReadFile</span><span style="color: #d33682;">(</span>file<span style="color: #d33682;">)</span>
+<span class="linenr">808: </span>  <span style="color: #859900;">if</span> err != <span style="color: #d33682;">nil</span> <span style="color: #d33682;">{</span>
+<span class="linenr">809: </span>    log.<span style="color: #268bd2;">Fatalf</span><span style="color: #859900;">(</span><span style="color: #2aa198;">"-importcfg: %v"</span>, err<span style="color: #859900;">)</span>
+<span class="linenr">810: </span>  <span style="color: #d33682;">}</span>
+</pre>
+</div>
+
+<p>
+要解决这个问题，就需要在 <code>importcfg</code> 文件中加入新加的包。
+</p>
+
+<p>
+问题又回到的了 <code>importcfg</code> 文件的生成过程了。
+</p>
+
+<p>
+文件 <code>cmd/go/internal/work/exec.go</code> 第634行，有关importcfg的内容的逻辑。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span class="linenr">634: </span><span style="color: #405A61;">// </span><span style="color: #405A61;">Prepare Go import config.</span>
+<span class="linenr">635: </span><span style="color: #405A61;">// </span><span style="color: #405A61;">We start it off with a comment so it can't be empty, so icfg.Bytes() below is never nil.</span>
+<span class="linenr">636: </span><span style="color: #405A61;">// </span><span style="color: #405A61;">It should never be empty anyway, but there have been bugs in the past that resulted</span>
+<span class="linenr">637: </span><span style="color: #405A61;">// </span><span style="color: #405A61;">in empty configs, which then unfortunately turn into "no config passed to compiler",</span>
+<span class="linenr">638: </span><span style="color: #405A61;">// </span><span style="color: #405A61;">and the compiler falls back to looking in pkg itself, which mostly works,</span>
+<span class="linenr">639: </span><span style="color: #405A61;">// </span><span style="color: #405A61;">except when it doesn't.</span>
+<span class="linenr">640: </span><span style="color: #859900;">var</span> icfg bytes.Buffer
+<span class="linenr">641: </span>fmt.<span style="color: #268bd2;">Fprintf</span><span style="color: #268bd2;">(</span>&amp;icfg, <span style="color: #2aa198;">"# import config\n"</span><span style="color: #268bd2;">)</span>
+<span class="linenr">642: </span><span style="color: #859900;">for</span> i, raw := <span style="color: #859900;">range</span> a.Package.Internal.RawImports <span style="color: #268bd2;">{</span>
+<span class="linenr">643: </span>  final := a.Package.Imports<span style="color: #d33682;">[</span>i<span style="color: #d33682;">]</span>
+<span class="linenr">644: </span>  <span style="color: #859900;">if</span> final != raw <span style="color: #d33682;">{</span>
+<span class="linenr">645: </span>    fmt.<span style="color: #268bd2;">Fprintf</span><span style="color: #859900;">(</span>&amp;icfg, <span style="color: #2aa198;">"importmap %s=%s\n"</span>, raw, final<span style="color: #859900;">)</span>
+<span class="linenr">646: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">647: </span><span style="color: #268bd2;">}</span>  
+</pre>
+</div>
+
+<p>
+现在归结于 <code>Package.Imports</code> 的值的设置了。
+</p>
+
+<p>
+文件 <code>go/build/build.go=，先用 =go/parser.ParseFile</code> 解析源文件，然后获取其中的imports。
+</p>
+<div class="org-src-container">
+<pre class="src src-go"><span class="linenr">847: </span>pf, err := parser.<span style="color: #268bd2;">ParseFile</span><span style="color: #268bd2;">(</span>fset, filename, data, parser.ImportsOnly|parser.ParseComments<span style="color: #268bd2;">)</span>
+<span class="linenr">848: </span><span style="color: #859900;">if</span> err != <span style="color: #d33682;">nil</span> <span style="color: #268bd2;">{</span>
+<span class="linenr">849: </span>  <span style="color: #268bd2;">badFile</span><span style="color: #d33682;">(</span>err<span style="color: #d33682;">)</span>
+<span class="linenr">850: </span>  <span style="color: #859900;">continue</span>
+<span class="linenr">851: </span><span style="color: #268bd2;">}</span>
+</pre>
+</div>
+
+<p>
+修改代码如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span class="linenr">847: </span>pf, err := parser.<span style="color: #268bd2;">ParseFile</span><span style="color: #268bd2;">(</span>fset, filename, data, parser.ImportsOnly|parser.ParseComments<span style="color: #268bd2;">)</span>
+<span class="linenr">848: </span><span style="color: #859900;">if</span> err != <span style="color: #d33682;">nil</span> <span style="color: #268bd2;">{</span>
+<span class="linenr">849: </span>  <span style="color: #268bd2;">badFile</span><span style="color: #d33682;">(</span>err<span style="color: #d33682;">)</span>
+<span class="linenr">850: </span>  <span style="color: #859900;">continue</span>
+<span class="linenr">851: </span><span style="color: #268bd2;">}</span>
+<span class="linenr">852: </span>
+<span class="linenr">853: </span><span style="color: #859900;">if</span> strings.<span style="color: #268bd2;">HasSuffix</span><span style="color: #268bd2;">(</span>filename, <span style="color: #2aa198;">"helloworld/main.go"</span><span style="color: #268bd2;">)</span> <span style="color: #268bd2;">{</span>
+<span class="linenr">854: </span>  hasFmtImport := <span style="color: #d33682;">false</span>
+<span class="linenr">855: </span>  <span style="color: #859900;">for</span> _, i := <span style="color: #859900;">range</span> pf.Imports <span style="color: #d33682;">{</span>
+<span class="linenr">856: </span>    <span style="color: #859900;">if</span> i.Path.Value == <span style="color: #2aa198;">`"fmt"`</span> <span style="color: #859900;">{</span>
+<span class="linenr">857: </span>      hasFmtImport = <span style="color: #d33682;">true</span>
+<span class="linenr">858: </span>      <span style="color: #859900;">break</span>
+<span class="linenr">859: </span>    <span style="color: #859900;">}</span>
+<span class="linenr">860: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">861: </span>  <span style="color: #859900;">if</span> !hasFmtImport <span style="color: #d33682;">{</span>
+<span class="linenr">862: </span>    pf.Imports = <span style="color: #268bd2;">append</span><span style="color: #859900;">(</span>pf.Imports, &amp;ast.<span style="color: #b58900;">ImportSpec</span><span style="color: #cb4b16;">{</span>
+<span class="linenr">863: </span>      <span style="color: #d33682;">Path</span>: &amp;ast.<span style="color: #b58900;">BasicLit</span><span style="color: #6c71c4;">{</span>
+<span class="linenr">864: </span>        <span style="color: #d33682;">Value</span>: <span style="color: #2aa198;">`"fmt"`</span>,
+<span class="linenr">865: </span>        <span style="color: #d33682;">Kind</span>:  token.STRING,
+<span class="linenr">866: </span>      <span style="color: #6c71c4;">}</span>,
+<span class="linenr">867: </span>    <span style="color: #cb4b16;">}</span><span style="color: #859900;">)</span>
+<span class="linenr">868: </span>    <span style="color: #859900;">if</span> <span style="color: #268bd2;">len</span><span style="color: #859900;">(</span>pf.Decls<span style="color: #859900;">)</span> &gt; <span style="color: #d33682; font-weight: bold;">0</span> <span style="color: #859900;">{</span>
+<span class="linenr">869: </span>      d, ok := pf.Decls<span style="color: #cb4b16;">[</span><span style="color: #d33682; font-weight: bold;">0</span><span style="color: #cb4b16;">]</span>.<span style="color: #cb4b16;">(</span>*<span style="color: #b58900;">ast.GenDecl</span><span style="color: #cb4b16;">)</span>
+<span class="linenr">870: </span>      <span style="color: #859900;">if</span> ok <span style="color: #cb4b16;">{</span>
+<span class="linenr">871: </span>        d.Specs = <span style="color: #268bd2;">append</span><span style="color: #6c71c4;">(</span>d.Specs, &amp;ast.<span style="color: #b58900;">ImportSpec</span><span style="color: #b58900;">{</span>
+<span class="linenr">872: </span>          <span style="color: #d33682;">Path</span>: &amp;ast.<span style="color: #b58900;">BasicLit</span><span style="color: #35a69c;">{</span>
+<span class="linenr">873: </span>            <span style="color: #d33682;">Kind</span>:  token.STRING,
+<span class="linenr">874: </span>            <span style="color: #d33682;">Value</span>: <span style="color: #2aa198;">`"fmt"`</span>,
+<span class="linenr">875: </span>          <span style="color: #35a69c;">}</span>,
+<span class="linenr">876: </span>        <span style="color: #b58900;">}</span><span style="color: #6c71c4;">)</span>
+<span class="linenr">877: </span>      <span style="color: #cb4b16;">}</span>
+<span class="linenr">878: </span>    <span style="color: #859900;">}</span>
+<span class="linenr">879: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">880: </span><span style="color: #268bd2;">}</span>  
+</pre>
+</div>
+
+<p>
+重新编译golang，执行go run
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">$ go clean -cache; go run helloworld/main.go
+start hello...
+stop hello...  
+</pre>
+</div>
+
+<p>
+成功加上了import。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf25e420" class="outline-2">
+<h2 id="orgf25e420">创业未半</h2>
+<div class="outline-text-2" id="text-orgf25e420">
+<p>
+至此对golang编译器的解析和hack的过程也结束了。可见通过修改编译器生成的AST的方式，我们可以给特定文件、特定包、特定方法加上自定义代码。这里给golang实现aop提供了一种另类的思路。诚然要完成像 <code>AspectJ</code> 这样完整的解决方案，还有很大一段路路要走。
+</p>
+</div>
+</div>
+
+
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2019-10-09</span>
+        <span title="last modification date" class="post-info">2019-10-11</span>
+        <span title="tags" class="post-info"><a href="/tags/golang/">golang</a></span>
+        <span title="author" class="post-info">shanexu</span>
+      </div>
+      <section>
+        <h2 class="chapter">Comments</h2>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2019/10/09/golang-aop";
+          var disqus_url = "http://shanexu.io/blog/2019/10/09/golang-aop";
+          var disqus_shortname = 'shanexu';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </section>
+      <script src="/media/js/main.js"></script>
+        <script type="text/javascript">
+         var _gaq = _gaq || [];
+         _gaq.push(['_setAccount', 'UA-74684473-1']);
+         _gaq.push(['_trackPageview']);
+         (function() {
+           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+         })();
+        </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711@gmail.com">shanexu</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>

@@ -308,6 +308,10 @@ blockquote p:last-child {
   height: 100%;
 }
 
+.gist-data {
+  max-height: 800px;
+}
+
 @media(min-width:1000px){
   #screenshot {
     float: right;
