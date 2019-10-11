@@ -167,6 +167,7 @@ go build -debug-actiongraph /tmp/build.txt -p 1 -v -o bin/helloworld helloworld/
   #+end_export
 
   转成图，如下：
+
   #+begin_src dot :file ./actions.png :cmdline -Kdot -Tpng
 digraph G {
 "0 link-install command-line-arguments" -> "1 link command-line-arguments"
@@ -604,7 +605,8 @@ func main() {
   #+end_src
   
   修改完后需要重新编译golang。
-  #+begin_src 
+
+  #+begin_src text
 cd $HOME/src/github.com/golang/go/src
 ./make.bash
 
