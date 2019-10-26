@@ -58,7 +58,7 @@ foldl _ zero []        = zero
 #+end_src
 
 例如计算[Integer]的和：
-#+begin_src haskell
+#+begin_src haskell -n
 import Prelude((+))
 
 foldl (\a b -> a+b) 0 [1,2,3,4]
@@ -76,7 +76,7 @@ foldr _ zero []        = zero
 
 同样用foldr也可以计算[Integer]的和：
 
-#+begin_src haskell
+#+begin_src haskell -n
 import Prelude((+))
 
 foldr (\a b -> a+b) 0 [1,2,3,4]
@@ -100,7 +100,7 @@ foldr (+) 0 [1,2,3,4]
 
 重点来了，其实我们常用的 map :: (a -> b) -> [a] -> [b] 函数也可以用foldr来表达。
 
-#+begin_src haskell
+#+begin_src haskell -n
 myMap f xs = foldr step [] xs
   where
     step x ys = f x : ys
@@ -108,7 +108,7 @@ myMap f xs = foldr step [] xs
 
 filter :: (a -> Bool) -> [a] -> [a] 函数也可以用foldr来表达。
 
-#+begin_src haskell
+#+begin_src haskell -n
 myFilter p xs = foldr step [] xs
   where
     step x ys
@@ -118,7 +118,7 @@ myFilter p xs = foldr step [] xs
 
 我们来说标题。事实上，foldl函数也能够用foldr来表达。
 
-#+begin_src haskell
+#+begin_src haskell -n
 myFoldl :: (a -> b -> a) -> a -> [b] -> a
 myFoldl f z xs = foldr step id xs z
   where
@@ -128,7 +128,7 @@ myFoldl f z xs = foldr step id xs z
 然后《Real World Haskell》第四章的作者在写完上面这段代码之后，就写了本文开头引用的那段话。
 
 foldr函数有三个参数，我们可以加上括号，来帮助思考
-#+begin_src haskell
+#+begin_src haskell -n
 myFoldl :: (a -> b -> a) -> a -> [b] -> a
 myFoldl f z xs = (foldr step id xs) z
   where
@@ -149,7 +149,7 @@ step :: b -> (a -> a) -> a -> a
 
 那么上面代码中where后面step的参数声明中x、g、a的类型分别为：
 
-#+begin_src haskell
+#+begin_src haskell -n
 x :: b
 g :: a -> a
 a :: a
@@ -157,7 +157,7 @@ a :: a
 
 同时 step x g 的类型为：
 
-#+begin_src haskell
+#+begin_src haskell -n
 step x g :: a -> a
 step x g = \a -> g (f a x)
 #+end_src
