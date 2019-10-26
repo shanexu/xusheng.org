@@ -124,11 +124,11 @@ I've tried learn Haskell...several times!
 例如计算[Integer]的和：
 </p>
 <div class="org-src-container">
-<pre class="src src-haskell"><span style="color: #80A0C2;">import</span> <span style="color: #ECCC87;">Prelude</span><span style="color: #80A0C2;">(</span><span style="color: #B58DAE;">(</span><span style="color: #dac6d6;">+</span><span style="color: #B58DAE;">)</span><span style="color: #80A0C2;">)</span>
-
-<span style="color: #8EBCBB;">foldl</span> <span style="color: #80A0C2;">(</span><span style="color: #dac6d6;">\</span>a b <span style="color: #dac6d6;">-&gt;</span> a<span style="color: #dac6d6;">+</span>b<span style="color: #80A0C2;">)</span> <span style="color: #B58DAE; font-weight: bold;">0</span> <span style="color: #80A0C2;">[</span><span style="color: #B58DAE; font-weight: bold;">1</span>,<span style="color: #B58DAE; font-weight: bold;">2</span>,<span style="color: #B58DAE; font-weight: bold;">3</span>,<span style="color: #B58DAE; font-weight: bold;">4</span><span style="color: #80A0C2;">]</span>
-
-<span style="color: #8EBCBB;">foldl</span> <span style="color: #80A0C2;">(</span><span style="color: #dac6d6;">+</span><span style="color: #80A0C2;">)</span> <span style="color: #B58DAE; font-weight: bold;">0</span> <span style="color: #80A0C2;">[</span><span style="color: #B58DAE; font-weight: bold;">1</span>,<span style="color: #B58DAE; font-weight: bold;">2</span>,<span style="color: #B58DAE; font-weight: bold;">3</span>,<span style="color: #B58DAE; font-weight: bold;">4</span><span style="color: #80A0C2;">]</span>
+<pre class="src src-haskell"><span class="linenr">1: </span><span style="color: #80A0C2;">import</span> <span style="color: #ECCC87;">Prelude</span><span style="color: #80A0C2;">(</span><span style="color: #B58DAE;">(</span><span style="color: #dac6d6;">+</span><span style="color: #B58DAE;">)</span><span style="color: #80A0C2;">)</span>
+<span class="linenr">2: </span>
+<span class="linenr">3: </span><span style="color: #8EBCBB;">foldl</span> <span style="color: #80A0C2;">(</span><span style="color: #dac6d6;">\</span>a b <span style="color: #dac6d6;">-&gt;</span> a<span style="color: #dac6d6;">+</span>b<span style="color: #80A0C2;">)</span> <span style="color: #B58DAE; font-weight: bold;">0</span> <span style="color: #80A0C2;">[</span><span style="color: #B58DAE; font-weight: bold;">1</span>,<span style="color: #B58DAE; font-weight: bold;">2</span>,<span style="color: #B58DAE; font-weight: bold;">3</span>,<span style="color: #B58DAE; font-weight: bold;">4</span><span style="color: #80A0C2;">]</span>
+<span class="linenr">4: </span>
+<span class="linenr">5: </span><span style="color: #8EBCBB;">foldl</span> <span style="color: #80A0C2;">(</span><span style="color: #dac6d6;">+</span><span style="color: #80A0C2;">)</span> <span style="color: #B58DAE; font-weight: bold;">0</span> <span style="color: #80A0C2;">[</span><span style="color: #B58DAE; font-weight: bold;">1</span>,<span style="color: #B58DAE; font-weight: bold;">2</span>,<span style="color: #B58DAE; font-weight: bold;">3</span>,<span style="color: #B58DAE; font-weight: bold;">4</span><span style="color: #80A0C2;">]</span>
 </pre>
 </div>
 
@@ -148,11 +148,11 @@ I've tried learn Haskell...several times!
 </p>
 
 <div class="org-src-container">
-<pre class="src src-haskell"><span style="color: #80A0C2;">import</span> <span style="color: #ECCC87;">Prelude</span><span style="color: #80A0C2;">(</span><span style="color: #B58DAE;">(</span><span style="color: #dac6d6;">+</span><span style="color: #B58DAE;">)</span><span style="color: #80A0C2;">)</span>
-
-<span style="color: #8EBCBB;">foldr</span> <span style="color: #80A0C2;">(</span><span style="color: #dac6d6;">\</span>a b <span style="color: #dac6d6;">-&gt;</span> a<span style="color: #dac6d6;">+</span>b<span style="color: #80A0C2;">)</span> <span style="color: #B58DAE; font-weight: bold;">0</span> <span style="color: #80A0C2;">[</span><span style="color: #B58DAE; font-weight: bold;">1</span>,<span style="color: #B58DAE; font-weight: bold;">2</span>,<span style="color: #B58DAE; font-weight: bold;">3</span>,<span style="color: #B58DAE; font-weight: bold;">4</span><span style="color: #80A0C2;">]</span>
-
-<span style="color: #8EBCBB;">foldr</span> <span style="color: #80A0C2;">(</span><span style="color: #dac6d6;">+</span><span style="color: #80A0C2;">)</span> <span style="color: #B58DAE; font-weight: bold;">0</span> <span style="color: #80A0C2;">[</span><span style="color: #B58DAE; font-weight: bold;">1</span>,<span style="color: #B58DAE; font-weight: bold;">2</span>,<span style="color: #B58DAE; font-weight: bold;">3</span>,<span style="color: #B58DAE; font-weight: bold;">4</span><span style="color: #80A0C2;">]</span>
+<pre class="src src-haskell"><span class="linenr">1: </span><span style="color: #80A0C2;">import</span> <span style="color: #ECCC87;">Prelude</span><span style="color: #80A0C2;">(</span><span style="color: #B58DAE;">(</span><span style="color: #dac6d6;">+</span><span style="color: #B58DAE;">)</span><span style="color: #80A0C2;">)</span>
+<span class="linenr">2: </span>
+<span class="linenr">3: </span><span style="color: #8EBCBB;">foldr</span> <span style="color: #80A0C2;">(</span><span style="color: #dac6d6;">\</span>a b <span style="color: #dac6d6;">-&gt;</span> a<span style="color: #dac6d6;">+</span>b<span style="color: #80A0C2;">)</span> <span style="color: #B58DAE; font-weight: bold;">0</span> <span style="color: #80A0C2;">[</span><span style="color: #B58DAE; font-weight: bold;">1</span>,<span style="color: #B58DAE; font-weight: bold;">2</span>,<span style="color: #B58DAE; font-weight: bold;">3</span>,<span style="color: #B58DAE; font-weight: bold;">4</span><span style="color: #80A0C2;">]</span>
+<span class="linenr">4: </span>
+<span class="linenr">5: </span><span style="color: #8EBCBB;">foldr</span> <span style="color: #80A0C2;">(</span><span style="color: #dac6d6;">+</span><span style="color: #80A0C2;">)</span> <span style="color: #B58DAE; font-weight: bold;">0</span> <span style="color: #80A0C2;">[</span><span style="color: #B58DAE; font-weight: bold;">1</span>,<span style="color: #B58DAE; font-weight: bold;">2</span>,<span style="color: #B58DAE; font-weight: bold;">3</span>,<span style="color: #B58DAE; font-weight: bold;">4</span><span style="color: #80A0C2;">]</span>
 </pre>
 </div>
 
@@ -183,9 +183,9 @@ I've tried learn Haskell...several times!
 </p>
 
 <div class="org-src-container">
-<pre class="src src-haskell"><span style="color: #8EBCBB;">myMap</span> f xs <span style="color: #dac6d6;">=</span> foldr step <span style="color: #80A0C2;">[]</span> xs
-  <span style="color: #80A0C2;">where</span>
-    step x ys <span style="color: #dac6d6;">=</span> f x <span style="color: #ECCC87;">:</span> ys
+<pre class="src src-haskell"><span class="linenr">1: </span><span style="color: #8EBCBB;">myMap</span> f xs <span style="color: #dac6d6;">=</span> foldr step <span style="color: #80A0C2;">[]</span> xs
+<span class="linenr">2: </span>  <span style="color: #80A0C2;">where</span>
+<span class="linenr">3: </span>    step x ys <span style="color: #dac6d6;">=</span> f x <span style="color: #ECCC87;">:</span> ys
 </pre>
 </div>
 
@@ -194,11 +194,11 @@ filter :: (a -&gt; Bool) -&gt; [a] -&gt; [a] 函数也可以用foldr来表达。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-haskell"><span style="color: #8EBCBB;">myFilter</span> p xs <span style="color: #dac6d6;">=</span> foldr step <span style="color: #80A0C2;">[]</span> xs
-  <span style="color: #80A0C2;">where</span>
-    step x ys
-      <span style="color: #dac6d6;">|</span> p x <span style="color: #dac6d6;">=</span> x <span style="color: #ECCC87;">:</span> ys
-      <span style="color: #dac6d6;">|</span> otherwise <span style="color: #dac6d6;">=</span> ys
+<pre class="src src-haskell"><span class="linenr">1: </span><span style="color: #8EBCBB;">myFilter</span> p xs <span style="color: #dac6d6;">=</span> foldr step <span style="color: #80A0C2;">[]</span> xs
+<span class="linenr">2: </span>  <span style="color: #80A0C2;">where</span>
+<span class="linenr">3: </span>    step x ys
+<span class="linenr">4: </span>      <span style="color: #dac6d6;">|</span> p x <span style="color: #dac6d6;">=</span> x <span style="color: #ECCC87;">:</span> ys
+<span class="linenr">5: </span>      <span style="color: #dac6d6;">|</span> otherwise <span style="color: #dac6d6;">=</span> ys
 </pre>
 </div>
 
@@ -207,10 +207,10 @@ filter :: (a -&gt; Bool) -&gt; [a] -&gt; [a] 函数也可以用foldr来表达。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-haskell"><span style="color: #8EBCBB;">myFoldl</span> <span style="color: #dac6d6;">::</span> <span style="color: #80A0C2;">(</span>a <span style="color: #dac6d6;">-&gt;</span> b <span style="color: #dac6d6;">-&gt;</span> a<span style="color: #80A0C2;">)</span> <span style="color: #dac6d6;">-&gt;</span> a <span style="color: #dac6d6;">-&gt;</span> <span style="color: #80A0C2;">[</span>b<span style="color: #80A0C2;">]</span> <span style="color: #dac6d6;">-&gt;</span> a
-<span style="color: #8EBCBB;">myFoldl</span> f z xs <span style="color: #dac6d6;">=</span> foldr step id xs z
-  <span style="color: #80A0C2;">where</span>
-    step x g a <span style="color: #dac6d6;">=</span> g <span style="color: #80A0C2;">(</span>f a x<span style="color: #80A0C2;">)</span>
+<pre class="src src-haskell"><span class="linenr">1: </span><span style="color: #8EBCBB;">myFoldl</span> <span style="color: #dac6d6;">::</span> <span style="color: #80A0C2;">(</span>a <span style="color: #dac6d6;">-&gt;</span> b <span style="color: #dac6d6;">-&gt;</span> a<span style="color: #80A0C2;">)</span> <span style="color: #dac6d6;">-&gt;</span> a <span style="color: #dac6d6;">-&gt;</span> <span style="color: #80A0C2;">[</span>b<span style="color: #80A0C2;">]</span> <span style="color: #dac6d6;">-&gt;</span> a
+<span class="linenr">2: </span><span style="color: #8EBCBB;">myFoldl</span> f z xs <span style="color: #dac6d6;">=</span> foldr step id xs z
+<span class="linenr">3: </span>  <span style="color: #80A0C2;">where</span>
+<span class="linenr">4: </span>    step x g a <span style="color: #dac6d6;">=</span> g <span style="color: #80A0C2;">(</span>f a x<span style="color: #80A0C2;">)</span>
 </pre>
 </div>
 
@@ -222,10 +222,10 @@ filter :: (a -&gt; Bool) -&gt; [a] -&gt; [a] 函数也可以用foldr来表达。
 foldr函数有三个参数，我们可以加上括号，来帮助思考
 </p>
 <div class="org-src-container">
-<pre class="src src-haskell"><span style="color: #8EBCBB;">myFoldl</span> <span style="color: #dac6d6;">::</span> <span style="color: #80A0C2;">(</span>a <span style="color: #dac6d6;">-&gt;</span> b <span style="color: #dac6d6;">-&gt;</span> a<span style="color: #80A0C2;">)</span> <span style="color: #dac6d6;">-&gt;</span> a <span style="color: #dac6d6;">-&gt;</span> <span style="color: #80A0C2;">[</span>b<span style="color: #80A0C2;">]</span> <span style="color: #dac6d6;">-&gt;</span> a
-<span style="color: #8EBCBB;">myFoldl</span> f z xs <span style="color: #dac6d6;">=</span> <span style="color: #80A0C2;">(</span>foldr step id xs<span style="color: #80A0C2;">)</span> z
-  <span style="color: #80A0C2;">where</span>
-    step x g a <span style="color: #dac6d6;">=</span> g <span style="color: #80A0C2;">(</span>f a x<span style="color: #80A0C2;">)</span>
+<pre class="src src-haskell"><span class="linenr">1: </span><span style="color: #8EBCBB;">myFoldl</span> <span style="color: #dac6d6;">::</span> <span style="color: #80A0C2;">(</span>a <span style="color: #dac6d6;">-&gt;</span> b <span style="color: #dac6d6;">-&gt;</span> a<span style="color: #80A0C2;">)</span> <span style="color: #dac6d6;">-&gt;</span> a <span style="color: #dac6d6;">-&gt;</span> <span style="color: #80A0C2;">[</span>b<span style="color: #80A0C2;">]</span> <span style="color: #dac6d6;">-&gt;</span> a
+<span class="linenr">2: </span><span style="color: #8EBCBB;">myFoldl</span> f z xs <span style="color: #dac6d6;">=</span> <span style="color: #80A0C2;">(</span>foldr step id xs<span style="color: #80A0C2;">)</span> z
+<span class="linenr">3: </span>  <span style="color: #80A0C2;">where</span>
+<span class="linenr">4: </span>    step x g a <span style="color: #dac6d6;">=</span> g <span style="color: #80A0C2;">(</span>f a x<span style="color: #80A0C2;">)</span>
 </pre>
 </div>
 
@@ -252,9 +252,9 @@ foldr函数有三个参数，我们可以加上括号，来帮助思考
 </p>
 
 <div class="org-src-container">
-<pre class="src src-haskell"><span style="color: #8EBCBB;">x</span> <span style="color: #dac6d6;">::</span> b
-<span style="color: #8EBCBB;">g</span> <span style="color: #dac6d6;">::</span> a <span style="color: #dac6d6;">-&gt;</span> a
-<span style="color: #8EBCBB;">a</span> <span style="color: #dac6d6;">::</span> a
+<pre class="src src-haskell"><span class="linenr">1: </span><span style="color: #8EBCBB;">x</span> <span style="color: #dac6d6;">::</span> b
+<span class="linenr">2: </span><span style="color: #8EBCBB;">g</span> <span style="color: #dac6d6;">::</span> a <span style="color: #dac6d6;">-&gt;</span> a
+<span class="linenr">3: </span><span style="color: #8EBCBB;">a</span> <span style="color: #dac6d6;">::</span> a
 </pre>
 </div>
 
@@ -263,8 +263,8 @@ foldr函数有三个参数，我们可以加上括号，来帮助思考
 </p>
 
 <div class="org-src-container">
-<pre class="src src-haskell"><span style="color: #8EBCBB;">step</span> x g <span style="color: #dac6d6;">::</span> a <span style="color: #dac6d6;">-&gt;</span> a
-<span style="color: #8EBCBB;">step</span> x g <span style="color: #dac6d6;">=</span> <span style="color: #dac6d6;">\</span>a <span style="color: #dac6d6;">-&gt;</span> g <span style="color: #80A0C2;">(</span>f a x<span style="color: #80A0C2;">)</span>
+<pre class="src src-haskell"><span class="linenr">1: </span><span style="color: #8EBCBB;">step</span> x g <span style="color: #dac6d6;">::</span> a <span style="color: #dac6d6;">-&gt;</span> a
+<span class="linenr">2: </span><span style="color: #8EBCBB;">step</span> x g <span style="color: #dac6d6;">=</span> <span style="color: #dac6d6;">\</span>a <span style="color: #dac6d6;">-&gt;</span> g <span style="color: #80A0C2;">(</span>f a x<span style="color: #80A0C2;">)</span>
 </pre>
 </div>
 
