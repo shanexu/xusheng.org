@@ -1,0 +1,20 @@
+#+TITLE:       2019 1024
+#+AUTHOR:      shanexu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2019-10-26 Sat
+#+URI:         /blog/%y/%m/%d/2019-1024
+#+KEYWORDS:    life, 1024
+#+TAGS:        life
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: Happy Chinese Programmer's Day
+
+#+begin_src c -n
+# define v putchar
+#define/*>"@@"v*/print(x) main(){v(2+v(2+v(v(49)-1)));}/*
+#>++++++++[>++*++++<-]>+.-.++.++.<+++++++*/
+print  (256 * 4);exit();
+#define/*@+++<>/.@*/exit()
+#+end_src
+
+https://user-images.githubusercontent.com/1257453/67612318-33a0b700-f791-11e9-8cdb-303d410dfade.png
