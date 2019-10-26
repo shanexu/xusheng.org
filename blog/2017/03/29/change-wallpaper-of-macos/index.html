@@ -77,17 +77,17 @@ macOS有很多令人不爽的地方，我都一一找到了破解方法。然而
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #6f7787;">#</span><span style="color: #6f7787;">!/bin/</span><span style="color: #80A0C2;">bash</span>
+<pre class="src src-shell"><span style="color: #405A61;">#</span><span style="color: #405A61;">!/bin/</span><span style="color: #859900;">bash</span>
 
-<span style="color: #80A0C2;">function</span> <span style="color: #8EBCBB;">realpath_fun</span><span style="color: #80A0C2;">()</span> <span style="color: #80A0C2;">{</span>
-    python -c <span style="color: #A2BF8A;">"import os;print(os.path.abspath('"</span>$<span style="color: #B58DAE; font-weight: bold;">1</span><span style="color: #A2BF8A;">"'))"</span>
-<span style="color: #80A0C2;">}</span>
+<span style="color: #859900;">function</span> <span style="color: #268bd2;">realpath_fun</span><span style="color: #268bd2;">()</span> <span style="color: #268bd2;">{</span>
+    python -c <span style="color: #2aa198;">"import os;print(os.path.abspath('"</span>$<span style="color: #d33682; font-weight: bold;">1</span><span style="color: #2aa198;">"'))"</span>
+<span style="color: #268bd2;">}</span>
 
-<span style="color: #dac6d6;">rp</span>=<span style="color: #80A0C2; font-weight: bold;">`which realpaths || echo realpath_fun`</span>
+<span style="color: #6c71c4;">rp</span>=<span style="color: #cb4b16; font-weight: bold;">`which realpaths || echo realpath_fun`</span>
 
-<span style="color: #dac6d6;">pic</span>=<span style="color: #80A0C2; font-weight: bold;">`$rp $1`</span>
+<span style="color: #6c71c4;">pic</span>=<span style="color: #cb4b16; font-weight: bold;">`$rp $1`</span>
 
-<span style="color: #8EBCBB;">echo</span> <span style="color: #A2BF8A;">"UPDATE data SET value = '"</span>$<span style="color: #dac6d6;">pic</span><span style="color: #A2BF8A;">"';"</span> | sqlite3 ~/Library/Application<span style="color: #A2BF8A;">\ </span>Support/Dock/desktoppicture.db &amp;&amp; killall Dock
+<span style="color: #268bd2;">echo</span> <span style="color: #2aa198;">"UPDATE data SET value = '"</span>$<span style="color: #6c71c4;">pic</span><span style="color: #2aa198;">"';"</span> | sqlite3 ~/Library/Application<span style="color: #2aa198;">\ </span>Support/Dock/desktoppicture.db &amp;&amp; killall Dock
 
 sudo rm /Library/Caches/com.apple.desktop.admin.png
 </pre>

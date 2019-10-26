@@ -124,7 +124,7 @@ ReactDOM.render(
 </ol>
 
 <div class="org-src-container">
-<pre class="src src-javascript"><span style="color: #80A0C2;">var</span> <span style="color: #dac6d6;">p</span> = ctx.getImageData<span style="color: #80A0C2;">(</span>i, j, <span style="color: #B58DAE; font-weight: bold;">1</span>, <span style="color: #B58DAE; font-weight: bold;">1</span><span style="color: #80A0C2;">)</span>.data;
+<pre class="src src-javascript"><span style="color: #859900;">var</span> <span style="color: #6c71c4;">p</span> = ctx.getImageData<span style="color: #268bd2;">(</span>i, j, <span style="color: #d33682; font-weight: bold;">1</span>, <span style="color: #d33682; font-weight: bold;">1</span><span style="color: #268bd2;">)</span>.data;
 </pre>
 </div>
 
@@ -139,68 +139,68 @@ ReactDOM.render(
 </p>
 
 <div class="org-src-container">
-<pre class="src src-javascript"><span class="linenr"> 1: </span><span style="color: #80A0C2;">var</span> <span style="color: #dac6d6;">HiddenCanvas</span> = React.createClass<span style="color: #80A0C2;">(</span><span style="color: #B58DAE;">{</span>
-<span class="linenr"> 2: </span>  <span style="color: #8EBCBB;">getInitialState</span>: <span style="color: #80A0C2;">function</span><span style="color: #A2BF8A;">()</span> <span style="color: #A2BF8A;">{</span>
-<span class="linenr"> 3: </span>    <span style="color: #80A0C2;">return</span> <span style="color: #D2876D;">{</span>
-<span class="linenr"> 4: </span>      items: <span style="color: #5D80AE;">[]</span>
-<span class="linenr"> 5: </span>    <span style="color: #D2876D;">}</span>;
-<span class="linenr"> 6: </span>  <span style="color: #A2BF8A;">}</span>,
-<span class="linenr"> 7: </span>  <span style="color: #8EBCBB;">componentDidMount</span>: <span style="color: #80A0C2;">function</span><span style="color: #A2BF8A;">()</span> <span style="color: #A2BF8A;">{</span>
-<span class="linenr"> 8: </span>    console.log<span style="color: #D2876D;">(</span><span style="color: #B58DAE; font-weight: bold;">1</span><span style="color: #D2876D;">)</span>;
-<span class="linenr"> 9: </span>    <span style="color: #80A0C2;">var</span> <span style="color: #dac6d6;">str</span> = <span style="color: #B58DAE;">this</span>.props.value;
-<span class="linenr">10: </span>    <span style="color: #80A0C2;">var</span> <span style="color: #dac6d6;">myCanvas</span> = <span style="color: #B58DAE;">this</span>.refs.myCanvas;
-<span class="linenr">11: </span>    <span style="color: #80A0C2;">var</span> <span style="color: #dac6d6;">ctx</span> = myCanvas.getContext<span style="color: #D2876D;">(</span><span style="color: #A2BF8A;">"2d"</span><span style="color: #D2876D;">)</span>;
-<span class="linenr">12: </span>    ctx.font=<span style="color: #A2BF8A;">"250px Droid Sans Mono"</span>;
-<span class="linenr">13: </span>    ctx.fillStyle=<span style="color: #A2BF8A;">"blue"</span>;
-<span class="linenr">14: </span>    ctx.fillText<span style="color: #D2876D;">(</span><span style="color: #B58DAE;">this</span>.props.value, <span style="color: #B58DAE; font-weight: bold;">20</span>, <span style="color: #B58DAE; font-weight: bold;">250</span><span style="color: #D2876D;">)</span>;
+<pre class="src src-javascript"><span class="linenr"> 1: </span><span style="color: #859900;">var</span> <span style="color: #6c71c4;">HiddenCanvas</span> = React.createClass<span style="color: #268bd2;">(</span><span style="color: #d33682;">{</span>
+<span class="linenr"> 2: </span>  <span style="color: #268bd2;">getInitialState</span>: <span style="color: #859900;">function</span><span style="color: #859900;">()</span> <span style="color: #859900;">{</span>
+<span class="linenr"> 3: </span>    <span style="color: #859900;">return</span> <span style="color: #cb4b16;">{</span>
+<span class="linenr"> 4: </span>      items: <span style="color: #6c71c4;">[]</span>
+<span class="linenr"> 5: </span>    <span style="color: #cb4b16;">}</span>;
+<span class="linenr"> 6: </span>  <span style="color: #859900;">}</span>,
+<span class="linenr"> 7: </span>  <span style="color: #268bd2;">componentDidMount</span>: <span style="color: #859900;">function</span><span style="color: #859900;">()</span> <span style="color: #859900;">{</span>
+<span class="linenr"> 8: </span>    console.log<span style="color: #cb4b16;">(</span><span style="color: #d33682; font-weight: bold;">1</span><span style="color: #cb4b16;">)</span>;
+<span class="linenr"> 9: </span>    <span style="color: #859900;">var</span> <span style="color: #6c71c4;">str</span> = <span style="color: #d33682;">this</span>.props.value;
+<span class="linenr">10: </span>    <span style="color: #859900;">var</span> <span style="color: #6c71c4;">myCanvas</span> = <span style="color: #d33682;">this</span>.refs.myCanvas;
+<span class="linenr">11: </span>    <span style="color: #859900;">var</span> <span style="color: #6c71c4;">ctx</span> = myCanvas.getContext<span style="color: #cb4b16;">(</span><span style="color: #2aa198;">"2d"</span><span style="color: #cb4b16;">)</span>;
+<span class="linenr">12: </span>    ctx.font=<span style="color: #2aa198;">"250px Droid Sans Mono"</span>;
+<span class="linenr">13: </span>    ctx.fillStyle=<span style="color: #2aa198;">"blue"</span>;
+<span class="linenr">14: </span>    ctx.fillText<span style="color: #cb4b16;">(</span><span style="color: #d33682;">this</span>.props.value, <span style="color: #d33682; font-weight: bold;">20</span>, <span style="color: #d33682; font-weight: bold;">250</span><span style="color: #cb4b16;">)</span>;
 <span class="linenr">15: </span>
-<span class="linenr">16: </span>    <span style="color: #80A0C2;">function</span> <span style="color: #8EBCBB;">rgbToHex</span><span style="color: #D2876D;">(</span><span style="color: #dac6d6;">r</span>, <span style="color: #dac6d6;">g</span>, <span style="color: #dac6d6;">b</span><span style="color: #D2876D;">)</span> <span style="color: #D2876D;">{</span>
-<span class="linenr">17: </span>      <span style="color: #80A0C2;">if</span> <span style="color: #5D80AE;">(</span>r &gt; <span style="color: #B58DAE; font-weight: bold;">255</span> || g &gt; <span style="color: #B58DAE; font-weight: bold;">255</span> || b &gt; <span style="color: #B58DAE; font-weight: bold;">255</span><span style="color: #5D80AE;">)</span>
-<span class="linenr">18: </span>        <span style="color: #80A0C2;">throw</span> <span style="color: #A2BF8A;">"Invalid color component"</span>;
-<span class="linenr">19: </span>      <span style="color: #80A0C2;">return</span> <span style="color: #5D80AE;">(</span><span style="color: #ECCC87;">(</span>r &lt;&lt; <span style="color: #B58DAE; font-weight: bold;">16</span><span style="color: #ECCC87;">)</span> | <span style="color: #ECCC87;">(</span>g &lt;&lt; <span style="color: #B58DAE; font-weight: bold;">8</span><span style="color: #ECCC87;">)</span> | b<span style="color: #5D80AE;">)</span>.toString<span style="color: #5D80AE;">(</span><span style="color: #B58DAE; font-weight: bold;">16</span><span style="color: #5D80AE;">)</span>;
-<span class="linenr">20: </span>    <span style="color: #D2876D;">}</span>
+<span class="linenr">16: </span>    <span style="color: #859900;">function</span> <span style="color: #268bd2;">rgbToHex</span><span style="color: #cb4b16;">(</span><span style="color: #6c71c4;">r</span>, <span style="color: #6c71c4;">g</span>, <span style="color: #6c71c4;">b</span><span style="color: #cb4b16;">)</span> <span style="color: #cb4b16;">{</span>
+<span class="linenr">17: </span>      <span style="color: #859900;">if</span> <span style="color: #6c71c4;">(</span>r &gt; <span style="color: #d33682; font-weight: bold;">255</span> || g &gt; <span style="color: #d33682; font-weight: bold;">255</span> || b &gt; <span style="color: #d33682; font-weight: bold;">255</span><span style="color: #6c71c4;">)</span>
+<span class="linenr">18: </span>        <span style="color: #859900;">throw</span> <span style="color: #2aa198;">"Invalid color component"</span>;
+<span class="linenr">19: </span>      <span style="color: #859900;">return</span> <span style="color: #6c71c4;">(</span><span style="color: #b58900;">(</span>r &lt;&lt; <span style="color: #d33682; font-weight: bold;">16</span><span style="color: #b58900;">)</span> | <span style="color: #b58900;">(</span>g &lt;&lt; <span style="color: #d33682; font-weight: bold;">8</span><span style="color: #b58900;">)</span> | b<span style="color: #6c71c4;">)</span>.toString<span style="color: #6c71c4;">(</span><span style="color: #d33682; font-weight: bold;">16</span><span style="color: #6c71c4;">)</span>;
+<span class="linenr">20: </span>    <span style="color: #cb4b16;">}</span>
 <span class="linenr">21: </span>
-<span class="linenr">22: </span>    setTimeout<span style="color: #D2876D;">(</span><span style="color: #80A0C2;">function</span><span style="color: #5D80AE;">(){</span>
-<span class="linenr">23: </span>      <span style="color: #80A0C2;">var</span> <span style="color: #dac6d6;">items</span> = <span style="color: #ECCC87;">[]</span>;
-<span class="linenr">24: </span>      <span style="color: #80A0C2;">var</span> <span style="color: #dac6d6;">count</span> = <span style="color: #B58DAE; font-weight: bold;">0</span>;
-<span class="linenr">25: </span>      <span style="color: #80A0C2;">for</span><span style="color: #ECCC87;">(</span><span style="color: #80A0C2;">var</span> <span style="color: #dac6d6;">i</span> = <span style="color: #B58DAE; font-weight: bold;">0</span>; i &lt; <span style="color: #B58DAE; font-weight: bold;">800</span>; i = i + <span style="color: #B58DAE; font-weight: bold;">24</span><span style="color: #ECCC87;">)</span> <span style="color: #ECCC87;">{</span>
-<span class="linenr">26: </span>        <span style="color: #80A0C2;">for</span><span style="color: #8EBCBB;">(</span><span style="color: #80A0C2;">var</span> <span style="color: #dac6d6;">j</span> = <span style="color: #B58DAE; font-weight: bold;">0</span>; j &lt; <span style="color: #B58DAE; font-weight: bold;">300</span>; j = j + <span style="color: #B58DAE; font-weight: bold;">24</span><span style="color: #8EBCBB;">)</span> <span style="color: #8EBCBB;">{</span>
-<span class="linenr">27: </span>          <span style="color: #80A0C2;">var</span> <span style="color: #dac6d6;">p</span> = ctx.getImageData<span style="color: #a2b6da;">(</span>i, j, <span style="color: #B58DAE; font-weight: bold;">1</span>, <span style="color: #B58DAE; font-weight: bold;">1</span><span style="color: #a2b6da;">)</span>.data;
-<span class="linenr">28: </span>          <span style="color: #80A0C2;">var</span> <span style="color: #dac6d6;">hex</span> = <span style="color: #A2BF8A;">"#"</span> + <span style="color: #a2b6da;">(</span><span style="color: #A2BF8A;">"000000"</span> + rgbToHex<span style="color: #9cb6ad;">(</span>p<span style="color: #80A0C2;">[</span><span style="color: #B58DAE; font-weight: bold;">0</span><span style="color: #80A0C2;">]</span>, p<span style="color: #80A0C2;">[</span><span style="color: #B58DAE; font-weight: bold;">1</span><span style="color: #80A0C2;">]</span>, p<span style="color: #80A0C2;">[</span><span style="color: #B58DAE; font-weight: bold;">2</span><span style="color: #80A0C2;">]</span><span style="color: #9cb6ad;">)</span><span style="color: #a2b6da;">)</span>.slice<span style="color: #a2b6da;">(</span>-<span style="color: #B58DAE; font-weight: bold;">6</span><span style="color: #a2b6da;">)</span>;
-<span class="linenr">29: </span>          <span style="color: #80A0C2;">if</span><span style="color: #a2b6da;">(</span>hex == <span style="color: #A2BF8A;">"#0000ff"</span><span style="color: #a2b6da;">)</span> <span style="color: #a2b6da;">{</span>
-<span class="linenr">30: </span>            items.push<span style="color: #9cb6ad;">(</span><span style="color: #80A0C2;">{</span>
+<span class="linenr">22: </span>    setTimeout<span style="color: #cb4b16;">(</span><span style="color: #859900;">function</span><span style="color: #6c71c4;">(){</span>
+<span class="linenr">23: </span>      <span style="color: #859900;">var</span> <span style="color: #6c71c4;">items</span> = <span style="color: #b58900;">[]</span>;
+<span class="linenr">24: </span>      <span style="color: #859900;">var</span> <span style="color: #6c71c4;">count</span> = <span style="color: #d33682; font-weight: bold;">0</span>;
+<span class="linenr">25: </span>      <span style="color: #859900;">for</span><span style="color: #b58900;">(</span><span style="color: #859900;">var</span> <span style="color: #6c71c4;">i</span> = <span style="color: #d33682; font-weight: bold;">0</span>; i &lt; <span style="color: #d33682; font-weight: bold;">800</span>; i = i + <span style="color: #d33682; font-weight: bold;">24</span><span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+<span class="linenr">26: </span>        <span style="color: #859900;">for</span><span style="color: #35a69c;">(</span><span style="color: #859900;">var</span> <span style="color: #6c71c4;">j</span> = <span style="color: #d33682; font-weight: bold;">0</span>; j &lt; <span style="color: #d33682; font-weight: bold;">300</span>; j = j + <span style="color: #d33682; font-weight: bold;">24</span><span style="color: #35a69c;">)</span> <span style="color: #35a69c;">{</span>
+<span class="linenr">27: </span>          <span style="color: #859900;">var</span> <span style="color: #6c71c4;">p</span> = ctx.getImageData<span style="color: #a2b6da;">(</span>i, j, <span style="color: #d33682; font-weight: bold;">1</span>, <span style="color: #d33682; font-weight: bold;">1</span><span style="color: #a2b6da;">)</span>.data;
+<span class="linenr">28: </span>          <span style="color: #859900;">var</span> <span style="color: #6c71c4;">hex</span> = <span style="color: #2aa198;">"#"</span> + <span style="color: #a2b6da;">(</span><span style="color: #2aa198;">"000000"</span> + rgbToHex<span style="color: #9cb6ad;">(</span>p<span style="color: #268bd2;">[</span><span style="color: #d33682; font-weight: bold;">0</span><span style="color: #268bd2;">]</span>, p<span style="color: #268bd2;">[</span><span style="color: #d33682; font-weight: bold;">1</span><span style="color: #268bd2;">]</span>, p<span style="color: #268bd2;">[</span><span style="color: #d33682; font-weight: bold;">2</span><span style="color: #268bd2;">]</span><span style="color: #9cb6ad;">)</span><span style="color: #a2b6da;">)</span>.slice<span style="color: #a2b6da;">(</span>-<span style="color: #d33682; font-weight: bold;">6</span><span style="color: #a2b6da;">)</span>;
+<span class="linenr">29: </span>          <span style="color: #859900;">if</span><span style="color: #a2b6da;">(</span>hex == <span style="color: #2aa198;">"#0000ff"</span><span style="color: #a2b6da;">)</span> <span style="color: #a2b6da;">{</span>
+<span class="linenr">30: </span>            items.push<span style="color: #9cb6ad;">(</span><span style="color: #268bd2;">{</span>
 <span class="linenr">31: </span>              id: count++,
-<span class="linenr">32: </span>              left: i - <span style="color: #B58DAE; font-weight: bold;">12</span>,
-<span class="linenr">33: </span>              top: j - <span style="color: #B58DAE; font-weight: bold;">12</span>,
-<span class="linenr">34: </span>              transform: <span style="color: #A2BF8A;">'rotate('</span> + <span style="color: #B58DAE;">(</span><span style="color: #B58DAE; font-weight: bold;">360</span> * Math.random<span style="color: #A2BF8A;">()</span><span style="color: #B58DAE;">)</span> + <span style="color: #A2BF8A;">'deg)'</span>
-<span class="linenr">35: </span>            <span style="color: #80A0C2;">}</span><span style="color: #9cb6ad;">)</span>;
+<span class="linenr">32: </span>              left: i - <span style="color: #d33682; font-weight: bold;">12</span>,
+<span class="linenr">33: </span>              top: j - <span style="color: #d33682; font-weight: bold;">12</span>,
+<span class="linenr">34: </span>              transform: <span style="color: #2aa198;">'rotate('</span> + <span style="color: #d33682;">(</span><span style="color: #d33682; font-weight: bold;">360</span> * Math.random<span style="color: #859900;">()</span><span style="color: #d33682;">)</span> + <span style="color: #2aa198;">'deg)'</span>
+<span class="linenr">35: </span>            <span style="color: #268bd2;">}</span><span style="color: #9cb6ad;">)</span>;
 <span class="linenr">36: </span>          <span style="color: #a2b6da;">}</span>
-<span class="linenr">37: </span>        <span style="color: #8EBCBB;">}</span>
-<span class="linenr">38: </span>      <span style="color: #ECCC87;">}</span>
-<span class="linenr">39: </span>      <span style="color: #B58DAE;">this</span>.setState<span style="color: #ECCC87;">(</span><span style="color: #8EBCBB;">{</span>
+<span class="linenr">37: </span>        <span style="color: #35a69c;">}</span>
+<span class="linenr">38: </span>      <span style="color: #b58900;">}</span>
+<span class="linenr">39: </span>      <span style="color: #d33682;">this</span>.setState<span style="color: #b58900;">(</span><span style="color: #35a69c;">{</span>
 <span class="linenr">40: </span>        items: items
-<span class="linenr">41: </span>      <span style="color: #8EBCBB;">}</span><span style="color: #ECCC87;">)</span>;
-<span class="linenr">42: </span>    <span style="color: #5D80AE;">}</span>.bind<span style="color: #5D80AE;">(</span><span style="color: #B58DAE;">this</span><span style="color: #5D80AE;">)</span><span style="color: #D2876D;">)</span>;
-<span class="linenr">43: </span>  <span style="color: #A2BF8A;">}</span>,
-<span class="linenr">44: </span>  <span style="color: #8EBCBB;">render</span>: <span style="color: #80A0C2;">function</span><span style="color: #A2BF8A;">()</span> <span style="color: #A2BF8A;">{</span>
-<span class="linenr">45: </span>    <span style="color: #80A0C2;">var</span> <span style="color: #dac6d6;">images</span> = <span style="color: #B58DAE;">this</span>.state.items.map<span style="color: #D2876D;">(</span><span style="color: #80A0C2;">function</span><span style="color: #5D80AE;">(</span><span style="color: #dac6d6;">m</span><span style="color: #5D80AE;">){</span>
-<span class="linenr">46: </span>      <span style="color: #80A0C2;">return</span> <span style="color: #ECCC87;">(</span>
-<span class="linenr">47: </span>        &lt;img key=<span style="color: #8EBCBB;">{</span>m.id<span style="color: #8EBCBB;">}</span> src=<span style="color: #A2BF8A;">"https://avatars1.githubusercontent.com/u/1257453?v=3&amp;s=460"</span> style=<span style="color: #8EBCBB;">{</span><span style="color: #a2b6da;">{</span>width: <span style="color: #A2BF8A;">'48px'</span>, position: <span style="color: #A2BF8A;">'absolute'</span>, left: m.left, top: m.top, transform: m.transform<span style="color: #a2b6da;">}</span><span style="color: #8EBCBB;">}</span> /&gt;
-<span class="linenr">48: </span>      <span style="color: #ECCC87;">)</span>;
-<span class="linenr">49: </span>    <span style="color: #5D80AE;">}</span><span style="color: #D2876D;">)</span>;
-<span class="linenr">50: </span>    <span style="color: #80A0C2;">return</span> <span style="color: #D2876D;">(</span>
-<span class="linenr">51: </span>      &lt;div style=<span style="color: #5D80AE;">{</span><span style="color: #ECCC87;">{</span>position: <span style="color: #A2BF8A;">'relative'</span><span style="color: #ECCC87;">}</span><span style="color: #5D80AE;">}</span>&gt;
-<span class="linenr">52: </span>        <span style="color: #5D80AE;">{</span>images<span style="color: #5D80AE;">}</span>
-<span class="linenr">53: </span>        &lt;canvas ref=<span style="color: #A2BF8A;">"myCanvas"</span> width=<span style="color: #A2BF8A;">"800"</span> height=<span style="color: #A2BF8A;">"300"</span> style=<span style="color: #5D80AE;">{</span><span style="color: #ECCC87;">{</span>visibility: <span style="color: #A2BF8A;">'hidden'</span><span style="color: #ECCC87;">}</span><span style="color: #5D80AE;">}</span>/&gt;
+<span class="linenr">41: </span>      <span style="color: #35a69c;">}</span><span style="color: #b58900;">)</span>;
+<span class="linenr">42: </span>    <span style="color: #6c71c4;">}</span>.bind<span style="color: #6c71c4;">(</span><span style="color: #d33682;">this</span><span style="color: #6c71c4;">)</span><span style="color: #cb4b16;">)</span>;
+<span class="linenr">43: </span>  <span style="color: #859900;">}</span>,
+<span class="linenr">44: </span>  <span style="color: #268bd2;">render</span>: <span style="color: #859900;">function</span><span style="color: #859900;">()</span> <span style="color: #859900;">{</span>
+<span class="linenr">45: </span>    <span style="color: #859900;">var</span> <span style="color: #6c71c4;">images</span> = <span style="color: #d33682;">this</span>.state.items.map<span style="color: #cb4b16;">(</span><span style="color: #859900;">function</span><span style="color: #6c71c4;">(</span><span style="color: #6c71c4;">m</span><span style="color: #6c71c4;">){</span>
+<span class="linenr">46: </span>      <span style="color: #859900;">return</span> <span style="color: #b58900;">(</span>
+<span class="linenr">47: </span>        &lt;img key=<span style="color: #35a69c;">{</span>m.id<span style="color: #35a69c;">}</span> src=<span style="color: #2aa198;">"https://avatars1.githubusercontent.com/u/1257453?v=3&amp;s=460"</span> style=<span style="color: #35a69c;">{</span><span style="color: #a2b6da;">{</span>width: <span style="color: #2aa198;">'48px'</span>, position: <span style="color: #2aa198;">'absolute'</span>, left: m.left, top: m.top, transform: m.transform<span style="color: #a2b6da;">}</span><span style="color: #35a69c;">}</span> /&gt;
+<span class="linenr">48: </span>      <span style="color: #b58900;">)</span>;
+<span class="linenr">49: </span>    <span style="color: #6c71c4;">}</span><span style="color: #cb4b16;">)</span>;
+<span class="linenr">50: </span>    <span style="color: #859900;">return</span> <span style="color: #cb4b16;">(</span>
+<span class="linenr">51: </span>      &lt;div style=<span style="color: #6c71c4;">{</span><span style="color: #b58900;">{</span>position: <span style="color: #2aa198;">'relative'</span><span style="color: #b58900;">}</span><span style="color: #6c71c4;">}</span>&gt;
+<span class="linenr">52: </span>        <span style="color: #6c71c4;">{</span>images<span style="color: #6c71c4;">}</span>
+<span class="linenr">53: </span>        &lt;canvas ref=<span style="color: #2aa198;">"myCanvas"</span> width=<span style="color: #2aa198;">"800"</span> height=<span style="color: #2aa198;">"300"</span> style=<span style="color: #6c71c4;">{</span><span style="color: #b58900;">{</span>visibility: <span style="color: #2aa198;">'hidden'</span><span style="color: #b58900;">}</span><span style="color: #6c71c4;">}</span>/&gt;
 <span class="linenr">54: </span>      &lt;/div&gt;
-<span class="linenr">55: </span>    <span style="color: #D2876D;">)</span>;
-<span class="linenr">56: </span>  <span style="color: #A2BF8A;">}</span>
-<span class="linenr">57: </span><span style="color: #B58DAE;">}</span><span style="color: #80A0C2;">)</span>;
+<span class="linenr">55: </span>    <span style="color: #cb4b16;">)</span>;
+<span class="linenr">56: </span>  <span style="color: #859900;">}</span>
+<span class="linenr">57: </span><span style="color: #d33682;">}</span><span style="color: #268bd2;">)</span>;
 <span class="linenr">58: </span>
-<span class="linenr">59: </span>ReactDOM.render<span style="color: #80A0C2;">(</span>
-<span class="linenr">60: </span>  &lt;HiddenCanvas value=<span style="color: #A2BF8A;">"2016"</span>/&gt;,
-<span class="linenr">61: </span>  document.getElementById<span style="color: #B58DAE;">(</span><span style="color: #A2BF8A;">'example'</span><span style="color: #B58DAE;">)</span>
-<span class="linenr">62: </span><span style="color: #80A0C2;">)</span>;
+<span class="linenr">59: </span>ReactDOM.render<span style="color: #268bd2;">(</span>
+<span class="linenr">60: </span>  &lt;HiddenCanvas value=<span style="color: #2aa198;">"2016"</span>/&gt;,
+<span class="linenr">61: </span>  document.getElementById<span style="color: #d33682;">(</span><span style="color: #2aa198;">'example'</span><span style="color: #d33682;">)</span>
+<span class="linenr">62: </span><span style="color: #268bd2;">)</span>;
 </pre>
 </div>
 
