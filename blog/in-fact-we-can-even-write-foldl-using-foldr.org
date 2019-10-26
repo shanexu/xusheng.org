@@ -1,0 +1,189 @@
+#+TITLE:       In fact, we can even write foldl using foldr!
+#+AUTHOR:      shanexu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2019-10-25 Fri
+#+URI:         /blog/%y/%m/%d/in-fact-we-can-even-write-foldl-using-foldr
+#+KEYWORDS:    haskell, foldl, foldr, fold
+#+TAGS:        haskell
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: In fact, we can even write foldl using foldr!
+
+#+begin_quote
+Understanding foldl in terms of foldr
+
+If you want to set yourself a solid challenge, try to follow the above definition of foldl using foldr. Be warned: this is not trivial! You might want to have the following tools at hand: some headache pills and a glass of water, ghci (so that you can find out what the id function does), and a pencil and paper.
+#+end_quote
+
+前几天群里有人发了篇文章：
+
+[[https://hackernoon.com/5-emerging-programming-languages-with-a-bright-future-11p3xo9][5 Emerging Programming Languages With a Bright Future]]
+
+这五门语言分别是：Elm, Kotlin, Rust, elixir, Crystal。
+
+Elm，Hmm，不禁让我想起了两年前在小黑屋里的日子。这几年Elm有什么长足的进步吗？然后我竟然去YouTube上搜了下。然后看了下面的视频。
+
+[[https://www.youtube.com/watch?v=5CYeZ2kEiOI][From Rails to Elm and Haskell - Richard Feldman]]
+
+诚然，Elm的函数式编程的特性很吸引我。
+
+上面的视频有一段关于
+
+如何学习 haskell ：
+
+[[https://user-images.githubusercontent.com/1257453/67538539-e78d3e00-f6ce-11e9-8ea3-8087ce6511f0.png]]
+
+呵呵。
+
+然而，
+
+#+begin_quote
+I've tried learn Haskell...several times!
+#+end_quote
+
+于是重新打开了翻开了很多次的，《Real World Haskell》。
+
+这次从第四章开始吧。
+
+下面是关于第四章中，foldl，foldr的内容。
+
+先来看看foldl的定义
+
+#+begin_src haskell -n
+import Prelude(id)
+
+foldl :: (a -> b -> a) -> a -> [b] -> a
+foldl step zero (x:xs) = foldl step (step zero x) xs
+foldl _ zero []        = zero
+#+end_src
+
+例如计算[Integer]的和：
+#+begin_src haskell
+import Prelude((+))
+
+foldl (\a b -> a+b) 0 [1,2,3,4]
+
+foldl (+) 0 [1,2,3,4]
+#+end_src
+
+而foldr的定义是这样的
+
+#+begin_src haskell -n
+foldr :: (a -> b -> b) -> b -> [a] -> b
+foldr step zero (x:xs) = step x (foldr step zero xs)
+foldr _ zero []        = zero
+#+end_src
+
+同样用foldr也可以计算[Integer]的和：
+
+#+begin_src haskell
+import Prelude((+))
+
+foldr (\a b -> a+b) 0 [1,2,3,4]
+
+foldr (+) 0 [1,2,3,4]
+#+end_src
+
+看似作用相同，但是foldl和foldr的计算步骤（顺序）是不一样的，foldl从左往右计算，而foldr则是从右往左。
+
+比如把用foldl计算[Integer]的过程展开：
+
+#+begin_src haskell
+((((0) + 1) + 2) + 3) + 4
+#+end_src
+
+比如把用foldr计算[Integer]的过程展开：
+
+#+begin_src haskell
+(1 + (2 + (3 + (4 + (0)))))
+#+end_src
+
+重点来了，其实我们常用的 map :: (a -> b) -> [a] -> [b] 函数也可以用foldr来表达。
+
+#+begin_src haskell
+myMap f xs = foldr step [] xs
+  where
+    step x ys = f x : ys
+#+end_src
+
+filter :: (a -> Bool) -> [a] -> [a] 函数也可以用foldr来表达。
+
+#+begin_src haskell
+myFilter p xs = foldr step [] xs
+  where
+    step x ys
+      | p x = x : ys
+      | otherwise = ys
+#+end_src
+
+我们来说标题。事实上，foldl函数也能够用foldr来表达。
+
+#+begin_src haskell
+myFoldl :: (a -> b -> a) -> a -> [b] -> a
+myFoldl f z xs = foldr step id xs z
+  where
+    step x g a = g (f a x)
+#+end_src
+
+然后《Real World Haskell》第四章的作者在写完上面这段代码之后，就写了本文开头引用的那段话。
+
+foldr函数有三个参数，我们可以加上括号，来帮助思考
+#+begin_src haskell
+myFoldl :: (a -> b -> a) -> a -> [b] -> a
+myFoldl f z xs = (foldr step id xs) z
+  where
+    step x g a = g (f a x)
+#+end_src
+
+整个函数的返回值是a，而z的类型也是a，那么括号中的表达式的类型为 a -> a，是一个从类型a到类型a的映射（入参类型为a，出参类型为a的函数）。而id这个函数，则是Prelude模块中的函数，也就是Identity function（恒等函数），恒等函数是数学中对于传回和其输入值相同的函数的称呼。也就是括号中foldr的初始值是identity function，其类型在此场景下为 a -> a。那么step函数的类型为：
+
+#+begin_src haskell
+step :: b -> (a -> a) -> (a -> a)
+#+end_src
+
+也可以写成
+
+#+begin_src haskell
+step :: b -> (a -> a) -> a -> a
+#+end_src
+
+那么上面代码中where后面step的参数声明中x、g、a的类型分别为：
+
+#+begin_src haskell
+x :: b
+g :: a -> a
+a :: a
+#+end_src
+
+同时 step x g 的类型为：
+
+#+begin_src haskell
+step x g :: a -> a
+step x g = \a -> g (f a x)
+#+end_src
+
+当 xs = [] 时
+
+#+begin_src haskell
+(\a -> id a) z
+#+end_src
+
+当 xs = [x1] 时
+
+#+begin_src haskell
+(\a' -> ((\a -> id a) (f a' x1))) z
+#+end_src
+
+当 xs = [x2, x1] 时
+#+begin_src haskell
+(\a'' -> (\a' -> ((\a -> id a) (f a' x1))) (f a'' x2)) z
+#+end_src
+
+当 xs = [x3, x2, x1] 时
+#+begin_src haskell
+(\a''' -> (\a'' -> (\a' -> ((\a -> id a) (f a' x1))) (f a'' x2)) (f a''' x3)) z
+#+end_src
+
+以此类推。
+
+大概就这样吧。
