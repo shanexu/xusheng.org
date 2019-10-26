@@ -1,7 +1,7 @@
 #+TITLE:       2019 1024
 #+AUTHOR:      shanexu
 #+EMAIL:       xusheng0711@gmail.com
-#+DATE:        2019-10-26 Sat
+#+DATE:        2019-10-24 Thu
 #+URI:         /blog/%y/%m/%d/2019-1024
 #+KEYWORDS:    life, 1024
 #+TAGS:        life
