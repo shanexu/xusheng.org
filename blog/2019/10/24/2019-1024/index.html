@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>从源代码安装golang - Shane Xu&#39;s Home</title>
+    <title>2019 1024 - Shane Xu&#39;s Home</title>
     <meta charset="utf-8" />
     <meta name="author" content="shanexu" />
-      <meta name="description" content="how to install golang from source" />
-      <meta name="keywords" content="golang" />
+      <meta name="description" content="Happy Chinese Programmer&#39;s Day" />
+      <meta name="keywords" content="life, 1024" />
     <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
     <link rel="stylesheet" href="/media/css/code-solarized-dark.css" type="text/css">
   </head>
@@ -32,62 +32,28 @@
     </div>
 
 
-  <h3 class="section">从源代码安装golang</h3>
-<p>
-本文的的主要内容来自golang源代码中的 <a href="https://github.com/golang/go/blob/master/doc/install-source.html">install-source.html</a> 内容。
+  <h3 class="section">2019 1024</h3>
+<div class="org-src-container">
+<pre class="src src-c"><span class="linenr">1: </span><span style="color: #cb4b16; font-weight: bold;"># define</span> <span style="color: #6c71c4;">v</span> putchar
+<span class="linenr">2: </span><span style="color: #cb4b16; font-weight: bold;">#define</span><span style="color: #405A61;">/*</span><span style="color: #405A61;">&gt;"@@"v</span><span style="color: #405A61;">*/</span><span style="color: #268bd2;">print</span><span style="color: #268bd2;">(</span><span style="color: #6c71c4;">x</span><span style="color: #268bd2;">)</span> main<span style="color: #268bd2;">(){</span>v<span style="color: #d33682;">(</span><span style="color: #d33682; font-weight: bold;">2</span>+v<span style="color: #859900;">(</span><span style="color: #d33682; font-weight: bold;">2</span>+v<span style="color: #cb4b16;">(</span>v<span style="color: #6c71c4;">(</span><span style="color: #d33682; font-weight: bold;">49</span><span style="color: #6c71c4;">)</span>-<span style="color: #d33682; font-weight: bold;">1</span><span style="color: #cb4b16;">)</span><span style="color: #859900;">)</span><span style="color: #d33682;">)</span>;<span style="color: #268bd2;">}</span><span style="color: #405A61;">/*</span>
+<span class="linenr">3: </span><span style="color: #405A61;">#&gt;++++++++[&gt;++*++++&lt;-]&gt;+.-.++.++.&lt;+++++++</span><span style="color: #405A61;">*/</span>
+<span class="linenr">4: </span>print  <span style="color: #268bd2;">(</span><span style="color: #d33682; font-weight: bold;">256</span> * <span style="color: #d33682; font-weight: bold;">4</span><span style="color: #268bd2;">)</span>;<span style="color: #268bd2;">exit</span><span style="color: #268bd2;">()</span>;
+<span class="linenr">5: </span><span style="color: #cb4b16; font-weight: bold;">#define</span><span style="color: #405A61;">/*</span><span style="color: #405A61;">@+++&lt;&gt;/.@</span><span style="color: #405A61;">*/</span><span style="color: #268bd2;">exit</span><span style="color: #268bd2;">()</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="https://user-images.githubusercontent.com/1257453/67612318-33a0b700-f791-11e9-8cdb-303d410dfade.png" alt="67612318-33a0b700-f791-11e9-8cdb-303d410dfade.png" />
 </p>
-
-<div id="outline-container-org2ec9dcc" class="outline-2">
-<h2 id="org2ec9dcc">克隆源代码</h2>
-<div class="outline-text-2" id="text-org2ec9dcc">
-<div class="org-src-container">
-<pre class="src src-shell">git clone https://github.com/golang/go.git
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org44cc38d" class="outline-2">
-<h2 id="org44cc38d">安装bootstrap binar</h2>
-<div class="outline-text-2" id="text-org44cc38d">
-<p>
-go1.4以后golang工具链全都由golang编译，所以从源码安装golang需要一个bootstrap环境，也就是说需要一个golang编译器。这里可以通过系统的包管理器安装go1.4后的版本。
-</p>
-<div class="org-src-container">
-<pre class="src src-shell">brew install go
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgc5a1521" class="outline-2">
-<h2 id="orgc5a1521">编译安装</h2>
-<div class="outline-text-2" id="text-orgc5a1521">
-<div class="org-src-container">
-<pre class="src src-shell"><span style="color: #268bd2;">cd</span> go/src
-<span style="color: #6c71c4;">GOROOT_BOOTSTRAP</span>=/usr/local/opt/go/libexec ./all.bash
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org8f2267f" class="outline-2">
-<h2 id="org8f2267f">检查</h2>
-<div class="outline-text-2" id="text-org8f2267f">
-<div class="org-src-container">
-<pre class="src src-text">$ ../bin/go version
-go version devel +739bf6b929 Fri Sep 27 21:17:15 2019 +0000 darwin/amd64
-</pre>
-</div>
-</div>
 </div>
 
 
     <div>
       <div class="post-meta">
-        <span title="post date" class="post-info">2019-09-28</span>
-        <span title="last modification date" class="post-info">2019-09-28</span>
-        <span title="tags" class="post-info"><a href="/tags/go/">go</a></span>
+        <span title="post date" class="post-info">2019-10-24</span>
+        <span title="last modification date" class="post-info">2019-10-26</span>
+        <span title="tags" class="post-info"><a href="/tags/life/">life</a></span>
         <span title="author" class="post-info">shanexu</span>
       </div>
       <section>
@@ -95,8 +61,8 @@ go version devel +739bf6b929 Fri Sep 27 21:17:15 2019 +0000 darwin/amd64
         <div id="disqus_thread"></div>
         <script type="text/javascript">
           //var disqus_developer = 1;
-          var disqus_identifier = "/blog/2019/09/28/install-golang-from-source";
-          var disqus_url = "http://shanexu.io/blog/2019/09/28/install-golang-from-source";
+          var disqus_identifier = "/blog/2019/10/24/2019-1024";
+          var disqus_url = "http://shanexu.io/blog/2019/10/24/2019-1024";
           var disqus_shortname = 'shanexu';
           /* * * DON'T EDIT BELOW THIS LINE * * */
           (function() {

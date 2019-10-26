@@ -4,16 +4,16 @@
     <title>Shane Xu&#39;s Home</title>
     <link>http://shanexu.io/</link>
     <description>Life is too short for so much sorrow.</description>
-    <pubDate>Sat, 26 Oct 2019 09:41:04 CST</pubDate>
-    <lastBuildDate>Sat, 26 Oct 2019 09:41:04 CST</lastBuildDate>
+    <pubDate>Sat, 26 Oct 2019 09:43:35 CST</pubDate>
+    <lastBuildDate>Sat, 26 Oct 2019 09:43:35 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
     <item>
       <title>2019 1024</title>
-      <link>http://shanexu.io/blog/2019/10/26/2019-1024</link>
+      <link>http://shanexu.io/blog/2019/10/24/2019-1024</link>
       <description><![CDATA[Happy Chinese Programmer's Day]]></description>
       <pubDate>2019-10-26</pubDate>
-      <guid>http://shanexu.io/blog/2019/10/26/2019-1024</guid>
+      <guid>http://shanexu.io/blog/2019/10/24/2019-1024</guid>
     </item>
     <item>
       <title>In fact, we can even write foldl using foldr!</title>
