@@ -489,6 +489,10 @@
 
   [[https://user-images.githubusercontent.com/1257453/68374271-7886ff00-013c-11ea-92aa-fc27ff89f413.png]]
 
+* 仓库地址
+  
+  [[https://github.com/shanexu/helloworld]]
+
 * 参考文档
 
   [[https://nixos.org/nix/manual]]
