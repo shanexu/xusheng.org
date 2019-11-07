@@ -1,0 +1,516 @@
+#+TITLE:       Learning Haskell with nix and Emacs
+#+AUTHOR:      shanexu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2019-11-07 Thu
+#+URI:         /blog/%y/%m/%d/learning-haskell-with-nix-and-emacs
+#+KEYWORDS:    haskell, nix, emacs
+#+TAGS:        haskell, nix
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: Learning Haskell with nix and Emacs
+
+* 前言
+  
+  [[https://github.com/haskell-servant/servant][haskell-servant]] 和 [[https://github.com/dmjio/miso][miso]] 等haskell开源项目竟然都是用nix管理依赖的。时隔多年nix竟然被赋予了这样的魔法，不仅让我大跌眼镜。在 [[https://github.com/Gabriel439/haskell-nix][Nix and Haskell in production]] 一文中指出，nix对标的其实是stack，他和stack一样有独立的haskell包缓存，用以达成reproducible的构建。nix胜过stack的唯一个地方，就是他不仅能解决haskell包依赖，还能解决其他任何依赖，甚至可以为你打造一个独立的开发环境。本文就是介绍如何在 =macos catalina= 上用nix打造一个haskell开发环境。
+
+* 安装nix和其他工具
+
+  本来这一个步骤应该是非常简单的。但是在最新版的macos catalina上并不那么容易了。nix需要在根目录上创建文件夹 =/nix= ，在系统默认开启 =SIP= 的情况下，根目录是以只读度方式挂载的，所以无法创建。首先需要关闭SIP，创建目录，重新启用SIP，由于启用后根目录仍然只读，还需要创建分区，将分区挂载到 =/nix= 。
+  
+  关闭SIP方法可参考文档： [[https://support.studionetworksolutions.com/hc/en-us/articles/115003839246-How-to-disable-Systems-Integrity-Protection-SIP-in-macOS][How to disable Systems Integrity Protection (SIP) in macOS]] 
+
+  #+begin_src text
+  PASSPHRASE=$(openssl rand -base64 32)
+  echo "Creating encrypted APFS volume with passphrase: $PASSPHRASE" >&2
+  sudo diskutil apfs addVolume disk1 'Case-sensitive APFS' Nix -mountpoint /nix -passphrase "$PASSPHRASE"
+  UUID=$(diskutil info -plist /nix | plutil -extract VolumeUUID xml1 - -o - | plutil -p - | sed -e 's/"//g')
+  echo $UUID
+  security add-generic-password -l Nix -a "$UUID" -s "$UUID" -D "Encrypted Volume Password" -w "$PASSPHRASE" \\n -T "/System/Library/CoreServices/APFSUserAgent" -T "/System/Library/CoreServices/CSUserAgent"
+  sudo diskutil enableOwnership /nix
+  echo 'LABEL=Nix /nix apfs rw' | sudo tee -a /etc/fstab >/dev/null
+  #+end_src
+
+  挂载完后， =df -h= 命令查看当前磁盘状态如下。
+
+
+  #+begin_src text
+  Filesystem      Size   Used  Avail Capacity iused      ifree %iused  Mounted on
+  /dev/disk1s5   466Gi   10Gi  211Gi     5%  483643 4881969237    0%   /
+  devfs          199Ki  199Ki    0Bi   100%     690          0  100%   /dev
+  /dev/disk1s1   466Gi  232Gi  211Gi    53% 3527520 4878925360    0%   /System/Volumes/Data
+  /dev/disk1s4   466Gi  2.0Gi  211Gi     1%       2 4882452878    0%   /private/var/vm
+  map auto_home    0Bi    0Bi    0Bi   100%       0          0  100%   /System/Volumes/Data/home
+  /dev/disk1s6   466Gi  9.8Gi  211Gi     5%  256476 4882196404    0%   /nix  
+  #+end_src
+
+  之后就可以按照官方文档所述，安装 =nix= 了。
+
+  #+begin_src shell-script
+  curl https://nixos.org/nix/install | sh  
+  #+end_src
+  
+  关于nix和macos catalina和sip的问题可以看下，nix的一个issues： [[https://github.com/NixOS/nix/issues/2925][/nix will not be writable on macOS Catalina #2925]]
+
+  nix安装完之后就可以安装开发工具了。
+
+  #+begin_src shell-script
+  nix-env --install cabal2nix stack cabal-install
+  #+end_src
+
+* 使用stack初始化工程
+  
+  #+begin_src shell-script
+  stack new helloworld new-template
+  #+end_src
+
+  工程结构如下
+
+  #+begin_src text
+  .
+  ├── ChangeLog.md
+  ├── LICENSE
+  ├── README.md
+  ├── Setup.hs
+  ├── app
+  │   └── Main.hs
+  ├── helloworld.cabal
+  ├── package.yaml
+  ├── src
+  │   └── Lib.hs
+  ├── stack.yaml
+  └── test
+      └── Spec.hs
+  #+end_src
+
+  修改 .gitignore
+
+  #+begin_src text
+  .stack-work/
+  *~
+  /result
+  *.hi
+  *.o
+  dist-newstyle/
+  #+end_src
+
+  初始化git仓库
+
+  #+begin_src shell-script
+  git init
+  #+end_src
+
+
+  此时可以用 =stack run= 编译并运行。
+
+  #+begin_src text
+  Building all executables for `helloworld' once. After a successful build of all of them, only specified executables will be rebuilt.
+  helloworld> configure (lib + exe)
+  Configuring helloworld-0.1.0.0...
+  helloworld> build (lib + exe)
+  Preprocessing library for helloworld-0.1.0.0..
+  Building library for helloworld-0.1.0.0..
+  [1 of 2] Compiling Lib
+  [2 of 2] Compiling Paths_helloworld
+  Preprocessing executable 'helloworld-exe' for helloworld-0.1.0.0..
+  Building executable 'helloworld-exe' for helloworld-0.1.0.0..
+  [1 of 2] Compiling Main
+  [2 of 2] Compiling Paths_helloworld
+  Linking .stack-work/dist/x86_64-osx/Cabal-2.4.0.1/build/helloworld-exe/helloworld-exe ...
+  helloworld> copy/register
+  Installing library in /Users/shane/src/github.com/shanexu/helloworld/.stack-work/install/x86_64-osx/12a66049aaca4a8b492b9641af325fbaf91178a6bf5ad4ae4f7714e26944d4c7/8.6.5/lib/x86_64-osx
+  -ghc-8.6.5/helloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp
+  Installing executable helloworld-exe in /Users/shane/src/github.com/shanexu/helloworld/.stack-work/install/x86_64-osx/12a66049aaca4a8b492b9641af325fbaf91178a6bf5ad4ae4f7714e26944d4c7/8.
+  6.5/bin
+  Registering library for helloworld-0.1.0.0..
+  someFunc  
+  #+end_src
+
+* 编写第一个nix表达式
+  说是编写，其实就是中 cabal2nix 生成。
+
+  #+begin_src shell-script
+  cabal2nix . > helloworld.nix
+  #+end_src
+
+  helloworld.nix 的内容如下：
+
+  #+begin_src nix -n
+  { mkDerivation, base, hpack, stdenv }:
+  mkDerivation {
+    pname = "helloworld";
+    version = "0.1.0.0";
+    src = ./.;
+    isLibrary = true;
+    isExecutable = true;
+    libraryHaskellDepends = [ base ];
+    libraryToolDepends = [ hpack ];
+    executableHaskellDepends = [ base ];
+    testHaskellDepends = [ base ];
+    prePatch = "hpack";
+    homepage = "https://github.com/shanexu/helloworld#readme";
+    license = stdenv.lib.licenses.bsd3;
+  }  
+  #+end_src
+
+  编写 =default.nix= 
+  
+  #+begin_src nix -n
+  let
+    pkgs = import <nixpkgs> { };
+  in
+    pkgs.haskellPackages.callPackage ./helloworld.nix { }
+  #+end_src
+
+  使用nix build
+  #+begin_src shell-script
+  nix-build
+  #+end_src
+
+  默认 =nix-build= 会在当前目录下找 =default.nix= 文件，并使用这个文件执行build任务。
+
+  #+begin_src text
+  these derivations will be built:
+    /nix/store/lq4nibqgmvrb8j3yl460jqpc7ysbi417-helloworld-0.1.0.0.drv
+  building '/nix/store/lq4nibqgmvrb8j3yl460jqpc7ysbi417-helloworld-0.1.0.0.drv'...
+  setupCompilerEnvironmentPhase
+  Build with /nix/store/kdmykixl5nafbygjp5i8a6b4iclmfm1l-ghc-8.6.5.
+  unpacking sources
+  unpacking source archive /nix/store/dfa15ibdmddj3pvq5zr1g01df2zr186d-helloworld
+  source root is helloworld
+  patching sources
+  helloworld.cabal is up-to-date
+  compileBuildDriverPhase
+  setupCompileFlags: -package-db=/private/var/folders/8x/6h3nms2s34z7vwk5blbsz3100000gn/T/nix-build-helloworld-0.1.0.0.drv-0/setup-package.conf.d -j4 -threaded
+  [1 of 1] Compiling Main             ( Setup.hs, /private/var/folders/8x/6h3nms2s34z7vwk5blbsz3100000gn/T/nix-build-helloworld-0.1.0.0.drv-0/Main.o )
+  Linking Setup ...  
+  #+end_src
+
+  build成功后会在当前目录下生成 =result= 目录，其结构如下：
+
+  #+begin_src text
+  result
+  ├── bin
+  │   └── helloworld-exe
+  ├── lib
+  │   ├── ghc-8.6.5
+  │   │   ├── package.conf.d
+  │   │   │   └── helloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp.conf
+  │   │   └── x86_64-osx-ghc-8.6.5
+  │   │       ├── helloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp
+  │   │       │   ├── Lib.dyn_hi
+  │   │       │   ├── Lib.hi
+  │   │       │   ├── Lib.p_hi
+  │   │       │   ├── Paths_helloworld.dyn_hi
+  │   │       │   ├── Paths_helloworld.hi
+  │   │       │   ├── Paths_helloworld.p_hi
+  │   │       │   ├── libHShelloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp.a
+  │   │       │   └── libHShelloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp_p.a
+  │   │       └── libHShelloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp-ghc8.6.5.dylib
+  │   └── links
+  └── nix-support
+      └── propagated-build-inputs
+
+  8 directories, 12 files  
+  #+end_src
+
+  确认build结果：
+
+  #+begin_src text
+  ❯ result/bin/helloworld-exe
+  someFunc  
+  #+end_src
+
+  实际上这个result是一个软链接
+
+  #+begin_src text
+  ❯ readlink result
+  /nix/store/zdp1n3yifw6ikpn8hjsza40iwdmk5fnz-helloworld-0.1.0.0  
+  #+end_src
+
+  此时再执行一遍 =nix-build= 会发现nix又会重新build一遍
+
+  #+begin_src text
+  ❯ nix-build
+  these derivations will be built:
+    /nix/store/43qdjaq019p4w81hqqds7wysbxaz0w4x-helloworld-0.1.0.0.drv
+  building '/nix/store/43qdjaq019p4w81hqqds7wysbxaz0w4x-helloworld-0.1.0.0.drv'...
+  setupCompilerEnvironmentPhase
+  Build with /nix/store/kdmykixl5nafbygjp5i8a6b4iclmfm1l-ghc-8.6.5.
+  unpacking sources
+  unpacking source archive /nix/store/smxcdw5xy2kdmdn2931vgny4l7cxxq65-helloworld
+  source root is helloworld
+  patching sources
+  helloworld.cabal is up-to-date
+  compileBuildDriverPhase
+  setupCompileFlags: -package-db=/private/var/folders/8x/6h3nms2s34z7vwk5blbsz3100000gn/T/nix-build-helloworld-0.1.0.0.drv-0/setup-package.conf.d -j4 -threaded
+  [1 of 1] Compiling Main             ( Setup.hs, /private/var/folders/8x/6h3nms2s34z7vwk5blbsz3100000gn/T/nix-build-helloworld-0.1.0.0.drv-0/Main.o )
+  Linking Setup ...
+  #+end_src
+
+  明明没有任何变更为什么会重新编译，问题出在 helloworld.nix 文件的第五行。
+
+  #+begin_src nix
+  src = ./.;
+  #+end_src
+
+  这里定义了当前目录所有文件为源码文件，第一次build时生成了result文件，所以文件夹内容有改变，所以就会认为文件变化，就会重新build。
+
+  这里可以使用nix内置函数，过滤掉软链接：
+
+  #+begin_src nix
+  src = builtins.filterSource (path: type: type != "symlink") ./.;
+  #+end_src
+
+  更通用的是可以使用gitignore来过滤非源码文件，修改helloworld.nix：
+
+  #+begin_src nix -n
+  { nix-gitignore, mkDerivation, base, hpack, stdenv }:
+  mkDerivation {
+    pname = "helloworld";
+    version = "0.1.0.0";
+    src = nix-gitignore.gitignoreSourcePure [./.gitignore] ./.;
+    isLibrary = true;
+    isExecutable = true;
+    libraryHaskellDepends = [ base ];
+    libraryToolDepends = [ hpack ];
+    executableHaskellDepends = [ base ];
+    testHaskellDepends = [ base ];
+    prePatch = "hpack";
+    homepage = "https://github.com/githubuser/helloworld#readme";
+    license = stdenv.lib.licenses.bsd3;
+  }  
+  #+end_src
+
+* 添加shell.nix文件
+  
+  #+begin_quote
+  nix-shell - start an interactive shell based on a Nix expression
+  #+end_quote
+
+  所以使用nix-shell就可以打开一个跟build时相同的环境。
+
+  #+begin_src text
+  ❯ nix-shell
+
+  [nix-shell:~/src/github.com/shanexu/helloworld]$ ghc --version
+  The Glorious Glasgow Haskell Compilation System, version 8.6.5
+
+  [nix-shell:~/src/github.com/shanexu/helloworld]$
+  /Users/shane/.nix-profile/bin/cabal
+  #+end_src
+
+  默认nix-shell会找shell.nix和default.nix文件。
+
+  如果需要定制nix-shell，则可以自行编写shell.nix文件：
+
+  #+begin_src nix -n
+  let
+    pkgs = import <nixpkgs> {};
+    default = (import ./default.nix);
+  in
+    pkgs.haskellPackages.shellFor {
+      name = "helloworld-shell";
+      packages = p: [default];
+      buildInputs = [
+        pkgs.cabal-install
+        pkgs.haskellPackages.apply-refact
+        pkgs.haskellPackages.hlint
+        pkgs.haskellPackages.stylish-haskell
+        pkgs.haskellPackages.hasktags
+        pkgs.haskellPackages.hoogle
+        pkgs.haskellPackages.hindent
+      ];
+    }
+  #+end_src
+  
+  这里在nix-shell里面安装了cabal，hlint等工具：
+  
+  #+begin_src text
+  ❯ nix-shell
+
+  [nix-shell:~/src/github.com/shanexu/helloworld]$ which cabal
+  /nix/store/h4wzzvjzpggyprf40n20y1adzbvhh9xj-cabal-install-3.0.0.0/bin/cabal
+
+  [nix-shell:~/src/github.com/shanexu/helloworld]$ which hlint
+  /nix/store/8s5q0l63cs2fn0hlwnjsps7iwh8ma5w8-hlint-2.2.3/bin/hlint  
+  #+end_src
+
+* 安装HIE
+
+  安装cachix
+
+  #+begin_src shell-script
+  nix-env -iA cachix -f https://cachix.org/api/v1/install
+  #+end_src
+
+  使用预编译缓存
+  
+  #+begin_src shell-script
+  cachix use all-hies
+  #+end_src
+
+  可以在全局环境安装HIE
+
+  #+begin_src shell-script
+  nix-env -iA selection --arg selector 'p: { inherit (p) ghc865; }' -f https://github.com/infinisil/all-hies/tarball/master
+  #+end_src
+
+  也可以加入到shell.nix中
+  
+  #+begin_src nix -n
+  let
+    pkgs = import <nixpkgs> {};
+    default = (import ./default.nix);
+    all-hie = (import (fetchTarball "https://github.com/infinisil/all-hies/tarball/master") {});
+  in
+    pkgs.haskellPackages.shellFor {
+      name = "helloworld-shell";
+      packages = p: [default];
+      buildInputs = [
+        pkgs.cabal-install
+        pkgs.haskellPackages.apply-refact
+        pkgs.haskellPackages.hlint
+        pkgs.haskellPackages.stylish-haskell
+        pkgs.haskellPackages.hasktags
+        pkgs.haskellPackages.hoogle
+        pkgs.haskellPackages.hindent
+        (all-hie.selection { selector = p: { inherit (p) ghc865; }; })
+      ];
+    }
+  #+end_src
+
+* nix-shell和direnv
+  nix-shell默认使用bash，但是我平时都用 [[https://github.com/robbyrussell/oh-my-zsh][oh-my-zsh]] 。direnv已经支持nix，可以通过stdlib的use_nix函数，启用nix的环境配置。只要在当前目录下增加.envrc文件便可启用。
+  #+begin_src text
+  use_nix
+  #+end_src
+
+  但是每次进入目录都会非常慢。
+  
+  #+begin_src text
+  ❯ direnv allow
+  direnv: loading .envrc
+  direnv: ([/usr/local/bin/direnv export zsh]) is taking a while to execute. Use CTRL-C to give up.  
+  #+end_src
+
+  查看stdlib中的use_nix函数：
+
+  #+begin_src shell-script -n
+  # Usage: use_nix [...]
+  #
+  # Load environment variables from `nix-shell`.
+  # If you have a `default.nix` or `shell.nix` these will be
+  # used by default, but you can also specify packages directly
+  # (e.g `use nix -p ocaml`).
+  #
+  use_nix() {
+    direnv_load nix-shell --show-trace "$@" --run "$(join_args "$direnv" dump)"
+    if [[ $# == 0 ]]; then
+      watch_file default.nix
+      watch_file shell.nix
+    fi
+  }  
+  #+end_src
+
+  可见每次进入目录的时候都需要执行nix-shell命令，这其实非常慢。
+
+  修改 =~/.direnvrc= 增加 =use_nix= 函数，覆盖stdlib中的方法。这个方法根据目录中的shell.nix和default.nix文件的hash值，在.direnv中保存nix-shell环境的缓存。同时为了防止 =nix-store --gc= 回收 =nix-shell= 的依赖包。在 .direnv 目录里面生成nix的gcroots，也就是几个软链接。
+
+  #+begin_src shell-script -n
+  use_nix() {
+      local path="$(nix-instantiate --find-file nixpkgs)"
+
+      if [ -f "${path}/.version-suffix" ]; then
+          local version="$(< $path/.version-suffix)"
+      elif [ -f "${path}/.git" ]; then
+          local version="$(< $(< ${path}/.git/HEAD))"
+      fi
+
+      local cache=".direnv/cache-${version:-unknown}"
+
+      local update_drv=0
+      if [[ ! -e "$cache" ]] || \
+             [[ "$HOME/.direnvrc" -nt "$cache" ]] || \
+             [[ .envrc -nt "$cache" ]] || \
+             [[ default.nix -nt "$cache" ]] || \
+             [[ shell.nix -nt "$cache" ]];
+      then
+          [ -d .direnv ] || mkdir .direnv
+          nix-shell --show-trace "$@" --run "\"$direnv\" dump bash" > "$cache"
+          update_drv=1
+      else
+          log_status using cached derivation
+      fi
+      local term_backup=$TERM path_backup=$PATH
+      if [ -n ${TMPDIR+x} ]; then
+          local tmp_backup=$TMPDIR
+      fi
+
+      eval "$(< $cache)"
+      export PATH=$PATH:$path_backup TERM=$term_backup TMPDIR=$tmp_backup
+      if [ -n ${tmp_backup+x} ]; then
+          export TMPDIR=${tmp_backup}
+      else
+          unset TMPDIR
+      fi
+
+      if [ "$out" ] && (( $update_drv )); then
+          local drv_link=".direnv/shell.drv"
+          local drv_dep_link=".direnv/shell.dep"
+          local drv="$(nix show-derivation $out | grep -E -o -m1 '/nix/store/.*.drv')"
+          local stripped_pwd=${PWD/\//}
+          local escaped_pwd=${stripped_pwd//-/--}
+          local escaped_pwd=${escaped_pwd//\//-}
+          ln -fs "$drv" "$drv_link"
+          ln -fs "$PWD/$drv_link" "/nix/var/nix/gcroots/per-user/$LOGNAME/$escaped_pwd"
+          rm -f ${drv_dep_link}*
+          nix-store --indirect --add-root $drv_dep_link --realise $(nix-store --query --references $drv_link)
+          log_status renewed cache and derivation link
+      fi
+
+      if [[ $# = 0 ]]; then
+          watch_file default.nix
+          watch_file shell.nix
+      fi
+  }
+  #+end_src
+  
+* 配置emacs(spacemacs)
+  我使用的是 [[https://github.com/syl20bnr/spacemacs/][spacemacs]] 的 develop 分支。
+
+  为了是emacs和direnv能够很好结合可以额外增加包，并在 =.spacemacs= 文件中 =dotspacemacs/user-config= 函数中添加配置。
+
+  #+begin_src emacs-lisp -n
+  ;; direnv-mode
+  (use-package direnv
+    :config
+    (direnv-mode))
+  #+end_src
+
+  [[https://user-images.githubusercontent.com/1257453/68374271-7886ff00-013c-11ea-92aa-fc27ff89f413.png]]
+
+* 参考文档
+
+  [[https://nixos.org/nix/manual]]
+  
+  [[https://github.com/Gabriel439/haskell-nix]]
+
+  [[https://github.com/fghibellini/nix-haskell-monorepo]]
+  
+  [[https://github.com/haskell/haskell-ide-engine]]
+
+  https://github.com/Infinisil/all-hies
+
+  [[https://github.com/NixOS/nix/issues/2208#issuecomment-412262911]]
+
+  [[https://github.com/direnv/direnv/wiki/Nix]]
+
+  [[https://github.com/wbolster/emacs-direnv]]
+
+  [[https://docs.haskellstack.org/en/stable/README/]]
+
+  [[https://www.haskell.org/cabal/users-guide/index.html]]
+
+  [[https://www.sam.today/blog/environments-with-nix-shell-learning-nix-pt-1/]]
+
+  [[https://www.youtube.com/watch?v=61MuMY9XFNo][Reading Nix Expression Zimbatm]]
