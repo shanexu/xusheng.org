@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>Learning Haskell with nix and Emacs - Shane Xu&#39;s Home</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="shanexu" />
+      <meta name="description" content="Learning Haskell with nix and Emacs" />
+      <meta name="keywords" content="haskell, nix, emacs" />
+    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/code-solarized-dark.css" type="text/css">
+  </head>
+
+  <body>
+    <div>
+      <header class="masthead">
+        <h1 class="settitle"><a href="/">Shane Xu&#39;s Home</a></h1>
+        <blockquote>Life is too short for so much sorrow.</blockquote>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="shanexu.io">
+        </form>
+      </header>
+    </div>
+    <div class="node nav">
+      <ul>
+          <li><a href="/blog/" id="Blog_tab">Blog</a></li>
+        <li><a href="/tags/">Tags</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="https://github.com/shanexu">GitHub</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+      </ul>
+    </div>
+
+
+  <h3 class="section">Learning Haskell with nix and Emacs</h3>
+
+<div id="outline-container-org9e9b592" class="outline-2">
+<h2 id="org9e9b592">前言</h2>
+<div class="outline-text-2" id="text-org9e9b592">
+<p>
+<a href="https://github.com/haskell-servant/servant">haskell-servant</a> 和 <a href="https://github.com/dmjio/miso">miso</a> 等haskell开源项目竟然都是用nix管理依赖的。时隔多年nix竟然被赋予了这样的魔法，不仅让我大跌眼镜。在 <a href="https://github.com/Gabriel439/haskell-nix">Nix and Haskell in production</a> 一文中指出，nix对标的其实是stack，他和stack一样有独立的haskell包缓存，用以达成reproducible的构建。nix胜过stack的唯一个地方，就是他不仅能解决haskell包依赖，还能解决其他任何依赖，甚至可以为你打造一个独立的开发环境。本文就是介绍如何在 <code>macos catalina</code> 上用nix打造一个haskell开发环境。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf3d73b6" class="outline-2">
+<h2 id="orgf3d73b6">安装nix和其他工具</h2>
+<div class="outline-text-2" id="text-orgf3d73b6">
+<p>
+本来这一个步骤应该是非常简单的。但是在最新版的macos catalina上并不那么容易了。nix需要在根目录上创建文件夹 <code>/nix</code> ，在系统默认开启 <code>SIP</code> 的情况下，根目录是以只读度方式挂载的，所以无法创建。首先需要关闭SIP，创建目录，重新启用SIP，由于启用后根目录仍然只读，还需要创建分区，将分区挂载到 <code>/nix</code> 。
+</p>
+
+<p>
+关闭SIP方法可参考文档： <a href="https://support.studionetworksolutions.com/hc/en-us/articles/115003839246-How-to-disable-Systems-Integrity-Protection-SIP-in-macOS">How to disable Systems Integrity Protection (SIP) in macOS</a> 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">PASSPHRASE=$(openssl rand -base64 32)
+echo "Creating encrypted APFS volume with passphrase: $PASSPHRASE" &gt;&amp;2
+sudo diskutil apfs addVolume disk1 'Case-sensitive APFS' Nix -mountpoint /nix -passphrase "$PASSPHRASE"
+UUID=$(diskutil info -plist /nix | plutil -extract VolumeUUID xml1 - -o - | plutil -p - | sed -e 's/"//g')
+echo $UUID
+security add-generic-password -l Nix -a "$UUID" -s "$UUID" -D "Encrypted Volume Password" -w "$PASSPHRASE" \\n -T "/System/Library/CoreServices/APFSUserAgent" -T "/System/Library/CoreServices/CSUserAgent"
+sudo diskutil enableOwnership /nix
+echo 'LABEL=Nix /nix apfs rw' | sudo tee -a /etc/fstab &gt;/dev/null
+</pre>
+</div>
+
+<p>
+挂载完后， <code>df -h</code> 命令查看当前磁盘状态如下。
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-text">Filesystem      Size   Used  Avail Capacity iused      ifree %iused  Mounted on
+/dev/disk1s5   466Gi   10Gi  211Gi     5%  483643 4881969237    0%   /
+devfs          199Ki  199Ki    0Bi   100%     690          0  100%   /dev
+/dev/disk1s1   466Gi  232Gi  211Gi    53% 3527520 4878925360    0%   /System/Volumes/Data
+/dev/disk1s4   466Gi  2.0Gi  211Gi     1%       2 4882452878    0%   /private/var/vm
+map auto_home    0Bi    0Bi    0Bi   100%       0          0  100%   /System/Volumes/Data/home
+/dev/disk1s6   466Gi  9.8Gi  211Gi     5%  256476 4882196404    0%   /nix  
+</pre>
+</div>
+
+<p>
+之后就可以按照官方文档所述，安装 <code>nix</code> 了。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell-script">curl https://nixos.org/nix/install | sh  
+</pre>
+</div>
+
+<p>
+关于nix和macos catalina和sip的问题可以看下，nix的一个issues： <a href="https://github.com/NixOS/nix/issues/2925">/nix will not be writable on macOS Catalina #2925</a>
+</p>
+
+<p>
+nix安装完之后就可以安装开发工具了。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell-script">nix-env --install cabal2nix stack cabal-install
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org59b9617" class="outline-2">
+<h2 id="org59b9617">使用stack初始化工程</h2>
+<div class="outline-text-2" id="text-org59b9617">
+<div class="org-src-container">
+<pre class="src src-shell-script">stack new helloworld new-template
+</pre>
+</div>
+
+<p>
+工程结构如下
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">.
+&#9500;&#9472;&#9472; ChangeLog.md
+&#9500;&#9472;&#9472; LICENSE
+&#9500;&#9472;&#9472; README.md
+&#9500;&#9472;&#9472; Setup.hs
+&#9500;&#9472;&#9472; app
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; Main.hs
+&#9500;&#9472;&#9472; helloworld.cabal
+&#9500;&#9472;&#9472; package.yaml
+&#9500;&#9472;&#9472; src
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; Lib.hs
+&#9500;&#9472;&#9472; stack.yaml
+&#9492;&#9472;&#9472; test
+    &#9492;&#9472;&#9472; Spec.hs
+</pre>
+</div>
+
+<p>
+修改 .gitignore
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">.stack-work/
+*~
+/result
+*.hi
+*.o
+dist-newstyle/
+</pre>
+</div>
+
+<p>
+初始化git仓库
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell-script">git init
+</pre>
+</div>
+
+
+<p>
+此时可以用 <code>stack run</code> 编译并运行。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">Building all executables for `helloworld' once. After a successful build of all of them, only specified executables will be rebuilt.
+helloworld&gt; configure (lib + exe)
+Configuring helloworld-0.1.0.0...
+helloworld&gt; build (lib + exe)
+Preprocessing library for helloworld-0.1.0.0..
+Building library for helloworld-0.1.0.0..
+[1 of 2] Compiling Lib
+[2 of 2] Compiling Paths_helloworld
+Preprocessing executable 'helloworld-exe' for helloworld-0.1.0.0..
+Building executable 'helloworld-exe' for helloworld-0.1.0.0..
+[1 of 2] Compiling Main
+[2 of 2] Compiling Paths_helloworld
+Linking .stack-work/dist/x86_64-osx/Cabal-2.4.0.1/build/helloworld-exe/helloworld-exe ...
+helloworld&gt; copy/register
+Installing library in /Users/shane/src/github.com/shanexu/helloworld/.stack-work/install/x86_64-osx/12a66049aaca4a8b492b9641af325fbaf91178a6bf5ad4ae4f7714e26944d4c7/8.6.5/lib/x86_64-osx
+-ghc-8.6.5/helloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp
+Installing executable helloworld-exe in /Users/shane/src/github.com/shanexu/helloworld/.stack-work/install/x86_64-osx/12a66049aaca4a8b492b9641af325fbaf91178a6bf5ad4ae4f7714e26944d4c7/8.
+6.5/bin
+Registering library for helloworld-0.1.0.0..
+someFunc  
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbfb9e9c" class="outline-2">
+<h2 id="orgbfb9e9c">编写第一个nix表达式</h2>
+<div class="outline-text-2" id="text-orgbfb9e9c">
+<p>
+说是编写，其实就是中 cabal2nix 生成。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell-script">cabal2nix . &gt; helloworld.nix
+</pre>
+</div>
+
+<p>
+helloworld.nix 的内容如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-nix"><span class="linenr"> 1: </span><span style="color: #268bd2;">{</span> mkDerivation, base, hpack, stdenv <span style="color: #268bd2;">}</span>:
+<span class="linenr"> 2: </span>mkDerivation <span style="color: #268bd2;">{</span>
+<span class="linenr"> 3: </span>  <span style="color: #6c71c4;">pname</span> = <span style="color: #2aa198;">"helloworld"</span>;
+<span class="linenr"> 4: </span>  <span style="color: #6c71c4;">version</span> = <span style="color: #2aa198;">"0.1.0.0"</span>;
+<span class="linenr"> 5: </span>  <span style="color: #6c71c4;">src</span> = <span style="color: #d33682;">./.</span>;
+<span class="linenr"> 6: </span>  <span style="color: #6c71c4;">isLibrary</span> = <span style="color: #268bd2;">true</span>;
+<span class="linenr"> 7: </span>  <span style="color: #6c71c4;">isExecutable</span> = <span style="color: #268bd2;">true</span>;
+<span class="linenr"> 8: </span>  <span style="color: #6c71c4;">libraryHaskellDepends</span> = <span style="color: #d33682;">[</span> base <span style="color: #d33682;">]</span>;
+<span class="linenr"> 9: </span>  <span style="color: #6c71c4;">libraryToolDepends</span> = <span style="color: #d33682;">[</span> hpack <span style="color: #d33682;">]</span>;
+<span class="linenr">10: </span>  <span style="color: #6c71c4;">executableHaskellDepends</span> = <span style="color: #d33682;">[</span> base <span style="color: #d33682;">]</span>;
+<span class="linenr">11: </span>  <span style="color: #6c71c4;">testHaskellDepends</span> = <span style="color: #d33682;">[</span> base <span style="color: #d33682;">]</span>;
+<span class="linenr">12: </span>  <span style="color: #6c71c4;">prePatch</span> = <span style="color: #2aa198;">"hpack"</span>;
+<span class="linenr">13: </span>  <span style="color: #6c71c4;">homepage</span> = <span style="color: #2aa198;">"https://github.com/shanexu/helloworld#readme"</span>;
+<span class="linenr">14: </span>  <span style="color: #6c71c4;">license</span> = stdenv.lib.licenses.bsd3;
+<span class="linenr">15: </span><span style="color: #268bd2;">}</span>  
+</pre>
+</div>
+
+<p>
+编写 <code>default.nix</code> 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-nix"><span class="linenr">1: </span><span style="color: #859900;">let</span>
+<span class="linenr">2: </span>  <span style="color: #6c71c4;">pkgs</span> = <span style="color: #268bd2;">import</span> <span style="color: #d33682;">&lt;nixpkgs&gt;</span> <span style="color: #268bd2;">{</span> <span style="color: #268bd2;">}</span>;
+<span class="linenr">3: </span><span style="color: #859900;">in</span>
+<span class="linenr">4: </span>  pkgs.haskellPackages.callPackage <span style="color: #d33682;">./helloworld.nix</span> <span style="color: #268bd2;">{</span> <span style="color: #268bd2;">}</span>
+</pre>
+</div>
+
+<p>
+使用nix build
+</p>
+<div class="org-src-container">
+<pre class="src src-shell-script">nix-build
+</pre>
+</div>
+
+<p>
+默认 <code>nix-build</code> 会在当前目录下找 <code>default.nix</code> 文件，并使用这个文件执行build任务。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">these derivations will be built:
+  /nix/store/lq4nibqgmvrb8j3yl460jqpc7ysbi417-helloworld-0.1.0.0.drv
+building '/nix/store/lq4nibqgmvrb8j3yl460jqpc7ysbi417-helloworld-0.1.0.0.drv'...
+setupCompilerEnvironmentPhase
+Build with /nix/store/kdmykixl5nafbygjp5i8a6b4iclmfm1l-ghc-8.6.5.
+unpacking sources
+unpacking source archive /nix/store/dfa15ibdmddj3pvq5zr1g01df2zr186d-helloworld
+source root is helloworld
+patching sources
+helloworld.cabal is up-to-date
+compileBuildDriverPhase
+setupCompileFlags: -package-db=/private/var/folders/8x/6h3nms2s34z7vwk5blbsz3100000gn/T/nix-build-helloworld-0.1.0.0.drv-0/setup-package.conf.d -j4 -threaded
+[1 of 1] Compiling Main             ( Setup.hs, /private/var/folders/8x/6h3nms2s34z7vwk5blbsz3100000gn/T/nix-build-helloworld-0.1.0.0.drv-0/Main.o )
+Linking Setup ...  
+</pre>
+</div>
+
+<p>
+build成功后会在当前目录下生成 <code>result</code> 目录，其结构如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">result
+&#9500;&#9472;&#9472; bin
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; helloworld-exe
+&#9500;&#9472;&#9472; lib
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; ghc-8.6.5
+&#9474;&#160;&#160; &#9474;&#160;&#160; &#9500;&#9472;&#9472; package.conf.d
+&#9474;&#160;&#160; &#9474;&#160;&#160; &#9474;&#160;&#160; &#9492;&#9472;&#9472; helloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp.conf
+&#9474;&#160;&#160; &#9474;&#160;&#160; &#9492;&#9472;&#9472; x86_64-osx-ghc-8.6.5
+&#9474;&#160;&#160; &#9474;&#160;&#160;     &#9500;&#9472;&#9472; helloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp
+&#9474;&#160;&#160; &#9474;&#160;&#160;     &#9474;&#160;&#160; &#9500;&#9472;&#9472; Lib.dyn_hi
+&#9474;&#160;&#160; &#9474;&#160;&#160;     &#9474;&#160;&#160; &#9500;&#9472;&#9472; Lib.hi
+&#9474;&#160;&#160; &#9474;&#160;&#160;     &#9474;&#160;&#160; &#9500;&#9472;&#9472; Lib.p_hi
+&#9474;&#160;&#160; &#9474;&#160;&#160;     &#9474;&#160;&#160; &#9500;&#9472;&#9472; Paths_helloworld.dyn_hi
+&#9474;&#160;&#160; &#9474;&#160;&#160;     &#9474;&#160;&#160; &#9500;&#9472;&#9472; Paths_helloworld.hi
+&#9474;&#160;&#160; &#9474;&#160;&#160;     &#9474;&#160;&#160; &#9500;&#9472;&#9472; Paths_helloworld.p_hi
+&#9474;&#160;&#160; &#9474;&#160;&#160;     &#9474;&#160;&#160; &#9500;&#9472;&#9472; libHShelloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp.a
+&#9474;&#160;&#160; &#9474;&#160;&#160;     &#9474;&#160;&#160; &#9492;&#9472;&#9472; libHShelloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp_p.a
+&#9474;&#160;&#160; &#9474;&#160;&#160;     &#9492;&#9472;&#9472; libHShelloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp-ghc8.6.5.dylib
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; links
+&#9492;&#9472;&#9472; nix-support
+    &#9492;&#9472;&#9472; propagated-build-inputs
+
+8 directories, 12 files  
+</pre>
+</div>
+
+<p>
+确认build结果：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">&#10095; result/bin/helloworld-exe
+someFunc  
+</pre>
+</div>
+
+<p>
+实际上这个result是一个软链接
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">&#10095; readlink result
+/nix/store/zdp1n3yifw6ikpn8hjsza40iwdmk5fnz-helloworld-0.1.0.0  
+</pre>
+</div>
+
+<p>
+此时再执行一遍 <code>nix-build</code> 会发现nix又会重新build一遍
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">&#10095; nix-build
+these derivations will be built:
+  /nix/store/43qdjaq019p4w81hqqds7wysbxaz0w4x-helloworld-0.1.0.0.drv
+building '/nix/store/43qdjaq019p4w81hqqds7wysbxaz0w4x-helloworld-0.1.0.0.drv'...
+setupCompilerEnvironmentPhase
+Build with /nix/store/kdmykixl5nafbygjp5i8a6b4iclmfm1l-ghc-8.6.5.
+unpacking sources
+unpacking source archive /nix/store/smxcdw5xy2kdmdn2931vgny4l7cxxq65-helloworld
+source root is helloworld
+patching sources
+helloworld.cabal is up-to-date
+compileBuildDriverPhase
+setupCompileFlags: -package-db=/private/var/folders/8x/6h3nms2s34z7vwk5blbsz3100000gn/T/nix-build-helloworld-0.1.0.0.drv-0/setup-package.conf.d -j4 -threaded
+[1 of 1] Compiling Main             ( Setup.hs, /private/var/folders/8x/6h3nms2s34z7vwk5blbsz3100000gn/T/nix-build-helloworld-0.1.0.0.drv-0/Main.o )
+Linking Setup ...
+</pre>
+</div>
+
+<p>
+明明没有任何变更为什么会重新编译，问题出在 helloworld.nix 文件的第五行。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-nix"><span style="color: #6c71c4;">src</span> = <span style="color: #d33682;">./.</span>;
+</pre>
+</div>
+
+<p>
+这里定义了当前目录所有文件为源码文件，第一次build时生成了result文件，所以文件夹内容有改变，所以就会认为文件变化，就会重新build。
+</p>
+
+<p>
+这里可以使用nix内置函数，过滤掉软链接：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-nix"><span style="color: #6c71c4;">src</span> = builtins.filterSource <span style="color: #268bd2;">(</span>path: type: type != <span style="color: #2aa198;">"symlink"</span><span style="color: #268bd2;">)</span> <span style="color: #d33682;">./.</span>;
+</pre>
+</div>
+
+<p>
+更通用的是可以使用gitignore来过滤非源码文件，修改helloworld.nix：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-nix"><span class="linenr"> 1: </span><span style="color: #268bd2;">{</span> nix-gitignore, mkDerivation, base, hpack, stdenv <span style="color: #268bd2;">}</span>:
+<span class="linenr"> 2: </span>mkDerivation <span style="color: #268bd2;">{</span>
+<span class="linenr"> 3: </span>  <span style="color: #6c71c4;">pname</span> = <span style="color: #2aa198;">"helloworld"</span>;
+<span class="linenr"> 4: </span>  <span style="color: #6c71c4;">version</span> = <span style="color: #2aa198;">"0.1.0.0"</span>;
+<span class="linenr"> 5: </span>  <span style="color: #6c71c4;">src</span> = nix-gitignore.gitignoreSourcePure <span style="color: #d33682;">[</span><span style="color: #d33682;">./.gitignore</span><span style="color: #d33682;">]</span> <span style="color: #d33682;">./.</span>;
+<span class="linenr"> 6: </span>  <span style="color: #6c71c4;">isLibrary</span> = <span style="color: #268bd2;">true</span>;
+<span class="linenr"> 7: </span>  <span style="color: #6c71c4;">isExecutable</span> = <span style="color: #268bd2;">true</span>;
+<span class="linenr"> 8: </span>  <span style="color: #6c71c4;">libraryHaskellDepends</span> = <span style="color: #d33682;">[</span> base <span style="color: #d33682;">]</span>;
+<span class="linenr"> 9: </span>  <span style="color: #6c71c4;">libraryToolDepends</span> = <span style="color: #d33682;">[</span> hpack <span style="color: #d33682;">]</span>;
+<span class="linenr">10: </span>  <span style="color: #6c71c4;">executableHaskellDepends</span> = <span style="color: #d33682;">[</span> base <span style="color: #d33682;">]</span>;
+<span class="linenr">11: </span>  <span style="color: #6c71c4;">testHaskellDepends</span> = <span style="color: #d33682;">[</span> base <span style="color: #d33682;">]</span>;
+<span class="linenr">12: </span>  <span style="color: #6c71c4;">prePatch</span> = <span style="color: #2aa198;">"hpack"</span>;
+<span class="linenr">13: </span>  <span style="color: #6c71c4;">homepage</span> = <span style="color: #2aa198;">"https://github.com/githubuser/helloworld#readme"</span>;
+<span class="linenr">14: </span>  <span style="color: #6c71c4;">license</span> = stdenv.lib.licenses.bsd3;
+<span class="linenr">15: </span><span style="color: #268bd2;">}</span>  
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga980256" class="outline-2">
+<h2 id="orga980256">添加shell.nix文件</h2>
+<div class="outline-text-2" id="text-orga980256">
+<blockquote>
+<p>
+nix-shell - start an interactive shell based on a Nix expression
+</p>
+</blockquote>
+
+<p>
+所以使用nix-shell就可以打开一个跟build时相同的环境。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">&#10095; nix-shell
+
+[nix-shell:~/src/github.com/shanexu/helloworld]$ ghc --version
+The Glorious Glasgow Haskell Compilation System, version 8.6.5
+
+[nix-shell:~/src/github.com/shanexu/helloworld]$
+/Users/shane/.nix-profile/bin/cabal
+</pre>
+</div>
+
+<p>
+默认nix-shell会找shell.nix和default.nix文件。
+</p>
+
+<p>
+如果需要定制nix-shell，则可以自行编写shell.nix文件：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-nix"><span class="linenr"> 1: </span><span style="color: #859900;">let</span>
+<span class="linenr"> 2: </span>  <span style="color: #6c71c4;">pkgs</span> = <span style="color: #268bd2;">import</span> <span style="color: #d33682;">&lt;nixpkgs&gt;</span> <span style="color: #268bd2;">{}</span>;
+<span class="linenr"> 3: </span>  <span style="color: #6c71c4;">default</span> = <span style="color: #268bd2;">(</span><span style="color: #268bd2;">import</span> <span style="color: #d33682;">./default.nix</span><span style="color: #268bd2;">)</span>;
+<span class="linenr"> 4: </span><span style="color: #859900;">in</span>
+<span class="linenr"> 5: </span>  pkgs.haskellPackages.shellFor <span style="color: #268bd2;">{</span>
+<span class="linenr"> 6: </span>    <span style="color: #6c71c4;">name</span> = <span style="color: #2aa198;">"helloworld-shell"</span>;
+<span class="linenr"> 7: </span>    <span style="color: #6c71c4;">packages</span> = p: <span style="color: #d33682;">[</span>default<span style="color: #d33682;">]</span>;
+<span class="linenr"> 8: </span>    <span style="color: #6c71c4;">buildInputs</span> = <span style="color: #d33682;">[</span>
+<span class="linenr"> 9: </span>      pkgs.cabal-install
+<span class="linenr">10: </span>      pkgs.haskellPackages.apply-refact
+<span class="linenr">11: </span>      pkgs.haskellPackages.hlint
+<span class="linenr">12: </span>      pkgs.haskellPackages.stylish-haskell
+<span class="linenr">13: </span>      pkgs.haskellPackages.hasktags
+<span class="linenr">14: </span>      pkgs.haskellPackages.hoogle
+<span class="linenr">15: </span>      pkgs.haskellPackages.hindent
+<span class="linenr">16: </span>    <span style="color: #d33682;">]</span>;
+<span class="linenr">17: </span>  <span style="color: #268bd2;">}</span>
+</pre>
+</div>
+
+<p>
+这里在nix-shell里面安装了cabal，hlint等工具：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">&#10095; nix-shell
+
+[nix-shell:~/src/github.com/shanexu/helloworld]$ which cabal
+/nix/store/h4wzzvjzpggyprf40n20y1adzbvhh9xj-cabal-install-3.0.0.0/bin/cabal
+
+[nix-shell:~/src/github.com/shanexu/helloworld]$ which hlint
+/nix/store/8s5q0l63cs2fn0hlwnjsps7iwh8ma5w8-hlint-2.2.3/bin/hlint  
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0646225" class="outline-2">
+<h2 id="org0646225">安装HIE</h2>
+<div class="outline-text-2" id="text-org0646225">
+<p>
+安装cachix
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell-script">nix-env -iA cachix -f https://cachix.org/api/v1/install
+</pre>
+</div>
+
+<p>
+使用预编译缓存
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell-script">cachix use all-hies
+</pre>
+</div>
+
+<p>
+可以在全局环境安装HIE
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell-script">nix-env -iA selection --arg selector <span style="color: #2aa198;">'p: { inherit (p) ghc865; }'</span> -f https://github.com/infinisil/all-hies/tarball/master
+</pre>
+</div>
+
+<p>
+也可以加入到shell.nix中
+</p>
+
+<div class="org-src-container">
+<pre class="src src-nix"><span class="linenr"> 1: </span><span style="color: #859900;">let</span>
+<span class="linenr"> 2: </span>  <span style="color: #6c71c4;">pkgs</span> = <span style="color: #268bd2;">import</span> <span style="color: #d33682;">&lt;nixpkgs&gt;</span> <span style="color: #268bd2;">{}</span>;
+<span class="linenr"> 3: </span>  <span style="color: #6c71c4;">default</span> = <span style="color: #268bd2;">(</span><span style="color: #268bd2;">import</span> <span style="color: #d33682;">./default.nix</span><span style="color: #268bd2;">)</span>;
+<span class="linenr"> 4: </span>  <span style="color: #6c71c4;">all-hie</span> = <span style="color: #268bd2;">(</span><span style="color: #268bd2;">import</span> <span style="color: #d33682;">(</span><span style="color: #268bd2;">fetchTarball</span> <span style="color: #2aa198;">"https://github.com/infinisil/all-hies/tarball/master"</span><span style="color: #d33682;">)</span> <span style="color: #d33682;">{}</span><span style="color: #268bd2;">)</span>;
+<span class="linenr"> 5: </span><span style="color: #859900;">in</span>
+<span class="linenr"> 6: </span>  pkgs.haskellPackages.shellFor <span style="color: #268bd2;">{</span>
+<span class="linenr"> 7: </span>    <span style="color: #6c71c4;">name</span> = <span style="color: #2aa198;">"helloworld-shell"</span>;
+<span class="linenr"> 8: </span>    <span style="color: #6c71c4;">packages</span> = p: <span style="color: #d33682;">[</span>default<span style="color: #d33682;">]</span>;
+<span class="linenr"> 9: </span>    <span style="color: #6c71c4;">buildInputs</span> = <span style="color: #d33682;">[</span>
+<span class="linenr">10: </span>      pkgs.cabal-install
+<span class="linenr">11: </span>      pkgs.haskellPackages.apply-refact
+<span class="linenr">12: </span>      pkgs.haskellPackages.hlint
+<span class="linenr">13: </span>      pkgs.haskellPackages.stylish-haskell
+<span class="linenr">14: </span>      pkgs.haskellPackages.hasktags
+<span class="linenr">15: </span>      pkgs.haskellPackages.hoogle
+<span class="linenr">16: </span>      pkgs.haskellPackages.hindent
+<span class="linenr">17: </span>      <span style="color: #859900;">(</span>all-hie.selection <span style="color: #cb4b16;">{</span> <span style="color: #6c71c4;">selector</span> = p: <span style="color: #6c71c4;">{</span> <span style="color: #859900;">inherit</span> <span style="color: #b58900;">(</span>p<span style="color: #b58900;">)</span> ghc865; <span style="color: #6c71c4;">}</span>; <span style="color: #cb4b16;">}</span><span style="color: #859900;">)</span>
+<span class="linenr">18: </span>    <span style="color: #d33682;">]</span>;
+<span class="linenr">19: </span>  <span style="color: #268bd2;">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0f906fe" class="outline-2">
+<h2 id="org0f906fe">nix-shell和direnv</h2>
+<div class="outline-text-2" id="text-org0f906fe">
+<p>
+nix-shell默认使用bash，但是我平时都用 <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a> 。direnv已经支持nix，可以通过stdlib的use_nix函数，启用nix的环境配置。只要在当前目录下增加.envrc文件便可启用。
+</p>
+<div class="org-src-container">
+<pre class="src src-text">use_nix
+</pre>
+</div>
+
+<p>
+但是每次进入目录都会非常慢。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">&#10095; direnv allow
+direnv: loading .envrc
+direnv: ([/usr/local/bin/direnv export zsh]) is taking a while to execute. Use CTRL-C to give up.  
+</pre>
+</div>
+
+<p>
+查看stdlib中的use_nix函数：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell-script"><span class="linenr"> 1: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">Usage: use_nix [...]</span>
+<span class="linenr"> 2: </span><span style="color: #405A61;">#</span>
+<span class="linenr"> 3: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">Load environment variables from `nix-shell`.</span>
+<span class="linenr"> 4: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">If you have a `default.nix` or `shell.nix` these will be</span>
+<span class="linenr"> 5: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">used by default, but you can also specify packages directly</span>
+<span class="linenr"> 6: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">(e.g `use nix -p ocaml`).</span>
+<span class="linenr"> 7: </span><span style="color: #405A61;">#</span>
+<span class="linenr"> 8: </span><span style="color: #268bd2;">use_nix</span><span style="color: #268bd2;">()</span> <span style="color: #268bd2;">{</span>
+<span class="linenr"> 9: </span>  direnv_load nix-shell --show-trace <span style="color: #2aa198;">"$@"</span> --run <span style="color: #2aa198;">"$(join_args "$direnv" dump)"</span>
+<span class="linenr">10: </span>  <span style="color: #859900;">if</span> <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> $<span style="color: #6c71c4;">#</span> == <span style="color: #d33682; font-weight: bold;">0</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span>; <span style="color: #859900;">then</span>
+<span class="linenr">11: </span>    watch_file default.nix
+<span class="linenr">12: </span>    watch_file shell.nix
+<span class="linenr">13: </span>  <span style="color: #859900;">fi</span>
+<span class="linenr">14: </span><span style="color: #268bd2;">}</span>  
+</pre>
+</div>
+
+<p>
+可见每次进入目录的时候都需要执行nix-shell命令，这其实非常慢。
+</p>
+
+<p>
+修改 <code>~/.direnvrc</code> 增加 <code>use_nix</code> 函数，覆盖stdlib中的方法。这个方法根据目录中的shell.nix和default.nix文件的hash值，在.direnv中保存nix-shell环境的缓存。同时为了防止 <code>nix-store --gc</code> 回收 <code>nix-shell</code> 的依赖包。在 .direnv 目录里面生成nix的gcroots，也就是几个软链接。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell-script"><span class="linenr"> 1: </span><span style="color: #268bd2;">use_nix</span><span style="color: #268bd2;">()</span> <span style="color: #268bd2;">{</span>
+<span class="linenr"> 2: </span>    <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">path</span>=<span style="color: #2aa198;">"$(nix-instantiate --find-file nixpkgs)"</span>
+<span class="linenr"> 3: </span>
+<span class="linenr"> 4: </span>    <span style="color: #859900;">if</span> <span style="color: #d33682;">[</span> -f <span style="color: #2aa198;">"${path}/.version-suffix"</span> <span style="color: #d33682;">]</span>; <span style="color: #859900;">then</span>
+<span class="linenr"> 5: </span>        <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">version</span>=<span style="color: #2aa198;">"$(&lt; $path/.version-suffix)"</span>
+<span class="linenr"> 6: </span>    <span style="color: #859900;">elif</span> <span style="color: #d33682;">[</span> -f <span style="color: #2aa198;">"${path}/.git"</span> <span style="color: #d33682;">]</span>; <span style="color: #859900;">then</span>
+<span class="linenr"> 7: </span>        <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">version</span>=<span style="color: #2aa198;">"$(&lt; $(&lt; ${path}/.git/HEAD))"</span>
+<span class="linenr"> 8: </span>    <span style="color: #859900;">fi</span>
+<span class="linenr"> 9: </span>
+<span class="linenr">10: </span>    <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">cache</span>=<span style="color: #2aa198;">".direnv/cache-${version:-unknown}"</span>
+<span class="linenr">11: </span>
+<span class="linenr">12: </span>    <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">update_drv</span>=<span style="color: #d33682; font-weight: bold;">0</span>
+<span class="linenr">13: </span>    <span style="color: #859900;">if</span> <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> <span style="color: #cb4b16; font-weight: bold;">!</span> -e <span style="color: #2aa198;">"$cache"</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span> || <span style="color: #2aa198;">\</span>
+<span class="linenr">14: </span>           <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> <span style="color: #2aa198;">"$HOME/.direnvrc"</span> -nt <span style="color: #2aa198;">"$cache"</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span> || <span style="color: #2aa198;">\</span>
+<span class="linenr">15: </span>           <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> .envrc -nt <span style="color: #2aa198;">"$cache"</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span> || <span style="color: #2aa198;">\</span>
+<span class="linenr">16: </span>           <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> default.nix -nt <span style="color: #2aa198;">"$cache"</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span> || <span style="color: #2aa198;">\</span>
+<span class="linenr">17: </span>           <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> shell.nix -nt <span style="color: #2aa198;">"$cache"</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span>;
+<span class="linenr">18: </span>    <span style="color: #859900;">then</span>
+<span class="linenr">19: </span>        <span style="color: #d33682;">[</span> -d .direnv <span style="color: #d33682;">]</span> || mkdir .direnv
+<span class="linenr">20: </span>        nix-shell --show-trace <span style="color: #2aa198;">"$@"</span> --run <span style="color: #2aa198;">"\"$direnv\" dump bash"</span> &gt; <span style="color: #2aa198;">"$cache"</span>
+<span class="linenr">21: </span>        <span style="color: #6c71c4;">update_drv</span>=<span style="color: #d33682; font-weight: bold;">1</span>
+<span class="linenr">22: </span>    <span style="color: #859900;">else</span>
+<span class="linenr">23: </span>        log_status using cached derivation
+<span class="linenr">24: </span>    <span style="color: #859900;">fi</span>
+<span class="linenr">25: </span>    <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">term_backup</span>=$<span style="color: #6c71c4;">TERM</span> <span style="color: #6c71c4;">path_backup</span>=$<span style="color: #6c71c4;">PATH</span>
+<span class="linenr">26: </span>    <span style="color: #859900;">if</span> <span style="color: #d33682;">[</span> -n $<span style="color: #859900;">{</span><span style="color: #6c71c4;">TMPDIR</span>+x<span style="color: #859900;">}</span> <span style="color: #d33682;">]</span>; <span style="color: #859900;">then</span>
+<span class="linenr">27: </span>        <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">tmp_backup</span>=$<span style="color: #6c71c4;">TMPDIR</span>
+<span class="linenr">28: </span>    <span style="color: #859900;">fi</span>
+<span class="linenr">29: </span>
+<span class="linenr">30: </span>    <span style="color: #268bd2;">eval</span> <span style="color: #2aa198;">"$(&lt; $cache)"</span>
+<span class="linenr">31: </span>    <span style="color: #268bd2;">export</span> <span style="color: #6c71c4;">PATH</span>=$<span style="color: #6c71c4;">PATH</span>:$<span style="color: #6c71c4;">path_backup</span> <span style="color: #6c71c4;">TERM</span>=$<span style="color: #6c71c4;">term_backup</span> <span style="color: #6c71c4;">TMPDIR</span>=$<span style="color: #6c71c4;">tmp_backup</span>
+<span class="linenr">32: </span>    <span style="color: #859900;">if</span> <span style="color: #d33682;">[</span> -n $<span style="color: #859900;">{</span><span style="color: #6c71c4;">tmp_backup</span>+x<span style="color: #859900;">}</span> <span style="color: #d33682;">]</span>; <span style="color: #859900;">then</span>
+<span class="linenr">33: </span>        <span style="color: #268bd2;">export</span> <span style="color: #6c71c4;">TMPDIR</span>=$<span style="color: #d33682;">{</span><span style="color: #6c71c4;">tmp_backup</span><span style="color: #d33682;">}</span>
+<span class="linenr">34: </span>    <span style="color: #859900;">else</span>
+<span class="linenr">35: </span>        <span style="color: #268bd2;">unset</span> TMPDIR
+<span class="linenr">36: </span>    <span style="color: #859900;">fi</span>
+<span class="linenr">37: </span>
+<span class="linenr">38: </span>    <span style="color: #859900;">if</span> <span style="color: #d33682;">[</span> <span style="color: #2aa198;">"$out"</span> <span style="color: #d33682;">]</span> &amp;&amp; <span style="color: #d33682;">(</span><span style="color: #859900;">(</span> $<span style="color: #6c71c4;">update_drv</span> <span style="color: #859900;">)</span><span style="color: #d33682;">)</span>; <span style="color: #859900;">then</span>
+<span class="linenr">39: </span>        <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">drv_link</span>=<span style="color: #2aa198;">".direnv/shell.drv"</span>
+<span class="linenr">40: </span>        <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">drv_dep_link</span>=<span style="color: #2aa198;">".direnv/shell.dep"</span>
+<span class="linenr">41: </span>        <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">drv</span>=<span style="color: #2aa198;">"$(nix show-derivation $out | grep -E -o -m1 '/nix/store/.*.drv')"</span>
+<span class="linenr">42: </span>        <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">stripped_pwd</span>=$<span style="color: #d33682;">{</span><span style="color: #6c71c4;">PWD</span>/<span style="color: #2aa198;">\/</span>/<span style="color: #d33682;">}</span>
+<span class="linenr">43: </span>        <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">escaped_pwd</span>=$<span style="color: #d33682;">{</span><span style="color: #6c71c4;">stripped_pwd</span>//-/--<span style="color: #d33682;">}</span>
+<span class="linenr">44: </span>        <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">escaped_pwd</span>=$<span style="color: #d33682;">{</span><span style="color: #6c71c4;">escaped_pwd</span>//<span style="color: #2aa198;">\/</span>/-<span style="color: #d33682;">}</span>
+<span class="linenr">45: </span>        ln -fs <span style="color: #2aa198;">"$drv"</span> <span style="color: #2aa198;">"$drv_link"</span>
+<span class="linenr">46: </span>        ln -fs <span style="color: #2aa198;">"$PWD/$drv_link"</span> <span style="color: #2aa198;">"/nix/var/nix/gcroots/per-user/$LOGNAME/$escaped_pwd"</span>
+<span class="linenr">47: </span>        rm -f $<span style="color: #d33682;">{</span><span style="color: #6c71c4;">drv_dep_link</span><span style="color: #d33682;">}</span>*
+<span class="linenr">48: </span>        nix-store --indirect --add-root $<span style="color: #6c71c4;">drv_dep_link</span> --realise $<span style="color: #d33682;">(</span>nix-store --query --references $<span style="color: #6c71c4;">drv_link</span><span style="color: #d33682;">)</span>
+<span class="linenr">49: </span>        log_status renewed cache and derivation link
+<span class="linenr">50: </span>    <span style="color: #859900;">fi</span>
+<span class="linenr">51: </span>
+<span class="linenr">52: </span>    <span style="color: #859900;">if</span> <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> $<span style="color: #6c71c4;">#</span> = <span style="color: #d33682; font-weight: bold;">0</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span>; <span style="color: #859900;">then</span>
+<span class="linenr">53: </span>        watch_file default.nix
+<span class="linenr">54: </span>        watch_file shell.nix
+<span class="linenr">55: </span>    <span style="color: #859900;">fi</span>
+<span class="linenr">56: </span><span style="color: #268bd2;">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org331abb9" class="outline-2">
+<h2 id="org331abb9">配置emacs(spacemacs)</h2>
+<div class="outline-text-2" id="text-org331abb9">
+<p>
+我使用的是 <a href="https://github.com/syl20bnr/spacemacs/">spacemacs</a> 的 develop 分支。
+</p>
+
+<p>
+为了是emacs和direnv能够很好结合可以额外增加包，并在 <code>.spacemacs</code> 文件中 <code>dotspacemacs/user-config</code> 函数中添加配置。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span class="linenr">1: </span><span style="color: #405A61;">;; </span><span style="color: #405A61;">direnv-mode</span>
+<span class="linenr">2: </span><span style="color: #268bd2;">(</span><span style="color: #859900;">use-package</span> <span style="color: #d33682;">direnv</span>
+<span class="linenr">3: </span>  <span style="color: #268bd2;">:config</span>
+<span class="linenr">4: </span>  <span style="color: #d33682;">(</span>direnv-mode<span style="color: #d33682;">)</span><span style="color: #268bd2;">)</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="https://user-images.githubusercontent.com/1257453/68374271-7886ff00-013c-11ea-92aa-fc27ff89f413.png" alt="68374271-7886ff00-013c-11ea-92aa-fc27ff89f413.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org82c3022" class="outline-2">
+<h2 id="org82c3022">仓库地址</h2>
+<div class="outline-text-2" id="text-org82c3022">
+<p>
+<a href="https://github.com/shanexu/helloworld">https://github.com/shanexu/helloworld</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgcd2778f" class="outline-2">
+<h2 id="orgcd2778f">参考文档</h2>
+<div class="outline-text-2" id="text-orgcd2778f">
+<p>
+<a href="https://nixos.org/nix/manual">https://nixos.org/nix/manual</a>
+</p>
+
+<p>
+<a href="https://github.com/Gabriel439/haskell-nix">https://github.com/Gabriel439/haskell-nix</a>
+</p>
+
+<p>
+<a href="https://github.com/fghibellini/nix-haskell-monorepo">https://github.com/fghibellini/nix-haskell-monorepo</a>
+</p>
+
+<p>
+<a href="https://github.com/haskell/haskell-ide-engine">https://github.com/haskell/haskell-ide-engine</a>
+</p>
+
+<p>
+<a href="https://github.com/Infinisil/all-hies">https://github.com/Infinisil/all-hies</a>
+</p>
+
+<p>
+<a href="https://github.com/NixOS/nix/issues/2208#issuecomment-412262911">https://github.com/NixOS/nix/issues/2208#issuecomment-412262911</a>
+</p>
+
+<p>
+<a href="https://github.com/direnv/direnv/wiki/Nix">https://github.com/direnv/direnv/wiki/Nix</a>
+</p>
+
+<p>
+<a href="https://github.com/wbolster/emacs-direnv">https://github.com/wbolster/emacs-direnv</a>
+</p>
+
+<p>
+<a href="https://docs.haskellstack.org/en/stable/README/">https://docs.haskellstack.org/en/stable/README/</a>
+</p>
+
+<p>
+<a href="https://www.haskell.org/cabal/users-guide/index.html">https://www.haskell.org/cabal/users-guide/index.html</a>
+</p>
+
+<p>
+<a href="https://www.sam.today/blog/environments-with-nix-shell-learning-nix-pt-1/">https://www.sam.today/blog/environments-with-nix-shell-learning-nix-pt-1/</a>
+</p>
+
+<p>
+<a href="https://www.youtube.com/watch?v=61MuMY9XFNo">Reading Nix Expression Zimbatm</a>
+</p>
+</div>
+</div>
+
+
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2019-11-07</span>
+        <span title="last modification date" class="post-info">2019-11-07</span>
+        <span title="tags" class="post-info"><a href="/tags/haskell/">haskell</a>, <a href="/tags/nix/">nix</a></span>
+        <span title="author" class="post-info">shanexu</span>
+      </div>
+      <section>
+        <h2 class="chapter">Comments</h2>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2019/11/07/learning-haskell-with-nix-and-emacs";
+          var disqus_url = "http://shanexu.io/blog/2019/11/07/learning-haskell-with-nix-and-emacs";
+          var disqus_shortname = 'shanexu';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </section>
+      <script src="/media/js/main.js"></script>
+        <script type="text/javascript">
+         var _gaq = _gaq || [];
+         _gaq.push(['_setAccount', 'UA-74684473-1']);
+         _gaq.push(['_trackPageview']);
+         (function() {
+           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+         })();
+        </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711@gmail.com">shanexu</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>
