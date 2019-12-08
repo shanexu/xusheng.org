@@ -1,0 +1,18 @@
+#+TITLE:       Moving from Homebrew to Nix Package Manager
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2019-12-08 Sun
+#+URI:         /blog/%y/%m/%d/moving-from-homebrew-to-nix-package-manager
+#+KEYWORDS:    nix, homebrew
+#+TAGS:        nix
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: Moving from Homebrew to Nix Package Manager
+
+* 前言
+
+
+
+* 参考文档
+
+[[https://www.softinio.com/post/moving-from-homebrew-to-nix-package-manager/]]
