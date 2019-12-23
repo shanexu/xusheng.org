@@ -11,7 +11,490 @@
 
 * 前言
 
+2012年我入手了人生第一台MacBook Pro，也正式开启了macOS(以前是 os x)之旅。在很长一段时间里我并不习惯macOS的应用安装方式。应用下载完后，打开dmg，然后拖放到 =/Applications= 目录下。以及macOS根本就不存在包管理器这种东西，我甚至在MacBook上直接安装了Archlinux。出于某些什么的原因，我又重新返回到了macOS，然后在用了一两个月的MacPorts之后转投了Homebrew。然后在最近重拾了haskell的学习进程之后，又开始折腾起了nix。
 
+* 安装nix
+
+  因为 =macOS catalin= 的关系，安装 nix 的过程有些许曲折，可以参考我之前的文章 [[https://xusheng.org/blog/2019/11/07/learning-haskell-with-nix-and-emacs/][Learning Haskell with nix and Emacs]] 。
+
+* 卸载Homebrew安装的包
+  
+  列出已经安装的包
+  #+begin_src shell-script
+  brew list
+  #+end_src
+
+  看看都安装了些什么软件包，如果有必要就在 nix 里面重新安装一遍。
+  
+  #+begin_src shell-script
+  brew uninstall `brew list`
+  #+end_src
+
+* 安装nix包
+  
+  #+begin_src shell-script
+  nix-env -i coreutils
+  #+end_src
+
+* 问题
+  
+** coreutils包中的命令覆盖了macOS本身的命令
+   
+   coreutils包中的命令有好几个与macOS命令冲突，并且其行为也不一样，例如 =df= 命令
+   
+   coreutils的df
+   #+begin_src text
+   $ df -h
+   Filesystem      Size  Used Avail Use% Mounted on
+   /dev/disk1s1    932G   11G  695G   2% /
+   /dev/disk1s5    932G  4.1G  695G   1% /private/var/vm
+   /dev/disk1s6    932G   17G  695G   3% /nix
+   #+end_src
+   
+   macOS 的 df
+   #+begin_src text
+   $ df -h
+   Filesystem      Size   Used  Avail Capacity iused      ifree %iused  Mounted on
+   /dev/disk1s1   932Gi   10Gi  694Gi     2%  484150 9767494010    0%   /
+   devfs          205Ki  205Ki    0Bi   100%     712          0  100%   /dev
+   /dev/disk1s2   932Gi  206Gi  694Gi    23% 2334824 9765643336    0%   /System/Volumes/Data
+   /dev/disk1s5   932Gi  4.0Gi  694Gi     1%       4 9767978156    0%   /private/var/vm
+   map auto_home    0Bi    0Bi    0Bi   100%       0          0  100%   /System/Volumes/Data/home
+   /dev/disk1s6   932Gi   16Gi  694Gi     3%  436832 9767541328    0%   /nix
+   #+end_src
+
+   于是参考homebrew的coreutils自己改了下 =coreutils= nix表达式：
+   
+   #+begin_src nix -n
+   { stdenv, lib, buildPackages
+   , autoreconfHook, bison, texinfo, fetchurl, perl, xz, libiconv, gmp ? null
+   , aclSupport ? stdenv.isLinux, acl ? null
+   , attrSupport ? stdenv.isLinux, attr ? null
+   , selinuxSupport? false, libselinux ? null, libsepol ? null
+   # No openssl in default version, so openssl-induced rebuilds aren't too big.
+   # It makes *sum functions significantly faster.
+   , minimal ? true, withOpenssl ? !minimal, openssl ? null
+   , withPrefix ? false
+   , singleBinary ? "symlinks" # you can also pass "shebangs" or false
+   , unprefixNoConflict ? false
+   }:
+
+   assert aclSupport -> acl != null;
+   assert selinuxSupport -> libselinux != null && libsepol != null;
+
+   with lib;
+
+   stdenv.mkDerivation rec {
+     pname = "coreutils";
+     version = "8.31";
+
+     src = fetchurl {
+       url = "mirror://gnu/${pname}/${pname}-${version}.tar.xz";
+       sha256 = "1zg9m79x1i2nifj4kb0waf9x3i5h6ydkypkjnbsb9rnwis8rqypz";
+     };
+
+     patches = optional stdenv.hostPlatform.isCygwin ./coreutils-8.23-4.cygwin.patch
+            # Fix failing test with musl. See https://lists.gnu.org/r/coreutils/2019-05/msg00031.html
+            # To be removed in coreutils-8.32.
+            ++ optional stdenv.hostPlatform.isMusl ./avoid-false-positive-in-date-debug-test.patch
+            # Fix compilation in musl-cross environments. To be removed in coreutils-8.32.
+            ++ optional stdenv.hostPlatform.isMusl ./coreutils-8.31-musl-cross.patch;
+
+     postPatch = ''
+       # The test tends to fail on btrfs,f2fs and maybe other unusual filesystems.
+       sed '2i echo Skipping dd sparse test && exit 77' -i ./tests/dd/sparse.sh
+       sed '2i echo Skipping du threshold test && exit 77' -i ./tests/du/threshold.sh
+       sed '2i echo Skipping cp sparse test && exit 77' -i ./tests/cp/sparse.sh
+       sed '2i echo Skipping rm deep-2 test && exit 77' -i ./tests/rm/deep-2.sh
+       sed '2i echo Skipping du long-from-unreadable test && exit 77' -i ./tests/du/long-from-unreadable.sh
+
+       # Some target platforms, especially when building inside a container have
+       # issues with the inotify test.
+       sed '2i echo Skipping tail inotify dir recreate test && exit 77' -i ./tests/tail-2/inotify-dir-recreate.sh
+
+       # sandbox does not allow setgid
+       sed '2i echo Skipping chmod setgid test && exit 77' -i ./tests/chmod/setgid.sh
+       substituteInPlace ./tests/install/install-C.sh \
+         --replace 'mode3=2755' 'mode3=1755'
+
+       sed '2i print "Skipping env -S test";  exit 77;' -i ./tests/misc/env-S.pl
+
+       # these tests fail in the unprivileged nix sandbox (without nix-daemon) as we break posix assumptions
+       for f in ./tests/chgrp/{basic.sh,recurse.sh,default-no-deref.sh,no-x.sh,posix-H.sh}; do
+         sed '2i echo Skipping chgrp && exit 77' -i "$f"
+       done
+       for f in gnulib-tests/{test-chown.c,test-fchownat.c,test-lchown.c}; do
+         echo "int main() { return 77; }" > "$f"
+       done
+     '' + optionalString (stdenv.hostPlatform.libc == "musl") (lib.concatStringsSep "\n" [
+       ''
+         echo "int main() { return 77; }" > gnulib-tests/test-parse-datetime.c
+         echo "int main() { return 77; }" > gnulib-tests/test-getlogin.c
+       ''
+     ]);
+
+     outputs = [ "out" "info" ];
+
+     nativeBuildInputs = [ perl xz.bin ]
+       ++ optionals stdenv.hostPlatform.isCygwin [ autoreconfHook texinfo ]   # due to patch
+       ++ optionals stdenv.hostPlatform.isMusl [ autoreconfHook bison ];   # due to patch
+     configureFlags = [ "--with-packager=https://NixOS.org" ]
+       ++ optional (singleBinary != false)
+         ("--enable-single-binary" + optionalString (isString singleBinary) "=${singleBinary}")
+       ++ optional withOpenssl "--with-openssl"
+       ++ optional stdenv.hostPlatform.isSunOS "ac_cv_func_inotify_init=no"
+       ++ optional withPrefix "--program-prefix=g"
+       ++ optionals (stdenv.hostPlatform != stdenv.buildPlatform && stdenv.hostPlatform.libc == "glibc") [
+         # TODO(19b98110126fde7cbb1127af7e3fe1568eacad3d): Needed for fstatfs() I
+         # don't know why it is not properly detected cross building with glibc.
+         "fu_cv_sys_stat_statfs2_bsize=yes"
+       ];
+
+
+     buildInputs = [ gmp ]
+       ++ optional aclSupport acl
+       ++ optional attrSupport attr
+       ++ optional withOpenssl openssl
+       ++ optionals selinuxSupport [ libselinux libsepol ]
+          # TODO(@Ericson2314): Investigate whether Darwin could benefit too
+       ++ optional (stdenv.hostPlatform != stdenv.buildPlatform && stdenv.hostPlatform.libc != "glibc") libiconv;
+
+     # The tests are known broken on Cygwin
+     # (http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/19025),
+     # Darwin (http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/19351),
+     # and {Open,Free}BSD.
+     # With non-standard storeDir: https://github.com/NixOS/nix/issues/512
+     doCheck = stdenv.hostPlatform == stdenv.buildPlatform
+       && (stdenv.hostPlatform.libc == "glibc" || stdenv.hostPlatform.isMusl)
+       && builtins.storeDir == "/nix/store";
+
+     # Prevents attempts of running 'help2man' on cross-built binaries.
+     PERL = if stdenv.hostPlatform == stdenv.buildPlatform then null else "missing";
+
+     # Saw random failures like ‘help2man: can't get '--help' info from
+     # man/sha512sum.td/sha512sum’.
+     enableParallelBuilding = false;
+
+     NIX_LDFLAGS = optionalString selinuxSupport "-lsepol";
+     FORCE_UNSAFE_CONFIGURE = optionalString stdenv.hostPlatform.isSunOS "1";
+
+     # Works around a bug with 8.26:
+     # Makefile:3440: *** Recursive variable 'INSTALL' references itself (eventually).  Stop.
+     preInstall = optionalString (stdenv.hostPlatform != stdenv.buildPlatform) ''
+       sed -i Makefile -e 's|^INSTALL =.*|INSTALL = ${buildPackages.coreutils}/bin/install -c|'
+     '';
+
+     postInstall = optionalString (stdenv.hostPlatform != stdenv.buildPlatform && !minimal) ''
+       rm $out/share/man/man1/*
+       cp ${buildPackages.coreutils-full}/share/man/man1/* $out/share/man/man1
+     ''
+     # du: 8.7 M locale + 0.4 M man pages
+     + optionalString minimal ''
+       rm -r "$out/share"
+     ''
+     + optionalString (stdenv.isDarwin && withPrefix && unprefixNoConflict) ''
+       cd $out/bin
+       ${concatStringsSep "\n" (builtins.map (x: "ln -s g${x} ${x}") (splitString " " "b2sum base32 chcon hostid md5sum nproc numfmt pinky ptx realpath runcon sha1sum sha224sum sha256sum sha384sum sha512sum shred shuf stdbuf tac timeout truncate"))}
+     '';
+
+     meta = {
+       homepage = https://www.gnu.org/software/coreutils/;
+       description = "The basic file, shell and text manipulation utilities of the GNU operating system";
+
+       longDescription = ''
+         The GNU Core Utilities are the basic file, shell and text
+         manipulation utilities of the GNU operating system.  These are
+         the core utilities which are expected to exist on every
+         operating system.
+       '';
+
+       license = licenses.gpl3Plus;
+
+       platforms = platforms.unix ++ platforms.windows;
+
+       priority = 10;
+
+       maintainers = [ maintainers.eelco ];
+     };
+
+   } // optionalAttrs stdenv.hostPlatform.isMusl {
+     # Work around a bogus warning in conjunction with musl.
+     NIX_CFLAGS_COMPILE = "-Wno-error";
+   }
+   #+end_src
+
+** emacs-libvterm 编译问题
+   
+   [[https://github.com/akermu/emacs-libvterm][emacs-libvterm]] 前段时间开始使用这个包，可以说这个包是目前为止，我用过的在emacs下表现最好的终端模拟器了。然后在换成nix之后遇到了些问题。
+   
+*** glibtool 命令找不到
+    emacs-libvterm在macOS下，回去寻找glibtool这个命令，而glibtool这个命令实际上就是libtool命令加了前缀 =g= 。nix里面对应的包名是libtool。需要修改nix增加前缀。
+
+*** libtool 静态编译问题
+    nix下的包默认都是非静态编译，而emacs-libvterm又需要静态编译。这里又要改glibtool的nix表达式。
+
+*** 综上，最后修改完的 nix 文件
+
+    #+begin_src nix -n
+    { stdenv, fetchurl, m4, perl, help2man
+    , withPrefix ? false
+    , static ? false
+    }:
+
+    stdenv.mkDerivation rec {
+      pname = "libtool";
+      version = "2.4.6";
+
+      src = fetchurl {
+        url = "mirror://gnu/libtool/${pname}-${version}.tar.gz";
+        sha256 = "1qq61k6lp1fp75xs398yzi6wvbx232l7xbyn3p13cnh27mflvgg3";
+      };
+
+      outputs = [ "out" "lib" ];
+
+      nativeBuildInputs = [ perl help2man m4 ];
+      propagatedBuildInputs = [ m4 ];
+      configureFlags = if withPrefix then [ "--program-prefix=g" ] else [];
+      dontDisableStatic = static;
+
+      # Don't fixup "#! /bin/sh" in Libtool, otherwise it will use the
+      # "fixed" path in generated files!
+      dontPatchShebangs = true;
+
+      # XXX: The GNU ld wrapper does all sorts of nasty things wrt. RPATH, which
+      # leads to the failure of a number of tests.
+      doCheck = false;
+      doInstallCheck = false;
+
+      enableParallelBuilding = true;
+
+      # Don't run the native `strip' when cross-compiling.  This breaks at least
+      # with `.a' files for MinGW.
+      dontStrip = stdenv.hostPlatform != stdenv.buildPlatform;
+
+      meta = with stdenv.lib; {
+        description = "GNU Libtool, a generic library support script";
+        longDescription = ''
+          GNU libtool is a generic library support script.  Libtool hides
+          the complexity of using shared libraries behind a consistent,
+          portable interface.
+
+          To use libtool, add the new generic library building commands to
+          your Makefile, Makefile.in, or Makefile.am.  See the
+          documentation for details.
+        '';
+        homepage = https://www.gnu.org/software/libtool/;
+        license = licenses.gpl2Plus;
+        maintainers = [ ];
+        platforms = platforms.unix;
+      };
+    }
+
+    #+end_src
+
+** jenv 包不存在问题
+   
+   jenv包是为了解决java环境问题的。而nix本身就是为了解决开发环境问题的“终极”方案。理论上根本就不需要jenv这样的工具。但是所有开发都使用 =nix-shell= 去定制开发环境，又稍显太重。所以有时候还是需要jenv这样的工具的。于是自己写个 nix表达式。
+   
+   #+begin_src nix -n
+   { stdenv, fetchurl }:
+
+   stdenv.mkDerivation rec {
+     version = "0.5.2";
+     pname = "jenv";
+     src = fetchurl {
+       url = "https://github.com/jenv/jenv/archive/${version}.tar.gz";
+       sha256 = "4cdce828bfaeb6561733bab641ed2912107a8bc24758a17f2387ee78403afb9a";
+     };
+     buildPhase =
+       ''
+       outdir=$out/libexec
+       mkdir -p $outdir
+       cp -r * $outdir
+       '';
+     installPhase =
+       ''
+       mkdir $out/bin
+       ln -s $outdir/libexec/jenv $out/bin/jenv;
+       '';
+     dontFixup = true;
+     meta = with stdenv.lib; {
+       description = "jEnv is an updated fork of jenv, a beloved Java environment manager adapted from rbenv.";
+       longDescription =
+         ''This is an updated fork of jenv, a beloved Java environment manager adapted from rbenv.
+
+           jenv gives you a few critical affordances for using java on development machines:
+
+             ,* It lets you switch between java versions. This is useful when developing Android applications, which generally require Java 8 for its tools, versus server applications, which use later versions like Java 11.
+             ,* It sets JAVA_HOME inside your shell, in a way that can be set globally, local to the current working directory or per shell.
+
+           However, this project does not:
+
+             ,* Install java for you. Use your platform appropriate package manager to install java. On macOS, brew is recommended.
+             ,* This document will show you how to install jenv, review its most common commands, show example workflows and identify known issues.
+         '';
+       homepage = http://www.jenv.be;
+       license = licenses.mit;
+       platforms = platforms.all;
+       maintainers = [ ];
+     };
+   }
+   #+end_src
+
+** mit-scheme 安装问题
+
+   nix的channel里有mit-scheme包，但是不支持darwin平台。使用mit-scheme-c的包来安装的话，又有编译问题。nix编译darwin包用的stdenv中clang的版本比较低。
+   
+   #+begin_src text
+   $ nix-shell --pure -p stdenv --command "clang --version"
+   clang version 7.1.0 (tags/RELEASE_710/final)
+   Target: x86_64-apple-darwin19.2.0
+   Thread model: posix
+   InstalledDir: /nix/store/jdmg20b8rgvs1s4fxb585lffz07vv52a-clang-7.1.0/bin
+   #+end_src
+   
+*** 解决clang版本低问题，可以直接使用xcode command line tools编译
+    
+    #+begin_src nix -n
+    { stdenv, requireFile, lib }:
+
+    let requireCLTool = version: sha256:
+      let
+        version' = lib.replaceStrings ["."] ["_"] version;
+        dmg = "Command_Line_Tools_for_Xcode_${version'}.dmg";
+        app = requireFile rec {
+          name = "CommandLineTools";
+          url = "https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_${version'}/Command_Line_Tools_for_Xcode_${version'}.dmg";
+          hashMode = "recursive";
+          inherit sha256;
+          message  = ''
+            Unfortunately, we cannot download ${name} automatically.
+            Please go to ${url}
+            to download it yourself, and add it to the Nix store by running the following commands.
+            Note: download (~ 5GB), extraction and storing of Xcode will take a while
+
+            nix-store --add-fixed --recursive sha256 /Library/Developer/CommandLineTools
+          '';
+        };
+        meta = with stdenv.lib; {
+          homepage = https://developer.apple.com/downloads/;
+          description = "Apple's Command Line Tools for Xcode";
+          license = licenses.unfree;
+          platforms = platforms.darwin;
+        };
+      in app.overrideAttrs (oldAttrs : oldAttrs // { inherit meta; });
+
+    in lib.makeExtensible (self: {
+      Command_Line_Tools_for_Xcode_11_2 = requireCLTool "11.2" "76ec9816dc26955c0d3d05cbd39b9500d18842ddd33a448c98fb896f1a917dc5";
+      Command_Line_Tools_for_Xcode = self."Command_Line_Tools_for_Xcode_${lib.replaceStrings ["."] ["_"] (if stdenv.targetPlatform.useiOSPrebuilt then stdenv.targetPlatform.xcodeVer else "11.2")}";
+    })
+    #+end_src
+
+*** 修改 mit-scheme nix表达式，使用xcode command line tools编译
+    
+    #+begin_src nix -n
+    { pkgs, stdenvNoCC, fetchurl, makeWrapper, gnum4, texinfo, texLive, automake, lib, macosVersion, xcodeVersion }:
+
+    let
+      version = "9.2";
+      xcode = pkgs.darwin."Command_Line_Tools_for_Xcode_${lib.replaceStrings ["."] ["_"] xcodeVersion}";
+    in
+    stdenvNoCC.mkDerivation {
+      name = "mit-scheme-macos${lib.replaceStrings ["."] ["_"] macosVersion}-xcode${lib.replaceStrings ["."] ["_"] xcodeVersion}-${version}";
+
+      # MIT/GNU Scheme is not bootstrappable, so it's recommended to compile from
+      # the platform-specific tarballs, which contain pre-built binaries.  It
+      # leads to more efficient code than when building the tarball that contains
+      # generated C code instead of those binaries.
+      src = fetchurl {
+          url = "mirror://gnu/mit-scheme/stable.pkg/${version}/mit-scheme-c-${version}.tar.gz";
+          sha256 = "0w5ib5vsidihb4hb6fma3sp596ykr8izagm57axvgd6lqzwicsjg";
+        };
+
+      buildInputs = [ xcode ];
+
+      configurePhase = "(cd doc && ./configure)";
+
+      buildPhase =
+        '' export PATH=${xcode}/usr/bin:$PATH
+           export CPATH=${xcode}/SDKs/MacOSX${macosVersion}.sdk/usr/include
+
+           cd src
+           for i in 6001/edextra.scm \
+                    6001/floppy.scm \
+                    compiler/etc/disload.scm \
+                    edwin/techinfo.scm \
+                    edwin/unix.scm \
+                    swat/c/tk3.2-custom/Makefile \
+                    swat/c/tk3.2-custom/tcl/Makefile \
+                    swat/scheme/other/btest.scm \
+                    microcode/configure
+           do
+               sed -i "s~/usr/local~$out~g" $i
+           done
+           sed -i 's/run_configure/run_configure --without-x --with-macosx-version=10.15/g' ./etc/make-liarc.sh
+           ./etc/make-liarc.sh --prefix=$out
+
+           cd ../doc
+
+           # Provide a `texinfo.tex'.
+           export TEXINPUTS="$(echo ${automake}/share/automake-*)"
+           echo "\$TEXINPUTS is \`$TEXINPUTS'"
+           make
+
+           cd ..
+        '';
+
+      installPhase =
+        '' make prefix=$out install -C src
+           make prefix=$out install -C doc
+        '';
+
+      fixupPhase =
+        '' wrapProgram $out/bin/mit-scheme-c --set MITSCHEME_LIBRARY_PATH \
+             $out/lib/mit-scheme-c
+        '';
+
+      nativeBuildInputs = [ makeWrapper gnum4 texinfo texLive automake ];
+
+      # XXX: The `check' target doesn't exist.
+      doCheck = false;
+
+      meta = with stdenvNoCC.lib; {
+        description = "MIT/GNU Scheme, a native code Scheme compiler";
+
+        longDescription =
+          '' MIT/GNU Scheme is an implementation of the Scheme programming
+             language, providing an interpreter, compiler, source-code debugger,
+             integrated Emacs-like editor, and a large runtime library.  MIT/GNU
+             Scheme is best suited to programming large applications with a rapid
+             development cycle.
+          '';
+
+        homepage = https://www.gnu.org/software/mit-scheme/;
+
+        license = licenses.gpl2Plus;
+
+        maintainers = [ ];
+
+        # Build fails on Cygwin and Darwin:
+        # <http://article.gmane.org/gmane.lisp.scheme.mit-scheme.devel/489>.
+        platforms = platforms.darwin;
+      };
+    }
+    #+end_src
+
+
+** 我的自定义nix-channels
+
+   [[https://github.com/shanexu/nixpkgs-channels]]
+
+* 后记
+  
+  nix是个好工具，对于构建应用的开发环境来说是一个杀手级的工具，但是对于macOS这种系统的日常使用来说还是有些不方便。最后我给自己定下了一些使用策略。
+  1. 使用homebrew cask安装桌面应用，比如firefox、chrome等。
+  2. 使用homebrew安装日常命令行工具。
+  3. 对一些依赖比较复杂的应用，使用nix构造开发环境
 
 * 参考文档
 
