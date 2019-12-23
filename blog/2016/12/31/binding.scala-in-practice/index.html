@@ -24,6 +24,7 @@
     <div class="node nav">
       <ul>
           <li><a href="/blog/" id="Blog_tab">Blog</a></li>
+          <li><a href="/media/" id="Media_tab">Media</a></li>
         <li><a href="/tags/">Tags</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="https://github.com/shanexu">GitHub</a></li>
@@ -43,16 +44,16 @@
 
 <div class="org-src-container">
 <pre class="src src-shell">mkdir simple-scala.js-Binding.scala
-<span style="color: #268bd2;">cd</span> simple-scala.js-Binding.scala
-mkdir -p js/src/<span style="color: #268bd2;">{</span>main,test<span style="color: #268bd2;">}</span>/scala
+<span style="color: #81a2be;">cd</span> simple-scala.js-Binding.scala
+mkdir -p js/src/<span style="color: #b294bb;">{</span>main,test<span style="color: #b294bb;">}</span>/scala
 mkdir project
-<span style="color: #268bd2;">echo</span> sbt.version=<span style="color: #d33682; font-weight: bold;">0.13.13</span> &gt; project/build.properties
-<span style="color: #268bd2;">echo</span> <span style="color: #2aa198;">'resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/"</span>
+<span style="color: #81a2be;">echo</span> sbt.version=<span style="color: #de935f; font-weight: bold;">0.13.13</span> &gt; project/build.properties
+<span style="color: #81a2be;">echo</span> <span style="color: #b5bd68;">'resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/"</span>
 
-<span style="color: #2aa198;">addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.14")</span>
+<span style="color: #b5bd68;">addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.14")</span>
 
-<span style="color: #2aa198;">addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.3")</span>
-<span style="color: #2aa198;">'</span> &gt; project/plugin.sbt
+<span style="color: #b5bd68;">addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.3")</span>
+<span style="color: #b5bd68;">'</span> &gt; project/plugin.sbt
 touch build.sbt
 </pre>
 </div>
@@ -62,31 +63,31 @@ touch build.sbt
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900;">val</span> <span style="color: #6c71c4;">commonSettings</span> <span style="color: #859900;">=</span> <span style="color: #d33682;">Seq</span><span style="color: #268bd2;">(</span>
-<span class="linenr"> 2: </span>  version := <span style="color: #2aa198;">"0.0.1"</span>,
-<span class="linenr"> 3: </span>  scalaVersion := <span style="color: #2aa198;">"2.11.8"</span>,
-<span class="linenr"> 4: </span>  addCompilerPlugin<span style="color: #d33682;">(</span><span style="color: #2aa198;">"org.scalamacros"</span> % <span style="color: #2aa198;">"paradise"</span> % <span style="color: #2aa198;">"2.1.0"</span> cross <span style="color: #d33682;">CrossVersion</span>.full<span style="color: #d33682;">)</span>,
-<span class="linenr"> 5: </span>  scalacOptions ++= <span style="color: #d33682;">Seq</span><span style="color: #d33682;">(</span><span style="color: #2aa198;">"-feature"</span>, <span style="color: #2aa198;">"-language:implicitConversions"</span><span style="color: #d33682;">)</span>
-<span class="linenr"> 6: </span><span style="color: #268bd2;">)</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">commonSettings</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">Seq</span><span style="color: #b294bb;">(</span>
+<span class="linenr"> 2: </span>  version := <span style="color: #b5bd68;">"0.0.1"</span>,
+<span class="linenr"> 3: </span>  scalaVersion := <span style="color: #b5bd68;">"2.11.8"</span>,
+<span class="linenr"> 4: </span>  addCompilerPlugin<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"org.scalamacros"</span> % <span style="color: #b5bd68;">"paradise"</span> % <span style="color: #b5bd68;">"2.1.0"</span> cross <span style="color: #de935f;">CrossVersion</span>.full<span style="color: #81a2be;">)</span>,
+<span class="linenr"> 5: </span>  scalacOptions ++= <span style="color: #de935f;">Seq</span><span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"-feature"</span>, <span style="color: #b5bd68;">"-language:implicitConversions"</span><span style="color: #81a2be;">)</span>
+<span class="linenr"> 6: </span><span style="color: #b294bb;">)</span>
 <span class="linenr"> 7: </span>
-<span class="linenr"> 8: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900;">val</span> <span style="color: #6c71c4;">BindingScalaVersion</span> <span style="color: #859900;">=</span> <span style="color: #2aa198;">"10.0.1"</span>
+<span class="linenr"> 8: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">BindingScalaVersion</span> <span style="color: #b294bb;">=</span> <span style="color: #b5bd68;">"10.0.1"</span>
 <span class="linenr"> 9: </span>
-<span class="linenr">10: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900;">val</span> <span style="color: #6c71c4;">root</span> <span style="color: #859900;">=</span> <span style="color: #268bd2;">(</span>project in file<span style="color: #d33682;">(</span><span style="color: #2aa198;">"."</span><span style="color: #d33682;">)</span><span style="color: #268bd2;">)</span>.
-<span class="linenr">11: </span>  settings<span style="color: #268bd2;">(</span>commonSettings<span style="color: #859900;">:</span> <span style="color: #859900;">_</span>*<span style="color: #268bd2;">)</span>.
-<span class="linenr">12: </span>  aggregate<span style="color: #268bd2;">(</span>js<span style="color: #268bd2;">)</span>
+<span class="linenr">10: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">root</span> <span style="color: #b294bb;">=</span> <span style="color: #b294bb;">(</span>project in file<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"."</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>.
+<span class="linenr">11: </span>  settings<span style="color: #b294bb;">(</span>commonSettings<span style="color: #b294bb;">:</span> <span style="color: #b294bb;">_</span>*<span style="color: #b294bb;">)</span>.
+<span class="linenr">12: </span>  aggregate<span style="color: #b294bb;">(</span>js<span style="color: #b294bb;">)</span>
 <span class="linenr">13: </span>
-<span class="linenr">14: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900;">val</span> <span style="color: #6c71c4;">js</span> <span style="color: #859900;">=</span> <span style="color: #268bd2;">(</span>project in file<span style="color: #d33682;">(</span><span style="color: #2aa198;">"js"</span><span style="color: #d33682;">)</span><span style="color: #268bd2;">)</span>.
-<span class="linenr">15: </span>  settings<span style="color: #268bd2;">(</span>commonSettings<span style="color: #859900;">:</span> <span style="color: #859900;">_</span>*<span style="color: #268bd2;">)</span>.
-<span class="linenr">16: </span>  settings<span style="color: #268bd2;">(</span>
-<span class="linenr">17: </span>    mainClass in <span style="color: #d33682;">(</span><span style="color: #d33682;">Compile</span><span style="color: #d33682;">)</span> := <span style="color: #d33682;">Some</span><span style="color: #d33682;">(</span><span style="color: #2aa198;">"Application"</span><span style="color: #d33682;">)</span>,
-<span class="linenr">18: </span>    persistLauncher := <span style="color: #d33682;">true</span>,
-<span class="linenr">19: </span>    libraryDependencies ++= <span style="color: #d33682;">Seq</span><span style="color: #d33682;">(</span>
-<span class="linenr">20: </span>      <span style="color: #2aa198;">"org.scala-js"</span> %%% <span style="color: #2aa198;">"scalajs-dom"</span> % <span style="color: #2aa198;">"0.9.1"</span>,
-<span class="linenr">21: </span>      <span style="color: #2aa198;">"com.thoughtworks.binding"</span> %%% <span style="color: #2aa198;">"dom"</span> % <span style="color: #d33682;">BindingScalaVersion</span>,
-<span class="linenr">22: </span>      <span style="color: #2aa198;">"com.thoughtworks.binding"</span> %%% <span style="color: #2aa198;">"route"</span> % <span style="color: #d33682;">BindingScalaVersion</span>
-<span class="linenr">23: </span>    <span style="color: #d33682;">)</span>
-<span class="linenr">24: </span>  <span style="color: #268bd2;">)</span>.
-<span class="linenr">25: </span>  enablePlugins<span style="color: #268bd2;">(</span><span style="color: #d33682;">ScalaJSPlugin</span><span style="color: #268bd2;">)</span>
+<span class="linenr">14: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">js</span> <span style="color: #b294bb;">=</span> <span style="color: #b294bb;">(</span>project in file<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"js"</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>.
+<span class="linenr">15: </span>  settings<span style="color: #b294bb;">(</span>commonSettings<span style="color: #b294bb;">:</span> <span style="color: #b294bb;">_</span>*<span style="color: #b294bb;">)</span>.
+<span class="linenr">16: </span>  settings<span style="color: #b294bb;">(</span>
+<span class="linenr">17: </span>    mainClass in <span style="color: #81a2be;">(</span><span style="color: #de935f;">Compile</span><span style="color: #81a2be;">)</span> := <span style="color: #de935f;">Some</span><span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"Application"</span><span style="color: #81a2be;">)</span>,
+<span class="linenr">18: </span>    persistLauncher := <span style="color: #de935f;">true</span>,
+<span class="linenr">19: </span>    libraryDependencies ++= <span style="color: #de935f;">Seq</span><span style="color: #81a2be;">(</span>
+<span class="linenr">20: </span>      <span style="color: #b5bd68;">"org.scala-js"</span> %%% <span style="color: #b5bd68;">"scalajs-dom"</span> % <span style="color: #b5bd68;">"0.9.1"</span>,
+<span class="linenr">21: </span>      <span style="color: #b5bd68;">"com.thoughtworks.binding"</span> %%% <span style="color: #b5bd68;">"dom"</span> % <span style="color: #de935f;">BindingScalaVersion</span>,
+<span class="linenr">22: </span>      <span style="color: #b5bd68;">"com.thoughtworks.binding"</span> %%% <span style="color: #b5bd68;">"route"</span> % <span style="color: #de935f;">BindingScalaVersion</span>
+<span class="linenr">23: </span>    <span style="color: #81a2be;">)</span>
+<span class="linenr">24: </span>  <span style="color: #b294bb;">)</span>.
+<span class="linenr">25: </span>  enablePlugins<span style="color: #b294bb;">(</span><span style="color: #de935f;">ScalaJSPlugin</span><span style="color: #b294bb;">)</span>
 </pre>
 </div>
 
@@ -95,12 +96,12 @@ touch build.sbt
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr">1: </span><span style="color: #405A61;">/* </span><span style="color: #405A61;">js/src/main/scala/Application.scala */</span>
-<span class="linenr">2: </span><span style="color: #859900;">import</span> scala.scalajs.js.<span style="color: #d33682;">JSApp</span>
+<pre class="src src-scala"><span class="linenr">1: </span><span style="color: #5a5b5a;">/* </span><span style="color: #5a5b5a;">js/src/main/scala/Application.scala */</span>
+<span class="linenr">2: </span><span style="color: #b294bb;">import</span> scala.scalajs.js.<span style="color: #de935f;">JSApp</span>
 <span class="linenr">3: </span>
-<span class="linenr">4: </span><span style="color: #859900;">object</span> <span style="color: #d33682;">Application</span> <span style="color: #859900;">extends</span> <span style="color: #b58900;">JSApp</span> <span style="color: #268bd2;">{</span>
-<span class="linenr">5: </span>  <span style="color: #859900;">def</span> <span style="color: #268bd2;">main</span><span style="color: #d33682;">()</span><span style="color: #859900;">:</span> <span style="color: #b58900;">Unit</span> <span style="color: #859900;">=</span> println<span style="color: #d33682;">(</span><span style="color: #2aa198;">"Hello World!"</span><span style="color: #d33682;">)</span>
-<span class="linenr">6: </span><span style="color: #268bd2;">}</span>
+<span class="linenr">4: </span><span style="color: #b294bb;">object</span> <span style="color: #de935f;">Application</span> <span style="color: #b294bb;">extends</span> <span style="color: #f0c674;">JSApp</span> <span style="color: #b294bb;">{</span>
+<span class="linenr">5: </span>  <span style="color: #b294bb;">def</span> <span style="color: #81a2be;">main</span><span style="color: #81a2be;">()</span><span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Unit</span> <span style="color: #b294bb;">=</span> println<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"Hello World!"</span><span style="color: #81a2be;">)</span>
+<span class="linenr">6: </span><span style="color: #b294bb;">}</span>
 </pre>
 </div>
 
@@ -121,21 +122,21 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 在项目根目录下新建一个 <code>index.html</code> 
 </p>
 <div class="org-src-container">
-<pre class="src src-html"><span class="linenr"> 1: </span><span style="color: #2aa198;">&lt;!doctype html&gt;</span>
-<span class="linenr"> 2: </span>&lt;<span style="color: #268bd2;">html</span>&gt;
-<span class="linenr"> 3: </span>  &lt;<span style="color: #268bd2;">head</span>&gt;
-<span class="linenr"> 4: </span>    &lt;<span style="color: #268bd2;">meta</span> <span style="color: #6c71c4;">charset</span>=<span style="color: #2aa198;">"utf-8"</span>&gt;
-<span class="linenr"> 5: </span>    &lt;<span style="color: #268bd2;">meta</span> <span style="color: #6c71c4;">http-equiv</span>=<span style="color: #2aa198;">"X-UA-Compatible"</span> <span style="color: #6c71c4;">content</span>=<span style="color: #2aa198;">"IE=edge,chrome=1"</span>&gt;
-<span class="linenr"> 6: </span>    &lt;<span style="color: #268bd2;">meta</span> <span style="color: #6c71c4;">name</span>=<span style="color: #2aa198;">"description"</span> <span style="color: #6c71c4;">content</span>=<span style="color: #2aa198;">""</span>&gt;
-<span class="linenr"> 7: </span>    &lt;<span style="color: #268bd2;">meta</span> <span style="color: #6c71c4;">name</span>=<span style="color: #2aa198;">"viewport"</span> <span style="color: #6c71c4;">content</span>=<span style="color: #2aa198;">"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"</span>&gt;
-<span class="linenr"> 8: </span>    &lt;<span style="color: #268bd2;">title</span>&gt;<span style="font-weight: bold; text-decoration: underline;">Hello World!</span>&lt;/<span style="color: #268bd2;">title</span>&gt;
-<span class="linenr"> 9: </span>    &lt;<span style="color: #268bd2;">script</span> <span style="color: #6c71c4;">type</span>=<span style="color: #2aa198;">"text/javascript"</span> <span style="color: #6c71c4;">src</span>=<span style="color: #2aa198;">"./js/target/scala-2.11/js-jsdeps.js"</span>&gt;&lt;/<span style="color: #268bd2;">script</span>&gt;
-<span class="linenr">10: </span>    &lt;<span style="color: #268bd2;">script</span> <span style="color: #6c71c4;">type</span>=<span style="color: #2aa198;">"text/javascript"</span> <span style="color: #6c71c4;">src</span>=<span style="color: #2aa198;">"./js/target/scala-2.11/js-fastopt.js"</span>&gt;&lt;/<span style="color: #268bd2;">script</span>&gt;
-<span class="linenr">11: </span>  &lt;/<span style="color: #268bd2;">head</span>&gt;
-<span class="linenr">12: </span>  &lt;<span style="color: #268bd2;">body</span>&gt;
-<span class="linenr">13: </span>    &lt;<span style="color: #268bd2;">script</span> <span style="color: #6c71c4;">type</span>=<span style="color: #2aa198;">"text/javascript"</span> <span style="color: #6c71c4;">src</span>=<span style="color: #2aa198;">"./js/target/scala-2.11/js-launcher.js"</span>&gt;&lt;/<span style="color: #268bd2;">script</span>&gt;
-<span class="linenr">14: </span>  &lt;/<span style="color: #268bd2;">body</span>&gt;
-<span class="linenr">15: </span>&lt;/<span style="color: #268bd2;">html</span>&gt;
+<pre class="src src-html"><span class="linenr"> 1: </span><span style="color: #b5bd68;">&lt;!doctype html&gt;</span>
+<span class="linenr"> 2: </span>&lt;<span style="color: #81a2be;">html</span>&gt;
+<span class="linenr"> 3: </span>  &lt;<span style="color: #81a2be;">head</span>&gt;
+<span class="linenr"> 4: </span>    &lt;<span style="color: #81a2be;">meta</span> <span style="color: #cc6666;">charset</span>=<span style="color: #b5bd68;">"utf-8"</span>&gt;
+<span class="linenr"> 5: </span>    &lt;<span style="color: #81a2be;">meta</span> <span style="color: #cc6666;">http-equiv</span>=<span style="color: #b5bd68;">"X-UA-Compatible"</span> <span style="color: #cc6666;">content</span>=<span style="color: #b5bd68;">"IE=edge,chrome=1"</span>&gt;
+<span class="linenr"> 6: </span>    &lt;<span style="color: #81a2be;">meta</span> <span style="color: #cc6666;">name</span>=<span style="color: #b5bd68;">"description"</span> <span style="color: #cc6666;">content</span>=<span style="color: #b5bd68;">""</span>&gt;
+<span class="linenr"> 7: </span>    &lt;<span style="color: #81a2be;">meta</span> <span style="color: #cc6666;">name</span>=<span style="color: #b5bd68;">"viewport"</span> <span style="color: #cc6666;">content</span>=<span style="color: #b5bd68;">"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"</span>&gt;
+<span class="linenr"> 8: </span>    &lt;<span style="color: #81a2be;">title</span>&gt;<span style="font-weight: bold; text-decoration: underline;">Hello World!</span>&lt;/<span style="color: #81a2be;">title</span>&gt;
+<span class="linenr"> 9: </span>    &lt;<span style="color: #81a2be;">script</span> <span style="color: #cc6666;">type</span>=<span style="color: #b5bd68;">"text/javascript"</span> <span style="color: #cc6666;">src</span>=<span style="color: #b5bd68;">"./js/target/scala-2.11/js-jsdeps.js"</span>&gt;&lt;/<span style="color: #81a2be;">script</span>&gt;
+<span class="linenr">10: </span>    &lt;<span style="color: #81a2be;">script</span> <span style="color: #cc6666;">type</span>=<span style="color: #b5bd68;">"text/javascript"</span> <span style="color: #cc6666;">src</span>=<span style="color: #b5bd68;">"./js/target/scala-2.11/js-fastopt.js"</span>&gt;&lt;/<span style="color: #81a2be;">script</span>&gt;
+<span class="linenr">11: </span>  &lt;/<span style="color: #81a2be;">head</span>&gt;
+<span class="linenr">12: </span>  &lt;<span style="color: #81a2be;">body</span>&gt;
+<span class="linenr">13: </span>    &lt;<span style="color: #81a2be;">script</span> <span style="color: #cc6666;">type</span>=<span style="color: #b5bd68;">"text/javascript"</span> <span style="color: #cc6666;">src</span>=<span style="color: #b5bd68;">"./js/target/scala-2.11/js-launcher.js"</span>&gt;&lt;/<span style="color: #81a2be;">script</span>&gt;
+<span class="linenr">14: </span>  &lt;/<span style="color: #81a2be;">body</span>&gt;
+<span class="linenr">15: </span>&lt;/<span style="color: #81a2be;">html</span>&gt;
 </pre>
 </div>
 
@@ -151,88 +152,88 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900;">val</span> <span style="color: #6c71c4;">commonSettings</span> <span style="color: #859900;">=</span> <span style="color: #d33682;">Seq</span><span style="color: #268bd2;">(</span>
-<span class="linenr"> 2: </span>  version := <span style="color: #2aa198;">"0.0.1"</span>,
-<span class="linenr"> 3: </span>  scalaVersion := <span style="color: #2aa198;">"2.11.8"</span>,
-<span class="linenr"> 4: </span>  addCompilerPlugin<span style="color: #d33682;">(</span><span style="color: #2aa198;">"org.scalamacros"</span> % <span style="color: #2aa198;">"paradise"</span> % <span style="color: #2aa198;">"2.1.0"</span> cross <span style="color: #d33682;">CrossVersion</span>.full<span style="color: #d33682;">)</span>,
-<span class="linenr"> 5: </span>  scalacOptions ++= <span style="color: #d33682;">Seq</span><span style="color: #d33682;">(</span><span style="color: #2aa198;">"-feature"</span>, <span style="color: #2aa198;">"-language:implicitConversions"</span><span style="color: #d33682;">)</span>
-<span class="linenr"> 6: </span><span style="color: #268bd2;">)</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">commonSettings</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">Seq</span><span style="color: #b294bb;">(</span>
+<span class="linenr"> 2: </span>  version := <span style="color: #b5bd68;">"0.0.1"</span>,
+<span class="linenr"> 3: </span>  scalaVersion := <span style="color: #b5bd68;">"2.11.8"</span>,
+<span class="linenr"> 4: </span>  addCompilerPlugin<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"org.scalamacros"</span> % <span style="color: #b5bd68;">"paradise"</span> % <span style="color: #b5bd68;">"2.1.0"</span> cross <span style="color: #de935f;">CrossVersion</span>.full<span style="color: #81a2be;">)</span>,
+<span class="linenr"> 5: </span>  scalacOptions ++= <span style="color: #de935f;">Seq</span><span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"-feature"</span>, <span style="color: #b5bd68;">"-language:implicitConversions"</span><span style="color: #81a2be;">)</span>
+<span class="linenr"> 6: </span><span style="color: #b294bb;">)</span>
 <span class="linenr"> 7: </span>
-<span class="linenr"> 8: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900;">val</span> <span style="color: #6c71c4;">AkkaVersion</span> <span style="color: #859900;">=</span> <span style="color: #2aa198;">"2.4.16"</span>
+<span class="linenr"> 8: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">AkkaVersion</span> <span style="color: #b294bb;">=</span> <span style="color: #b5bd68;">"2.4.16"</span>
 <span class="linenr"> 9: </span>
-<span class="linenr">10: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900;">val</span> <span style="color: #6c71c4;">AkkaHttpVersion</span> <span style="color: #859900;">=</span> <span style="color: #2aa198;">"10.0.1"</span>
+<span class="linenr">10: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">AkkaHttpVersion</span> <span style="color: #b294bb;">=</span> <span style="color: #b5bd68;">"10.0.1"</span>
 <span class="linenr">11: </span>
-<span class="linenr">12: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900;">val</span> <span style="color: #6c71c4;">BindingScalaVersion</span> <span style="color: #859900;">=</span> <span style="color: #2aa198;">"10.0.1"</span>
+<span class="linenr">12: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">BindingScalaVersion</span> <span style="color: #b294bb;">=</span> <span style="color: #b5bd68;">"10.0.1"</span>
 <span class="linenr">13: </span>
-<span class="linenr">14: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900;">val</span> <span style="color: #6c71c4;">CirceVersion</span> <span style="color: #859900;">=</span> <span style="color: #2aa198;">"0.6.1"</span>
+<span class="linenr">14: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">CirceVersion</span> <span style="color: #b294bb;">=</span> <span style="color: #b5bd68;">"0.6.1"</span>
 <span class="linenr">15: </span>
-<span class="linenr">16: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900;">val</span> <span style="color: #6c71c4;">ScalazVersion</span> <span style="color: #859900;">=</span> <span style="color: #2aa198;">"7.2.8"</span>
+<span class="linenr">16: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">ScalazVersion</span> <span style="color: #b294bb;">=</span> <span style="color: #b5bd68;">"7.2.8"</span>
 <span class="linenr">17: </span>
-<span class="linenr">18: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900;">val</span> <span style="color: #6c71c4;">compileCopyTask</span> <span style="color: #859900;">=</span> taskKey<span style="color: #268bd2;">[</span><span style="color: #d33682;">Unit</span><span style="color: #268bd2;">](</span><span style="color: #2aa198;">"compile and copy"</span><span style="color: #268bd2;">)</span>
+<span class="linenr">18: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">compileCopyTask</span> <span style="color: #b294bb;">=</span> taskKey<span style="color: #b294bb;">[</span><span style="color: #de935f;">Unit</span><span style="color: #b294bb;">](</span><span style="color: #b5bd68;">"compile and copy"</span><span style="color: #b294bb;">)</span>
 <span class="linenr">19: </span>
 <span class="linenr">20: </span>
-<span class="linenr">21: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900;">val</span> <span style="color: #6c71c4;">root</span> <span style="color: #859900;">=</span> <span style="color: #268bd2;">(</span>project in file<span style="color: #d33682;">(</span><span style="color: #2aa198;">"."</span><span style="color: #d33682;">)</span><span style="color: #268bd2;">)</span>.
-<span class="linenr">22: </span>  settings<span style="color: #268bd2;">(</span>commonSettings<span style="color: #859900;">:</span> <span style="color: #859900;">_</span>*<span style="color: #268bd2;">)</span>.
-<span class="linenr">23: </span>  aggregate<span style="color: #268bd2;">(</span>server, js<span style="color: #268bd2;">)</span>
+<span class="linenr">21: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">root</span> <span style="color: #b294bb;">=</span> <span style="color: #b294bb;">(</span>project in file<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"."</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>.
+<span class="linenr">22: </span>  settings<span style="color: #b294bb;">(</span>commonSettings<span style="color: #b294bb;">:</span> <span style="color: #b294bb;">_</span>*<span style="color: #b294bb;">)</span>.
+<span class="linenr">23: </span>  aggregate<span style="color: #b294bb;">(</span>server, js<span style="color: #b294bb;">)</span>
 <span class="linenr">24: </span>
-<span class="linenr">25: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900;">val</span> <span style="color: #6c71c4;">server</span> <span style="color: #859900;">=</span> <span style="color: #268bd2;">(</span>project in file<span style="color: #d33682;">(</span><span style="color: #2aa198;">"server"</span><span style="color: #d33682;">)</span><span style="color: #268bd2;">)</span>.
-<span class="linenr">26: </span>  settings<span style="color: #268bd2;">(</span>commonSettings<span style="color: #859900;">:</span> <span style="color: #859900;">_</span>*<span style="color: #268bd2;">)</span>.
-<span class="linenr">27: </span>  settings<span style="color: #268bd2;">(</span>
-<span class="linenr">28: </span>    cancelable in <span style="color: #d33682;">Global</span> := <span style="color: #d33682;">true</span>,
-<span class="linenr">29: </span>    fork in run := <span style="color: #d33682;">true</span>,
-<span class="linenr">30: </span>    libraryDependencies ++= <span style="color: #d33682;">Seq</span><span style="color: #d33682;">(</span>
-<span class="linenr">31: </span>      <span style="color: #2aa198;">"com.typesafe.akka"</span> %% <span style="color: #2aa198;">"akka-actor"</span> % <span style="color: #d33682;">AkkaVersion</span>,
-<span class="linenr">32: </span>      <span style="color: #2aa198;">"com.typesafe.akka"</span> %% <span style="color: #2aa198;">"akka-stream"</span> % <span style="color: #d33682;">AkkaVersion</span>,
-<span class="linenr">33: </span>      <span style="color: #2aa198;">"com.typesafe.akka"</span> %% <span style="color: #2aa198;">"akka-http"</span> % <span style="color: #d33682;">AkkaHttpVersion</span>,
-<span class="linenr">34: </span>      <span style="color: #2aa198;">"ch.qos.logback"</span> %  <span style="color: #2aa198;">"logback-classic"</span> % <span style="color: #2aa198;">"1.1.7"</span>,
-<span class="linenr">35: </span>      <span style="color: #2aa198;">"com.typesafe.scala-logging"</span> %% <span style="color: #2aa198;">"scala-logging"</span> % <span style="color: #2aa198;">"3.5.0"</span>
-<span class="linenr">36: </span>    <span style="color: #d33682;">)</span>
-<span class="linenr">37: </span>  <span style="color: #268bd2;">)</span>.
-<span class="linenr">38: </span>  settings<span style="color: #268bd2;">(</span>
-<span class="linenr">39: </span>    compileCopyTask := <span style="color: #d33682;">{</span>
-<span class="linenr">40: </span>      <span style="color: #859900;">val</span> <span style="color: #6c71c4;">mainVersion</span> <span style="color: #859900;">=</span> scalaVersion.value.split<span style="color: #859900;">(</span><span style="color: #2aa198;">"""\."""</span><span style="color: #859900;">)</span>.take<span style="color: #859900;">(</span><span style="color: #d33682; font-weight: bold;">2</span><span style="color: #859900;">)</span>.mkString<span style="color: #859900;">(</span><span style="color: #2aa198;">"."</span><span style="color: #859900;">)</span>
-<span class="linenr">41: </span>      <span style="color: #859900;">val</span> <span style="color: #6c71c4;">to</span> <span style="color: #859900;">=</span> target.value / <span style="color: #859900;">(</span><span style="color: #2aa198;">"scala-"</span> + mainVersion<span style="color: #859900;">)</span> / <span style="color: #2aa198;">"classes"</span> / <span style="color: #2aa198;">"static"</span> / <span style="color: #2aa198;">"js"</span>
-<span class="linenr">42: </span>      to.mkdirs<span style="color: #859900;">()</span>
-<span class="linenr">43: </span>      <span style="color: #859900;">val</span> <span style="color: #6c71c4;">fastJs</span> <span style="color: #859900;">=</span> <span style="color: #859900;">(</span>fastOptJS in <span style="color: #d33682;">Compile</span> in js<span style="color: #859900;">)</span>.value.data
-<span class="linenr">44: </span>      <span style="color: #859900;">val</span> <span style="color: #6c71c4;">fastJsSourceMap</span> <span style="color: #859900;">=</span> fastJs.getParentFile / <span style="color: #859900;">(</span>fastJs.getName + <span style="color: #2aa198;">".map"</span><span style="color: #859900;">)</span>
-<span class="linenr">45: </span>      <span style="color: #859900;">val</span> <span style="color: #6c71c4;">fastJsLauncher</span> <span style="color: #859900;">=</span> <span style="color: #859900;">(</span>packageScalaJSLauncher in <span style="color: #d33682;">Compile</span> in js<span style="color: #859900;">)</span>.value.data
-<span class="linenr">46: </span>      <span style="color: #859900;">val</span> <span style="color: #6c71c4;">fastJsDeps</span> <span style="color: #859900;">=</span> <span style="color: #859900;">(</span>packageJSDependencies in <span style="color: #d33682;">Compile</span> in js<span style="color: #859900;">)</span>.value
-<span class="linenr">47: </span>      <span style="color: #859900;">val</span> <span style="color: #6c71c4;">fullJs</span> <span style="color: #859900;">=</span> <span style="color: #859900;">(</span>fullOptJS in <span style="color: #d33682;">Compile</span> in js<span style="color: #859900;">)</span>.value.data
-<span class="linenr">48: </span>      <span style="color: #859900;">val</span> <span style="color: #6c71c4;">fullJsSourceMap</span> <span style="color: #859900;">=</span> fullJs.getParentFile / <span style="color: #859900;">(</span>fullJs.getName + <span style="color: #2aa198;">".map"</span><span style="color: #859900;">)</span>
-<span class="linenr">49: </span>      <span style="color: #859900;">val</span> <span style="color: #6c71c4;">fullJsDeps</span> <span style="color: #859900;">=</span> <span style="color: #859900;">(</span>packageMinifiedJSDependencies in <span style="color: #d33682;">Compile</span> in js<span style="color: #859900;">)</span>.value
+<span class="linenr">25: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">server</span> <span style="color: #b294bb;">=</span> <span style="color: #b294bb;">(</span>project in file<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"server"</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>.
+<span class="linenr">26: </span>  settings<span style="color: #b294bb;">(</span>commonSettings<span style="color: #b294bb;">:</span> <span style="color: #b294bb;">_</span>*<span style="color: #b294bb;">)</span>.
+<span class="linenr">27: </span>  settings<span style="color: #b294bb;">(</span>
+<span class="linenr">28: </span>    cancelable in <span style="color: #de935f;">Global</span> := <span style="color: #de935f;">true</span>,
+<span class="linenr">29: </span>    fork in run := <span style="color: #de935f;">true</span>,
+<span class="linenr">30: </span>    libraryDependencies ++= <span style="color: #de935f;">Seq</span><span style="color: #81a2be;">(</span>
+<span class="linenr">31: </span>      <span style="color: #b5bd68;">"com.typesafe.akka"</span> %% <span style="color: #b5bd68;">"akka-actor"</span> % <span style="color: #de935f;">AkkaVersion</span>,
+<span class="linenr">32: </span>      <span style="color: #b5bd68;">"com.typesafe.akka"</span> %% <span style="color: #b5bd68;">"akka-stream"</span> % <span style="color: #de935f;">AkkaVersion</span>,
+<span class="linenr">33: </span>      <span style="color: #b5bd68;">"com.typesafe.akka"</span> %% <span style="color: #b5bd68;">"akka-http"</span> % <span style="color: #de935f;">AkkaHttpVersion</span>,
+<span class="linenr">34: </span>      <span style="color: #b5bd68;">"ch.qos.logback"</span> %  <span style="color: #b5bd68;">"logback-classic"</span> % <span style="color: #b5bd68;">"1.1.7"</span>,
+<span class="linenr">35: </span>      <span style="color: #b5bd68;">"com.typesafe.scala-logging"</span> %% <span style="color: #b5bd68;">"scala-logging"</span> % <span style="color: #b5bd68;">"3.5.0"</span>
+<span class="linenr">36: </span>    <span style="color: #81a2be;">)</span>
+<span class="linenr">37: </span>  <span style="color: #b294bb;">)</span>.
+<span class="linenr">38: </span>  settings<span style="color: #b294bb;">(</span>
+<span class="linenr">39: </span>    compileCopyTask := <span style="color: #81a2be;">{</span>
+<span class="linenr">40: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">mainVersion</span> <span style="color: #b294bb;">=</span> scalaVersion.value.split<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"""\."""</span><span style="color: #de935f;">)</span>.take<span style="color: #de935f;">(</span><span style="color: #de935f; font-weight: bold;">2</span><span style="color: #de935f;">)</span>.mkString<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"."</span><span style="color: #de935f;">)</span>
+<span class="linenr">41: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">to</span> <span style="color: #b294bb;">=</span> target.value / <span style="color: #de935f;">(</span><span style="color: #b5bd68;">"scala-"</span> + mainVersion<span style="color: #de935f;">)</span> / <span style="color: #b5bd68;">"classes"</span> / <span style="color: #b5bd68;">"static"</span> / <span style="color: #b5bd68;">"js"</span>
+<span class="linenr">42: </span>      to.mkdirs<span style="color: #de935f;">()</span>
+<span class="linenr">43: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">fastJs</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">(</span>fastOptJS in <span style="color: #de935f;">Compile</span> in js<span style="color: #de935f;">)</span>.value.data
+<span class="linenr">44: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">fastJsSourceMap</span> <span style="color: #b294bb;">=</span> fastJs.getParentFile / <span style="color: #de935f;">(</span>fastJs.getName + <span style="color: #b5bd68;">".map"</span><span style="color: #de935f;">)</span>
+<span class="linenr">45: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">fastJsLauncher</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">(</span>packageScalaJSLauncher in <span style="color: #de935f;">Compile</span> in js<span style="color: #de935f;">)</span>.value.data
+<span class="linenr">46: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">fastJsDeps</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">(</span>packageJSDependencies in <span style="color: #de935f;">Compile</span> in js<span style="color: #de935f;">)</span>.value
+<span class="linenr">47: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">fullJs</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">(</span>fullOptJS in <span style="color: #de935f;">Compile</span> in js<span style="color: #de935f;">)</span>.value.data
+<span class="linenr">48: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">fullJsSourceMap</span> <span style="color: #b294bb;">=</span> fullJs.getParentFile / <span style="color: #de935f;">(</span>fullJs.getName + <span style="color: #b5bd68;">".map"</span><span style="color: #de935f;">)</span>
+<span class="linenr">49: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">fullJsDeps</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">(</span>packageMinifiedJSDependencies in <span style="color: #de935f;">Compile</span> in js<span style="color: #de935f;">)</span>.value
 <span class="linenr">50: </span>
-<span class="linenr">51: </span>      <span style="color: #859900;">for</span><span style="color: #859900;">(</span>f <span style="color: #859900;">&lt;-</span> <span style="color: #d33682;">Seq</span><span style="color: #cb4b16;">(</span>fastJs, fastJsSourceMap, fastJsLauncher, fastJsDeps, fullJs, fullJsSourceMap, fullJsDeps<span style="color: #cb4b16;">)</span><span style="color: #859900;">)</span> <span style="color: #859900;">{</span>
-<span class="linenr">52: </span>        <span style="color: #d33682;">IO</span>.copyFile<span style="color: #cb4b16;">(</span>f, to / f.getName<span style="color: #cb4b16;">)</span>
-<span class="linenr">53: </span>      <span style="color: #859900;">}</span>
-<span class="linenr">54: </span>    <span style="color: #d33682;">}</span>
-<span class="linenr">55: </span>  <span style="color: #268bd2;">)</span>.
-<span class="linenr">56: </span>  settings<span style="color: #268bd2;">(</span>
-<span class="linenr">57: </span>    compile in <span style="color: #d33682;">Compile</span> := <span style="color: #d33682;">{</span>
+<span class="linenr">51: </span>      <span style="color: #b294bb;">for</span><span style="color: #de935f;">(</span>f <span style="color: #b294bb;">&lt;-</span> <span style="color: #de935f;">Seq</span><span style="color: #b5bd68;">(</span>fastJs, fastJsSourceMap, fastJsLauncher, fastJsDeps, fullJs, fullJsSourceMap, fullJsDeps<span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span> <span style="color: #de935f;">{</span>
+<span class="linenr">52: </span>        <span style="color: #de935f;">IO</span>.copyFile<span style="color: #b5bd68;">(</span>f, to / f.getName<span style="color: #b5bd68;">)</span>
+<span class="linenr">53: </span>      <span style="color: #de935f;">}</span>
+<span class="linenr">54: </span>    <span style="color: #81a2be;">}</span>
+<span class="linenr">55: </span>  <span style="color: #b294bb;">)</span>.
+<span class="linenr">56: </span>  settings<span style="color: #b294bb;">(</span>
+<span class="linenr">57: </span>    compile in <span style="color: #de935f;">Compile</span> := <span style="color: #81a2be;">{</span>
 <span class="linenr">58: </span>      compileCopyTask.value
-<span class="linenr">59: </span>      <span style="color: #859900;">(</span>compile in <span style="color: #d33682;">Compile</span><span style="color: #859900;">)</span>.value
-<span class="linenr">60: </span>    <span style="color: #d33682;">}</span>
-<span class="linenr">61: </span>  <span style="color: #268bd2;">)</span>.
-<span class="linenr">62: </span>  settings<span style="color: #268bd2;">(</span>
-<span class="linenr">63: </span>    mainClass in assembly := <span style="color: #d33682;">Some</span><span style="color: #d33682;">(</span><span style="color: #2aa198;">"Server"</span><span style="color: #d33682;">)</span>,
-<span class="linenr">64: </span>    assemblyJarName in assembly := <span style="color: #2aa198;">"server.jar"</span>
-<span class="linenr">65: </span>  <span style="color: #268bd2;">)</span>
+<span class="linenr">59: </span>      <span style="color: #de935f;">(</span>compile in <span style="color: #de935f;">Compile</span><span style="color: #de935f;">)</span>.value
+<span class="linenr">60: </span>    <span style="color: #81a2be;">}</span>
+<span class="linenr">61: </span>  <span style="color: #b294bb;">)</span>.
+<span class="linenr">62: </span>  settings<span style="color: #b294bb;">(</span>
+<span class="linenr">63: </span>    mainClass in assembly := <span style="color: #de935f;">Some</span><span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"Server"</span><span style="color: #81a2be;">)</span>,
+<span class="linenr">64: </span>    assemblyJarName in assembly := <span style="color: #b5bd68;">"server.jar"</span>
+<span class="linenr">65: </span>  <span style="color: #b294bb;">)</span>
 <span class="linenr">66: </span>
-<span class="linenr">67: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900;">val</span> <span style="color: #6c71c4;">js</span> <span style="color: #859900;">=</span> <span style="color: #268bd2;">(</span>project in file<span style="color: #d33682;">(</span><span style="color: #2aa198;">"js"</span><span style="color: #d33682;">)</span><span style="color: #268bd2;">)</span>.
-<span class="linenr">68: </span>  settings<span style="color: #268bd2;">(</span>commonSettings<span style="color: #859900;">:</span> <span style="color: #859900;">_</span>*<span style="color: #268bd2;">)</span>.
-<span class="linenr">69: </span>  settings<span style="color: #268bd2;">(</span>
-<span class="linenr">70: </span>    mainClass in <span style="color: #d33682;">(</span><span style="color: #d33682;">Compile</span><span style="color: #d33682;">)</span> := <span style="color: #d33682;">Some</span><span style="color: #d33682;">(</span><span style="color: #2aa198;">"Application"</span><span style="color: #d33682;">)</span>,
-<span class="linenr">71: </span>    persistLauncher := <span style="color: #d33682;">true</span>,
-<span class="linenr">72: </span>    libraryDependencies ++= <span style="color: #d33682;">Seq</span><span style="color: #d33682;">(</span>
-<span class="linenr">73: </span>      <span style="color: #2aa198;">"org.scala-js"</span> %%% <span style="color: #2aa198;">"scalajs-dom"</span> % <span style="color: #2aa198;">"0.9.1"</span>,
-<span class="linenr">74: </span>      <span style="color: #2aa198;">"com.thoughtworks.binding"</span> %%% <span style="color: #2aa198;">"dom"</span> % <span style="color: #d33682;">BindingScalaVersion</span>,
-<span class="linenr">75: </span>      <span style="color: #2aa198;">"com.thoughtworks.binding"</span> %%% <span style="color: #2aa198;">"route"</span> % <span style="color: #d33682;">BindingScalaVersion</span>,
-<span class="linenr">76: </span>      <span style="color: #2aa198;">"io.circe"</span> %%% <span style="color: #2aa198;">"circe-core"</span> % <span style="color: #d33682;">CirceVersion</span>,
-<span class="linenr">77: </span>      <span style="color: #2aa198;">"io.circe"</span> %%% <span style="color: #2aa198;">"circe-parser"</span> % <span style="color: #d33682;">CirceVersion</span>,
-<span class="linenr">78: </span>      <span style="color: #2aa198;">"io.circe"</span> %%% <span style="color: #2aa198;">"circe-generic"</span> % <span style="color: #d33682;">CirceVersion</span>,
-<span class="linenr">79: </span>      <span style="color: #2aa198;">"org.scalaz"</span> %%% <span style="color: #2aa198;">"scalaz-core"</span> % <span style="color: #d33682;">ScalazVersion</span>
-<span class="linenr">80: </span>    <span style="color: #d33682;">)</span>
-<span class="linenr">81: </span>  <span style="color: #268bd2;">)</span>.
-<span class="linenr">82: </span>  enablePlugins<span style="color: #268bd2;">(</span><span style="color: #d33682;">ScalaJSPlugin</span><span style="color: #268bd2;">)</span>
+<span class="linenr">67: </span><span style="color: #81a2be;">lazy</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">js</span> <span style="color: #b294bb;">=</span> <span style="color: #b294bb;">(</span>project in file<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"js"</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>.
+<span class="linenr">68: </span>  settings<span style="color: #b294bb;">(</span>commonSettings<span style="color: #b294bb;">:</span> <span style="color: #b294bb;">_</span>*<span style="color: #b294bb;">)</span>.
+<span class="linenr">69: </span>  settings<span style="color: #b294bb;">(</span>
+<span class="linenr">70: </span>    mainClass in <span style="color: #81a2be;">(</span><span style="color: #de935f;">Compile</span><span style="color: #81a2be;">)</span> := <span style="color: #de935f;">Some</span><span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"Application"</span><span style="color: #81a2be;">)</span>,
+<span class="linenr">71: </span>    persistLauncher := <span style="color: #de935f;">true</span>,
+<span class="linenr">72: </span>    libraryDependencies ++= <span style="color: #de935f;">Seq</span><span style="color: #81a2be;">(</span>
+<span class="linenr">73: </span>      <span style="color: #b5bd68;">"org.scala-js"</span> %%% <span style="color: #b5bd68;">"scalajs-dom"</span> % <span style="color: #b5bd68;">"0.9.1"</span>,
+<span class="linenr">74: </span>      <span style="color: #b5bd68;">"com.thoughtworks.binding"</span> %%% <span style="color: #b5bd68;">"dom"</span> % <span style="color: #de935f;">BindingScalaVersion</span>,
+<span class="linenr">75: </span>      <span style="color: #b5bd68;">"com.thoughtworks.binding"</span> %%% <span style="color: #b5bd68;">"route"</span> % <span style="color: #de935f;">BindingScalaVersion</span>,
+<span class="linenr">76: </span>      <span style="color: #b5bd68;">"io.circe"</span> %%% <span style="color: #b5bd68;">"circe-core"</span> % <span style="color: #de935f;">CirceVersion</span>,
+<span class="linenr">77: </span>      <span style="color: #b5bd68;">"io.circe"</span> %%% <span style="color: #b5bd68;">"circe-parser"</span> % <span style="color: #de935f;">CirceVersion</span>,
+<span class="linenr">78: </span>      <span style="color: #b5bd68;">"io.circe"</span> %%% <span style="color: #b5bd68;">"circe-generic"</span> % <span style="color: #de935f;">CirceVersion</span>,
+<span class="linenr">79: </span>      <span style="color: #b5bd68;">"org.scalaz"</span> %%% <span style="color: #b5bd68;">"scalaz-core"</span> % <span style="color: #de935f;">ScalazVersion</span>
+<span class="linenr">80: </span>    <span style="color: #81a2be;">)</span>
+<span class="linenr">81: </span>  <span style="color: #b294bb;">)</span>.
+<span class="linenr">82: </span>  enablePlugins<span style="color: #b294bb;">(</span><span style="color: #de935f;">ScalaJSPlugin</span><span style="color: #b294bb;">)</span>
 <span class="linenr">83: </span>
 </pre>
 </div>
@@ -242,7 +243,7 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell">mkdir -p server/src/<span style="color: #268bd2;">{</span>main,test<span style="color: #268bd2;">}</span>/<span style="color: #268bd2;">{</span>scala,resources<span style="color: #268bd2;">}</span>
+<pre class="src src-shell">mkdir -p server/src/<span style="color: #b294bb;">{</span>main,test<span style="color: #b294bb;">}</span>/<span style="color: #b294bb;">{</span>scala,resources<span style="color: #b294bb;">}</span>
 </pre>
 </div>
 
@@ -251,67 +252,67 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #859900;">import</span> java.util.concurrent.<span style="color: #d33682;">CountDownLatch</span>
-<span class="linenr"> 2: </span><span style="color: #859900;">import</span> akka.actor.<span style="color: #d33682;">ActorSystem</span>
-<span class="linenr"> 3: </span><span style="color: #859900;">import</span> akka.stream.<span style="color: #d33682;">ActorMaterializer</span>
-<span class="linenr"> 4: </span><span style="color: #859900;">import</span> akka.http.scaladsl.<span style="color: #d33682;">Http</span>
-<span class="linenr"> 5: </span><span style="color: #859900;">import</span> akka.http.scaladsl.server.<span style="color: #d33682;">Directives</span>.<span style="color: #859900;">_</span>
-<span class="linenr"> 6: </span><span style="color: #859900;">import</span> com.typesafe.config.<span style="color: #d33682;">ConfigFactory</span>
-<span class="linenr"> 7: </span><span style="color: #859900;">import</span> com.typesafe.scalalogging.<span style="color: #d33682;">Logger</span>
-<span class="linenr"> 8: </span><span style="color: #859900;">import</span> scala.concurrent.<span style="color: #d33682;">Await</span>
-<span class="linenr"> 9: </span><span style="color: #859900;">import</span> scala.concurrent.duration.<span style="color: #859900;">_</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #b294bb;">import</span> java.util.concurrent.<span style="color: #de935f;">CountDownLatch</span>
+<span class="linenr"> 2: </span><span style="color: #b294bb;">import</span> akka.actor.<span style="color: #de935f;">ActorSystem</span>
+<span class="linenr"> 3: </span><span style="color: #b294bb;">import</span> akka.stream.<span style="color: #de935f;">ActorMaterializer</span>
+<span class="linenr"> 4: </span><span style="color: #b294bb;">import</span> akka.http.scaladsl.<span style="color: #de935f;">Http</span>
+<span class="linenr"> 5: </span><span style="color: #b294bb;">import</span> akka.http.scaladsl.server.<span style="color: #de935f;">Directives</span>.<span style="color: #b294bb;">_</span>
+<span class="linenr"> 6: </span><span style="color: #b294bb;">import</span> com.typesafe.config.<span style="color: #de935f;">ConfigFactory</span>
+<span class="linenr"> 7: </span><span style="color: #b294bb;">import</span> com.typesafe.scalalogging.<span style="color: #de935f;">Logger</span>
+<span class="linenr"> 8: </span><span style="color: #b294bb;">import</span> scala.concurrent.<span style="color: #de935f;">Await</span>
+<span class="linenr"> 9: </span><span style="color: #b294bb;">import</span> scala.concurrent.duration.<span style="color: #b294bb;">_</span>
 <span class="linenr">10: </span>
-<span class="linenr">11: </span><span style="color: #859900;">object</span> <span style="color: #d33682;">Server</span> <span style="color: #859900;">extends</span> <span style="color: #b58900;">App</span> <span style="color: #268bd2;">{</span>
-<span class="linenr">12: </span>  <span style="color: #859900;">val</span> <span style="color: #6c71c4;">logger</span> <span style="color: #859900;">=</span> <span style="color: #d33682;">Logger</span><span style="color: #d33682;">(</span><span style="color: #d33682;">Server</span>.getClass<span style="color: #d33682;">)</span>
-<span class="linenr">13: </span>  <span style="color: #859900;">val</span> <span style="color: #6c71c4;">conf</span> <span style="color: #859900;">=</span> <span style="color: #d33682;">ConfigFactory</span>.load<span style="color: #d33682;">()</span>.withFallback<span style="color: #d33682;">(</span><span style="color: #d33682;">ConfigFactory</span>.load<span style="color: #859900;">(</span><span style="color: #2aa198;">"default.conf"</span><span style="color: #859900;">)</span><span style="color: #d33682;">)</span>
+<span class="linenr">11: </span><span style="color: #b294bb;">object</span> <span style="color: #de935f;">Server</span> <span style="color: #b294bb;">extends</span> <span style="color: #f0c674;">App</span> <span style="color: #b294bb;">{</span>
+<span class="linenr">12: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">logger</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">Logger</span><span style="color: #81a2be;">(</span><span style="color: #de935f;">Server</span>.getClass<span style="color: #81a2be;">)</span>
+<span class="linenr">13: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">conf</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">ConfigFactory</span>.load<span style="color: #81a2be;">()</span>.withFallback<span style="color: #81a2be;">(</span><span style="color: #de935f;">ConfigFactory</span>.load<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"default.conf"</span><span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span>
 <span class="linenr">14: </span>
-<span class="linenr">15: </span>  <span style="color: #268bd2;">implicit</span> <span style="color: #859900;">val</span> <span style="color: #6c71c4;">actorSystem</span> <span style="color: #859900;">=</span> <span style="color: #d33682;">ActorSystem</span><span style="color: #d33682;">()</span>
-<span class="linenr">16: </span>  <span style="color: #268bd2;">implicit</span> <span style="color: #859900;">val</span> <span style="color: #6c71c4;">materializer</span> <span style="color: #859900;">=</span> <span style="color: #d33682;">ActorMaterializer</span><span style="color: #d33682;">()</span>
-<span class="linenr">17: </span>  <span style="color: #268bd2;">implicit</span> <span style="color: #859900;">val</span> <span style="color: #6c71c4;">executionContext</span> <span style="color: #859900;">=</span> actorSystem.dispatcher
+<span class="linenr">15: </span>  <span style="color: #81a2be;">implicit</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">actorSystem</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">ActorSystem</span><span style="color: #81a2be;">()</span>
+<span class="linenr">16: </span>  <span style="color: #81a2be;">implicit</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">materializer</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">ActorMaterializer</span><span style="color: #81a2be;">()</span>
+<span class="linenr">17: </span>  <span style="color: #81a2be;">implicit</span> <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">executionContext</span> <span style="color: #b294bb;">=</span> actorSystem.dispatcher
 <span class="linenr">18: </span>
-<span class="linenr">19: </span>  <span style="color: #859900;">val</span> <span style="color: #6c71c4;">shutdownLatch</span> <span style="color: #859900;">=</span> <span style="color: #859900;">new</span> <span style="color: #b58900;">CountDownLatch</span><span style="color: #d33682;">(</span><span style="color: #d33682; font-weight: bold;">1</span><span style="color: #d33682;">)</span>
+<span class="linenr">19: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">shutdownLatch</span> <span style="color: #b294bb;">=</span> <span style="color: #b294bb;">new</span> <span style="color: #f0c674;">CountDownLatch</span><span style="color: #81a2be;">(</span><span style="color: #de935f; font-weight: bold;">1</span><span style="color: #81a2be;">)</span>
 <span class="linenr">20: </span>
-<span class="linenr">21: </span>  <span style="color: #859900;">val</span> <span style="color: #6c71c4;">devRoute</span> <span style="color: #859900;">=</span> pathSingleSlash <span style="color: #d33682;">{</span>
-<span class="linenr">22: </span>    parameter<span style="color: #859900;">(</span><span style="color: #2aa198;">"fast"</span><span style="color: #859900;">)</span> <span style="color: #859900;">{</span> <span style="color: #859900;">_</span> <span style="color: #859900;">=&gt;</span>
-<span class="linenr">23: </span>      getFromFile<span style="color: #cb4b16;">(</span><span style="color: #2aa198;">"./src/main/resources/static/index-fastopt.html"</span><span style="color: #cb4b16;">)</span>
-<span class="linenr">24: </span>    <span style="color: #859900;">}</span> ~
-<span class="linenr">25: </span>      getFromFile<span style="color: #859900;">(</span><span style="color: #2aa198;">"./src/main/resources/static/index-fullopt.html"</span><span style="color: #859900;">)</span>
-<span class="linenr">26: </span>  <span style="color: #d33682;">}</span> ~
-<span class="linenr">27: </span>    encodeResponse <span style="color: #d33682;">{</span>
-<span class="linenr">28: </span>      getFromDirectory<span style="color: #859900;">(</span><span style="color: #2aa198;">"./src/main/resources/static"</span><span style="color: #859900;">)</span> ~
-<span class="linenr">29: </span>        pathPrefix<span style="color: #859900;">(</span><span style="color: #2aa198;">"js"</span><span style="color: #859900;">)</span> <span style="color: #859900;">{</span>
-<span class="linenr">30: </span>          getFromDirectory<span style="color: #cb4b16;">(</span><span style="color: #2aa198;">"../js/target/scala-2.11"</span><span style="color: #cb4b16;">)</span>
-<span class="linenr">31: </span>        <span style="color: #859900;">}</span>
-<span class="linenr">32: </span>    <span style="color: #d33682;">}</span>
+<span class="linenr">21: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">devRoute</span> <span style="color: #b294bb;">=</span> pathSingleSlash <span style="color: #81a2be;">{</span>
+<span class="linenr">22: </span>    parameter<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"fast"</span><span style="color: #de935f;">)</span> <span style="color: #de935f;">{</span> <span style="color: #b294bb;">_</span> <span style="color: #b294bb;">=&gt;</span>
+<span class="linenr">23: </span>      getFromFile<span style="color: #b5bd68;">(</span><span style="color: #b5bd68;">"./src/main/resources/static/index-fastopt.html"</span><span style="color: #b5bd68;">)</span>
+<span class="linenr">24: </span>    <span style="color: #de935f;">}</span> ~
+<span class="linenr">25: </span>      getFromFile<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"./src/main/resources/static/index-fullopt.html"</span><span style="color: #de935f;">)</span>
+<span class="linenr">26: </span>  <span style="color: #81a2be;">}</span> ~
+<span class="linenr">27: </span>    encodeResponse <span style="color: #81a2be;">{</span>
+<span class="linenr">28: </span>      getFromDirectory<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"./src/main/resources/static"</span><span style="color: #de935f;">)</span> ~
+<span class="linenr">29: </span>        pathPrefix<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"js"</span><span style="color: #de935f;">)</span> <span style="color: #de935f;">{</span>
+<span class="linenr">30: </span>          getFromDirectory<span style="color: #b5bd68;">(</span><span style="color: #b5bd68;">"../js/target/scala-2.11"</span><span style="color: #b5bd68;">)</span>
+<span class="linenr">31: </span>        <span style="color: #de935f;">}</span>
+<span class="linenr">32: </span>    <span style="color: #81a2be;">}</span>
 <span class="linenr">33: </span>
-<span class="linenr">34: </span>  <span style="color: #859900;">val</span> <span style="color: #6c71c4;">productionRoute</span> <span style="color: #859900;">=</span> pathSingleSlash <span style="color: #d33682;">{</span>
-<span class="linenr">35: </span>    parameter<span style="color: #859900;">(</span><span style="color: #2aa198;">"fast"</span><span style="color: #859900;">)</span> <span style="color: #859900;">{</span> <span style="color: #859900;">_</span> <span style="color: #859900;">=&gt;</span>
-<span class="linenr">36: </span>      getFromResource<span style="color: #cb4b16;">(</span><span style="color: #2aa198;">"static/index-fastopt.html"</span><span style="color: #cb4b16;">)</span>
-<span class="linenr">37: </span>    <span style="color: #859900;">}</span> ~
-<span class="linenr">38: </span>      getFromResource<span style="color: #859900;">(</span><span style="color: #2aa198;">"static/index-fullopt.html"</span><span style="color: #859900;">)</span>
-<span class="linenr">39: </span>  <span style="color: #d33682;">}</span> ~
-<span class="linenr">40: </span>    encodeResponse <span style="color: #d33682;">{</span>
-<span class="linenr">41: </span>      getFromResourceDirectory<span style="color: #859900;">(</span><span style="color: #2aa198;">"static"</span><span style="color: #859900;">)</span>
-<span class="linenr">42: </span>    <span style="color: #d33682;">}</span>
+<span class="linenr">34: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">productionRoute</span> <span style="color: #b294bb;">=</span> pathSingleSlash <span style="color: #81a2be;">{</span>
+<span class="linenr">35: </span>    parameter<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"fast"</span><span style="color: #de935f;">)</span> <span style="color: #de935f;">{</span> <span style="color: #b294bb;">_</span> <span style="color: #b294bb;">=&gt;</span>
+<span class="linenr">36: </span>      getFromResource<span style="color: #b5bd68;">(</span><span style="color: #b5bd68;">"static/index-fastopt.html"</span><span style="color: #b5bd68;">)</span>
+<span class="linenr">37: </span>    <span style="color: #de935f;">}</span> ~
+<span class="linenr">38: </span>      getFromResource<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"static/index-fullopt.html"</span><span style="color: #de935f;">)</span>
+<span class="linenr">39: </span>  <span style="color: #81a2be;">}</span> ~
+<span class="linenr">40: </span>    encodeResponse <span style="color: #81a2be;">{</span>
+<span class="linenr">41: </span>      getFromResourceDirectory<span style="color: #de935f;">(</span><span style="color: #b5bd68;">"static"</span><span style="color: #de935f;">)</span>
+<span class="linenr">42: </span>    <span style="color: #81a2be;">}</span>
 <span class="linenr">43: </span>
-<span class="linenr">44: </span>  <span style="color: #859900;">val</span> <span style="color: #6c71c4;">host</span> <span style="color: #859900;">=</span> conf.getString<span style="color: #d33682;">(</span><span style="color: #2aa198;">"server.host"</span><span style="color: #d33682;">)</span>
-<span class="linenr">45: </span>  <span style="color: #859900;">val</span> <span style="color: #6c71c4;">port</span> <span style="color: #859900;">=</span> conf.getInt<span style="color: #d33682;">(</span><span style="color: #2aa198;">"server.port"</span><span style="color: #d33682;">)</span>
-<span class="linenr">46: </span>  <span style="color: #859900;">val</span> <span style="color: #6c71c4;">bindingFuture</span> <span style="color: #859900;">=</span> <span style="color: #d33682;">Http</span><span style="color: #d33682;">()</span>.bindAndHandle<span style="color: #d33682;">(</span>devRoute ~ productionRoute, host, port<span style="color: #d33682;">)</span>
-<span class="linenr">47: </span>  logger.info<span style="color: #d33682;">(</span>s<span style="color: #2aa198;">"Server online as http://</span><span style="color: #6c71c4;">${host}</span><span style="color: #2aa198;">:</span><span style="color: #6c71c4;">${port}</span><span style="color: #2aa198;">"</span><span style="color: #d33682;">)</span>
+<span class="linenr">44: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">host</span> <span style="color: #b294bb;">=</span> conf.getString<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"server.host"</span><span style="color: #81a2be;">)</span>
+<span class="linenr">45: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">port</span> <span style="color: #b294bb;">=</span> conf.getInt<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"server.port"</span><span style="color: #81a2be;">)</span>
+<span class="linenr">46: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">bindingFuture</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">Http</span><span style="color: #81a2be;">()</span>.bindAndHandle<span style="color: #81a2be;">(</span>devRoute ~ productionRoute, host, port<span style="color: #81a2be;">)</span>
+<span class="linenr">47: </span>  logger.info<span style="color: #81a2be;">(</span>s<span style="color: #b5bd68;">"Server online as http://</span><span style="color: #cc6666;">${host}</span><span style="color: #b5bd68;">:</span><span style="color: #cc6666;">${port}</span><span style="color: #b5bd68;">"</span><span style="color: #81a2be;">)</span>
 <span class="linenr">48: </span>
-<span class="linenr">49: </span>  <span style="color: #d33682;">Runtime</span>.getRuntime<span style="color: #d33682;">()</span>.addShutdownHook<span style="color: #d33682;">(</span><span style="color: #859900;">new</span> <span style="color: #b58900;">Thread</span><span style="color: #859900;">()</span> <span style="color: #859900;">{</span>
-<span class="linenr">50: </span>    <span style="color: #268bd2;">override</span> <span style="color: #859900;">def</span> <span style="color: #268bd2;">run</span><span style="color: #cb4b16;">()</span> <span style="color: #859900;">=</span> <span style="color: #cb4b16;">{</span>
-<span class="linenr">51: </span>      <span style="color: #859900;">val</span> <span style="color: #6c71c4;">f</span> <span style="color: #859900;">=</span> bindingFuture.flatMap<span style="color: #6c71c4;">(</span><span style="color: #859900;">_</span>.unbind<span style="color: #b58900;">()</span><span style="color: #6c71c4;">)</span> andThen <span style="color: #6c71c4;">{</span>
-<span class="linenr">52: </span>        <span style="color: #859900;">case</span> <span style="color: #859900;">_</span> <span style="color: #859900;">=&gt;</span> actorSystem.terminate<span style="color: #b58900;">()</span>
-<span class="linenr">53: </span>      <span style="color: #6c71c4;">}</span>
-<span class="linenr">54: </span>      <span style="color: #d33682;">Await</span>.ready<span style="color: #6c71c4;">(</span>f, <span style="color: #d33682; font-weight: bold;">1</span> minute<span style="color: #6c71c4;">)</span>
-<span class="linenr">55: </span>      logger.info<span style="color: #6c71c4;">(</span><span style="color: #2aa198;">"Goodbye!"</span><span style="color: #6c71c4;">)</span>
-<span class="linenr">56: </span>      shutdownLatch.countDown<span style="color: #6c71c4;">()</span>
-<span class="linenr">57: </span>    <span style="color: #cb4b16;">}</span>
-<span class="linenr">58: </span>  <span style="color: #859900;">}</span><span style="color: #d33682;">)</span>
+<span class="linenr">49: </span>  <span style="color: #de935f;">Runtime</span>.getRuntime<span style="color: #81a2be;">()</span>.addShutdownHook<span style="color: #81a2be;">(</span><span style="color: #b294bb;">new</span> <span style="color: #f0c674;">Thread</span><span style="color: #de935f;">()</span> <span style="color: #de935f;">{</span>
+<span class="linenr">50: </span>    <span style="color: #81a2be;">override</span> <span style="color: #b294bb;">def</span> <span style="color: #81a2be;">run</span><span style="color: #b5bd68;">()</span> <span style="color: #b294bb;">=</span> <span style="color: #b5bd68;">{</span>
+<span class="linenr">51: </span>      <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">f</span> <span style="color: #b294bb;">=</span> bindingFuture.flatMap<span style="color: #c9b4cf;">(</span><span style="color: #b294bb;">_</span>.unbind<span style="color: #f0c674;">()</span><span style="color: #c9b4cf;">)</span> andThen <span style="color: #c9b4cf;">{</span>
+<span class="linenr">52: </span>        <span style="color: #b294bb;">case</span> <span style="color: #b294bb;">_</span> <span style="color: #b294bb;">=&gt;</span> actorSystem.terminate<span style="color: #f0c674;">()</span>
+<span class="linenr">53: </span>      <span style="color: #c9b4cf;">}</span>
+<span class="linenr">54: </span>      <span style="color: #de935f;">Await</span>.ready<span style="color: #c9b4cf;">(</span>f, <span style="color: #de935f; font-weight: bold;">1</span> minute<span style="color: #c9b4cf;">)</span>
+<span class="linenr">55: </span>      logger.info<span style="color: #c9b4cf;">(</span><span style="color: #b5bd68;">"Goodbye!"</span><span style="color: #c9b4cf;">)</span>
+<span class="linenr">56: </span>      shutdownLatch.countDown<span style="color: #c9b4cf;">()</span>
+<span class="linenr">57: </span>    <span style="color: #b5bd68;">}</span>
+<span class="linenr">58: </span>  <span style="color: #de935f;">}</span><span style="color: #81a2be;">)</span>
 <span class="linenr">59: </span>
-<span class="linenr">60: </span>  shutdownLatch.await<span style="color: #d33682;">()</span>
-<span class="linenr">61: </span><span style="color: #268bd2;">}</span>
+<span class="linenr">60: </span>  shutdownLatch.await<span style="color: #81a2be;">()</span>
+<span class="linenr">61: </span><span style="color: #b294bb;">}</span>
 </pre>
 </div>
 
@@ -340,14 +341,14 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 </p>
 
 <div class="org-src-container">
-<pre class="src src-javascript"><span class="linenr">1: </span><span style="color: #859900;">function</span> <span style="color: #268bd2;">AppViewModel</span><span style="color: #268bd2;">()</span> <span style="color: #268bd2;">{</span>
-<span class="linenr">2: </span>  <span style="color: #d33682;">this</span>.firstName = ko.observable<span style="color: #d33682;">(</span><span style="color: #2aa198;">'Bob'</span><span style="color: #d33682;">)</span>;
-<span class="linenr">3: </span>  <span style="color: #d33682;">this</span>.lastName = ko.observable<span style="color: #d33682;">(</span><span style="color: #2aa198;">'Smith'</span><span style="color: #d33682;">)</span>;
+<pre class="src src-javascript"><span class="linenr">1: </span><span style="color: #b294bb;">function</span> <span style="color: #81a2be;">AppViewModel</span><span style="color: #b294bb;">()</span> <span style="color: #b294bb;">{</span>
+<span class="linenr">2: </span>  <span style="color: #de935f;">this</span>.firstName = ko.observable<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">'Bob'</span><span style="color: #81a2be;">)</span>;
+<span class="linenr">3: </span>  <span style="color: #de935f;">this</span>.lastName = ko.observable<span style="color: #81a2be;">(</span><span style="color: #b5bd68;">'Smith'</span><span style="color: #81a2be;">)</span>;
 <span class="linenr">4: </span>
-<span class="linenr">5: </span>  <span style="color: #d33682;">this</span>.fullName = ko.computed<span style="color: #d33682;">(</span><span style="color: #859900;">function</span><span style="color: #859900;">()</span> <span style="color: #859900;">{</span>
-<span class="linenr">6: </span>    <span style="color: #859900;">return</span> <span style="color: #d33682;">this</span>.firstName<span style="color: #cb4b16;">()</span> + <span style="color: #2aa198;">" "</span> + <span style="color: #d33682;">this</span>.lastName<span style="color: #cb4b16;">()</span>;
-<span class="linenr">7: </span>  <span style="color: #859900;">}</span>, <span style="color: #d33682;">this</span><span style="color: #d33682;">)</span>;
-<span class="linenr">8: </span><span style="color: #268bd2;">}</span>
+<span class="linenr">5: </span>  <span style="color: #de935f;">this</span>.fullName = ko.computed<span style="color: #81a2be;">(</span><span style="color: #b294bb;">function</span><span style="color: #de935f;">()</span> <span style="color: #de935f;">{</span>
+<span class="linenr">6: </span>    <span style="color: #b294bb;">return</span> <span style="color: #de935f;">this</span>.firstName<span style="color: #b5bd68;">()</span> + <span style="color: #b5bd68;">" "</span> + <span style="color: #de935f;">this</span>.lastName<span style="color: #b5bd68;">()</span>;
+<span class="linenr">7: </span>  <span style="color: #de935f;">}</span>, <span style="color: #de935f;">this</span><span style="color: #81a2be;">)</span>;
+<span class="linenr">8: </span><span style="color: #b294bb;">}</span>
 </pre>
 </div>
 
@@ -356,12 +357,12 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr">1: </span><span style="color: #859900;">val</span> <span style="color: #6c71c4;">firstName</span> <span style="color: #859900;">=</span> <span style="color: #d33682;">Var</span><span style="color: #268bd2;">(</span><span style="color: #2aa198;">"Shane"</span><span style="color: #268bd2;">)</span>
-<span class="linenr">2: </span><span style="color: #859900;">val</span> <span style="color: #6c71c4;">lastName</span> <span style="color: #859900;">=</span> <span style="color: #d33682;">Var</span><span style="color: #268bd2;">(</span><span style="color: #2aa198;">"Xu"</span><span style="color: #268bd2;">)</span>
+<pre class="src src-scala"><span class="linenr">1: </span><span style="color: #b294bb;">val</span> <span style="color: #cc6666;">firstName</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">Var</span><span style="color: #b294bb;">(</span><span style="color: #b5bd68;">"Shane"</span><span style="color: #b294bb;">)</span>
+<span class="linenr">2: </span><span style="color: #b294bb;">val</span> <span style="color: #cc6666;">lastName</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">Var</span><span style="color: #b294bb;">(</span><span style="color: #b5bd68;">"Xu"</span><span style="color: #b294bb;">)</span>
 <span class="linenr">3: </span>
-<span class="linenr">4: </span><span style="color: #859900;">val</span> <span style="color: #6c71c4;">fullName</span> <span style="color: #859900;">=</span> <span style="color: #d33682;">Binding</span> <span style="color: #268bd2;">{</span>
-<span class="linenr">5: </span>  s<span style="color: #2aa198;">"</span><span style="color: #6c71c4;">${firstName.bind}</span><span style="color: #2aa198;"> </span><span style="color: #6c71c4;">${lastName.bind}</span><span style="color: #2aa198;">"</span>
-<span class="linenr">6: </span><span style="color: #268bd2;">}</span>
+<span class="linenr">4: </span><span style="color: #b294bb;">val</span> <span style="color: #cc6666;">fullName</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">Binding</span> <span style="color: #b294bb;">{</span>
+<span class="linenr">5: </span>  s<span style="color: #b5bd68;">"</span><span style="color: #cc6666;">${firstName.bind}</span><span style="color: #b5bd68;"> </span><span style="color: #cc6666;">${lastName.bind}</span><span style="color: #b5bd68;">"</span>
+<span class="linenr">6: </span><span style="color: #b294bb;">}</span>
 </pre>
 </div>
 
@@ -391,24 +392,24 @@ Binding.scala 不发明“组件”之类的噱头，而以更轻巧的“方法
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #cb4b16; font-weight: bold;">@dom</span> <span style="color: #859900;">def</span> <span style="color: #268bd2;">tagPicker</span><span style="color: #268bd2;">(</span>tags<span style="color: #859900;">:</span> <span style="color: #b58900;">Vars</span><span style="color: #d33682;">[</span><span style="color: #d33682;">String</span><span style="color: #d33682;">]</span><span style="color: #268bd2;">)</span> <span style="color: #859900;">=</span> <span style="color: #268bd2;">{</span>
-<span class="linenr"> 2: </span>  <span style="color: #859900;">val</span> <span style="color: #6c71c4;">input</span><span style="color: #859900;">:</span> <span style="color: #b58900;">Input</span> <span style="color: #859900;">=</span> &lt;input <span style="color: #859900;">type=</span><span style="color: #2aa198;">"text"</span>/&gt;
-<span class="linenr"> 3: </span>  <span style="color: #859900;">val</span> <span style="color: #6c71c4;">addHandler</span> <span style="color: #859900;">=</span> <span style="color: #d33682;">{</span> event<span style="color: #859900;">:</span> <span style="color: #b58900;">Event</span> <span style="color: #859900;">=&gt;</span>
-<span class="linenr"> 4: </span>    <span style="color: #859900;">if</span> <span style="color: #859900;">(</span>input.value != <span style="color: #2aa198;">""</span> &amp;&amp; !tags.get.contains<span style="color: #cb4b16;">(</span>input.value<span style="color: #cb4b16;">)</span><span style="color: #859900;">)</span> <span style="color: #859900;">{</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #c5c8c6; font-weight: bold;">@dom</span> <span style="color: #b294bb;">def</span> <span style="color: #81a2be;">tagPicker</span><span style="color: #b294bb;">(</span>tags<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Vars</span><span style="color: #81a2be;">[</span><span style="color: #de935f;">String</span><span style="color: #81a2be;">]</span><span style="color: #b294bb;">)</span> <span style="color: #b294bb;">=</span> <span style="color: #b294bb;">{</span>
+<span class="linenr"> 2: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">input</span><span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Input</span> <span style="color: #b294bb;">=</span> &lt;input <span style="color: #b294bb;">type=</span><span style="color: #b5bd68;">"text"</span>/&gt;
+<span class="linenr"> 3: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">addHandler</span> <span style="color: #b294bb;">=</span> <span style="color: #81a2be;">{</span> event<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Event</span> <span style="color: #b294bb;">=&gt;</span>
+<span class="linenr"> 4: </span>    <span style="color: #b294bb;">if</span> <span style="color: #de935f;">(</span>input.value != <span style="color: #b5bd68;">""</span> &amp;&amp; !tags.get.contains<span style="color: #b5bd68;">(</span>input.value<span style="color: #b5bd68;">)</span><span style="color: #de935f;">)</span> <span style="color: #de935f;">{</span>
 <span class="linenr"> 5: </span>      tags.get += input.value
-<span class="linenr"> 6: </span>      input.value <span style="color: #859900;">=</span> <span style="color: #2aa198;">""</span>
-<span class="linenr"> 7: </span>    <span style="color: #859900;">}</span>
-<span class="linenr"> 8: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr"> 6: </span>      input.value <span style="color: #b294bb;">=</span> <span style="color: #b5bd68;">""</span>
+<span class="linenr"> 7: </span>    <span style="color: #de935f;">}</span>
+<span class="linenr"> 8: </span>  <span style="color: #81a2be;">}</span>
 <span class="linenr"> 9: </span>  &lt;section&gt;
-<span class="linenr">10: </span>    &lt;div&gt;<span style="color: #d33682;">{</span>
-<span class="linenr">11: </span>      <span style="color: #859900;">for</span> <span style="color: #859900;">(</span>tag <span style="color: #859900;">&lt;-</span> tags<span style="color: #859900;">)</span> <span style="color: #859900;">yield</span> &lt;q&gt;
-<span class="linenr">12: </span>        <span style="color: #859900;">{</span> tag <span style="color: #859900;">}</span>
-<span class="linenr">13: </span>        &lt;button onclick<span style="color: #859900;">=</span><span style="color: #859900;">{</span> event<span style="color: #859900;">:</span> <span style="color: #b58900;">Event</span> <span style="color: #859900;">=&gt;</span> tags.get -= tag <span style="color: #859900;">}</span>&gt;x&lt;/button&gt;
+<span class="linenr">10: </span>    &lt;div&gt;<span style="color: #81a2be;">{</span>
+<span class="linenr">11: </span>      <span style="color: #b294bb;">for</span> <span style="color: #de935f;">(</span>tag <span style="color: #b294bb;">&lt;-</span> tags<span style="color: #de935f;">)</span> <span style="color: #b294bb;">yield</span> &lt;q&gt;
+<span class="linenr">12: </span>        <span style="color: #de935f;">{</span> tag <span style="color: #de935f;">}</span>
+<span class="linenr">13: </span>        &lt;button onclick<span style="color: #b294bb;">=</span><span style="color: #de935f;">{</span> event<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Event</span> <span style="color: #b294bb;">=&gt;</span> tags.get -= tag <span style="color: #de935f;">}</span>&gt;x&lt;/button&gt;
 <span class="linenr">14: </span>      &lt;/q&gt;
-<span class="linenr">15: </span>    <span style="color: #d33682;">}</span>&lt;/div&gt;
-<span class="linenr">16: </span>    &lt;div&gt;<span style="color: #d33682;">{</span> input <span style="color: #d33682;">}</span> &lt;button onclick<span style="color: #859900;">=</span><span style="color: #d33682;">{</span> addHandler <span style="color: #d33682;">}</span>&gt;<span style="color: #d33682;">Add</span>&lt;/button&gt;&lt;/div&gt;
+<span class="linenr">15: </span>    <span style="color: #81a2be;">}</span>&lt;/div&gt;
+<span class="linenr">16: </span>    &lt;div&gt;<span style="color: #81a2be;">{</span> input <span style="color: #81a2be;">}</span> &lt;button onclick<span style="color: #b294bb;">=</span><span style="color: #81a2be;">{</span> addHandler <span style="color: #81a2be;">}</span>&gt;<span style="color: #de935f;">Add</span>&lt;/button&gt;&lt;/div&gt;
 <span class="linenr">17: </span>  &lt;/section&gt;
-<span class="linenr">18: </span><span style="color: #268bd2;">}</span>
+<span class="linenr">18: </span><span style="color: #b294bb;">}</span>
 </pre>
 </div>
 
@@ -417,65 +418,65 @@ Binding.scala 不发明“组件”之类的噱头，而以更轻巧的“方法
 </p>
 
 <div class="org-src-container">
-<pre class="src src-xml"><span class="linenr"> 1: </span>&lt;<span style="color: #268bd2;">Window</span> <span style="color: #268bd2;">x</span>:<span style="color: #6c71c4;">Class</span> = <span style="color: #2aa198;">"TemplateDemo.MainWindow"</span> 
-<span class="linenr"> 2: </span>   <span style="color: #268bd2;">xmlns</span> = <span style="color: #2aa198;">"http://schemas.microsoft.com/winfx/2006/xaml/presentation"</span> 
-<span class="linenr"> 3: </span>   <span style="color: #268bd2;">xmlns</span>:<span style="color: #6c71c4;">x</span> = <span style="color: #2aa198;">"http://schemas.microsoft.com/winfx/2006/xaml"</span> 
-<span class="linenr"> 4: </span>   <span style="color: #6c71c4;">Title</span> = <span style="color: #2aa198;">"MainWindow"</span> <span style="color: #6c71c4;">Height</span> = <span style="color: #2aa198;">"350"</span> <span style="color: #6c71c4;">Width</span> = <span style="color: #2aa198;">"604"</span>&gt; 
+<pre class="src src-xml"><span class="linenr"> 1: </span>&lt;<span style="color: #81a2be;">Window</span> <span style="color: #81a2be;">x</span>:<span style="color: #cc6666;">Class</span> = <span style="color: #b5bd68;">"TemplateDemo.MainWindow"</span> 
+<span class="linenr"> 2: </span>   <span style="color: #81a2be;">xmlns</span> = <span style="color: #b5bd68;">"http://schemas.microsoft.com/winfx/2006/xaml/presentation"</span> 
+<span class="linenr"> 3: </span>   <span style="color: #81a2be;">xmlns</span>:<span style="color: #cc6666;">x</span> = <span style="color: #b5bd68;">"http://schemas.microsoft.com/winfx/2006/xaml"</span> 
+<span class="linenr"> 4: </span>   <span style="color: #cc6666;">Title</span> = <span style="color: #b5bd68;">"MainWindow"</span> <span style="color: #cc6666;">Height</span> = <span style="color: #b5bd68;">"350"</span> <span style="color: #cc6666;">Width</span> = <span style="color: #b5bd68;">"604"</span>&gt; 
 <span class="linenr"> 5: </span>
-<span class="linenr"> 6: </span>   &lt;<span style="color: #268bd2;">Window.Resources</span>&gt; 
-<span class="linenr"> 7: </span>      &lt;<span style="color: #268bd2;">ControlTemplate</span> <span style="color: #268bd2;">x</span>:<span style="color: #6c71c4;">Key</span>= <span style="color: #2aa198;">"ButtonTemplate"</span> <span style="color: #6c71c4;">TargetType</span> = <span style="color: #2aa198;">"Button"</span>&gt;
+<span class="linenr"> 6: </span>   &lt;<span style="color: #81a2be;">Window.Resources</span>&gt; 
+<span class="linenr"> 7: </span>      &lt;<span style="color: #81a2be;">ControlTemplate</span> <span style="color: #81a2be;">x</span>:<span style="color: #cc6666;">Key</span>= <span style="color: #b5bd68;">"ButtonTemplate"</span> <span style="color: #cc6666;">TargetType</span> = <span style="color: #b5bd68;">"Button"</span>&gt;
 <span class="linenr"> 8: </span>
-<span class="linenr"> 9: </span>         &lt;<span style="color: #268bd2;">Grid</span>&gt; 
-<span class="linenr">10: </span>            &lt;<span style="color: #268bd2;">Ellipse</span> <span style="color: #268bd2;">x</span>:<span style="color: #6c71c4;">Name</span> = <span style="color: #2aa198;">"ButtonEllipse"</span> <span style="color: #6c71c4;">Height</span> = <span style="color: #2aa198;">"100"</span> <span style="color: #6c71c4;">Width</span> = <span style="color: #2aa198;">"150"</span> &gt; 
-<span class="linenr">11: </span>               &lt;<span style="color: #268bd2;">Ellipse.Fill</span>&gt; 
-<span class="linenr">12: </span>                  &lt;<span style="color: #268bd2;">LinearGradientBrush</span> <span style="color: #6c71c4;">StartPoint</span> = <span style="color: #2aa198;">"0,0.2"</span> <span style="color: #6c71c4;">EndPoint</span> = <span style="color: #2aa198;">"0.2,1.4"</span>&gt; 
-<span class="linenr">13: </span>                     &lt;<span style="color: #268bd2;">GradientStop</span> <span style="color: #6c71c4;">Offset</span> = <span style="color: #2aa198;">"0"</span> <span style="color: #6c71c4;">Color</span> = <span style="color: #2aa198;">"Red"</span> /&gt; 
-<span class="linenr">14: </span>                     &lt;<span style="color: #268bd2;">GradientStop</span> <span style="color: #6c71c4;">Offset</span> = <span style="color: #2aa198;">"1"</span> <span style="color: #6c71c4;">Color</span> = <span style="color: #2aa198;">"Orange"</span> /&gt; 
-<span class="linenr">15: </span>                  &lt;/<span style="color: #268bd2;">LinearGradientBrush</span>&gt; 
-<span class="linenr">16: </span>               &lt;/<span style="color: #268bd2;">Ellipse.Fill</span>&gt; 
-<span class="linenr">17: </span>            &lt;/<span style="color: #268bd2;">Ellipse</span>&gt; 
+<span class="linenr"> 9: </span>         &lt;<span style="color: #81a2be;">Grid</span>&gt; 
+<span class="linenr">10: </span>            &lt;<span style="color: #81a2be;">Ellipse</span> <span style="color: #81a2be;">x</span>:<span style="color: #cc6666;">Name</span> = <span style="color: #b5bd68;">"ButtonEllipse"</span> <span style="color: #cc6666;">Height</span> = <span style="color: #b5bd68;">"100"</span> <span style="color: #cc6666;">Width</span> = <span style="color: #b5bd68;">"150"</span> &gt; 
+<span class="linenr">11: </span>               &lt;<span style="color: #81a2be;">Ellipse.Fill</span>&gt; 
+<span class="linenr">12: </span>                  &lt;<span style="color: #81a2be;">LinearGradientBrush</span> <span style="color: #cc6666;">StartPoint</span> = <span style="color: #b5bd68;">"0,0.2"</span> <span style="color: #cc6666;">EndPoint</span> = <span style="color: #b5bd68;">"0.2,1.4"</span>&gt; 
+<span class="linenr">13: </span>                     &lt;<span style="color: #81a2be;">GradientStop</span> <span style="color: #cc6666;">Offset</span> = <span style="color: #b5bd68;">"0"</span> <span style="color: #cc6666;">Color</span> = <span style="color: #b5bd68;">"Red"</span> /&gt; 
+<span class="linenr">14: </span>                     &lt;<span style="color: #81a2be;">GradientStop</span> <span style="color: #cc6666;">Offset</span> = <span style="color: #b5bd68;">"1"</span> <span style="color: #cc6666;">Color</span> = <span style="color: #b5bd68;">"Orange"</span> /&gt; 
+<span class="linenr">15: </span>                  &lt;/<span style="color: #81a2be;">LinearGradientBrush</span>&gt; 
+<span class="linenr">16: </span>               &lt;/<span style="color: #81a2be;">Ellipse.Fill</span>&gt; 
+<span class="linenr">17: </span>            &lt;/<span style="color: #81a2be;">Ellipse</span>&gt; 
 <span class="linenr">18: </span>
-<span class="linenr">19: </span>            &lt;<span style="color: #268bd2;">ContentPresenter</span> <span style="color: #6c71c4;">Content</span> = <span style="color: #2aa198;">"{TemplateBinding Content}"</span> 
-<span class="linenr">20: </span>               <span style="color: #6c71c4;">HorizontalAlignment</span> = <span style="color: #2aa198;">"Center"</span> <span style="color: #6c71c4;">VerticalAlignment</span> = <span style="color: #2aa198;">"Center"</span> /&gt; 
-<span class="linenr">21: </span>         &lt;/<span style="color: #268bd2;">Grid</span>&gt; 
+<span class="linenr">19: </span>            &lt;<span style="color: #81a2be;">ContentPresenter</span> <span style="color: #cc6666;">Content</span> = <span style="color: #b5bd68;">"{TemplateBinding Content}"</span> 
+<span class="linenr">20: </span>               <span style="color: #cc6666;">HorizontalAlignment</span> = <span style="color: #b5bd68;">"Center"</span> <span style="color: #cc6666;">VerticalAlignment</span> = <span style="color: #b5bd68;">"Center"</span> /&gt; 
+<span class="linenr">21: </span>         &lt;/<span style="color: #81a2be;">Grid</span>&gt; 
 <span class="linenr">22: </span>
-<span class="linenr">23: </span>         &lt;<span style="color: #268bd2;">ControlTemplate.Triggers</span>&gt; 
+<span class="linenr">23: </span>         &lt;<span style="color: #81a2be;">ControlTemplate.Triggers</span>&gt; 
 <span class="linenr">24: </span>
-<span class="linenr">25: </span>            &lt;<span style="color: #268bd2;">Trigger</span> <span style="color: #6c71c4;">Property</span> = <span style="color: #2aa198;">"IsMouseOver"</span> <span style="color: #6c71c4;">Value</span> = <span style="color: #2aa198;">"True"</span>&gt; 
-<span class="linenr">26: </span>               &lt;<span style="color: #268bd2;">Setter</span> <span style="color: #6c71c4;">TargetName</span> = <span style="color: #2aa198;">"ButtonEllipse"</span> <span style="color: #6c71c4;">Property</span> = <span style="color: #2aa198;">"Fill"</span> &gt; 
-<span class="linenr">27: </span>                  &lt;<span style="color: #268bd2;">Setter.Value</span>&gt; 
-<span class="linenr">28: </span>                     &lt;<span style="color: #268bd2;">LinearGradientBrush</span> <span style="color: #6c71c4;">StartPoint</span> = <span style="color: #2aa198;">"0,0.2"</span> <span style="color: #6c71c4;">EndPoint</span> = <span style="color: #2aa198;">"0.2,1.4"</span>&gt; 
-<span class="linenr">29: </span>                        &lt;<span style="color: #268bd2;">GradientStop</span> <span style="color: #6c71c4;">Offset</span> = <span style="color: #2aa198;">"0"</span> <span style="color: #6c71c4;">Color</span> = <span style="color: #2aa198;">"YellowGreen"</span> /&gt; 
-<span class="linenr">30: </span>                        &lt;<span style="color: #268bd2;">GradientStop</span> <span style="color: #6c71c4;">Offset</span> = <span style="color: #2aa198;">"1"</span> <span style="color: #6c71c4;">Color</span> = <span style="color: #2aa198;">"Gold"</span> /&gt; 
-<span class="linenr">31: </span>                     &lt;/<span style="color: #268bd2;">LinearGradientBrush</span>&gt; 
-<span class="linenr">32: </span>                  &lt;/<span style="color: #268bd2;">Setter.Value</span>&gt; 
-<span class="linenr">33: </span>               &lt;/<span style="color: #268bd2;">Setter</span>&gt; 
-<span class="linenr">34: </span>            &lt;/<span style="color: #268bd2;">Trigger</span>&gt; 
+<span class="linenr">25: </span>            &lt;<span style="color: #81a2be;">Trigger</span> <span style="color: #cc6666;">Property</span> = <span style="color: #b5bd68;">"IsMouseOver"</span> <span style="color: #cc6666;">Value</span> = <span style="color: #b5bd68;">"True"</span>&gt; 
+<span class="linenr">26: </span>               &lt;<span style="color: #81a2be;">Setter</span> <span style="color: #cc6666;">TargetName</span> = <span style="color: #b5bd68;">"ButtonEllipse"</span> <span style="color: #cc6666;">Property</span> = <span style="color: #b5bd68;">"Fill"</span> &gt; 
+<span class="linenr">27: </span>                  &lt;<span style="color: #81a2be;">Setter.Value</span>&gt; 
+<span class="linenr">28: </span>                     &lt;<span style="color: #81a2be;">LinearGradientBrush</span> <span style="color: #cc6666;">StartPoint</span> = <span style="color: #b5bd68;">"0,0.2"</span> <span style="color: #cc6666;">EndPoint</span> = <span style="color: #b5bd68;">"0.2,1.4"</span>&gt; 
+<span class="linenr">29: </span>                        &lt;<span style="color: #81a2be;">GradientStop</span> <span style="color: #cc6666;">Offset</span> = <span style="color: #b5bd68;">"0"</span> <span style="color: #cc6666;">Color</span> = <span style="color: #b5bd68;">"YellowGreen"</span> /&gt; 
+<span class="linenr">30: </span>                        &lt;<span style="color: #81a2be;">GradientStop</span> <span style="color: #cc6666;">Offset</span> = <span style="color: #b5bd68;">"1"</span> <span style="color: #cc6666;">Color</span> = <span style="color: #b5bd68;">"Gold"</span> /&gt; 
+<span class="linenr">31: </span>                     &lt;/<span style="color: #81a2be;">LinearGradientBrush</span>&gt; 
+<span class="linenr">32: </span>                  &lt;/<span style="color: #81a2be;">Setter.Value</span>&gt; 
+<span class="linenr">33: </span>               &lt;/<span style="color: #81a2be;">Setter</span>&gt; 
+<span class="linenr">34: </span>            &lt;/<span style="color: #81a2be;">Trigger</span>&gt; 
 <span class="linenr">35: </span>
-<span class="linenr">36: </span>            &lt;<span style="color: #268bd2;">Trigger</span> <span style="color: #6c71c4;">Property</span> = <span style="color: #2aa198;">"IsPressed"</span> <span style="color: #6c71c4;">Value</span> = <span style="color: #2aa198;">"True"</span>&gt; 
-<span class="linenr">37: </span>               &lt;<span style="color: #268bd2;">Setter</span> <span style="color: #6c71c4;">Property</span> = <span style="color: #2aa198;">"RenderTransform"</span>&gt; 
-<span class="linenr">38: </span>                  &lt;<span style="color: #268bd2;">Setter.Value</span>&gt; 
-<span class="linenr">39: </span>                     &lt;<span style="color: #268bd2;">ScaleTransform</span> <span style="color: #6c71c4;">ScaleX</span> = <span style="color: #2aa198;">"0.8"</span> <span style="color: #6c71c4;">ScaleY</span> = <span style="color: #2aa198;">"0.8"</span> 
-<span class="linenr">40: </span>                        <span style="color: #6c71c4;">CenterX</span> = <span style="color: #2aa198;">"0"</span> <span style="color: #6c71c4;">CenterY</span> = <span style="color: #2aa198;">"0"</span>  /&gt; 
-<span class="linenr">41: </span>                  &lt;/<span style="color: #268bd2;">Setter.Value</span>&gt; 
-<span class="linenr">42: </span>               &lt;/<span style="color: #268bd2;">Setter</span>&gt; 
-<span class="linenr">43: </span>               &lt;<span style="color: #268bd2;">Setter</span> <span style="color: #6c71c4;">Property</span> = <span style="color: #2aa198;">"RenderTransformOrigin"</span> <span style="color: #6c71c4;">Value</span> = <span style="color: #2aa198;">"0.5,0.5"</span> /&gt; 
-<span class="linenr">44: </span>            &lt;/<span style="color: #268bd2;">Trigger</span>&gt; 
+<span class="linenr">36: </span>            &lt;<span style="color: #81a2be;">Trigger</span> <span style="color: #cc6666;">Property</span> = <span style="color: #b5bd68;">"IsPressed"</span> <span style="color: #cc6666;">Value</span> = <span style="color: #b5bd68;">"True"</span>&gt; 
+<span class="linenr">37: </span>               &lt;<span style="color: #81a2be;">Setter</span> <span style="color: #cc6666;">Property</span> = <span style="color: #b5bd68;">"RenderTransform"</span>&gt; 
+<span class="linenr">38: </span>                  &lt;<span style="color: #81a2be;">Setter.Value</span>&gt; 
+<span class="linenr">39: </span>                     &lt;<span style="color: #81a2be;">ScaleTransform</span> <span style="color: #cc6666;">ScaleX</span> = <span style="color: #b5bd68;">"0.8"</span> <span style="color: #cc6666;">ScaleY</span> = <span style="color: #b5bd68;">"0.8"</span> 
+<span class="linenr">40: </span>                        <span style="color: #cc6666;">CenterX</span> = <span style="color: #b5bd68;">"0"</span> <span style="color: #cc6666;">CenterY</span> = <span style="color: #b5bd68;">"0"</span>  /&gt; 
+<span class="linenr">41: </span>                  &lt;/<span style="color: #81a2be;">Setter.Value</span>&gt; 
+<span class="linenr">42: </span>               &lt;/<span style="color: #81a2be;">Setter</span>&gt; 
+<span class="linenr">43: </span>               &lt;<span style="color: #81a2be;">Setter</span> <span style="color: #cc6666;">Property</span> = <span style="color: #b5bd68;">"RenderTransformOrigin"</span> <span style="color: #cc6666;">Value</span> = <span style="color: #b5bd68;">"0.5,0.5"</span> /&gt; 
+<span class="linenr">44: </span>            &lt;/<span style="color: #81a2be;">Trigger</span>&gt; 
 <span class="linenr">45: </span>
-<span class="linenr">46: </span>         &lt;/<span style="color: #268bd2;">ControlTemplate.Triggers</span>&gt; 
+<span class="linenr">46: </span>         &lt;/<span style="color: #81a2be;">ControlTemplate.Triggers</span>&gt; 
 <span class="linenr">47: </span>
-<span class="linenr">48: </span>      &lt;/<span style="color: #268bd2;">ControlTemplate</span>&gt; 
-<span class="linenr">49: </span>   &lt;/<span style="color: #268bd2;">Window.Resources</span>&gt; 
+<span class="linenr">48: </span>      &lt;/<span style="color: #81a2be;">ControlTemplate</span>&gt; 
+<span class="linenr">49: </span>   &lt;/<span style="color: #81a2be;">Window.Resources</span>&gt; 
 <span class="linenr">50: </span>
-<span class="linenr">51: </span>   &lt;<span style="color: #268bd2;">StackPanel</span>&gt; 
-<span class="linenr">52: </span>      &lt;<span style="color: #268bd2;">Button</span> <span style="color: #6c71c4;">Content</span> = <span style="color: #2aa198;">"Round Button!"</span>
-<span class="linenr">53: </span>         <span style="color: #6c71c4;">Template</span> = <span style="color: #2aa198;">"{StaticResource ButtonTemplate}"</span> 
-<span class="linenr">54: </span>         <span style="color: #6c71c4;">Width</span> = <span style="color: #2aa198;">"150"</span> <span style="color: #6c71c4;">Margin</span> = <span style="color: #2aa198;">"50"</span> /&gt; 
-<span class="linenr">55: </span>      &lt;<span style="color: #268bd2;">Button</span> <span style="color: #6c71c4;">Content</span> = <span style="color: #2aa198;">"Default Button!"</span> <span style="color: #6c71c4;">Height</span> = <span style="color: #2aa198;">"40"</span> 
-<span class="linenr">56: </span>         <span style="color: #6c71c4;">Width</span> = <span style="color: #2aa198;">"150"</span> <span style="color: #6c71c4;">Margin</span> = <span style="color: #2aa198;">"5"</span> /&gt;
-<span class="linenr">57: </span>   &lt;/<span style="color: #268bd2;">StackPanel</span>&gt; 
+<span class="linenr">51: </span>   &lt;<span style="color: #81a2be;">StackPanel</span>&gt; 
+<span class="linenr">52: </span>      &lt;<span style="color: #81a2be;">Button</span> <span style="color: #cc6666;">Content</span> = <span style="color: #b5bd68;">"Round Button!"</span>
+<span class="linenr">53: </span>         <span style="color: #cc6666;">Template</span> = <span style="color: #b5bd68;">"{StaticResource ButtonTemplate}"</span> 
+<span class="linenr">54: </span>         <span style="color: #cc6666;">Width</span> = <span style="color: #b5bd68;">"150"</span> <span style="color: #cc6666;">Margin</span> = <span style="color: #b5bd68;">"50"</span> /&gt; 
+<span class="linenr">55: </span>      &lt;<span style="color: #81a2be;">Button</span> <span style="color: #cc6666;">Content</span> = <span style="color: #b5bd68;">"Default Button!"</span> <span style="color: #cc6666;">Height</span> = <span style="color: #b5bd68;">"40"</span> 
+<span class="linenr">56: </span>         <span style="color: #cc6666;">Width</span> = <span style="color: #b5bd68;">"150"</span> <span style="color: #cc6666;">Margin</span> = <span style="color: #b5bd68;">"5"</span> /&gt;
+<span class="linenr">57: </span>   &lt;/<span style="color: #81a2be;">StackPanel</span>&gt; 
 <span class="linenr">58: </span>
-<span class="linenr">59: </span>&lt;/<span style="color: #268bd2;">Window</span>&gt; 
+<span class="linenr">59: </span>&lt;/<span style="color: #81a2be;">Window</span>&gt; 
 </pre>
 </div>
 
@@ -489,46 +490,46 @@ Window.Resources标签中，定义了一个适用于Button的ControlTemplate，�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-xml"><span class="linenr"> 1: </span>&lt;<span style="color: #268bd2;">LinearGradientBrush</span> <span style="color: #268bd2;">x</span>:<span style="color: #6c71c4;">Key</span>=<span style="color: #2aa198;">"TabItemHotBackground"</span> <span style="color: #6c71c4;">EndPoint</span>=<span style="color: #2aa198;">"0,1"</span> <span style="color: #6c71c4;">StartPoint</span>=<span style="color: #2aa198;">"0,0"</span>&gt;
-<span class="linenr"> 2: </span>    &lt;<span style="color: #268bd2;">GradientStop</span> <span style="color: #6c71c4;">Color</span>=<span style="color: #2aa198;">"#EAF6FD"</span> <span style="color: #6c71c4;">Offset</span>=<span style="color: #2aa198;">"0.15"</span>/&gt;
-<span class="linenr"> 3: </span>    &lt;<span style="color: #268bd2;">GradientStop</span> <span style="color: #6c71c4;">Color</span>=<span style="color: #2aa198;">"#D9F0FC"</span> <span style="color: #6c71c4;">Offset</span>=<span style="color: #2aa198;">".5"</span>/&gt;
-<span class="linenr"> 4: </span>    &lt;<span style="color: #268bd2;">GradientStop</span> <span style="color: #6c71c4;">Color</span>=<span style="color: #2aa198;">"#BEE6FD"</span> <span style="color: #6c71c4;">Offset</span>=<span style="color: #2aa198;">".5"</span>/&gt;
-<span class="linenr"> 5: </span>    &lt;<span style="color: #268bd2;">GradientStop</span> <span style="color: #6c71c4;">Color</span>=<span style="color: #2aa198;">"#A7D9F5"</span> <span style="color: #6c71c4;">Offset</span>=<span style="color: #2aa198;">"1"</span>/&gt;
-<span class="linenr"> 6: </span>&lt;/<span style="color: #268bd2;">LinearGradientBrush</span>&gt;
-<span class="linenr"> 7: </span>&lt;<span style="color: #268bd2;">SolidColorBrush</span> <span style="color: #268bd2;">x</span>:<span style="color: #6c71c4;">Key</span>=<span style="color: #2aa198;">"TabItemSelectedBackground"</span> <span style="color: #6c71c4;">Color</span>=<span style="color: #2aa198;">"#F9F9F9"</span>/&gt;
-<span class="linenr"> 8: </span>&lt;<span style="color: #268bd2;">SolidColorBrush</span> <span style="color: #268bd2;">x</span>:<span style="color: #6c71c4;">Key</span>=<span style="color: #2aa198;">"TabItemHotBorderBrush"</span> <span style="color: #6c71c4;">Color</span>=<span style="color: #2aa198;">"#3C7FB1"</span>/&gt;
+<pre class="src src-xml"><span class="linenr"> 1: </span>&lt;<span style="color: #81a2be;">LinearGradientBrush</span> <span style="color: #81a2be;">x</span>:<span style="color: #cc6666;">Key</span>=<span style="color: #b5bd68;">"TabItemHotBackground"</span> <span style="color: #cc6666;">EndPoint</span>=<span style="color: #b5bd68;">"0,1"</span> <span style="color: #cc6666;">StartPoint</span>=<span style="color: #b5bd68;">"0,0"</span>&gt;
+<span class="linenr"> 2: </span>    &lt;<span style="color: #81a2be;">GradientStop</span> <span style="color: #cc6666;">Color</span>=<span style="color: #b5bd68;">"#EAF6FD"</span> <span style="color: #cc6666;">Offset</span>=<span style="color: #b5bd68;">"0.15"</span>/&gt;
+<span class="linenr"> 3: </span>    &lt;<span style="color: #81a2be;">GradientStop</span> <span style="color: #cc6666;">Color</span>=<span style="color: #b5bd68;">"#D9F0FC"</span> <span style="color: #cc6666;">Offset</span>=<span style="color: #b5bd68;">".5"</span>/&gt;
+<span class="linenr"> 4: </span>    &lt;<span style="color: #81a2be;">GradientStop</span> <span style="color: #cc6666;">Color</span>=<span style="color: #b5bd68;">"#BEE6FD"</span> <span style="color: #cc6666;">Offset</span>=<span style="color: #b5bd68;">".5"</span>/&gt;
+<span class="linenr"> 5: </span>    &lt;<span style="color: #81a2be;">GradientStop</span> <span style="color: #cc6666;">Color</span>=<span style="color: #b5bd68;">"#A7D9F5"</span> <span style="color: #cc6666;">Offset</span>=<span style="color: #b5bd68;">"1"</span>/&gt;
+<span class="linenr"> 6: </span>&lt;/<span style="color: #81a2be;">LinearGradientBrush</span>&gt;
+<span class="linenr"> 7: </span>&lt;<span style="color: #81a2be;">SolidColorBrush</span> <span style="color: #81a2be;">x</span>:<span style="color: #cc6666;">Key</span>=<span style="color: #b5bd68;">"TabItemSelectedBackground"</span> <span style="color: #cc6666;">Color</span>=<span style="color: #b5bd68;">"#F9F9F9"</span>/&gt;
+<span class="linenr"> 8: </span>&lt;<span style="color: #81a2be;">SolidColorBrush</span> <span style="color: #81a2be;">x</span>:<span style="color: #cc6666;">Key</span>=<span style="color: #b5bd68;">"TabItemHotBorderBrush"</span> <span style="color: #cc6666;">Color</span>=<span style="color: #b5bd68;">"#3C7FB1"</span>/&gt;
 <span class="linenr"> 9: </span>
-<span class="linenr">10: </span>&lt;<span style="color: #268bd2;">Style</span> <span style="color: #268bd2;">x</span>:<span style="color: #6c71c4;">Key</span>=<span style="color: #2aa198;">"RadioButtonStyle1"</span> <span style="color: #6c71c4;">TargetType</span>=<span style="color: #2aa198;">"{x:Type RadioButton}"</span>&gt;
-<span class="linenr">11: </span>    &lt;<span style="color: #268bd2;">Setter</span> <span style="color: #6c71c4;">Property</span>=<span style="color: #2aa198;">"Template"</span>&gt;
-<span class="linenr">12: </span>        &lt;<span style="color: #268bd2;">Setter.Value</span>&gt;
-<span class="linenr">13: </span>            &lt;<span style="color: #268bd2;">ControlTemplate</span> <span style="color: #6c71c4;">TargetType</span>=<span style="color: #2aa198;">"RadioButton"</span>&gt;
-<span class="linenr">14: </span>                &lt;<span style="color: #268bd2;">Border</span> <span style="color: #6c71c4;">BorderBrush</span>=<span style="color: #2aa198;">"Transparent"</span> <span style="color: #6c71c4;">BorderThickness</span>=<span style="color: #2aa198;">"0"</span> <span style="color: #6c71c4;">Background</span>=<span style="color: #2aa198;">"Transparent"</span> <span style="color: #6c71c4;">CornerRadius</span>=<span style="color: #2aa198;">"0"</span>&gt;
-<span class="linenr">15: </span>                    &lt;<span style="color: #268bd2;">TabItem</span> <span style="color: #268bd2;">x</span>:<span style="color: #6c71c4;">Name</span>=<span style="color: #2aa198;">"tabItem"</span> <span style="color: #6c71c4;">IsSelected</span>=<span style="color: #2aa198;">"{TemplateBinding IsChecked}"</span> <span style="color: #6c71c4;">IsHitTestVisible</span>=<span style="color: #2aa198;">"False"</span>&gt;
-<span class="linenr">16: </span>                        &lt;<span style="color: #268bd2;">TabItem.Header</span>&gt;
-<span class="linenr">17: </span>                            &lt;<span style="color: #268bd2;">ContentPresenter</span> <span style="color: #6c71c4;">Margin</span>=<span style="color: #2aa198;">"5"</span>/&gt;
-<span class="linenr">18: </span>                        &lt;/<span style="color: #268bd2;">TabItem.Header</span>&gt;
-<span class="linenr">19: </span>                    &lt;/<span style="color: #268bd2;">TabItem</span>&gt;
-<span class="linenr">20: </span>                &lt;/<span style="color: #268bd2;">Border</span>&gt;
-<span class="linenr">21: </span>                &lt;<span style="color: #268bd2;">ControlTemplate.Triggers</span>&gt;
-<span class="linenr">22: </span>                    &lt;<span style="color: #268bd2;">Trigger</span> <span style="color: #6c71c4;">Property</span>=<span style="color: #2aa198;">"IsMouseOver"</span> <span style="color: #6c71c4;">Value</span>=<span style="color: #2aa198;">"true"</span>&gt;
-<span class="linenr">23: </span>                        &lt;<span style="color: #268bd2;">Setter</span> <span style="color: #6c71c4;">Property</span>=<span style="color: #2aa198;">"Background"</span> <span style="color: #6c71c4;">TargetName</span>=<span style="color: #2aa198;">"tabItem"</span> <span style="color: #6c71c4;">Value</span>=<span style="color: #2aa198;">"{StaticResource TabItemHotBackground}"</span>/&gt;
-<span class="linenr">24: </span>                    &lt;/<span style="color: #268bd2;">Trigger</span>&gt;
-<span class="linenr">25: </span>                    &lt;<span style="color: #268bd2;">Trigger</span> <span style="color: #6c71c4;">Property</span>=<span style="color: #2aa198;">"IsChecked"</span> <span style="color: #6c71c4;">Value</span>=<span style="color: #2aa198;">"true"</span>&gt;
-<span class="linenr">26: </span>                        &lt;<span style="color: #268bd2;">Setter</span> <span style="color: #6c71c4;">Property</span>=<span style="color: #2aa198;">"Panel.ZIndex"</span> <span style="color: #6c71c4;">Value</span>=<span style="color: #2aa198;">"1"</span>/&gt;
-<span class="linenr">27: </span>                        &lt;<span style="color: #268bd2;">Setter</span> <span style="color: #6c71c4;">Property</span>=<span style="color: #2aa198;">"Background"</span> <span style="color: #6c71c4;">TargetName</span>=<span style="color: #2aa198;">"tabItem"</span> <span style="color: #6c71c4;">Value</span>=<span style="color: #2aa198;">"{StaticResource TabItemSelectedBackground}"</span>/&gt;
-<span class="linenr">28: </span>                    &lt;/<span style="color: #268bd2;">Trigger</span>&gt;
-<span class="linenr">29: </span>                    &lt;<span style="color: #268bd2;">MultiTrigger</span>&gt;
-<span class="linenr">30: </span>                        &lt;<span style="color: #268bd2;">MultiTrigger.Conditions</span>&gt;
-<span class="linenr">31: </span>                            &lt;<span style="color: #268bd2;">Condition</span> <span style="color: #6c71c4;">Property</span>=<span style="color: #2aa198;">"IsChecked"</span> <span style="color: #6c71c4;">Value</span>=<span style="color: #2aa198;">"false"</span>/&gt;
-<span class="linenr">32: </span>                            &lt;<span style="color: #268bd2;">Condition</span> <span style="color: #6c71c4;">Property</span>=<span style="color: #2aa198;">"IsMouseOver"</span> <span style="color: #6c71c4;">Value</span>=<span style="color: #2aa198;">"true"</span>/&gt;
-<span class="linenr">33: </span>                        &lt;/<span style="color: #268bd2;">MultiTrigger.Conditions</span>&gt;
-<span class="linenr">34: </span>                        &lt;<span style="color: #268bd2;">Setter</span> <span style="color: #6c71c4;">Property</span>=<span style="color: #2aa198;">"BorderBrush"</span> <span style="color: #6c71c4;">TargetName</span>=<span style="color: #2aa198;">"tabItem"</span> <span style="color: #6c71c4;">Value</span>=<span style="color: #2aa198;">"{StaticResource TabItemHotBorderBrush}"</span>/&gt;
-<span class="linenr">35: </span>                    &lt;/<span style="color: #268bd2;">MultiTrigger</span>&gt;
-<span class="linenr">36: </span>                &lt;/<span style="color: #268bd2;">ControlTemplate.Triggers</span>&gt;
-<span class="linenr">37: </span>            &lt;/<span style="color: #268bd2;">ControlTemplate</span>&gt;
-<span class="linenr">38: </span>        &lt;/<span style="color: #268bd2;">Setter.Value</span>&gt;
-<span class="linenr">39: </span>    &lt;/<span style="color: #268bd2;">Setter</span>&gt;
-<span class="linenr">40: </span>&lt;/<span style="color: #268bd2;">Style</span>&gt;
+<span class="linenr">10: </span>&lt;<span style="color: #81a2be;">Style</span> <span style="color: #81a2be;">x</span>:<span style="color: #cc6666;">Key</span>=<span style="color: #b5bd68;">"RadioButtonStyle1"</span> <span style="color: #cc6666;">TargetType</span>=<span style="color: #b5bd68;">"{x:Type RadioButton}"</span>&gt;
+<span class="linenr">11: </span>    &lt;<span style="color: #81a2be;">Setter</span> <span style="color: #cc6666;">Property</span>=<span style="color: #b5bd68;">"Template"</span>&gt;
+<span class="linenr">12: </span>        &lt;<span style="color: #81a2be;">Setter.Value</span>&gt;
+<span class="linenr">13: </span>            &lt;<span style="color: #81a2be;">ControlTemplate</span> <span style="color: #cc6666;">TargetType</span>=<span style="color: #b5bd68;">"RadioButton"</span>&gt;
+<span class="linenr">14: </span>                &lt;<span style="color: #81a2be;">Border</span> <span style="color: #cc6666;">BorderBrush</span>=<span style="color: #b5bd68;">"Transparent"</span> <span style="color: #cc6666;">BorderThickness</span>=<span style="color: #b5bd68;">"0"</span> <span style="color: #cc6666;">Background</span>=<span style="color: #b5bd68;">"Transparent"</span> <span style="color: #cc6666;">CornerRadius</span>=<span style="color: #b5bd68;">"0"</span>&gt;
+<span class="linenr">15: </span>                    &lt;<span style="color: #81a2be;">TabItem</span> <span style="color: #81a2be;">x</span>:<span style="color: #cc6666;">Name</span>=<span style="color: #b5bd68;">"tabItem"</span> <span style="color: #cc6666;">IsSelected</span>=<span style="color: #b5bd68;">"{TemplateBinding IsChecked}"</span> <span style="color: #cc6666;">IsHitTestVisible</span>=<span style="color: #b5bd68;">"False"</span>&gt;
+<span class="linenr">16: </span>                        &lt;<span style="color: #81a2be;">TabItem.Header</span>&gt;
+<span class="linenr">17: </span>                            &lt;<span style="color: #81a2be;">ContentPresenter</span> <span style="color: #cc6666;">Margin</span>=<span style="color: #b5bd68;">"5"</span>/&gt;
+<span class="linenr">18: </span>                        &lt;/<span style="color: #81a2be;">TabItem.Header</span>&gt;
+<span class="linenr">19: </span>                    &lt;/<span style="color: #81a2be;">TabItem</span>&gt;
+<span class="linenr">20: </span>                &lt;/<span style="color: #81a2be;">Border</span>&gt;
+<span class="linenr">21: </span>                &lt;<span style="color: #81a2be;">ControlTemplate.Triggers</span>&gt;
+<span class="linenr">22: </span>                    &lt;<span style="color: #81a2be;">Trigger</span> <span style="color: #cc6666;">Property</span>=<span style="color: #b5bd68;">"IsMouseOver"</span> <span style="color: #cc6666;">Value</span>=<span style="color: #b5bd68;">"true"</span>&gt;
+<span class="linenr">23: </span>                        &lt;<span style="color: #81a2be;">Setter</span> <span style="color: #cc6666;">Property</span>=<span style="color: #b5bd68;">"Background"</span> <span style="color: #cc6666;">TargetName</span>=<span style="color: #b5bd68;">"tabItem"</span> <span style="color: #cc6666;">Value</span>=<span style="color: #b5bd68;">"{StaticResource TabItemHotBackground}"</span>/&gt;
+<span class="linenr">24: </span>                    &lt;/<span style="color: #81a2be;">Trigger</span>&gt;
+<span class="linenr">25: </span>                    &lt;<span style="color: #81a2be;">Trigger</span> <span style="color: #cc6666;">Property</span>=<span style="color: #b5bd68;">"IsChecked"</span> <span style="color: #cc6666;">Value</span>=<span style="color: #b5bd68;">"true"</span>&gt;
+<span class="linenr">26: </span>                        &lt;<span style="color: #81a2be;">Setter</span> <span style="color: #cc6666;">Property</span>=<span style="color: #b5bd68;">"Panel.ZIndex"</span> <span style="color: #cc6666;">Value</span>=<span style="color: #b5bd68;">"1"</span>/&gt;
+<span class="linenr">27: </span>                        &lt;<span style="color: #81a2be;">Setter</span> <span style="color: #cc6666;">Property</span>=<span style="color: #b5bd68;">"Background"</span> <span style="color: #cc6666;">TargetName</span>=<span style="color: #b5bd68;">"tabItem"</span> <span style="color: #cc6666;">Value</span>=<span style="color: #b5bd68;">"{StaticResource TabItemSelectedBackground}"</span>/&gt;
+<span class="linenr">28: </span>                    &lt;/<span style="color: #81a2be;">Trigger</span>&gt;
+<span class="linenr">29: </span>                    &lt;<span style="color: #81a2be;">MultiTrigger</span>&gt;
+<span class="linenr">30: </span>                        &lt;<span style="color: #81a2be;">MultiTrigger.Conditions</span>&gt;
+<span class="linenr">31: </span>                            &lt;<span style="color: #81a2be;">Condition</span> <span style="color: #cc6666;">Property</span>=<span style="color: #b5bd68;">"IsChecked"</span> <span style="color: #cc6666;">Value</span>=<span style="color: #b5bd68;">"false"</span>/&gt;
+<span class="linenr">32: </span>                            &lt;<span style="color: #81a2be;">Condition</span> <span style="color: #cc6666;">Property</span>=<span style="color: #b5bd68;">"IsMouseOver"</span> <span style="color: #cc6666;">Value</span>=<span style="color: #b5bd68;">"true"</span>/&gt;
+<span class="linenr">33: </span>                        &lt;/<span style="color: #81a2be;">MultiTrigger.Conditions</span>&gt;
+<span class="linenr">34: </span>                        &lt;<span style="color: #81a2be;">Setter</span> <span style="color: #cc6666;">Property</span>=<span style="color: #b5bd68;">"BorderBrush"</span> <span style="color: #cc6666;">TargetName</span>=<span style="color: #b5bd68;">"tabItem"</span> <span style="color: #cc6666;">Value</span>=<span style="color: #b5bd68;">"{StaticResource TabItemHotBorderBrush}"</span>/&gt;
+<span class="linenr">35: </span>                    &lt;/<span style="color: #81a2be;">MultiTrigger</span>&gt;
+<span class="linenr">36: </span>                &lt;/<span style="color: #81a2be;">ControlTemplate.Triggers</span>&gt;
+<span class="linenr">37: </span>            &lt;/<span style="color: #81a2be;">ControlTemplate</span>&gt;
+<span class="linenr">38: </span>        &lt;/<span style="color: #81a2be;">Setter.Value</span>&gt;
+<span class="linenr">39: </span>    &lt;/<span style="color: #81a2be;">Setter</span>&gt;
+<span class="linenr">40: </span>&lt;/<span style="color: #81a2be;">Style</span>&gt;
 </pre>
 </div>
 
@@ -571,12 +572,12 @@ Window.Resources标签中，定义了一个适用于Button的ControlTemplate，�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr">1: </span><span style="color: #859900;">trait</span> <span style="color: #b58900;">Component</span><span style="color: #268bd2;">[</span><span style="color: #d33682;">T</span><span style="color: #268bd2;">]</span> <span style="color: #268bd2;">{</span> self<span style="color: #859900;">:</span> <span style="color: #b58900;">T</span> <span style="color: #859900;">=&gt;</span>
-<span class="linenr">2: </span>  <span style="color: #cb4b16; font-weight: bold;">@dom</span>
-<span class="linenr">3: </span>  <span style="color: #859900;">def</span> <span style="color: #268bd2;">render</span><span style="color: #d33682;">(</span><span style="color: #268bd2;">implicit</span> template<span style="color: #859900;">:</span> <span style="color: #b58900;">T</span> <span style="color: #859900;">=&gt;</span> <span style="color: #d33682;">Binding</span><span style="color: #859900;">[</span><span style="color: #d33682;">Node</span><span style="color: #859900;">]</span><span style="color: #d33682;">)</span> <span style="color: #859900;">=</span> <span style="color: #d33682;">{</span>
-<span class="linenr">4: </span>    template<span style="color: #859900;">(</span>self<span style="color: #859900;">)</span>.bind
-<span class="linenr">5: </span>  <span style="color: #d33682;">}</span>
-<span class="linenr">6: </span><span style="color: #268bd2;">}</span>
+<pre class="src src-scala"><span class="linenr">1: </span><span style="color: #b294bb;">trait</span> <span style="color: #f0c674;">Component</span><span style="color: #b294bb;">[</span><span style="color: #de935f;">T</span><span style="color: #b294bb;">]</span> <span style="color: #b294bb;">{</span> self<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">T</span> <span style="color: #b294bb;">=&gt;</span>
+<span class="linenr">2: </span>  <span style="color: #c5c8c6; font-weight: bold;">@dom</span>
+<span class="linenr">3: </span>  <span style="color: #b294bb;">def</span> <span style="color: #81a2be;">render</span><span style="color: #81a2be;">(</span><span style="color: #81a2be;">implicit</span> template<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">T</span> <span style="color: #b294bb;">=&gt;</span> <span style="color: #de935f;">Binding</span><span style="color: #de935f;">[</span><span style="color: #de935f;">Node</span><span style="color: #de935f;">]</span><span style="color: #81a2be;">)</span> <span style="color: #b294bb;">=</span> <span style="color: #81a2be;">{</span>
+<span class="linenr">4: </span>    template<span style="color: #de935f;">(</span>self<span style="color: #de935f;">)</span>.bind
+<span class="linenr">5: </span>  <span style="color: #81a2be;">}</span>
+<span class="linenr">6: </span><span style="color: #b294bb;">}</span>
 </pre>
 </div>
 
@@ -585,58 +586,58 @@ Window.Resources标签中，定义了一个适用于Button的ControlTemplate，�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #859900;">import</span> org.scalajs.dom.raw.<span style="color: #268bd2;">{</span> <span style="color: #d33682;">Node</span>, <span style="color: #d33682;">Event</span>, <span style="color: #d33682;">HTMLInputElement</span> <span style="color: #268bd2;">}</span>
-<span class="linenr"> 2: </span><span style="color: #859900;">import</span> com.thoughtworks.binding.dom
-<span class="linenr"> 3: </span><span style="color: #859900;">import</span> com.thoughtworks.binding.<span style="color: #d33682;">Binding</span>
-<span class="linenr"> 4: </span><span style="color: #859900;">import</span> com.thoughtworks.binding.<span style="color: #d33682;">Binding</span>.<span style="color: #268bd2;">{</span> <span style="color: #d33682;">Var</span>, <span style="color: #d33682;">Vars</span> <span style="color: #268bd2;">}</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #b294bb;">import</span> org.scalajs.dom.raw.<span style="color: #b294bb;">{</span> <span style="color: #de935f;">Node</span>, <span style="color: #de935f;">Event</span>, <span style="color: #de935f;">HTMLInputElement</span> <span style="color: #b294bb;">}</span>
+<span class="linenr"> 2: </span><span style="color: #b294bb;">import</span> com.thoughtworks.binding.dom
+<span class="linenr"> 3: </span><span style="color: #b294bb;">import</span> com.thoughtworks.binding.<span style="color: #de935f;">Binding</span>
+<span class="linenr"> 4: </span><span style="color: #b294bb;">import</span> com.thoughtworks.binding.<span style="color: #de935f;">Binding</span>.<span style="color: #b294bb;">{</span> <span style="color: #de935f;">Var</span>, <span style="color: #de935f;">Vars</span> <span style="color: #b294bb;">}</span>
 <span class="linenr"> 5: </span>
-<span class="linenr"> 6: </span><span style="color: #859900;">case</span> <span style="color: #859900;">class</span> <span style="color: #b58900;">TagPicker</span><span style="color: #268bd2;">(</span>tags<span style="color: #859900;">:</span> <span style="color: #b58900;">Vars</span><span style="color: #d33682;">[</span><span style="color: #d33682;">String</span><span style="color: #d33682;">]</span><span style="color: #268bd2;">)</span> <span style="color: #859900;">extends</span> <span style="color: #b58900;">Component</span><span style="color: #268bd2;">[</span><span style="color: #d33682;">TagPicker</span><span style="color: #268bd2;">]</span> <span style="color: #268bd2;">{</span>
-<span class="linenr"> 7: </span>  <span style="color: #859900;">val</span> <span style="color: #6c71c4;">text</span> <span style="color: #859900;">=</span> <span style="color: #d33682;">Var</span><span style="color: #d33682;">(</span><span style="color: #2aa198;">""</span><span style="color: #d33682;">)</span>
+<span class="linenr"> 6: </span><span style="color: #b294bb;">case</span> <span style="color: #b294bb;">class</span> <span style="color: #f0c674;">TagPicker</span><span style="color: #b294bb;">(</span>tags<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Vars</span><span style="color: #81a2be;">[</span><span style="color: #de935f;">String</span><span style="color: #81a2be;">]</span><span style="color: #b294bb;">)</span> <span style="color: #b294bb;">extends</span> <span style="color: #f0c674;">Component</span><span style="color: #b294bb;">[</span><span style="color: #de935f;">TagPicker</span><span style="color: #b294bb;">]</span> <span style="color: #b294bb;">{</span>
+<span class="linenr"> 7: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">text</span> <span style="color: #b294bb;">=</span> <span style="color: #de935f;">Var</span><span style="color: #81a2be;">(</span><span style="color: #b5bd68;">""</span><span style="color: #81a2be;">)</span>
 <span class="linenr"> 8: </span>
-<span class="linenr"> 9: </span>  <span style="color: #859900;">val</span> <span style="color: #6c71c4;">textChangeHandler</span> <span style="color: #859900;">=</span> <span style="color: #d33682;">{</span> e<span style="color: #859900;">:</span> <span style="color: #b58900;">Event</span> <span style="color: #859900;">=&gt;</span>
-<span class="linenr">10: </span>    e.target <span style="color: #859900;">match</span> <span style="color: #859900;">{</span>
-<span class="linenr">11: </span>      <span style="color: #859900;">case</span> <span style="color: #6c71c4;">i</span><span style="color: #859900;">:</span> <span style="color: #b58900;">HTMLInputElement</span> <span style="color: #859900;">=&gt;</span>
+<span class="linenr"> 9: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">textChangeHandler</span> <span style="color: #b294bb;">=</span> <span style="color: #81a2be;">{</span> e<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Event</span> <span style="color: #b294bb;">=&gt;</span>
+<span class="linenr">10: </span>    e.target <span style="color: #b294bb;">match</span> <span style="color: #de935f;">{</span>
+<span class="linenr">11: </span>      <span style="color: #b294bb;">case</span> <span style="color: #cc6666;">i</span><span style="color: #b294bb;">:</span> <span style="color: #f0c674;">HTMLInputElement</span> <span style="color: #b294bb;">=&gt;</span>
 <span class="linenr">12: </span>        text := i.value
-<span class="linenr">13: </span>      <span style="color: #859900;">case</span> <span style="color: #859900;">_</span> <span style="color: #859900;">=&gt;</span>
-<span class="linenr">14: </span>    <span style="color: #859900;">}</span>
-<span class="linenr">15: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">13: </span>      <span style="color: #b294bb;">case</span> <span style="color: #b294bb;">_</span> <span style="color: #b294bb;">=&gt;</span>
+<span class="linenr">14: </span>    <span style="color: #de935f;">}</span>
+<span class="linenr">15: </span>  <span style="color: #81a2be;">}</span>
 <span class="linenr">16: </span>
-<span class="linenr">17: </span>  <span style="color: #859900;">val</span> <span style="color: #6c71c4;">addHandler</span> <span style="color: #859900;">=</span> <span style="color: #d33682;">{</span> e<span style="color: #859900;">:</span> <span style="color: #b58900;">Event</span> <span style="color: #859900;">=&gt;</span>
-<span class="linenr">18: </span>    text.get <span style="color: #859900;">match</span> <span style="color: #859900;">{</span>
-<span class="linenr">19: </span>      <span style="color: #859900;">case</span> <span style="color: #2aa198;">""</span> | <span style="color: #d33682;">null</span> <span style="color: #859900;">=&gt;</span>
-<span class="linenr">20: </span>      <span style="color: #859900;">case</span> <span style="color: #6c71c4;">value</span> <span style="color: #859900;">if</span> !tags.get.contains<span style="color: #cb4b16;">(</span>value<span style="color: #cb4b16;">)</span> <span style="color: #859900;">=&gt;</span>
+<span class="linenr">17: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">addHandler</span> <span style="color: #b294bb;">=</span> <span style="color: #81a2be;">{</span> e<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Event</span> <span style="color: #b294bb;">=&gt;</span>
+<span class="linenr">18: </span>    text.get <span style="color: #b294bb;">match</span> <span style="color: #de935f;">{</span>
+<span class="linenr">19: </span>      <span style="color: #b294bb;">case</span> <span style="color: #b5bd68;">""</span> | <span style="color: #de935f;">null</span> <span style="color: #b294bb;">=&gt;</span>
+<span class="linenr">20: </span>      <span style="color: #b294bb;">case</span> <span style="color: #cc6666;">value</span> <span style="color: #b294bb;">if</span> !tags.get.contains<span style="color: #b5bd68;">(</span>value<span style="color: #b5bd68;">)</span> <span style="color: #b294bb;">=&gt;</span>
 <span class="linenr">21: </span>        tags.get += value
-<span class="linenr">22: </span>        text := <span style="color: #2aa198;">""</span>
-<span class="linenr">23: </span>    <span style="color: #859900;">}</span>
-<span class="linenr">24: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">22: </span>        text := <span style="color: #b5bd68;">""</span>
+<span class="linenr">23: </span>    <span style="color: #de935f;">}</span>
+<span class="linenr">24: </span>  <span style="color: #81a2be;">}</span>
 <span class="linenr">25: </span>
-<span class="linenr">26: </span>  <span style="color: #859900;">val</span> <span style="color: #6c71c4;">removeHandler</span> <span style="color: #859900;">=</span> <span style="color: #d33682;">{</span> value<span style="color: #859900;">:</span> <span style="color: #b58900;">String</span> <span style="color: #859900;">=&gt;</span>
-<span class="linenr">27: </span>    <span style="color: #859900;">{</span> e<span style="color: #859900;">:</span> <span style="color: #b58900;">Event</span> <span style="color: #859900;">=&gt;</span>
+<span class="linenr">26: </span>  <span style="color: #b294bb;">val</span> <span style="color: #cc6666;">removeHandler</span> <span style="color: #b294bb;">=</span> <span style="color: #81a2be;">{</span> value<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">String</span> <span style="color: #b294bb;">=&gt;</span>
+<span class="linenr">27: </span>    <span style="color: #de935f;">{</span> e<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Event</span> <span style="color: #b294bb;">=&gt;</span>
 <span class="linenr">28: </span>      tags.get -= value
-<span class="linenr">29: </span>    <span style="color: #859900;">}</span>
-<span class="linenr">30: </span>  <span style="color: #d33682;">}</span>
-<span class="linenr">31: </span><span style="color: #268bd2;">}</span>
+<span class="linenr">29: </span>    <span style="color: #de935f;">}</span>
+<span class="linenr">30: </span>  <span style="color: #81a2be;">}</span>
+<span class="linenr">31: </span><span style="color: #b294bb;">}</span>
 <span class="linenr">32: </span>
-<span class="linenr">33: </span><span style="color: #859900;">object</span> <span style="color: #d33682;">TagPicker</span> <span style="color: #268bd2;">{</span>
+<span class="linenr">33: </span><span style="color: #b294bb;">object</span> <span style="color: #de935f;">TagPicker</span> <span style="color: #b294bb;">{</span>
 <span class="linenr">34: </span>
-<span class="linenr">35: </span>  <span style="color: #cb4b16; font-weight: bold;">@dom</span>
-<span class="linenr">36: </span>  <span style="color: #268bd2;">implicit</span> <span style="color: #859900;">def</span> <span style="color: #268bd2;">defaultTemplate</span><span style="color: #d33682;">(</span>self<span style="color: #859900;">:</span> <span style="color: #b58900;">TagPicker</span><span style="color: #d33682;">)</span><span style="color: #859900;">:</span> <span style="color: #b58900;">Binding</span><span style="color: #d33682;">[</span><span style="color: #d33682;">Node</span><span style="color: #d33682;">]</span> <span style="color: #859900;">=</span> <span style="color: #d33682;">{</span>
+<span class="linenr">35: </span>  <span style="color: #c5c8c6; font-weight: bold;">@dom</span>
+<span class="linenr">36: </span>  <span style="color: #81a2be;">implicit</span> <span style="color: #b294bb;">def</span> <span style="color: #81a2be;">defaultTemplate</span><span style="color: #81a2be;">(</span>self<span style="color: #b294bb;">:</span> <span style="color: #f0c674;">TagPicker</span><span style="color: #81a2be;">)</span><span style="color: #b294bb;">:</span> <span style="color: #f0c674;">Binding</span><span style="color: #81a2be;">[</span><span style="color: #de935f;">Node</span><span style="color: #81a2be;">]</span> <span style="color: #b294bb;">=</span> <span style="color: #81a2be;">{</span>
 <span class="linenr">37: </span>    &lt;section&gt;
-<span class="linenr">38: </span>      &lt;div&gt;<span style="color: #859900;">{</span>
-<span class="linenr">39: </span>        <span style="color: #859900;">for</span> <span style="color: #cb4b16;">(</span>tag <span style="color: #859900;">&lt;-</span> self.tags<span style="color: #cb4b16;">)</span> <span style="color: #859900;">yield</span> <span style="color: #cb4b16;">{</span>
+<span class="linenr">38: </span>      &lt;div&gt;<span style="color: #de935f;">{</span>
+<span class="linenr">39: </span>        <span style="color: #b294bb;">for</span> <span style="color: #b5bd68;">(</span>tag <span style="color: #b294bb;">&lt;-</span> self.tags<span style="color: #b5bd68;">)</span> <span style="color: #b294bb;">yield</span> <span style="color: #b5bd68;">{</span>
 <span class="linenr">40: </span>          &lt;span&gt;
-<span class="linenr">41: </span>            <span style="color: #6c71c4;">{</span> tag <span style="color: #6c71c4;">}</span>
-<span class="linenr">42: </span>            &lt;button onclick<span style="color: #859900;">=</span><span style="color: #6c71c4;">{</span> self.removeHandler<span style="color: #b58900;">(</span>tag<span style="color: #b58900;">)</span> <span style="color: #6c71c4;">}</span>&gt;x&lt;/button&gt;
+<span class="linenr">41: </span>            <span style="color: #c9b4cf;">{</span> tag <span style="color: #c9b4cf;">}</span>
+<span class="linenr">42: </span>            &lt;button onclick<span style="color: #b294bb;">=</span><span style="color: #c9b4cf;">{</span> self.removeHandler<span style="color: #f0c674;">(</span>tag<span style="color: #f0c674;">)</span> <span style="color: #c9b4cf;">}</span>&gt;x&lt;/button&gt;
 <span class="linenr">43: </span>          &lt;/span&gt;
-<span class="linenr">44: </span>        <span style="color: #cb4b16;">}</span>
-<span class="linenr">45: </span>      <span style="color: #859900;">}</span>&lt;/div&gt;
+<span class="linenr">44: </span>        <span style="color: #b5bd68;">}</span>
+<span class="linenr">45: </span>      <span style="color: #de935f;">}</span>&lt;/div&gt;
 <span class="linenr">46: </span>      &lt;div&gt;
-<span class="linenr">47: </span>        &lt;input value<span style="color: #859900;">=</span><span style="color: #859900;">{</span> self.text.bind <span style="color: #859900;">}</span> onchange<span style="color: #859900;">=</span><span style="color: #859900;">{</span> self.textChangeHandler <span style="color: #859900;">}</span>/&gt;
-<span class="linenr">48: </span>        &lt;button onclick<span style="color: #859900;">=</span><span style="color: #859900;">{</span> self.addHandler <span style="color: #859900;">}</span>&gt;<span style="color: #d33682;">Add</span>&lt;/button&gt;
+<span class="linenr">47: </span>        &lt;input value<span style="color: #b294bb;">=</span><span style="color: #de935f;">{</span> self.text.bind <span style="color: #de935f;">}</span> onchange<span style="color: #b294bb;">=</span><span style="color: #de935f;">{</span> self.textChangeHandler <span style="color: #de935f;">}</span>/&gt;
+<span class="linenr">48: </span>        &lt;button onclick<span style="color: #b294bb;">=</span><span style="color: #de935f;">{</span> self.addHandler <span style="color: #de935f;">}</span>&gt;<span style="color: #de935f;">Add</span>&lt;/button&gt;
 <span class="linenr">49: </span>      &lt;/div&gt;
 <span class="linenr">50: </span>    &lt;/section&gt;
-<span class="linenr">51: </span>  <span style="color: #d33682;">}</span>
-<span class="linenr">52: </span><span style="color: #268bd2;">}</span>
+<span class="linenr">51: </span>  <span style="color: #81a2be;">}</span>
+<span class="linenr">52: </span><span style="color: #b294bb;">}</span>
 </pre>
 </div>
 

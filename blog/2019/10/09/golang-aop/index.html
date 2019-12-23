@@ -24,6 +24,7 @@
     <div class="node nav">
       <ul>
           <li><a href="/blog/" id="Blog_tab">Blog</a></li>
+          <li><a href="/media/" id="Media_tab">Media</a></li>
         <li><a href="/tags/">Tags</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="https://github.com/shanexu">GitHub</a></li>
@@ -34,9 +35,9 @@
 
   <h3 class="section">golang aop的一种实现方法</h3>
 
-<div id="outline-container-org0c2263c" class="outline-2">
-<h2 id="org0c2263c">序</h2>
-<div class="outline-text-2" id="text-org0c2263c">
+<div id="outline-container-orgff7278d" class="outline-2">
+<h2 id="orgff7278d">序</h2>
+<div class="outline-text-2" id="text-orgff7278d">
 <p>
 实际这个标题有点夸张了。我原本也不想实现golang的aop，也无意去实现。我的出发点仅仅是APM(Application Performance Management)。我们总说golang是一门怎么怎么神奇好用的语言，然而仅仅是一个aop都难以优雅地实现。再比如，opentracing，设计了一整套api，做分布式调用链追踪，其中包括java、golang等语言，实际上纯用java的人可能根本不需要用opentracing这套东西。java的字节码增强实在是太好用了。根本就不需要这样繁琐地在代码中显示地调用opentracing的api。所以golang有没有类似java这样的字节码增强的方法呢？肯定没有啊。
 </p>
@@ -68,52 +69,52 @@
 </div>
 </div>
 
-<div id="outline-container-org18b3ad7" class="outline-2">
-<h2 id="org18b3ad7">开发环境准备</h2>
-<div class="outline-text-2" id="text-org18b3ad7">
+<div id="outline-container-orgfedc123" class="outline-2">
+<h2 id="orgfedc123">开发环境准备</h2>
+<div class="outline-text-2" id="text-orgfedc123">
 <p>
 工欲善其事必先利其器，我敬佩那些用vim和emacs写golang代码的大神（虽然我也用emacs写golang代码），但是面对golang源码这个大工程，我还是选择使用GoLand。因为牵涉到很多环境变量的切换，推荐使用 <a href="https://direnv.net/">direnv</a> 方便切换配置。
 </p>
 </div>
 
-<div id="outline-container-orga65242c" class="outline-3">
-<h3 id="orga65242c">准备源代码</h3>
-<div class="outline-text-3" id="text-orga65242c">
+<div id="outline-container-orgf3c1d7c" class="outline-3">
+<h3 id="orgf3c1d7c">准备源代码</h3>
+<div class="outline-text-3" id="text-orgf3c1d7c">
 <div class="org-src-container">
-<pre class="src src-shell">mkdir -p $<span style="color: #6c71c4;">HOME</span>/src/github.com/golang
-<span style="color: #268bd2;">cd</span> $<span style="color: #6c71c4;">HOME</span>/src/github.com/golang
+<pre class="src src-shell">mkdir -p $<span style="color: #cc6666;">HOME</span>/src/github.com/golang
+<span style="color: #81a2be;">cd</span> $<span style="color: #cc6666;">HOME</span>/src/github.com/golang
 git clone https://github.com/golang/go.git
-<span style="color: #268bd2;">cd</span> $<span style="color: #6c71c4;">HOME</span>/src/github.com/golang/go/src
-<span style="color: #268bd2;">echo</span> <span style="color: #2aa198;">'export GOROOT=$HOME/src/github.com/golang/go</span>
-<span style="color: #2aa198;">export PATH=$GOROOT/bin:$PATH</span>
-<span style="color: #2aa198;">export GOBIN=$GOROOT/bin'</span> &gt; .envrc
+<span style="color: #81a2be;">cd</span> $<span style="color: #cc6666;">HOME</span>/src/github.com/golang/go/src
+<span style="color: #81a2be;">echo</span> <span style="color: #b5bd68;">'export GOROOT=$HOME/src/github.com/golang/go</span>
+<span style="color: #b5bd68;">export PATH=$GOROOT/bin:$PATH</span>
+<span style="color: #b5bd68;">export GOBIN=$GOROOT/bin'</span> &gt; .envrc
 direnv allow
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org4956932" class="outline-3">
-<h3 id="org4956932">安装BOOTSTRAP环境（go编译器通过go语言编译，正如gcc通过gcc编译一般）</h3>
-<div class="outline-text-3" id="text-org4956932">
+<div id="outline-container-orgafd68f7" class="outline-3">
+<h3 id="orgafd68f7">安装BOOTSTRAP环境（go编译器通过go语言编译，正如gcc通过gcc编译一般）</h3>
+<div class="outline-text-3" id="text-orgafd68f7">
 <div class="org-src-container">
-<pre class="src src-shell">mkdir $<span style="color: #6c71c4;">HOME</span>/gos
-<span style="color: #268bd2;">cd</span> $<span style="color: #6c71c4;">HOME</span>/gos
+<pre class="src src-shell">mkdir $<span style="color: #cc6666;">HOME</span>/gos
+<span style="color: #81a2be;">cd</span> $<span style="color: #cc6666;">HOME</span>/gos
 curl https://dl.google.com/go/go1.12.10.darwin-amd64.tar.gz | tar xvzf -
 mv go go1.12.10
-<span style="color: #268bd2;">cd</span> $<span style="color: #6c71c4;">HOME</span>/src/github.com/golang/go/src
-<span style="color: #268bd2;">echo</span> <span style="color: #2aa198;">'export GOROOT_BOOTSTRAP=$HOME/gos/go1.12.10'</span> &gt;&gt; .envrc
+<span style="color: #81a2be;">cd</span> $<span style="color: #cc6666;">HOME</span>/src/github.com/golang/go/src
+<span style="color: #81a2be;">echo</span> <span style="color: #b5bd68;">'export GOROOT_BOOTSTRAP=$HOME/gos/go1.12.10'</span> &gt;&gt; .envrc
 direnv allow
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orga53a88d" class="outline-3">
-<h3 id="orga53a88d">切换到最新的tag，并创建一个分支</h3>
-<div class="outline-text-3" id="text-orga53a88d">
+<div id="outline-container-org0c8c572" class="outline-3">
+<h3 id="org0c8c572">切换到最新的tag，并创建一个分支</h3>
+<div class="outline-text-3" id="text-org0c8c572">
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #268bd2;">cd</span> $<span style="color: #6c71c4;">HOME</span>/src/github.com/golang/go
+<pre class="src src-shell"><span style="color: #81a2be;">cd</span> $<span style="color: #cc6666;">HOME</span>/src/github.com/golang/go
 git checkout go1.13.1
 git checkout -b go1.13.1-playground
 </pre>
@@ -121,11 +122,11 @@ git checkout -b go1.13.1-playground
 </div>
 </div>
 
-<div id="outline-container-orge48a6e6" class="outline-3">
-<h3 id="orge48a6e6">首次尝试编译go编译器</h3>
-<div class="outline-text-3" id="text-orge48a6e6">
+<div id="outline-container-org75b14a0" class="outline-3">
+<h3 id="org75b14a0">首次尝试编译go编译器</h3>
+<div class="outline-text-3" id="text-org75b14a0">
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #268bd2;">cd</span> $<span style="color: #6c71c4;">HOME</span>/src/github.com/golang/go/src
+<pre class="src src-shell"><span style="color: #81a2be;">cd</span> $<span style="color: #cc6666;">HOME</span>/src/github.com/golang/go/src
 ./make.bash
 </pre>
 </div>
@@ -150,20 +151,20 @@ Installed commands in /Users/shane/src/github.com/golang/go/bin
 验证编译
 </p>
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #268bd2;">which</span> go
+<pre class="src src-shell"><span style="color: #81a2be;">which</span> go
 go version
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org55ee948" class="outline-3">
-<h3 id="org55ee948">GoLand设置</h3>
-<div class="outline-text-3" id="text-org55ee948">
+<div id="outline-container-org91576d0" class="outline-3">
+<h3 id="org91576d0">GoLand设置</h3>
+<div class="outline-text-3" id="text-org91576d0">
 </div>
-<div id="outline-container-orgd361f7b" class="outline-4">
-<h4 id="orgd361f7b">创建项目</h4>
-<div class="outline-text-4" id="text-orgd361f7b">
+<div id="outline-container-org86e8a4f" class="outline-4">
+<h4 id="org86e8a4f">创建项目</h4>
+<div class="outline-text-4" id="text-org86e8a4f">
 <p>
 File -&gt; Open 选择工程根目录
 </p>
@@ -176,9 +177,9 @@ File -&gt; Open 选择工程根目录
 </div>
 </div>
 
-<div id="outline-container-orgde3f25a" class="outline-4">
-<h4 id="orgde3f25a">设置GOROOT</h4>
-<div class="outline-text-4" id="text-orgde3f25a">
+<div id="outline-container-orga51000e" class="outline-4">
+<h4 id="orga51000e">设置GOROOT</h4>
+<div class="outline-text-4" id="text-orga51000e">
 <p>
 <code>$HOME/src/github.com/golang/go</code>
 </p>
@@ -192,45 +193,45 @@ File -&gt; Open 选择工程根目录
 </div>
 </div>
 
-<div id="outline-container-org884b52e" class="outline-3">
-<h3 id="org884b52e">创建一个playground项目，用于测试编译</h3>
-<div class="outline-text-3" id="text-org884b52e">
+<div id="outline-container-org98a6218" class="outline-3">
+<h3 id="org98a6218">创建一个playground项目，用于测试编译</h3>
+<div class="outline-text-3" id="text-org98a6218">
 </div>
-<div id="outline-container-org5a7cf92" class="outline-4">
-<h4 id="org5a7cf92">clone我的测试项目</h4>
-<div class="outline-text-4" id="text-org5a7cf92">
+<div id="outline-container-org4206272" class="outline-4">
+<h4 id="org4206272">clone我的测试项目</h4>
+<div class="outline-text-4" id="text-org4206272">
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #268bd2;">cd</span> $<span style="color: #6c71c4;">HOME</span>/src/github.com/shanexu
+<pre class="src src-shell"><span style="color: #81a2be;">cd</span> $<span style="color: #cc6666;">HOME</span>/src/github.com/shanexu
 git clone https://github.com/shanexu/go-playground.git
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org3cba2c4" class="outline-4">
-<h4 id="org3cba2c4">配置环境变量</h4>
-<div class="outline-text-4" id="text-org3cba2c4">
+<div id="outline-container-orga59d406" class="outline-4">
+<h4 id="orga59d406">配置环境变量</h4>
+<div class="outline-text-4" id="text-orga59d406">
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #268bd2;">cd</span> $<span style="color: #6c71c4;">HOME</span>/src/github.com/shanexu/go-playground
-<span style="color: #268bd2;">echo</span> <span style="color: #2aa198;">'export GOROOT=$HOME/src/github.com/golang/go</span>
-<span style="color: #2aa198;">export PATH=$GOROOT/bin:$PATH</span>
-<span style="color: #2aa198;">export GOBIN=$(pwd)/bin'</span> &gt; .envrc
+<pre class="src src-shell"><span style="color: #81a2be;">cd</span> $<span style="color: #cc6666;">HOME</span>/src/github.com/shanexu/go-playground
+<span style="color: #81a2be;">echo</span> <span style="color: #b5bd68;">'export GOROOT=$HOME/src/github.com/golang/go</span>
+<span style="color: #b5bd68;">export PATH=$GOROOT/bin:$PATH</span>
+<span style="color: #b5bd68;">export GOBIN=$(pwd)/bin'</span> &gt; .envrc
 </pre>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org2d23ec7" class="outline-3">
-<h3 id="org2d23ec7">至此整个开发环境算是搭建成功了</h3>
+<div id="outline-container-org417a46a" class="outline-3">
+<h3 id="org417a46a">至此整个开发环境算是搭建成功了</h3>
 </div>
 </div>
 
-<div id="outline-container-org99d45d5" class="outline-2">
-<h2 id="org99d45d5">go build 过程分析</h2>
-<div class="outline-text-2" id="text-org99d45d5">
+<div id="outline-container-orgd176f60" class="outline-2">
+<h2 id="orgd176f60">go build 过程分析</h2>
+<div class="outline-text-2" id="text-orgd176f60">
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #268bd2;">cd</span> $<span style="color: #6c71c4;">HOME</span>/src/github.com/shanexu/go-playground
+<pre class="src src-shell"><span style="color: #81a2be;">cd</span> $<span style="color: #cc6666;">HOME</span>/src/github.com/shanexu/go-playground
 go build -o bin/helloworld helloworld/main.go
 </pre>
 </div>
@@ -239,9 +240,9 @@ go build -o bin/helloworld helloworld/main.go
 先从 <code>go build</code> 命令开始。go命令本身就是多个子命令的入口，比如我们现在要研究的build命令，就是他的一个子命令，其源码在 <code>src/cmd/go/internal/work/build.go</code> 中。
 </p>
 <div class="org-src-container">
-<pre class="src src-go"><span class="linenr">23: </span><span style="color: #859900;">var</span> <span style="color: #6c71c4;">CmdBuild</span> = &amp;<span style="color: #b58900;">base.Command</span><span style="color: #268bd2;">{</span>
-<span class="linenr">24: </span>  <span style="color: #d33682;">UsageLine</span>: <span style="color: #2aa198;">"go build [-o output] [-i] [build flags] [packages]"</span>,
-<span class="linenr">25: </span>  <span style="color: #d33682;">Short</span>:     <span style="color: #2aa198;">"compile packages and dependencies"</span>,  
+<pre class="src src-go"><span class="linenr">23: </span><span style="color: #b294bb;">var</span> <span style="color: #cc6666;">CmdBuild</span> = &amp;<span style="color: #f0c674;">base.Command</span><span style="color: #b294bb;">{</span>
+<span class="linenr">24: </span>  <span style="color: #de935f;">UsageLine</span>: <span style="color: #b5bd68;">"go build [-o output] [-i] [build flags] [packages]"</span>,
+<span class="linenr">25: </span>  <span style="color: #de935f;">Short</span>:     <span style="color: #b5bd68;">"compile packages and dependencies"</span>,  
 </pre>
 </div>
 
@@ -265,8 +266,8 @@ go build -o bin/helloworld helloworld/main.go
 </p>
 
 <div class="org-src-container">
-<pre class="src src-go"><span class="linenr">243: </span><span style="color: #405A61;">// </span><span style="color: #405A61;">Undocumented, unstable debugging flags.</span>
-<span class="linenr">244: </span>cmd.Flag.<span style="color: #268bd2;">StringVar</span><span style="color: #268bd2;">(</span>&amp;cfg.DebugActiongraph, <span style="color: #2aa198;">"debug-actiongraph"</span>, <span style="color: #2aa198;">""</span>, <span style="color: #2aa198;">""</span><span style="color: #268bd2;">)</span>
+<pre class="src src-go"><span class="linenr">243: </span><span style="color: #5a5b5a;">// </span><span style="color: #5a5b5a;">Undocumented, unstable debugging flags.</span>
+<span class="linenr">244: </span>cmd.Flag.<span style="color: #81a2be;">StringVar</span><span style="color: #b294bb;">(</span>&amp;cfg.DebugActiongraph, <span style="color: #b5bd68;">"debug-actiongraph"</span>, <span style="color: #b5bd68;">""</span>, <span style="color: #b5bd68;">""</span><span style="color: #b294bb;">)</span>
 </pre>
 </div>
 
@@ -275,7 +276,7 @@ go build -o bin/helloworld helloworld/main.go
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell">go build -debug-actiongraph /tmp/build.txt -p <span style="color: #d33682; font-weight: bold;">1</span> -v -o bin/helloworld helloworld/main.go
+<pre class="src src-shell">go build -debug-actiongraph /tmp/build.txt -p <span style="color: #de935f; font-weight: bold;">1</span> -v -o bin/helloworld helloworld/main.go
 </pre>
 </div>
 
@@ -299,9 +300,9 @@ go build -o bin/helloworld helloworld/main.go
 观察 <code>actions[2].Cmd</code> 的内容。可见 <code>go build</code> 命令实际上是调用了对应系统（OS）架构（ARCH）的编译器命令（compile）来编译源代码的。
 </p>
 <div class="org-src-container">
-<pre class="src src-json"><span style="color: #268bd2;">[</span>
-  "/Users/shane/src/github.com/golang/go/pkg/tool/darwin_amd<span style="color: #d33682;">64</span>/compile -o /var/folders/<span style="color: #d33682; font-weight: bold;">8x</span>/<span style="color: #d33682; font-weight: bold;">6h3nms2s34z7vwk5blbsz3100000gn</span>/T/go-build<span style="color: #d33682;">730813966</span>/b<span style="color: #d33682;">001</span>/_pkg_.a -trimpath \"/var/folders/<span style="color: #d33682; font-weight: bold;">8x</span>/<span style="color: #d33682; font-weight: bold;">6h3nms2s34z7vwk5blbsz3100000gn</span>/T/go-build<span style="color: #d33682;">730813966</span>/b<span style="color: #d33682;">001</span>=&gt;\" -p main -lang=go1.<span style="color: #d33682; font-weight: bold;">13</span> -complete -buildid z<span style="color: #d33682;">5</span>Cb<span style="color: #d33682;">5</span>jRJruTRtEF<span style="color: #d33682;">3</span>nuzz/z<span style="color: #d33682;">5</span>Cb<span style="color: #d33682;">5</span>jRJruTRtEF<span style="color: #d33682;">3</span>nuzz -goversion go1.<span style="color: #d33682; font-weight: bold;">13</span>.<span style="color: #d33682; font-weight: bold;">1</span> -D _/Users/shane/src/github.com/shanexu/go-playground/helloworld -importcfg /var/folders/<span style="color: #d33682; font-weight: bold;">8x</span>/<span style="color: #d33682; font-weight: bold;">6h3nms2s34z7vwk5blbsz3100000gn</span>/T/go-build<span style="color: #d33682;">730813966</span>/b<span style="color: #d33682;">001</span>/importcfg -pack -c=<span style="color: #d33682; font-weight: bold;">12</span> /Users/shane/src/github.com/shanexu/go-playground/helloworld/main.go /var/folders/<span style="color: #d33682; font-weight: bold;">8x</span>/<span style="color: #d33682; font-weight: bold;">6h3nms2s34z7vwk5blbsz3100000gn</span>/T/go-build<span style="color: #d33682;">730813966</span>/b<span style="color: #d33682;">001</span>/_gomod_.go"
-<span style="color: #268bd2;">]</span>
+<pre class="src src-json"><span style="color: #b294bb;">[</span>
+  "/Users/shane/src/github.com/golang/go/pkg/tool/darwin_amd<span style="color: #de935f;">64</span>/compile -o /var/folders/<span style="color: #de935f; font-weight: bold;">8x</span>/<span style="color: #de935f; font-weight: bold;">6h3nms2s34z7vwk5blbsz3100000gn</span>/T/go-build<span style="color: #de935f;">730813966</span>/b<span style="color: #de935f;">001</span>/_pkg_.a -trimpath \"/var/folders/<span style="color: #de935f; font-weight: bold;">8x</span>/<span style="color: #de935f; font-weight: bold;">6h3nms2s34z7vwk5blbsz3100000gn</span>/T/go-build<span style="color: #de935f;">730813966</span>/b<span style="color: #de935f;">001</span>=&gt;\" -p main -lang=go1.<span style="color: #de935f; font-weight: bold;">13</span> -complete -buildid z<span style="color: #de935f;">5</span>Cb<span style="color: #de935f;">5</span>jRJruTRtEF<span style="color: #de935f;">3</span>nuzz/z<span style="color: #de935f;">5</span>Cb<span style="color: #de935f;">5</span>jRJruTRtEF<span style="color: #de935f;">3</span>nuzz -goversion go1.<span style="color: #de935f; font-weight: bold;">13</span>.<span style="color: #de935f; font-weight: bold;">1</span> -D _/Users/shane/src/github.com/shanexu/go-playground/helloworld -importcfg /var/folders/<span style="color: #de935f; font-weight: bold;">8x</span>/<span style="color: #de935f; font-weight: bold;">6h3nms2s34z7vwk5blbsz3100000gn</span>/T/go-build<span style="color: #de935f;">730813966</span>/b<span style="color: #de935f;">001</span>/importcfg -pack -c=<span style="color: #de935f; font-weight: bold;">12</span> /Users/shane/src/github.com/shanexu/go-playground/helloworld/main.go /var/folders/<span style="color: #de935f; font-weight: bold;">8x</span>/<span style="color: #de935f; font-weight: bold;">6h3nms2s34z7vwk5blbsz3100000gn</span>/T/go-build<span style="color: #de935f;">730813966</span>/b<span style="color: #de935f;">001</span>/_gomod_.go"
+<span style="color: #b294bb;">]</span>
 </pre>
 </div>
 
@@ -318,22 +319,22 @@ go build -o bin/helloworld helloworld/main.go
 </p>
 
 <div class="org-src-container">
-<pre class="src src-go"><span class="linenr">109: </span><span style="color: #405A61;">// </span><span style="color: #405A61;">Handle runs a single action and takes care of triggering</span>
-<span class="linenr">110: </span><span style="color: #405A61;">// </span><span style="color: #405A61;">any actions that are runnable as a result.</span>
-<span class="linenr">111: </span><span style="color: #6c71c4;">handle</span> := <span style="color: #859900;">func</span><span style="color: #268bd2;">(</span><span style="color: #6c71c4;">a</span> *<span style="color: #b58900;">Action</span><span style="color: #268bd2;">)</span> <span style="color: #268bd2;">{</span>
-<span class="linenr">112: </span>  <span style="color: #859900;">if</span> a.json != <span style="color: #d33682;">nil</span> <span style="color: #d33682;">{</span>
-<span class="linenr">113: </span>    a.json.TimeStart = time.<span style="color: #268bd2;">Now</span><span style="color: #859900;">()</span>
-<span class="linenr">114: </span>  <span style="color: #d33682;">}</span>
-<span class="linenr">115: </span>  <span style="color: #859900;">var</span> <span style="color: #6c71c4;">err</span> <span style="color: #b58900;">error</span>
-<span class="linenr">116: </span>  <span style="color: #859900;">if</span> a.Func != <span style="color: #d33682;">nil</span> &amp;&amp; <span style="color: #d33682;">(</span><span style="color: #cb4b16; font-weight: bold;">!</span>a.Failed || a.IgnoreFail<span style="color: #d33682;">)</span> <span style="color: #d33682;">{</span>
-<span class="linenr">117: </span>    err = a.<span style="color: #268bd2;">Func</span><span style="color: #859900;">(</span>b, a<span style="color: #859900;">)</span>
-<span class="linenr">118: </span>  <span style="color: #d33682;">}</span>
-<span class="linenr">119: </span>  <span style="color: #859900;">if</span> a.json != <span style="color: #d33682;">nil</span> <span style="color: #d33682;">{</span>
-<span class="linenr">120: </span>    a.json.TimeDone = time.<span style="color: #268bd2;">Now</span><span style="color: #859900;">()</span>
-<span class="linenr">121: </span>  <span style="color: #d33682;">}</span>
+<pre class="src src-go"><span class="linenr">109: </span><span style="color: #5a5b5a;">// </span><span style="color: #5a5b5a;">Handle runs a single action and takes care of triggering</span>
+<span class="linenr">110: </span><span style="color: #5a5b5a;">// </span><span style="color: #5a5b5a;">any actions that are runnable as a result.</span>
+<span class="linenr">111: </span><span style="color: #cc6666;">handle</span> := <span style="color: #b294bb;">func</span><span style="color: #b294bb;">(</span><span style="color: #cc6666;">a</span> *<span style="color: #f0c674;">Action</span><span style="color: #b294bb;">)</span> <span style="color: #b294bb;">{</span>
+<span class="linenr">112: </span>  <span style="color: #b294bb;">if</span> a.json != <span style="color: #de935f;">nil</span> <span style="color: #81a2be;">{</span>
+<span class="linenr">113: </span>    a.json.TimeStart = time.<span style="color: #81a2be;">Now</span><span style="color: #de935f;">()</span>
+<span class="linenr">114: </span>  <span style="color: #81a2be;">}</span>
+<span class="linenr">115: </span>  <span style="color: #b294bb;">var</span> <span style="color: #cc6666;">err</span> <span style="color: #f0c674;">error</span>
+<span class="linenr">116: </span>  <span style="color: #b294bb;">if</span> a.Func != <span style="color: #de935f;">nil</span> &amp;&amp; <span style="color: #81a2be;">(</span><span style="color: #c5c8c6; font-weight: bold;">!</span>a.Failed || a.IgnoreFail<span style="color: #81a2be;">)</span> <span style="color: #81a2be;">{</span>
+<span class="linenr">117: </span>    err = a.<span style="color: #81a2be;">Func</span><span style="color: #de935f;">(</span>b, a<span style="color: #de935f;">)</span>
+<span class="linenr">118: </span>  <span style="color: #81a2be;">}</span>
+<span class="linenr">119: </span>  <span style="color: #b294bb;">if</span> a.json != <span style="color: #de935f;">nil</span> <span style="color: #81a2be;">{</span>
+<span class="linenr">120: </span>    a.json.TimeDone = time.<span style="color: #81a2be;">Now</span><span style="color: #de935f;">()</span>
+<span class="linenr">121: </span>  <span style="color: #81a2be;">}</span>
 <span class="linenr">122: </span>
-<span class="linenr">123: </span>  <span style="color: #405A61;">// </span><span style="color: #405A61;">The actions run in parallel but all the updates to the</span>
-<span class="linenr">124: </span>  <span style="color: #405A61;">// </span><span style="color: #405A61;">shared work state are serialized through b.exec.</span>
+<span class="linenr">123: </span>  <span style="color: #5a5b5a;">// </span><span style="color: #5a5b5a;">The actions run in parallel but all the updates to the</span>
+<span class="linenr">124: </span>  <span style="color: #5a5b5a;">// </span><span style="color: #5a5b5a;">shared work state are serialized through b.exec.</span>
 </pre>
 </div>
 
@@ -345,10 +346,10 @@ go build -o bin/helloworld helloworld/main.go
 <code>_gomod_.go</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-go"><span class="linenr">1: </span><span style="color: #859900;">package</span> main
-<span class="linenr">2: </span><span style="color: #859900;">import</span> _ <span style="color: #2aa198;">"unsafe"</span>
-<span class="linenr">3: </span><span style="color: #405A61;">//</span><span style="color: #405A61;">go:linkname __debug_modinfo__ runtime.modinfo</span>
-<span class="linenr">4: </span><span style="color: #859900;">var</span> <span style="color: #6c71c4;">__debug_modinfo__</span> = <span style="color: #2aa198;">"0w\xaf\f\x92t\b\x02A\xe1\xc1\a\xe6\xd6\x18\xe6path\tcommand-line-arguments\nmod\tgithub.com/shanexu/go-playground\t(devel)\t\n\xf92C1\x86\x18 r\x00\x82B\x10A\x16\xd8\xf2"</span>
+<pre class="src src-go"><span class="linenr">1: </span><span style="color: #b294bb;">package</span> main
+<span class="linenr">2: </span><span style="color: #b294bb;">import</span> _ <span style="color: #b5bd68;">"unsafe"</span>
+<span class="linenr">3: </span><span style="color: #5a5b5a;">//</span><span style="color: #5a5b5a;">go:linkname __debug_modinfo__ runtime.modinfo</span>
+<span class="linenr">4: </span><span style="color: #b294bb;">var</span> <span style="color: #cc6666;">__debug_modinfo__</span> = <span style="color: #b5bd68;">"0w\xaf\f\x92t\b\x02A\xe1\xc1\a\xe6\xd6\x18\xe6path\tcommand-line-arguments\nmod\tgithub.com/shanexu/go-playground\t(devel)\t\n\xf92C1\x86\x18 r\x00\x82B\x10A\x16\xd8\xf2"</span>
 <span class="linenr">5: </span>
 </pre>
 </div>
@@ -389,28 +390,28 @@ packagefile runtime=/Users/shane/src/github.com/golang/go/pkg/darwin_amd64/runti
 </div>
 </div>
 
-<div id="outline-container-org6b42611" class="outline-2">
-<h2 id="org6b42611">compile 过程分析</h2>
-<div class="outline-text-2" id="text-org6b42611">
+<div id="outline-container-org9457b48" class="outline-2">
+<h2 id="org9457b48">compile 过程分析</h2>
+<div class="outline-text-2" id="text-org9457b48">
 <p>
 从入口文件 <code>cmd/compile/main.go</code> 看起。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-go"><span class="linenr">40: </span><span style="color: #859900;">func</span> <span style="color: #268bd2;">main</span><span style="color: #268bd2;">()</span> <span style="color: #268bd2;">{</span>
-<span class="linenr">41: </span>  <span style="color: #405A61;">// </span><span style="color: #405A61;">disable timestamps for reproducible output</span>
-<span class="linenr">42: </span>  log.<span style="color: #268bd2;">SetFlags</span><span style="color: #d33682;">(</span><span style="color: #d33682; font-weight: bold;">0</span><span style="color: #d33682;">)</span>
-<span class="linenr">43: </span>  log.<span style="color: #268bd2;">SetPrefix</span><span style="color: #d33682;">(</span><span style="color: #2aa198;">"compile: "</span><span style="color: #d33682;">)</span>
+<pre class="src src-go"><span class="linenr">40: </span><span style="color: #b294bb;">func</span> <span style="color: #81a2be;">main</span><span style="color: #b294bb;">()</span> <span style="color: #b294bb;">{</span>
+<span class="linenr">41: </span>  <span style="color: #5a5b5a;">// </span><span style="color: #5a5b5a;">disable timestamps for reproducible output</span>
+<span class="linenr">42: </span>  log.<span style="color: #81a2be;">SetFlags</span><span style="color: #81a2be;">(</span><span style="color: #de935f; font-weight: bold;">0</span><span style="color: #81a2be;">)</span>
+<span class="linenr">43: </span>  log.<span style="color: #81a2be;">SetPrefix</span><span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"compile: "</span><span style="color: #81a2be;">)</span>
 <span class="linenr">44: </span>
-<span class="linenr">45: </span>  <span style="color: #6c71c4;">archInit</span>, <span style="color: #6c71c4;">ok</span> := archInits<span style="color: #d33682;">[</span>objabi.GOARCH<span style="color: #d33682;">]</span>
-<span class="linenr">46: </span>  <span style="color: #859900;">if</span> <span style="color: #cb4b16; font-weight: bold;">!</span>ok <span style="color: #d33682;">{</span>
-<span class="linenr">47: </span>    fmt.<span style="color: #268bd2;">Fprintf</span><span style="color: #859900;">(</span>os.Stderr, <span style="color: #2aa198;">"compile: unknown architecture %q\n"</span>, objabi.GOARCH<span style="color: #859900;">)</span>
-<span class="linenr">48: </span>    os.<span style="color: #268bd2;">Exit</span><span style="color: #859900;">(</span><span style="color: #d33682; font-weight: bold;">2</span><span style="color: #859900;">)</span>
-<span class="linenr">49: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">45: </span>  <span style="color: #cc6666;">archInit</span>, <span style="color: #cc6666;">ok</span> := archInits<span style="color: #81a2be;">[</span>objabi.GOARCH<span style="color: #81a2be;">]</span>
+<span class="linenr">46: </span>  <span style="color: #b294bb;">if</span> <span style="color: #c5c8c6; font-weight: bold;">!</span>ok <span style="color: #81a2be;">{</span>
+<span class="linenr">47: </span>    fmt.<span style="color: #81a2be;">Fprintf</span><span style="color: #de935f;">(</span>os.Stderr, <span style="color: #b5bd68;">"compile: unknown architecture %q\n"</span>, objabi.GOARCH<span style="color: #de935f;">)</span>
+<span class="linenr">48: </span>    os.<span style="color: #81a2be;">Exit</span><span style="color: #de935f;">(</span><span style="color: #de935f; font-weight: bold;">2</span><span style="color: #de935f;">)</span>
+<span class="linenr">49: </span>  <span style="color: #81a2be;">}</span>
 <span class="linenr">50: </span>
-<span class="linenr">51: </span>  gc.<span style="color: #268bd2;">Main</span><span style="color: #d33682;">(</span>archInit<span style="color: #d33682;">)</span>
-<span class="linenr">52: </span>  gc.<span style="color: #268bd2;">Exit</span><span style="color: #d33682;">(</span><span style="color: #d33682; font-weight: bold;">0</span><span style="color: #d33682;">)</span>
-<span class="linenr">53: </span><span style="color: #268bd2;">}</span>
+<span class="linenr">51: </span>  gc.<span style="color: #81a2be;">Main</span><span style="color: #81a2be;">(</span>archInit<span style="color: #81a2be;">)</span>
+<span class="linenr">52: </span>  gc.<span style="color: #81a2be;">Exit</span><span style="color: #81a2be;">(</span><span style="color: #de935f; font-weight: bold;">0</span><span style="color: #81a2be;">)</span>
+<span class="linenr">53: </span><span style="color: #b294bb;">}</span>
 </pre>
 </div>
 
@@ -429,9 +430,9 @@ packagefile runtime=/Users/shane/src/github.com/golang/go/pkg/darwin_amd64/runti
 </p>
 
 <div class="org-src-container">
-<pre class="src src-go"><span class="linenr">511: </span>timings.<span style="color: #268bd2;">Start</span><span style="color: #268bd2;">(</span><span style="color: #2aa198;">"fe"</span>, <span style="color: #2aa198;">"parse"</span><span style="color: #268bd2;">)</span>
-<span class="linenr">512: </span><span style="color: #6c71c4;">lines</span> := <span style="color: #268bd2;">parseFiles</span><span style="color: #268bd2;">(</span>flag.<span style="color: #268bd2;">Args</span><span style="color: #d33682;">()</span><span style="color: #268bd2;">)</span>
-<span class="linenr">513: </span>timings.<span style="color: #268bd2;">Stop</span><span style="color: #268bd2;">()</span>
+<pre class="src src-go"><span class="linenr">511: </span>timings.<span style="color: #81a2be;">Start</span><span style="color: #b294bb;">(</span><span style="color: #b5bd68;">"fe"</span>, <span style="color: #b5bd68;">"parse"</span><span style="color: #b294bb;">)</span>
+<span class="linenr">512: </span><span style="color: #cc6666;">lines</span> := <span style="color: #81a2be;">parseFiles</span><span style="color: #b294bb;">(</span>flag.<span style="color: #81a2be;">Args</span><span style="color: #81a2be;">()</span><span style="color: #b294bb;">)</span>
+<span class="linenr">513: </span>timings.<span style="color: #81a2be;">Stop</span><span style="color: #b294bb;">()</span>
 </pre>
 </div>
 
@@ -440,11 +441,11 @@ packagefile runtime=/Users/shane/src/github.com/golang/go/pkg/darwin_amd64/runti
 </p>
 
 <div class="org-src-container">
-<pre class="src src-go"><span class="linenr">758: </span><span style="color: #859900;">if</span> benchfile != <span style="color: #2aa198;">""</span> <span style="color: #268bd2;">{</span>
-<span class="linenr">759: </span>  <span style="color: #859900;">if</span> <span style="color: #6c71c4;">err</span> := <span style="color: #268bd2;">writebench</span><span style="color: #d33682;">(</span>benchfile<span style="color: #d33682;">)</span>; err != <span style="color: #d33682;">nil</span> <span style="color: #d33682;">{</span>
-<span class="linenr">760: </span>    log.<span style="color: #268bd2;">Fatalf</span><span style="color: #859900;">(</span><span style="color: #2aa198;">"cannot write benchmark data: %v"</span>, err<span style="color: #859900;">)</span>
-<span class="linenr">761: </span>  <span style="color: #d33682;">}</span>
-<span class="linenr">762: </span><span style="color: #268bd2;">}</span>
+<pre class="src src-go"><span class="linenr">758: </span><span style="color: #b294bb;">if</span> benchfile != <span style="color: #b5bd68;">""</span> <span style="color: #b294bb;">{</span>
+<span class="linenr">759: </span>  <span style="color: #b294bb;">if</span> <span style="color: #cc6666;">err</span> := <span style="color: #81a2be;">writebench</span><span style="color: #81a2be;">(</span>benchfile<span style="color: #81a2be;">)</span>; err != <span style="color: #de935f;">nil</span> <span style="color: #81a2be;">{</span>
+<span class="linenr">760: </span>    log.<span style="color: #81a2be;">Fatalf</span><span style="color: #de935f;">(</span><span style="color: #b5bd68;">"cannot write benchmark data: %v"</span>, err<span style="color: #de935f;">)</span>
+<span class="linenr">761: </span>  <span style="color: #81a2be;">}</span>
+<span class="linenr">762: </span><span style="color: #b294bb;">}</span>
 </pre>
 </div>
 
@@ -489,9 +490,9 @@ BenchmarkCompile:main:total                1    8709884 ns/op    100.00 %
 </div>
 </div>
 
-<div id="outline-container-orgfadbfb6" class="outline-2">
-<h2 id="orgfadbfb6">编译期插入代码</h2>
-<div class="outline-text-2" id="text-orgfadbfb6">
+<div id="outline-container-org4dd0eb0" class="outline-2">
+<h2 id="org4dd0eb0">编译期插入代码</h2>
+<div class="outline-text-2" id="text-org4dd0eb0">
 <p>
 在进入这一阶段之前可以先阅读下这篇 <a href="https://medium.com/justforfunc/understanding-go-programs-with-go-parser-c4e88a6edb87">Understanding Go programs with go/parser</a> ，对go的AST有一定的感性认识。
 </p>
@@ -501,20 +502,20 @@ BenchmarkCompile:main:total                1    8709884 ns/op    100.00 %
 </p>
 
 <div class="org-src-container">
-<pre class="src src-go"><span class="linenr"> 1: </span><span style="color: #859900;">package</span> main
+<pre class="src src-go"><span class="linenr"> 1: </span><span style="color: #b294bb;">package</span> main
 <span class="linenr"> 2: </span>
-<span class="linenr"> 3: </span><span style="color: #859900;">import</span> <span style="color: #268bd2;">(</span>
-<span class="linenr"> 4: </span>  <span style="color: #2aa198;">"context"</span>
-<span class="linenr"> 5: </span>  <span style="color: #2aa198;">"fmt"</span>
-<span class="linenr"> 6: </span><span style="color: #268bd2;">)</span>
+<span class="linenr"> 3: </span><span style="color: #b294bb;">import</span> <span style="color: #b294bb;">(</span>
+<span class="linenr"> 4: </span>  <span style="color: #b5bd68;">"context"</span>
+<span class="linenr"> 5: </span>  <span style="color: #b5bd68;">"fmt"</span>
+<span class="linenr"> 6: </span><span style="color: #b294bb;">)</span>
 <span class="linenr"> 7: </span>
-<span class="linenr"> 8: </span><span style="color: #859900;">func</span> <span style="color: #268bd2;">hello</span><span style="color: #268bd2;">(</span><span style="color: #6c71c4;">ctx</span> <span style="color: #b58900;">context.Context</span><span style="color: #268bd2;">)</span> <span style="color: #268bd2;">{</span>
-<span class="linenr"> 9: </span>  fmt.<span style="color: #268bd2;">Println</span><span style="color: #d33682;">(</span><span style="color: #2aa198;">"hello world"</span><span style="color: #d33682;">)</span>
-<span class="linenr">10: </span><span style="color: #268bd2;">}</span>
+<span class="linenr"> 8: </span><span style="color: #b294bb;">func</span> <span style="color: #81a2be;">hello</span><span style="color: #b294bb;">(</span><span style="color: #cc6666;">ctx</span> <span style="color: #f0c674;">context.Context</span><span style="color: #b294bb;">)</span> <span style="color: #b294bb;">{</span>
+<span class="linenr"> 9: </span>  fmt.<span style="color: #81a2be;">Println</span><span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"hello world"</span><span style="color: #81a2be;">)</span>
+<span class="linenr">10: </span><span style="color: #b294bb;">}</span>
 <span class="linenr">11: </span>
-<span class="linenr">12: </span><span style="color: #859900;">func</span> <span style="color: #268bd2;">main</span><span style="color: #268bd2;">()</span> <span style="color: #268bd2;">{</span>
-<span class="linenr">13: </span>  <span style="color: #268bd2;">hello</span><span style="color: #d33682;">(</span>context.<span style="color: #268bd2;">Background</span><span style="color: #859900;">()</span><span style="color: #d33682;">)</span>
-<span class="linenr">14: </span><span style="color: #268bd2;">}</span>
+<span class="linenr">12: </span><span style="color: #b294bb;">func</span> <span style="color: #81a2be;">main</span><span style="color: #b294bb;">()</span> <span style="color: #b294bb;">{</span>
+<span class="linenr">13: </span>  <span style="color: #81a2be;">hello</span><span style="color: #81a2be;">(</span>context.<span style="color: #81a2be;">Background</span><span style="color: #de935f;">()</span><span style="color: #81a2be;">)</span>
+<span class="linenr">14: </span><span style="color: #b294bb;">}</span>
 <span class="linenr">15: </span>
 </pre>
 </div>
@@ -523,38 +524,38 @@ BenchmarkCompile:main:total                1    8709884 ns/op    100.00 %
 经过 <code>go/parser.ParseFile</code> 
 </p>
 <div class="org-src-container">
-<pre class="src src-go"><span class="linenr"> 1: </span><span style="color: #859900;">package</span> main
+<pre class="src src-go"><span class="linenr"> 1: </span><span style="color: #b294bb;">package</span> main
 <span class="linenr"> 2: </span>
-<span class="linenr"> 3: </span><span style="color: #859900;">import</span> <span style="color: #268bd2;">(</span>
-<span class="linenr"> 4: </span>  <span style="color: #2aa198;">"go/parser"</span>
-<span class="linenr"> 5: </span>  <span style="color: #2aa198;">"go/token"</span>
-<span class="linenr"> 6: </span>  <span style="color: #2aa198;">"io/ioutil"</span>
-<span class="linenr"> 7: </span>  <span style="color: #2aa198;">"os"</span>
-<span class="linenr"> 8: </span>  <span style="color: #2aa198;">"path/filepath"</span>
+<span class="linenr"> 3: </span><span style="color: #b294bb;">import</span> <span style="color: #b294bb;">(</span>
+<span class="linenr"> 4: </span>  <span style="color: #b5bd68;">"go/parser"</span>
+<span class="linenr"> 5: </span>  <span style="color: #b5bd68;">"go/token"</span>
+<span class="linenr"> 6: </span>  <span style="color: #b5bd68;">"io/ioutil"</span>
+<span class="linenr"> 7: </span>  <span style="color: #b5bd68;">"os"</span>
+<span class="linenr"> 8: </span>  <span style="color: #b5bd68;">"path/filepath"</span>
 <span class="linenr"> 9: </span>
-<span class="linenr">10: </span>  <span style="color: #2aa198;">"github.com/davecgh/go-spew/spew"</span>
-<span class="linenr">11: </span><span style="color: #268bd2;">)</span>
+<span class="linenr">10: </span>  <span style="color: #b5bd68;">"github.com/davecgh/go-spew/spew"</span>
+<span class="linenr">11: </span><span style="color: #b294bb;">)</span>
 <span class="linenr">12: </span>
-<span class="linenr">13: </span><span style="color: #859900;">func</span> <span style="color: #268bd2;">main</span><span style="color: #268bd2;">()</span> <span style="color: #268bd2;">{</span>
-<span class="linenr">14: </span>  <span style="color: #6c71c4;">home</span>, <span style="color: #6c71c4;">err</span> := os.<span style="color: #268bd2;">UserHomeDir</span><span style="color: #d33682;">()</span>
-<span class="linenr">15: </span>  <span style="color: #859900;">if</span> err != <span style="color: #d33682;">nil</span> <span style="color: #d33682;">{</span>
-<span class="linenr">16: </span>    <span style="color: #268bd2;">panic</span><span style="color: #859900;">(</span>err<span style="color: #859900;">)</span>
-<span class="linenr">17: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">13: </span><span style="color: #b294bb;">func</span> <span style="color: #81a2be;">main</span><span style="color: #b294bb;">()</span> <span style="color: #b294bb;">{</span>
+<span class="linenr">14: </span>  <span style="color: #cc6666;">home</span>, <span style="color: #cc6666;">err</span> := os.<span style="color: #81a2be;">UserHomeDir</span><span style="color: #81a2be;">()</span>
+<span class="linenr">15: </span>  <span style="color: #b294bb;">if</span> err != <span style="color: #de935f;">nil</span> <span style="color: #81a2be;">{</span>
+<span class="linenr">16: </span>    <span style="color: #81a2be;">panic</span><span style="color: #de935f;">(</span>err<span style="color: #de935f;">)</span>
+<span class="linenr">17: </span>  <span style="color: #81a2be;">}</span>
 <span class="linenr">18: </span>
-<span class="linenr">19: </span>  <span style="color: #6c71c4;">file</span> := filepath.<span style="color: #268bd2;">Join</span><span style="color: #d33682;">(</span>home, <span style="color: #2aa198;">"src"</span>, <span style="color: #2aa198;">"github.com"</span>, <span style="color: #2aa198;">"shanexu"</span>, <span style="color: #2aa198;">"go-playground"</span>, <span style="color: #2aa198;">"helloworld"</span>, <span style="color: #2aa198;">"main.go"</span><span style="color: #d33682;">)</span>
-<span class="linenr">20: </span>  <span style="color: #6c71c4;">src</span>, <span style="color: #6c71c4;">err</span> := ioutil.<span style="color: #268bd2;">ReadFile</span><span style="color: #d33682;">(</span>file<span style="color: #d33682;">)</span>
-<span class="linenr">21: </span>  <span style="color: #859900;">if</span> err != <span style="color: #d33682;">nil</span> <span style="color: #d33682;">{</span>
-<span class="linenr">22: </span>    <span style="color: #268bd2;">panic</span><span style="color: #859900;">(</span>err<span style="color: #859900;">)</span>
-<span class="linenr">23: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">19: </span>  <span style="color: #cc6666;">file</span> := filepath.<span style="color: #81a2be;">Join</span><span style="color: #81a2be;">(</span>home, <span style="color: #b5bd68;">"src"</span>, <span style="color: #b5bd68;">"github.com"</span>, <span style="color: #b5bd68;">"shanexu"</span>, <span style="color: #b5bd68;">"go-playground"</span>, <span style="color: #b5bd68;">"helloworld"</span>, <span style="color: #b5bd68;">"main.go"</span><span style="color: #81a2be;">)</span>
+<span class="linenr">20: </span>  <span style="color: #cc6666;">src</span>, <span style="color: #cc6666;">err</span> := ioutil.<span style="color: #81a2be;">ReadFile</span><span style="color: #81a2be;">(</span>file<span style="color: #81a2be;">)</span>
+<span class="linenr">21: </span>  <span style="color: #b294bb;">if</span> err != <span style="color: #de935f;">nil</span> <span style="color: #81a2be;">{</span>
+<span class="linenr">22: </span>    <span style="color: #81a2be;">panic</span><span style="color: #de935f;">(</span>err<span style="color: #de935f;">)</span>
+<span class="linenr">23: </span>  <span style="color: #81a2be;">}</span>
 <span class="linenr">24: </span>
-<span class="linenr">25: </span>  <span style="color: #6c71c4;">fset</span> := token.<span style="color: #268bd2;">NewFileSet</span><span style="color: #d33682;">()</span>
-<span class="linenr">26: </span>  <span style="color: #6c71c4;">f</span>, <span style="color: #6c71c4;">err</span> := parser.<span style="color: #268bd2;">ParseFile</span><span style="color: #d33682;">(</span>fset, <span style="color: #2aa198;">"main.go"</span>, src, parser.AllErrors<span style="color: #d33682;">)</span>
-<span class="linenr">27: </span>  <span style="color: #859900;">if</span> err != <span style="color: #d33682;">nil</span> <span style="color: #d33682;">{</span>
-<span class="linenr">28: </span>    <span style="color: #268bd2;">panic</span><span style="color: #859900;">(</span>err<span style="color: #859900;">)</span>
-<span class="linenr">29: </span>  <span style="color: #d33682;">}</span>
+<span class="linenr">25: </span>  <span style="color: #cc6666;">fset</span> := token.<span style="color: #81a2be;">NewFileSet</span><span style="color: #81a2be;">()</span>
+<span class="linenr">26: </span>  <span style="color: #cc6666;">f</span>, <span style="color: #cc6666;">err</span> := parser.<span style="color: #81a2be;">ParseFile</span><span style="color: #81a2be;">(</span>fset, <span style="color: #b5bd68;">"main.go"</span>, src, parser.AllErrors<span style="color: #81a2be;">)</span>
+<span class="linenr">27: </span>  <span style="color: #b294bb;">if</span> err != <span style="color: #de935f;">nil</span> <span style="color: #81a2be;">{</span>
+<span class="linenr">28: </span>    <span style="color: #81a2be;">panic</span><span style="color: #de935f;">(</span>err<span style="color: #de935f;">)</span>
+<span class="linenr">29: </span>  <span style="color: #81a2be;">}</span>
 <span class="linenr">30: </span>
-<span class="linenr">31: </span>  spew.<span style="color: #268bd2;">Dump</span><span style="color: #d33682;">(</span>f<span style="color: #d33682;">)</span>
-<span class="linenr">32: </span><span style="color: #268bd2;">}</span>  
+<span class="linenr">31: </span>  spew.<span style="color: #81a2be;">Dump</span><span style="color: #81a2be;">(</span>f<span style="color: #81a2be;">)</span>
+<span class="linenr">32: </span><span style="color: #b294bb;">}</span>  
 </pre>
 </div>
 
@@ -573,49 +574,49 @@ BenchmarkCompile:main:total                1    8709884 ns/op    100.00 %
 例如我们想针对所有main包下以hello开头的函数在进入方法时打印“start ${方法名}...”，在离开方法是打印“stop ${方法名}...”， 则可以在文件 <code>cmd/compile/internal/gc/noder.go</code> Parse结束后，修改p.file的值。代码如下：
 </p>
 <div class="org-src-container">
-<pre class="src src-go"><span class="linenr">52: </span>p.file, _ = syntax.<span style="color: #268bd2;">Parse</span><span style="color: #268bd2;">(</span>base, f, p.error, p.pragma, syntax.CheckBranches<span style="color: #268bd2;">)</span> <span style="color: #405A61;">// </span><span style="color: #405A61;">errors are tracked via p.error</span>
-<span class="linenr">53: </span><span style="color: #859900;">if</span> p.file.PkgName.Value == <span style="color: #2aa198;">"main"</span> <span style="color: #268bd2;">{</span>
-<span class="linenr">54: </span>  <span style="color: #859900;">for</span> <span style="color: #6c71c4;">_</span>, <span style="color: #6c71c4;">d</span> := <span style="color: #859900;">range</span> p.file.DeclList <span style="color: #d33682;">{</span>
-<span class="linenr">55: </span>    <span style="color: #6c71c4;">d</span>, <span style="color: #6c71c4;">_</span> := d.<span style="color: #859900;">(</span>*<span style="color: #b58900;">syntax.FuncDecl</span><span style="color: #859900;">)</span>
-<span class="linenr">56: </span>    <span style="color: #859900;">if</span> d == <span style="color: #d33682;">nil</span> <span style="color: #859900;">{</span>
-<span class="linenr">57: </span>      <span style="color: #859900;">continue</span>
-<span class="linenr">58: </span>    <span style="color: #859900;">}</span>
-<span class="linenr">59: </span>    <span style="color: #859900;">if</span> <span style="color: #cb4b16; font-weight: bold;">!</span>strings.<span style="color: #268bd2;">HasPrefix</span><span style="color: #859900;">(</span>d.Name.Value, <span style="color: #2aa198;">"hello"</span><span style="color: #859900;">)</span> <span style="color: #859900;">{</span>
-<span class="linenr">60: </span>      <span style="color: #859900;">continue</span>
-<span class="linenr">61: </span>    <span style="color: #859900;">}</span>
-<span class="linenr">62: </span>    d.Body.List = <span style="color: #268bd2;">append</span><span style="color: #859900;">(</span><span style="color: #cb4b16;">[]</span><span style="color: #b58900;">syntax.Stmt</span><span style="color: #cb4b16;">{</span>
-<span class="linenr">63: </span>      &amp;<span style="color: #b58900;">syntax.ExprStmt</span><span style="color: #6c71c4;">{</span>
-<span class="linenr">64: </span>        <span style="color: #d33682;">X</span>: &amp;<span style="color: #b58900;">syntax.CallExpr</span><span style="color: #b58900;">{</span>
-<span class="linenr">65: </span>          <span style="color: #d33682;">Fun</span>: &amp;<span style="color: #b58900;">syntax.SelectorExpr</span><span style="color: #35a69c;">{</span>
-<span class="linenr">66: </span>            <span style="color: #d33682;">X</span>:   &amp;<span style="color: #b58900;">syntax.Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #2aa198;">"fmt"</span><span style="color: #a2b6da;">}</span>,
-<span class="linenr">67: </span>            <span style="color: #d33682;">Sel</span>: &amp;<span style="color: #b58900;">syntax.Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #2aa198;">"Println"</span><span style="color: #a2b6da;">}</span>,
-<span class="linenr">68: </span>          <span style="color: #35a69c;">}</span>,
-<span class="linenr">69: </span>          <span style="color: #d33682;">ArgList</span>: <span style="color: #35a69c;">[]</span><span style="color: #b58900;">syntax.Expr</span><span style="color: #35a69c;">{</span>
-<span class="linenr">70: </span>            &amp;<span style="color: #b58900;">syntax.BasicLit</span><span style="color: #a2b6da;">{</span>
-<span class="linenr">71: </span>              <span style="color: #d33682;">Value</span>: strconv.<span style="color: #268bd2;">Quote</span><span style="color: #9cb6ad;">(</span><span style="color: #2aa198;">"start "</span> + d.Name.Value + <span style="color: #2aa198;">"..."</span><span style="color: #9cb6ad;">)</span>,
-<span class="linenr">72: </span>              <span style="color: #d33682;">Kind</span>:  syntax.StringLit,
+<pre class="src src-go"><span class="linenr">52: </span>p.file, _ = syntax.<span style="color: #81a2be;">Parse</span><span style="color: #b294bb;">(</span>base, f, p.error, p.pragma, syntax.CheckBranches<span style="color: #b294bb;">)</span> <span style="color: #5a5b5a;">// </span><span style="color: #5a5b5a;">errors are tracked via p.error</span>
+<span class="linenr">53: </span><span style="color: #b294bb;">if</span> p.file.PkgName.Value == <span style="color: #b5bd68;">"main"</span> <span style="color: #b294bb;">{</span>
+<span class="linenr">54: </span>  <span style="color: #b294bb;">for</span> <span style="color: #cc6666;">_</span>, <span style="color: #cc6666;">d</span> := <span style="color: #b294bb;">range</span> p.file.DeclList <span style="color: #81a2be;">{</span>
+<span class="linenr">55: </span>    <span style="color: #cc6666;">d</span>, <span style="color: #cc6666;">_</span> := d.<span style="color: #de935f;">(</span>*<span style="color: #f0c674;">syntax.FuncDecl</span><span style="color: #de935f;">)</span>
+<span class="linenr">56: </span>    <span style="color: #b294bb;">if</span> d == <span style="color: #de935f;">nil</span> <span style="color: #de935f;">{</span>
+<span class="linenr">57: </span>      <span style="color: #b294bb;">continue</span>
+<span class="linenr">58: </span>    <span style="color: #de935f;">}</span>
+<span class="linenr">59: </span>    <span style="color: #b294bb;">if</span> <span style="color: #c5c8c6; font-weight: bold;">!</span>strings.<span style="color: #81a2be;">HasPrefix</span><span style="color: #de935f;">(</span>d.Name.Value, <span style="color: #b5bd68;">"hello"</span><span style="color: #de935f;">)</span> <span style="color: #de935f;">{</span>
+<span class="linenr">60: </span>      <span style="color: #b294bb;">continue</span>
+<span class="linenr">61: </span>    <span style="color: #de935f;">}</span>
+<span class="linenr">62: </span>    d.Body.List = <span style="color: #81a2be;">append</span><span style="color: #de935f;">(</span><span style="color: #b5bd68;">[]</span><span style="color: #f0c674;">syntax.Stmt</span><span style="color: #b5bd68;">{</span>
+<span class="linenr">63: </span>      &amp;<span style="color: #f0c674;">syntax.ExprStmt</span><span style="color: #c9b4cf;">{</span>
+<span class="linenr">64: </span>        <span style="color: #de935f;">X</span>: &amp;<span style="color: #f0c674;">syntax.CallExpr</span><span style="color: #f0c674;">{</span>
+<span class="linenr">65: </span>          <span style="color: #de935f;">Fun</span>: &amp;<span style="color: #f0c674;">syntax.SelectorExpr</span><span style="color: #81a2be;">{</span>
+<span class="linenr">66: </span>            <span style="color: #de935f;">X</span>:   &amp;<span style="color: #f0c674;">syntax.Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #b5bd68;">"fmt"</span><span style="color: #a2b6da;">}</span>,
+<span class="linenr">67: </span>            <span style="color: #de935f;">Sel</span>: &amp;<span style="color: #f0c674;">syntax.Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #b5bd68;">"Println"</span><span style="color: #a2b6da;">}</span>,
+<span class="linenr">68: </span>          <span style="color: #81a2be;">}</span>,
+<span class="linenr">69: </span>          <span style="color: #de935f;">ArgList</span>: <span style="color: #81a2be;">[]</span><span style="color: #f0c674;">syntax.Expr</span><span style="color: #81a2be;">{</span>
+<span class="linenr">70: </span>            &amp;<span style="color: #f0c674;">syntax.BasicLit</span><span style="color: #a2b6da;">{</span>
+<span class="linenr">71: </span>              <span style="color: #de935f;">Value</span>: strconv.<span style="color: #81a2be;">Quote</span><span style="color: #9cb6ad;">(</span><span style="color: #b5bd68;">"start "</span> + d.Name.Value + <span style="color: #b5bd68;">"..."</span><span style="color: #9cb6ad;">)</span>,
+<span class="linenr">72: </span>              <span style="color: #de935f;">Kind</span>:  syntax.StringLit,
 <span class="linenr">73: </span>            <span style="color: #a2b6da;">}</span>,
-<span class="linenr">74: </span>          <span style="color: #35a69c;">}</span>,
-<span class="linenr">75: </span>        <span style="color: #b58900;">}</span>,
-<span class="linenr">76: </span>      <span style="color: #6c71c4;">}</span>,
-<span class="linenr">77: </span>      &amp;<span style="color: #b58900;">syntax.CallStmt</span><span style="color: #6c71c4;">{</span>
-<span class="linenr">78: </span>        <span style="color: #d33682;">Tok</span>: syntax.Defer,
-<span class="linenr">79: </span>        <span style="color: #d33682;">Call</span>: &amp;<span style="color: #b58900;">syntax.CallExpr</span><span style="color: #b58900;">{</span>
-<span class="linenr">80: </span>          <span style="color: #d33682;">Fun</span>: &amp;<span style="color: #b58900;">syntax.SelectorExpr</span><span style="color: #35a69c;">{</span>
-<span class="linenr">81: </span>            <span style="color: #d33682;">X</span>:   &amp;<span style="color: #b58900;">syntax.Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #2aa198;">"fmt"</span><span style="color: #a2b6da;">}</span>,
-<span class="linenr">82: </span>            <span style="color: #d33682;">Sel</span>: &amp;<span style="color: #b58900;">syntax.Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #2aa198;">"Println"</span><span style="color: #a2b6da;">}</span>,
-<span class="linenr">83: </span>          <span style="color: #35a69c;">}</span>,
-<span class="linenr">84: </span>          <span style="color: #d33682;">ArgList</span>: <span style="color: #35a69c;">[]</span><span style="color: #b58900;">syntax.Expr</span><span style="color: #35a69c;">{</span>
-<span class="linenr">85: </span>            &amp;<span style="color: #b58900;">syntax.BasicLit</span><span style="color: #a2b6da;">{</span>
-<span class="linenr">86: </span>              <span style="color: #d33682;">Value</span>: strconv.<span style="color: #268bd2;">Quote</span><span style="color: #9cb6ad;">(</span><span style="color: #2aa198;">"stop "</span> + d.Name.Value + <span style="color: #2aa198;">"..."</span><span style="color: #9cb6ad;">)</span>,
-<span class="linenr">87: </span>              <span style="color: #d33682;">Kind</span>:  syntax.StringLit,
+<span class="linenr">74: </span>          <span style="color: #81a2be;">}</span>,
+<span class="linenr">75: </span>        <span style="color: #f0c674;">}</span>,
+<span class="linenr">76: </span>      <span style="color: #c9b4cf;">}</span>,
+<span class="linenr">77: </span>      &amp;<span style="color: #f0c674;">syntax.CallStmt</span><span style="color: #c9b4cf;">{</span>
+<span class="linenr">78: </span>        <span style="color: #de935f;">Tok</span>: syntax.Defer,
+<span class="linenr">79: </span>        <span style="color: #de935f;">Call</span>: &amp;<span style="color: #f0c674;">syntax.CallExpr</span><span style="color: #f0c674;">{</span>
+<span class="linenr">80: </span>          <span style="color: #de935f;">Fun</span>: &amp;<span style="color: #f0c674;">syntax.SelectorExpr</span><span style="color: #81a2be;">{</span>
+<span class="linenr">81: </span>            <span style="color: #de935f;">X</span>:   &amp;<span style="color: #f0c674;">syntax.Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #b5bd68;">"fmt"</span><span style="color: #a2b6da;">}</span>,
+<span class="linenr">82: </span>            <span style="color: #de935f;">Sel</span>: &amp;<span style="color: #f0c674;">syntax.Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #b5bd68;">"Println"</span><span style="color: #a2b6da;">}</span>,
+<span class="linenr">83: </span>          <span style="color: #81a2be;">}</span>,
+<span class="linenr">84: </span>          <span style="color: #de935f;">ArgList</span>: <span style="color: #81a2be;">[]</span><span style="color: #f0c674;">syntax.Expr</span><span style="color: #81a2be;">{</span>
+<span class="linenr">85: </span>            &amp;<span style="color: #f0c674;">syntax.BasicLit</span><span style="color: #a2b6da;">{</span>
+<span class="linenr">86: </span>              <span style="color: #de935f;">Value</span>: strconv.<span style="color: #81a2be;">Quote</span><span style="color: #9cb6ad;">(</span><span style="color: #b5bd68;">"stop "</span> + d.Name.Value + <span style="color: #b5bd68;">"..."</span><span style="color: #9cb6ad;">)</span>,
+<span class="linenr">87: </span>              <span style="color: #de935f;">Kind</span>:  syntax.StringLit,
 <span class="linenr">88: </span>            <span style="color: #a2b6da;">}</span>,
-<span class="linenr">89: </span>          <span style="color: #35a69c;">}</span>,
-<span class="linenr">90: </span>        <span style="color: #b58900;">}</span>,
-<span class="linenr">91: </span>      <span style="color: #6c71c4;">}</span>,
-<span class="linenr">92: </span>    <span style="color: #cb4b16;">}</span>, d.Body.List...<span style="color: #859900;">)</span>
-<span class="linenr">93: </span>  <span style="color: #d33682;">}</span>
-<span class="linenr">94: </span><span style="color: #268bd2;">}</span>  
+<span class="linenr">89: </span>          <span style="color: #81a2be;">}</span>,
+<span class="linenr">90: </span>        <span style="color: #f0c674;">}</span>,
+<span class="linenr">91: </span>      <span style="color: #c9b4cf;">}</span>,
+<span class="linenr">92: </span>    <span style="color: #b5bd68;">}</span>, d.Body.List...<span style="color: #de935f;">)</span>
+<span class="linenr">93: </span>  <span style="color: #81a2be;">}</span>
+<span class="linenr">94: </span><span style="color: #b294bb;">}</span>  
 </pre>
 </div>
 
@@ -648,11 +649,11 @@ stop hello...
 </p>
 
 <div class="org-src-container">
-<pre class="src src-go"><span style="color: #859900;">func</span> <span style="color: #268bd2;">hello</span><span style="color: #268bd2;">(</span><span style="color: #6c71c4;">ctx</span> <span style="color: #b58900;">context.Context</span><span style="color: #268bd2;">)</span> <span style="color: #268bd2;">{</span>
-  fmt.<span style="color: #268bd2;">Println</span><span style="color: #d33682;">(</span><span style="color: #2aa198;">"start hello..."</span><span style="color: #d33682;">)</span>
-  <span style="color: #859900;">defer</span> fmt.<span style="color: #268bd2;">Println</span><span style="color: #d33682;">(</span><span style="color: #2aa198;">"stop hello..."</span><span style="color: #d33682;">)</span>
-  fmt.<span style="color: #268bd2;">Println</span><span style="color: #d33682;">(</span><span style="color: #2aa198;">"hello world"</span><span style="color: #d33682;">)</span>
-<span style="color: #268bd2;">}</span>
+<pre class="src src-go"><span style="color: #b294bb;">func</span> <span style="color: #81a2be;">hello</span><span style="color: #b294bb;">(</span><span style="color: #cc6666;">ctx</span> <span style="color: #f0c674;">context.Context</span><span style="color: #b294bb;">)</span> <span style="color: #b294bb;">{</span>
+  fmt.<span style="color: #81a2be;">Println</span><span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"start hello..."</span><span style="color: #81a2be;">)</span>
+  <span style="color: #b294bb;">defer</span> fmt.<span style="color: #81a2be;">Println</span><span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"stop hello..."</span><span style="color: #81a2be;">)</span>
+  fmt.<span style="color: #81a2be;">Println</span><span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"hello world"</span><span style="color: #81a2be;">)</span>
+<span style="color: #b294bb;">}</span>
 </pre>
 </div>
 
@@ -676,72 +677,72 @@ helloworld/main.go:7:16: undefined: fmt in fmt.Println
 </p>
 
 <div class="org-src-container">
-<pre class="src src-go"><span class="linenr"> 52: </span><span style="color: #859900;">if</span> p.file.PkgName.Value == <span style="color: #2aa198;">"main"</span> <span style="color: #268bd2;">{</span>
-<span class="linenr"> 53: </span>  <span style="color: #859900;">for</span> <span style="color: #6c71c4;">_</span>, <span style="color: #6c71c4;">d</span> := <span style="color: #859900;">range</span> p.file.DeclList <span style="color: #d33682;">{</span>
-<span class="linenr"> 54: </span>    <span style="color: #6c71c4;">d</span>, <span style="color: #6c71c4;">_</span> := d.<span style="color: #859900;">(</span>*<span style="color: #b58900;">syntax.FuncDecl</span><span style="color: #859900;">)</span>
-<span class="linenr"> 55: </span>    <span style="color: #859900;">if</span> d == <span style="color: #d33682;">nil</span> <span style="color: #859900;">{</span>
-<span class="linenr"> 56: </span>      <span style="color: #859900;">continue</span>
-<span class="linenr"> 57: </span>    <span style="color: #859900;">}</span>
-<span class="linenr"> 58: </span>    <span style="color: #859900;">if</span> <span style="color: #cb4b16; font-weight: bold;">!</span>strings.<span style="color: #268bd2;">HasPrefix</span><span style="color: #859900;">(</span>d.Name.Value, <span style="color: #2aa198;">"hello"</span><span style="color: #859900;">)</span> <span style="color: #859900;">{</span>
-<span class="linenr"> 59: </span>      <span style="color: #859900;">continue</span>
-<span class="linenr"> 60: </span>    <span style="color: #859900;">}</span>
-<span class="linenr"> 61: </span>    hasHello = <span style="color: #d33682;">true</span>
-<span class="linenr"> 62: </span>    d.Body.List = <span style="color: #268bd2;">append</span><span style="color: #859900;">(</span><span style="color: #cb4b16;">[]</span><span style="color: #b58900;">syntax.Stmt</span><span style="color: #cb4b16;">{</span>
-<span class="linenr"> 63: </span>      &amp;<span style="color: #b58900;">syntax.ExprStmt</span><span style="color: #6c71c4;">{</span>
-<span class="linenr"> 64: </span>        <span style="color: #d33682;">X</span>: &amp;<span style="color: #b58900;">syntax.CallExpr</span><span style="color: #b58900;">{</span>
-<span class="linenr"> 65: </span>          <span style="color: #d33682;">Fun</span>: &amp;<span style="color: #b58900;">syntax.SelectorExpr</span><span style="color: #35a69c;">{</span>
-<span class="linenr"> 66: </span>            <span style="color: #d33682;">X</span>:   &amp;<span style="color: #b58900;">syntax.Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #2aa198;">"fmt"</span><span style="color: #a2b6da;">}</span>,
-<span class="linenr"> 67: </span>            <span style="color: #d33682;">Sel</span>: &amp;<span style="color: #b58900;">syntax.Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #2aa198;">"Println"</span><span style="color: #a2b6da;">}</span>,
-<span class="linenr"> 68: </span>          <span style="color: #35a69c;">}</span>,
-<span class="linenr"> 69: </span>          <span style="color: #d33682;">ArgList</span>: <span style="color: #35a69c;">[]</span><span style="color: #b58900;">syntax.Expr</span><span style="color: #35a69c;">{</span>
-<span class="linenr"> 70: </span>            &amp;<span style="color: #b58900;">syntax.BasicLit</span><span style="color: #a2b6da;">{</span>
-<span class="linenr"> 71: </span>              <span style="color: #d33682;">Value</span>: strconv.<span style="color: #268bd2;">Quote</span><span style="color: #9cb6ad;">(</span><span style="color: #2aa198;">"start "</span> + d.Name.Value + <span style="color: #2aa198;">"..."</span><span style="color: #9cb6ad;">)</span>,
-<span class="linenr"> 72: </span>              <span style="color: #d33682;">Kind</span>:  syntax.StringLit,
+<pre class="src src-go"><span class="linenr"> 52: </span><span style="color: #b294bb;">if</span> p.file.PkgName.Value == <span style="color: #b5bd68;">"main"</span> <span style="color: #b294bb;">{</span>
+<span class="linenr"> 53: </span>  <span style="color: #b294bb;">for</span> <span style="color: #cc6666;">_</span>, <span style="color: #cc6666;">d</span> := <span style="color: #b294bb;">range</span> p.file.DeclList <span style="color: #81a2be;">{</span>
+<span class="linenr"> 54: </span>    <span style="color: #cc6666;">d</span>, <span style="color: #cc6666;">_</span> := d.<span style="color: #de935f;">(</span>*<span style="color: #f0c674;">syntax.FuncDecl</span><span style="color: #de935f;">)</span>
+<span class="linenr"> 55: </span>    <span style="color: #b294bb;">if</span> d == <span style="color: #de935f;">nil</span> <span style="color: #de935f;">{</span>
+<span class="linenr"> 56: </span>      <span style="color: #b294bb;">continue</span>
+<span class="linenr"> 57: </span>    <span style="color: #de935f;">}</span>
+<span class="linenr"> 58: </span>    <span style="color: #b294bb;">if</span> <span style="color: #c5c8c6; font-weight: bold;">!</span>strings.<span style="color: #81a2be;">HasPrefix</span><span style="color: #de935f;">(</span>d.Name.Value, <span style="color: #b5bd68;">"hello"</span><span style="color: #de935f;">)</span> <span style="color: #de935f;">{</span>
+<span class="linenr"> 59: </span>      <span style="color: #b294bb;">continue</span>
+<span class="linenr"> 60: </span>    <span style="color: #de935f;">}</span>
+<span class="linenr"> 61: </span>    hasHello = <span style="color: #de935f;">true</span>
+<span class="linenr"> 62: </span>    d.Body.List = <span style="color: #81a2be;">append</span><span style="color: #de935f;">(</span><span style="color: #b5bd68;">[]</span><span style="color: #f0c674;">syntax.Stmt</span><span style="color: #b5bd68;">{</span>
+<span class="linenr"> 63: </span>      &amp;<span style="color: #f0c674;">syntax.ExprStmt</span><span style="color: #c9b4cf;">{</span>
+<span class="linenr"> 64: </span>        <span style="color: #de935f;">X</span>: &amp;<span style="color: #f0c674;">syntax.CallExpr</span><span style="color: #f0c674;">{</span>
+<span class="linenr"> 65: </span>          <span style="color: #de935f;">Fun</span>: &amp;<span style="color: #f0c674;">syntax.SelectorExpr</span><span style="color: #81a2be;">{</span>
+<span class="linenr"> 66: </span>            <span style="color: #de935f;">X</span>:   &amp;<span style="color: #f0c674;">syntax.Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #b5bd68;">"fmt"</span><span style="color: #a2b6da;">}</span>,
+<span class="linenr"> 67: </span>            <span style="color: #de935f;">Sel</span>: &amp;<span style="color: #f0c674;">syntax.Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #b5bd68;">"Println"</span><span style="color: #a2b6da;">}</span>,
+<span class="linenr"> 68: </span>          <span style="color: #81a2be;">}</span>,
+<span class="linenr"> 69: </span>          <span style="color: #de935f;">ArgList</span>: <span style="color: #81a2be;">[]</span><span style="color: #f0c674;">syntax.Expr</span><span style="color: #81a2be;">{</span>
+<span class="linenr"> 70: </span>            &amp;<span style="color: #f0c674;">syntax.BasicLit</span><span style="color: #a2b6da;">{</span>
+<span class="linenr"> 71: </span>              <span style="color: #de935f;">Value</span>: strconv.<span style="color: #81a2be;">Quote</span><span style="color: #9cb6ad;">(</span><span style="color: #b5bd68;">"start "</span> + d.Name.Value + <span style="color: #b5bd68;">"..."</span><span style="color: #9cb6ad;">)</span>,
+<span class="linenr"> 72: </span>              <span style="color: #de935f;">Kind</span>:  syntax.StringLit,
 <span class="linenr"> 73: </span>            <span style="color: #a2b6da;">}</span>,
-<span class="linenr"> 74: </span>          <span style="color: #35a69c;">}</span>,
-<span class="linenr"> 75: </span>        <span style="color: #b58900;">}</span>,
-<span class="linenr"> 76: </span>      <span style="color: #6c71c4;">}</span>,
-<span class="linenr"> 77: </span>      &amp;<span style="color: #b58900;">syntax.CallStmt</span><span style="color: #6c71c4;">{</span>
-<span class="linenr"> 78: </span>        <span style="color: #d33682;">Tok</span>: syntax.Defer,
-<span class="linenr"> 79: </span>        <span style="color: #d33682;">Call</span>: &amp;<span style="color: #b58900;">syntax.CallExpr</span><span style="color: #b58900;">{</span>
-<span class="linenr"> 80: </span>          <span style="color: #d33682;">Fun</span>: &amp;<span style="color: #b58900;">syntax.SelectorExpr</span><span style="color: #35a69c;">{</span>
-<span class="linenr"> 81: </span>            <span style="color: #d33682;">X</span>:   &amp;<span style="color: #b58900;">syntax.Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #2aa198;">"fmt"</span><span style="color: #a2b6da;">}</span>,
-<span class="linenr"> 82: </span>            <span style="color: #d33682;">Sel</span>: &amp;<span style="color: #b58900;">syntax.Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #2aa198;">"Println"</span><span style="color: #a2b6da;">}</span>,
-<span class="linenr"> 83: </span>          <span style="color: #35a69c;">}</span>,
-<span class="linenr"> 84: </span>          <span style="color: #d33682;">ArgList</span>: <span style="color: #35a69c;">[]</span><span style="color: #b58900;">syntax.Expr</span><span style="color: #35a69c;">{</span>
-<span class="linenr"> 85: </span>            &amp;<span style="color: #b58900;">syntax.BasicLit</span><span style="color: #a2b6da;">{</span>
-<span class="linenr"> 86: </span>              <span style="color: #d33682;">Value</span>: strconv.<span style="color: #268bd2;">Quote</span><span style="color: #9cb6ad;">(</span><span style="color: #2aa198;">"stop "</span> + d.Name.Value + <span style="color: #2aa198;">"..."</span><span style="color: #9cb6ad;">)</span>,
-<span class="linenr"> 87: </span>              <span style="color: #d33682;">Kind</span>:  syntax.StringLit,
+<span class="linenr"> 74: </span>          <span style="color: #81a2be;">}</span>,
+<span class="linenr"> 75: </span>        <span style="color: #f0c674;">}</span>,
+<span class="linenr"> 76: </span>      <span style="color: #c9b4cf;">}</span>,
+<span class="linenr"> 77: </span>      &amp;<span style="color: #f0c674;">syntax.CallStmt</span><span style="color: #c9b4cf;">{</span>
+<span class="linenr"> 78: </span>        <span style="color: #de935f;">Tok</span>: syntax.Defer,
+<span class="linenr"> 79: </span>        <span style="color: #de935f;">Call</span>: &amp;<span style="color: #f0c674;">syntax.CallExpr</span><span style="color: #f0c674;">{</span>
+<span class="linenr"> 80: </span>          <span style="color: #de935f;">Fun</span>: &amp;<span style="color: #f0c674;">syntax.SelectorExpr</span><span style="color: #81a2be;">{</span>
+<span class="linenr"> 81: </span>            <span style="color: #de935f;">X</span>:   &amp;<span style="color: #f0c674;">syntax.Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #b5bd68;">"fmt"</span><span style="color: #a2b6da;">}</span>,
+<span class="linenr"> 82: </span>            <span style="color: #de935f;">Sel</span>: &amp;<span style="color: #f0c674;">syntax.Name</span><span style="color: #a2b6da;">{</span>Value: <span style="color: #b5bd68;">"Println"</span><span style="color: #a2b6da;">}</span>,
+<span class="linenr"> 83: </span>          <span style="color: #81a2be;">}</span>,
+<span class="linenr"> 84: </span>          <span style="color: #de935f;">ArgList</span>: <span style="color: #81a2be;">[]</span><span style="color: #f0c674;">syntax.Expr</span><span style="color: #81a2be;">{</span>
+<span class="linenr"> 85: </span>            &amp;<span style="color: #f0c674;">syntax.BasicLit</span><span style="color: #a2b6da;">{</span>
+<span class="linenr"> 86: </span>              <span style="color: #de935f;">Value</span>: strconv.<span style="color: #81a2be;">Quote</span><span style="color: #9cb6ad;">(</span><span style="color: #b5bd68;">"stop "</span> + d.Name.Value + <span style="color: #b5bd68;">"..."</span><span style="color: #9cb6ad;">)</span>,
+<span class="linenr"> 87: </span>              <span style="color: #de935f;">Kind</span>:  syntax.StringLit,
 <span class="linenr"> 88: </span>            <span style="color: #a2b6da;">}</span>,
-<span class="linenr"> 89: </span>          <span style="color: #35a69c;">}</span>,
-<span class="linenr"> 90: </span>        <span style="color: #b58900;">}</span>,
-<span class="linenr"> 91: </span>      <span style="color: #6c71c4;">}</span>,
-<span class="linenr"> 92: </span>    <span style="color: #cb4b16;">}</span>, d.Body.List...<span style="color: #859900;">)</span>
-<span class="linenr"> 93: </span>  <span style="color: #d33682;">}</span>
-<span class="linenr"> 94: </span><span style="color: #268bd2;">}</span>
-<span class="linenr"> 95: </span><span style="color: #859900;">if</span> hasHello <span style="color: #268bd2;">{</span>
-<span class="linenr"> 96: </span>  <span style="color: #6c71c4;">hasFmtImport</span> := <span style="color: #d33682;">false</span>
-<span class="linenr"> 97: </span>  <span style="color: #859900;">for</span> <span style="color: #6c71c4;">_</span>, <span style="color: #6c71c4;">d</span> := <span style="color: #859900;">range</span> p.file.DeclList <span style="color: #d33682;">{</span>
-<span class="linenr"> 98: </span>    <span style="color: #6c71c4;">d</span>, <span style="color: #6c71c4;">_</span> := d.<span style="color: #859900;">(</span>*<span style="color: #b58900;">syntax.ImportDecl</span><span style="color: #859900;">)</span>
-<span class="linenr"> 99: </span>    <span style="color: #859900;">if</span> d == <span style="color: #d33682;">nil</span> <span style="color: #859900;">{</span>
-<span class="linenr">100: </span>      <span style="color: #859900;">continue</span>
-<span class="linenr">101: </span>    <span style="color: #859900;">}</span>
-<span class="linenr">102: </span>    <span style="color: #859900;">if</span> d.Path.Value != <span style="color: #2aa198;">"fmt"</span> <span style="color: #859900;">{</span>
-<span class="linenr">103: </span>      <span style="color: #859900;">continue</span>
-<span class="linenr">104: </span>    <span style="color: #859900;">}</span>
-<span class="linenr">105: </span>    hasFmtImport = <span style="color: #d33682;">true</span>
-<span class="linenr">106: </span>    <span style="color: #859900;">break</span>
-<span class="linenr">107: </span>  <span style="color: #d33682;">}</span>
-<span class="linenr">108: </span>  <span style="color: #859900;">if</span> <span style="color: #cb4b16; font-weight: bold;">!</span>hasFmtImport <span style="color: #d33682;">{</span>
-<span class="linenr">109: </span>    p.file.DeclList = <span style="color: #268bd2;">append</span><span style="color: #859900;">(</span><span style="color: #cb4b16;">[]</span><span style="color: #b58900;">syntax.Decl</span><span style="color: #cb4b16;">{</span>
-<span class="linenr">110: </span>      &amp;<span style="color: #b58900;">syntax.ImportDecl</span><span style="color: #6c71c4;">{</span>
-<span class="linenr">111: </span>        <span style="color: #d33682;">Path</span>: &amp;<span style="color: #b58900;">syntax.BasicLit</span><span style="color: #b58900;">{</span>
-<span class="linenr">112: </span>          <span style="color: #d33682;">Value</span>: <span style="color: #2aa198;">`"fmt"`</span>, Kind: syntax.StringLit,
-<span class="linenr">113: </span>        <span style="color: #b58900;">}</span>,
-<span class="linenr">114: </span>      <span style="color: #6c71c4;">}</span>,
-<span class="linenr">115: </span>    <span style="color: #cb4b16;">}</span>, p.file.DeclList...<span style="color: #859900;">)</span>
-<span class="linenr">116: </span>  <span style="color: #d33682;">}</span>
-<span class="linenr">117: </span><span style="color: #268bd2;">}</span>  
+<span class="linenr"> 89: </span>          <span style="color: #81a2be;">}</span>,
+<span class="linenr"> 90: </span>        <span style="color: #f0c674;">}</span>,
+<span class="linenr"> 91: </span>      <span style="color: #c9b4cf;">}</span>,
+<span class="linenr"> 92: </span>    <span style="color: #b5bd68;">}</span>, d.Body.List...<span style="color: #de935f;">)</span>
+<span class="linenr"> 93: </span>  <span style="color: #81a2be;">}</span>
+<span class="linenr"> 94: </span><span style="color: #b294bb;">}</span>
+<span class="linenr"> 95: </span><span style="color: #b294bb;">if</span> hasHello <span style="color: #b294bb;">{</span>
+<span class="linenr"> 96: </span>  <span style="color: #cc6666;">hasFmtImport</span> := <span style="color: #de935f;">false</span>
+<span class="linenr"> 97: </span>  <span style="color: #b294bb;">for</span> <span style="color: #cc6666;">_</span>, <span style="color: #cc6666;">d</span> := <span style="color: #b294bb;">range</span> p.file.DeclList <span style="color: #81a2be;">{</span>
+<span class="linenr"> 98: </span>    <span style="color: #cc6666;">d</span>, <span style="color: #cc6666;">_</span> := d.<span style="color: #de935f;">(</span>*<span style="color: #f0c674;">syntax.ImportDecl</span><span style="color: #de935f;">)</span>
+<span class="linenr"> 99: </span>    <span style="color: #b294bb;">if</span> d == <span style="color: #de935f;">nil</span> <span style="color: #de935f;">{</span>
+<span class="linenr">100: </span>      <span style="color: #b294bb;">continue</span>
+<span class="linenr">101: </span>    <span style="color: #de935f;">}</span>
+<span class="linenr">102: </span>    <span style="color: #b294bb;">if</span> d.Path.Value != <span style="color: #b5bd68;">"fmt"</span> <span style="color: #de935f;">{</span>
+<span class="linenr">103: </span>      <span style="color: #b294bb;">continue</span>
+<span class="linenr">104: </span>    <span style="color: #de935f;">}</span>
+<span class="linenr">105: </span>    hasFmtImport = <span style="color: #de935f;">true</span>
+<span class="linenr">106: </span>    <span style="color: #b294bb;">break</span>
+<span class="linenr">107: </span>  <span style="color: #81a2be;">}</span>
+<span class="linenr">108: </span>  <span style="color: #b294bb;">if</span> <span style="color: #c5c8c6; font-weight: bold;">!</span>hasFmtImport <span style="color: #81a2be;">{</span>
+<span class="linenr">109: </span>    p.file.DeclList = <span style="color: #81a2be;">append</span><span style="color: #de935f;">(</span><span style="color: #b5bd68;">[]</span><span style="color: #f0c674;">syntax.Decl</span><span style="color: #b5bd68;">{</span>
+<span class="linenr">110: </span>      &amp;<span style="color: #f0c674;">syntax.ImportDecl</span><span style="color: #c9b4cf;">{</span>
+<span class="linenr">111: </span>        <span style="color: #de935f;">Path</span>: &amp;<span style="color: #f0c674;">syntax.BasicLit</span><span style="color: #f0c674;">{</span>
+<span class="linenr">112: </span>          <span style="color: #de935f;">Value</span>: <span style="color: #b5bd68;">`"fmt"`</span>, Kind: syntax.StringLit,
+<span class="linenr">113: </span>        <span style="color: #f0c674;">}</span>,
+<span class="linenr">114: </span>      <span style="color: #c9b4cf;">}</span>,
+<span class="linenr">115: </span>    <span style="color: #b5bd68;">}</span>, p.file.DeclList...<span style="color: #de935f;">)</span>
+<span class="linenr">116: </span>  <span style="color: #81a2be;">}</span>
+<span class="linenr">117: </span><span style="color: #b294bb;">}</span>  
 </pre>
 </div>
 
@@ -770,10 +771,10 @@ helloworld/main.go:1:9: can't find import: "fmt"
 包变量 <code>packageFile</code> 这个map中获取相关包的信息。
 </p>
 <div class="org-src-container">
-<pre class="src src-go"><span class="linenr">988: </span><span style="color: #859900;">if</span> packageFile != <span style="color: #d33682;">nil</span> <span style="color: #268bd2;">{</span>
-<span class="linenr">989: </span>  file, ok = packageFile<span style="color: #d33682;">[</span>name<span style="color: #d33682;">]</span>
-<span class="linenr">990: </span>  <span style="color: #859900;">return</span> file, ok
-<span class="linenr">991: </span><span style="color: #268bd2;">}</span>  
+<pre class="src src-go"><span class="linenr">988: </span><span style="color: #b294bb;">if</span> packageFile != <span style="color: #de935f;">nil</span> <span style="color: #b294bb;">{</span>
+<span class="linenr">989: </span>  file, ok = packageFile<span style="color: #81a2be;">[</span>name<span style="color: #81a2be;">]</span>
+<span class="linenr">990: </span>  <span style="color: #b294bb;">return</span> file, ok
+<span class="linenr">991: </span><span style="color: #b294bb;">}</span>  
 </pre>
 </div>
 
@@ -792,12 +793,12 @@ helloworld/main.go:1:9: can't find import: "fmt"
 </p>
 
 <div class="org-src-container">
-<pre class="src src-go"><span class="linenr">805: </span><span style="color: #859900;">func</span> <span style="color: #268bd2;">readImportCfg</span><span style="color: #268bd2;">(</span><span style="color: #6c71c4;">file</span> <span style="color: #b58900;">string</span><span style="color: #268bd2;">)</span> <span style="color: #268bd2;">{</span>
-<span class="linenr">806: </span>  packageFile = <span style="color: #859900;">map</span><span style="color: #d33682;">[</span><span style="color: #b58900;">string</span><span style="color: #d33682;">]</span><span style="color: #b58900;">string</span><span style="color: #d33682;">{}</span>
-<span class="linenr">807: </span>  <span style="color: #6c71c4;">data</span>, <span style="color: #6c71c4;">err</span> := ioutil.<span style="color: #268bd2;">ReadFile</span><span style="color: #d33682;">(</span>file<span style="color: #d33682;">)</span>
-<span class="linenr">808: </span>  <span style="color: #859900;">if</span> err != <span style="color: #d33682;">nil</span> <span style="color: #d33682;">{</span>
-<span class="linenr">809: </span>    log.<span style="color: #268bd2;">Fatalf</span><span style="color: #859900;">(</span><span style="color: #2aa198;">"-importcfg: %v"</span>, err<span style="color: #859900;">)</span>
-<span class="linenr">810: </span>  <span style="color: #d33682;">}</span>
+<pre class="src src-go"><span class="linenr">805: </span><span style="color: #b294bb;">func</span> <span style="color: #81a2be;">readImportCfg</span><span style="color: #b294bb;">(</span><span style="color: #cc6666;">file</span> <span style="color: #f0c674;">string</span><span style="color: #b294bb;">)</span> <span style="color: #b294bb;">{</span>
+<span class="linenr">806: </span>  packageFile = <span style="color: #b294bb;">map</span><span style="color: #81a2be;">[</span><span style="color: #f0c674;">string</span><span style="color: #81a2be;">]</span><span style="color: #f0c674;">string</span><span style="color: #81a2be;">{}</span>
+<span class="linenr">807: </span>  <span style="color: #cc6666;">data</span>, <span style="color: #cc6666;">err</span> := ioutil.<span style="color: #81a2be;">ReadFile</span><span style="color: #81a2be;">(</span>file<span style="color: #81a2be;">)</span>
+<span class="linenr">808: </span>  <span style="color: #b294bb;">if</span> err != <span style="color: #de935f;">nil</span> <span style="color: #81a2be;">{</span>
+<span class="linenr">809: </span>    log.<span style="color: #81a2be;">Fatalf</span><span style="color: #de935f;">(</span><span style="color: #b5bd68;">"-importcfg: %v"</span>, err<span style="color: #de935f;">)</span>
+<span class="linenr">810: </span>  <span style="color: #81a2be;">}</span>
 </pre>
 </div>
 
@@ -814,20 +815,20 @@ helloworld/main.go:1:9: can't find import: "fmt"
 </p>
 
 <div class="org-src-container">
-<pre class="src src-go"><span class="linenr">634: </span><span style="color: #405A61;">// </span><span style="color: #405A61;">Prepare Go import config.</span>
-<span class="linenr">635: </span><span style="color: #405A61;">// </span><span style="color: #405A61;">We start it off with a comment so it can't be empty, so icfg.Bytes() below is never nil.</span>
-<span class="linenr">636: </span><span style="color: #405A61;">// </span><span style="color: #405A61;">It should never be empty anyway, but there have been bugs in the past that resulted</span>
-<span class="linenr">637: </span><span style="color: #405A61;">// </span><span style="color: #405A61;">in empty configs, which then unfortunately turn into "no config passed to compiler",</span>
-<span class="linenr">638: </span><span style="color: #405A61;">// </span><span style="color: #405A61;">and the compiler falls back to looking in pkg itself, which mostly works,</span>
-<span class="linenr">639: </span><span style="color: #405A61;">// </span><span style="color: #405A61;">except when it doesn't.</span>
-<span class="linenr">640: </span><span style="color: #859900;">var</span> <span style="color: #6c71c4;">icfg</span> <span style="color: #b58900;">bytes.Buffer</span>
-<span class="linenr">641: </span>fmt.<span style="color: #268bd2;">Fprintf</span><span style="color: #268bd2;">(</span>&amp;icfg, <span style="color: #2aa198;">"# import config\n"</span><span style="color: #268bd2;">)</span>
-<span class="linenr">642: </span><span style="color: #859900;">for</span> <span style="color: #6c71c4;">i</span>, <span style="color: #6c71c4;">raw</span> := <span style="color: #859900;">range</span> a.Package.Internal.RawImports <span style="color: #268bd2;">{</span>
-<span class="linenr">643: </span>  <span style="color: #6c71c4;">final</span> := a.Package.Imports<span style="color: #d33682;">[</span>i<span style="color: #d33682;">]</span>
-<span class="linenr">644: </span>  <span style="color: #859900;">if</span> final != raw <span style="color: #d33682;">{</span>
-<span class="linenr">645: </span>    fmt.<span style="color: #268bd2;">Fprintf</span><span style="color: #859900;">(</span>&amp;icfg, <span style="color: #2aa198;">"importmap %s=%s\n"</span>, raw, final<span style="color: #859900;">)</span>
-<span class="linenr">646: </span>  <span style="color: #d33682;">}</span>
-<span class="linenr">647: </span><span style="color: #268bd2;">}</span>  
+<pre class="src src-go"><span class="linenr">634: </span><span style="color: #5a5b5a;">// </span><span style="color: #5a5b5a;">Prepare Go import config.</span>
+<span class="linenr">635: </span><span style="color: #5a5b5a;">// </span><span style="color: #5a5b5a;">We start it off with a comment so it can't be empty, so icfg.Bytes() below is never nil.</span>
+<span class="linenr">636: </span><span style="color: #5a5b5a;">// </span><span style="color: #5a5b5a;">It should never be empty anyway, but there have been bugs in the past that resulted</span>
+<span class="linenr">637: </span><span style="color: #5a5b5a;">// </span><span style="color: #5a5b5a;">in empty configs, which then unfortunately turn into "no config passed to compiler",</span>
+<span class="linenr">638: </span><span style="color: #5a5b5a;">// </span><span style="color: #5a5b5a;">and the compiler falls back to looking in pkg itself, which mostly works,</span>
+<span class="linenr">639: </span><span style="color: #5a5b5a;">// </span><span style="color: #5a5b5a;">except when it doesn't.</span>
+<span class="linenr">640: </span><span style="color: #b294bb;">var</span> <span style="color: #cc6666;">icfg</span> <span style="color: #f0c674;">bytes.Buffer</span>
+<span class="linenr">641: </span>fmt.<span style="color: #81a2be;">Fprintf</span><span style="color: #b294bb;">(</span>&amp;icfg, <span style="color: #b5bd68;">"# import config\n"</span><span style="color: #b294bb;">)</span>
+<span class="linenr">642: </span><span style="color: #b294bb;">for</span> <span style="color: #cc6666;">i</span>, <span style="color: #cc6666;">raw</span> := <span style="color: #b294bb;">range</span> a.Package.Internal.RawImports <span style="color: #b294bb;">{</span>
+<span class="linenr">643: </span>  <span style="color: #cc6666;">final</span> := a.Package.Imports<span style="color: #81a2be;">[</span>i<span style="color: #81a2be;">]</span>
+<span class="linenr">644: </span>  <span style="color: #b294bb;">if</span> final != raw <span style="color: #81a2be;">{</span>
+<span class="linenr">645: </span>    fmt.<span style="color: #81a2be;">Fprintf</span><span style="color: #de935f;">(</span>&amp;icfg, <span style="color: #b5bd68;">"importmap %s=%s\n"</span>, raw, final<span style="color: #de935f;">)</span>
+<span class="linenr">646: </span>  <span style="color: #81a2be;">}</span>
+<span class="linenr">647: </span><span style="color: #b294bb;">}</span>  
 </pre>
 </div>
 
@@ -839,11 +840,11 @@ helloworld/main.go:1:9: can't find import: "fmt"
 文件 <code>go/build/build.go=，先用 =go/parser.ParseFile</code> 解析源文件，然后获取其中的imports。
 </p>
 <div class="org-src-container">
-<pre class="src src-go"><span class="linenr">847: </span><span style="color: #6c71c4;">pf</span>, <span style="color: #6c71c4;">err</span> := parser.<span style="color: #268bd2;">ParseFile</span><span style="color: #268bd2;">(</span>fset, filename, data, parser.ImportsOnly|parser.ParseComments<span style="color: #268bd2;">)</span>
-<span class="linenr">848: </span><span style="color: #859900;">if</span> err != <span style="color: #d33682;">nil</span> <span style="color: #268bd2;">{</span>
-<span class="linenr">849: </span>  <span style="color: #268bd2;">badFile</span><span style="color: #d33682;">(</span>err<span style="color: #d33682;">)</span>
-<span class="linenr">850: </span>  <span style="color: #859900;">continue</span>
-<span class="linenr">851: </span><span style="color: #268bd2;">}</span>
+<pre class="src src-go"><span class="linenr">847: </span><span style="color: #cc6666;">pf</span>, <span style="color: #cc6666;">err</span> := parser.<span style="color: #81a2be;">ParseFile</span><span style="color: #b294bb;">(</span>fset, filename, data, parser.ImportsOnly|parser.ParseComments<span style="color: #b294bb;">)</span>
+<span class="linenr">848: </span><span style="color: #b294bb;">if</span> err != <span style="color: #de935f;">nil</span> <span style="color: #b294bb;">{</span>
+<span class="linenr">849: </span>  <span style="color: #81a2be;">badFile</span><span style="color: #81a2be;">(</span>err<span style="color: #81a2be;">)</span>
+<span class="linenr">850: </span>  <span style="color: #b294bb;">continue</span>
+<span class="linenr">851: </span><span style="color: #b294bb;">}</span>
 </pre>
 </div>
 
@@ -852,40 +853,40 @@ helloworld/main.go:1:9: can't find import: "fmt"
 </p>
 
 <div class="org-src-container">
-<pre class="src src-go"><span class="linenr">847: </span><span style="color: #6c71c4;">pf</span>, <span style="color: #6c71c4;">err</span> := parser.<span style="color: #268bd2;">ParseFile</span><span style="color: #268bd2;">(</span>fset, filename, data, parser.ImportsOnly|parser.ParseComments<span style="color: #268bd2;">)</span>
-<span class="linenr">848: </span><span style="color: #859900;">if</span> err != <span style="color: #d33682;">nil</span> <span style="color: #268bd2;">{</span>
-<span class="linenr">849: </span>  <span style="color: #268bd2;">badFile</span><span style="color: #d33682;">(</span>err<span style="color: #d33682;">)</span>
-<span class="linenr">850: </span>  <span style="color: #859900;">continue</span>
-<span class="linenr">851: </span><span style="color: #268bd2;">}</span>
+<pre class="src src-go"><span class="linenr">847: </span><span style="color: #cc6666;">pf</span>, <span style="color: #cc6666;">err</span> := parser.<span style="color: #81a2be;">ParseFile</span><span style="color: #b294bb;">(</span>fset, filename, data, parser.ImportsOnly|parser.ParseComments<span style="color: #b294bb;">)</span>
+<span class="linenr">848: </span><span style="color: #b294bb;">if</span> err != <span style="color: #de935f;">nil</span> <span style="color: #b294bb;">{</span>
+<span class="linenr">849: </span>  <span style="color: #81a2be;">badFile</span><span style="color: #81a2be;">(</span>err<span style="color: #81a2be;">)</span>
+<span class="linenr">850: </span>  <span style="color: #b294bb;">continue</span>
+<span class="linenr">851: </span><span style="color: #b294bb;">}</span>
 <span class="linenr">852: </span>
-<span class="linenr">853: </span><span style="color: #859900;">if</span> strings.<span style="color: #268bd2;">HasSuffix</span><span style="color: #268bd2;">(</span>filename, <span style="color: #2aa198;">"helloworld/main.go"</span><span style="color: #268bd2;">)</span> <span style="color: #268bd2;">{</span>
-<span class="linenr">854: </span>  <span style="color: #6c71c4;">hasFmtImport</span> := <span style="color: #d33682;">false</span>
-<span class="linenr">855: </span>  <span style="color: #859900;">for</span> <span style="color: #6c71c4;">_</span>, <span style="color: #6c71c4;">i</span> := <span style="color: #859900;">range</span> pf.Imports <span style="color: #d33682;">{</span>
-<span class="linenr">856: </span>    <span style="color: #859900;">if</span> i.Path.Value == <span style="color: #2aa198;">`"fmt"`</span> <span style="color: #859900;">{</span>
-<span class="linenr">857: </span>      hasFmtImport = <span style="color: #d33682;">true</span>
-<span class="linenr">858: </span>      <span style="color: #859900;">break</span>
-<span class="linenr">859: </span>    <span style="color: #859900;">}</span>
-<span class="linenr">860: </span>  <span style="color: #d33682;">}</span>
-<span class="linenr">861: </span>  <span style="color: #859900;">if</span> <span style="color: #cb4b16; font-weight: bold;">!</span>hasFmtImport <span style="color: #d33682;">{</span>
-<span class="linenr">862: </span>    pf.Imports = <span style="color: #268bd2;">append</span><span style="color: #859900;">(</span>pf.Imports, &amp;<span style="color: #b58900;">ast.ImportSpec</span><span style="color: #cb4b16;">{</span>
-<span class="linenr">863: </span>      <span style="color: #d33682;">Path</span>: &amp;<span style="color: #b58900;">ast.BasicLit</span><span style="color: #6c71c4;">{</span>
-<span class="linenr">864: </span>        <span style="color: #d33682;">Value</span>: <span style="color: #2aa198;">`"fmt"`</span>,
-<span class="linenr">865: </span>        <span style="color: #d33682;">Kind</span>:  token.STRING,
-<span class="linenr">866: </span>      <span style="color: #6c71c4;">}</span>,
-<span class="linenr">867: </span>    <span style="color: #cb4b16;">}</span><span style="color: #859900;">)</span>
-<span class="linenr">868: </span>    <span style="color: #859900;">if</span> <span style="color: #268bd2;">len</span><span style="color: #859900;">(</span>pf.Decls<span style="color: #859900;">)</span> &gt; <span style="color: #d33682; font-weight: bold;">0</span> <span style="color: #859900;">{</span>
-<span class="linenr">869: </span>      <span style="color: #6c71c4;">d</span>, <span style="color: #6c71c4;">ok</span> := pf.Decls<span style="color: #cb4b16;">[</span><span style="color: #d33682; font-weight: bold;">0</span><span style="color: #cb4b16;">]</span>.<span style="color: #cb4b16;">(</span>*<span style="color: #b58900;">ast.GenDecl</span><span style="color: #cb4b16;">)</span>
-<span class="linenr">870: </span>      <span style="color: #859900;">if</span> ok <span style="color: #cb4b16;">{</span>
-<span class="linenr">871: </span>        d.Specs = <span style="color: #268bd2;">append</span><span style="color: #6c71c4;">(</span>d.Specs, &amp;<span style="color: #b58900;">ast.ImportSpec</span><span style="color: #b58900;">{</span>
-<span class="linenr">872: </span>          <span style="color: #d33682;">Path</span>: &amp;<span style="color: #b58900;">ast.BasicLit</span><span style="color: #35a69c;">{</span>
-<span class="linenr">873: </span>            <span style="color: #d33682;">Kind</span>:  token.STRING,
-<span class="linenr">874: </span>            <span style="color: #d33682;">Value</span>: <span style="color: #2aa198;">`"fmt"`</span>,
-<span class="linenr">875: </span>          <span style="color: #35a69c;">}</span>,
-<span class="linenr">876: </span>        <span style="color: #b58900;">}</span><span style="color: #6c71c4;">)</span>
-<span class="linenr">877: </span>      <span style="color: #cb4b16;">}</span>
-<span class="linenr">878: </span>    <span style="color: #859900;">}</span>
-<span class="linenr">879: </span>  <span style="color: #d33682;">}</span>
-<span class="linenr">880: </span><span style="color: #268bd2;">}</span>  
+<span class="linenr">853: </span><span style="color: #b294bb;">if</span> strings.<span style="color: #81a2be;">HasSuffix</span><span style="color: #b294bb;">(</span>filename, <span style="color: #b5bd68;">"helloworld/main.go"</span><span style="color: #b294bb;">)</span> <span style="color: #b294bb;">{</span>
+<span class="linenr">854: </span>  <span style="color: #cc6666;">hasFmtImport</span> := <span style="color: #de935f;">false</span>
+<span class="linenr">855: </span>  <span style="color: #b294bb;">for</span> <span style="color: #cc6666;">_</span>, <span style="color: #cc6666;">i</span> := <span style="color: #b294bb;">range</span> pf.Imports <span style="color: #81a2be;">{</span>
+<span class="linenr">856: </span>    <span style="color: #b294bb;">if</span> i.Path.Value == <span style="color: #b5bd68;">`"fmt"`</span> <span style="color: #de935f;">{</span>
+<span class="linenr">857: </span>      hasFmtImport = <span style="color: #de935f;">true</span>
+<span class="linenr">858: </span>      <span style="color: #b294bb;">break</span>
+<span class="linenr">859: </span>    <span style="color: #de935f;">}</span>
+<span class="linenr">860: </span>  <span style="color: #81a2be;">}</span>
+<span class="linenr">861: </span>  <span style="color: #b294bb;">if</span> <span style="color: #c5c8c6; font-weight: bold;">!</span>hasFmtImport <span style="color: #81a2be;">{</span>
+<span class="linenr">862: </span>    pf.Imports = <span style="color: #81a2be;">append</span><span style="color: #de935f;">(</span>pf.Imports, &amp;<span style="color: #f0c674;">ast.ImportSpec</span><span style="color: #b5bd68;">{</span>
+<span class="linenr">863: </span>      <span style="color: #de935f;">Path</span>: &amp;<span style="color: #f0c674;">ast.BasicLit</span><span style="color: #c9b4cf;">{</span>
+<span class="linenr">864: </span>        <span style="color: #de935f;">Value</span>: <span style="color: #b5bd68;">`"fmt"`</span>,
+<span class="linenr">865: </span>        <span style="color: #de935f;">Kind</span>:  token.STRING,
+<span class="linenr">866: </span>      <span style="color: #c9b4cf;">}</span>,
+<span class="linenr">867: </span>    <span style="color: #b5bd68;">}</span><span style="color: #de935f;">)</span>
+<span class="linenr">868: </span>    <span style="color: #b294bb;">if</span> <span style="color: #81a2be;">len</span><span style="color: #de935f;">(</span>pf.Decls<span style="color: #de935f;">)</span> &gt; <span style="color: #de935f; font-weight: bold;">0</span> <span style="color: #de935f;">{</span>
+<span class="linenr">869: </span>      <span style="color: #cc6666;">d</span>, <span style="color: #cc6666;">ok</span> := pf.Decls<span style="color: #b5bd68;">[</span><span style="color: #de935f; font-weight: bold;">0</span><span style="color: #b5bd68;">]</span>.<span style="color: #b5bd68;">(</span>*<span style="color: #f0c674;">ast.GenDecl</span><span style="color: #b5bd68;">)</span>
+<span class="linenr">870: </span>      <span style="color: #b294bb;">if</span> ok <span style="color: #b5bd68;">{</span>
+<span class="linenr">871: </span>        d.Specs = <span style="color: #81a2be;">append</span><span style="color: #c9b4cf;">(</span>d.Specs, &amp;<span style="color: #f0c674;">ast.ImportSpec</span><span style="color: #f0c674;">{</span>
+<span class="linenr">872: </span>          <span style="color: #de935f;">Path</span>: &amp;<span style="color: #f0c674;">ast.BasicLit</span><span style="color: #81a2be;">{</span>
+<span class="linenr">873: </span>            <span style="color: #de935f;">Kind</span>:  token.STRING,
+<span class="linenr">874: </span>            <span style="color: #de935f;">Value</span>: <span style="color: #b5bd68;">`"fmt"`</span>,
+<span class="linenr">875: </span>          <span style="color: #81a2be;">}</span>,
+<span class="linenr">876: </span>        <span style="color: #f0c674;">}</span><span style="color: #c9b4cf;">)</span>
+<span class="linenr">877: </span>      <span style="color: #b5bd68;">}</span>
+<span class="linenr">878: </span>    <span style="color: #de935f;">}</span>
+<span class="linenr">879: </span>  <span style="color: #81a2be;">}</span>
+<span class="linenr">880: </span><span style="color: #b294bb;">}</span>  
 </pre>
 </div>
 
@@ -906,9 +907,9 @@ stop hello...
 </div>
 </div>
 
-<div id="outline-container-org3b333fe" class="outline-2">
-<h2 id="org3b333fe">创业未半</h2>
-<div class="outline-text-2" id="text-org3b333fe">
+<div id="outline-container-org7fa0be9" class="outline-2">
+<h2 id="org7fa0be9">创业未半</h2>
+<div class="outline-text-2" id="text-org7fa0be9">
 <p>
 至此对golang编译器的解析和hack的过程也结束了。可见通过修改编译器生成的AST的方式，我们可以给特定文件、特定包、特定方法加上自定义代码。这里给golang实现aop提供了一种另类的思路。诚然要完成像 <code>AspectJ</code> 这样完整的解决方案，还有很大一段路路要走。
 </p>

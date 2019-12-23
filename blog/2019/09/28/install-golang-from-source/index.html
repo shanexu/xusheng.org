@@ -24,6 +24,7 @@
     <div class="node nav">
       <ul>
           <li><a href="/blog/" id="Blog_tab">Blog</a></li>
+          <li><a href="/media/" id="Media_tab">Media</a></li>
         <li><a href="/tags/">Tags</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="https://github.com/shanexu">GitHub</a></li>
@@ -37,9 +38,9 @@
 本文的的主要内容来自golang源代码中的 <a href="https://github.com/golang/go/blob/master/doc/install-source.html">install-source.html</a> 内容。
 </p>
 
-<div id="outline-container-org488f7c5" class="outline-2">
-<h2 id="org488f7c5">克隆源代码</h2>
-<div class="outline-text-2" id="text-org488f7c5">
+<div id="outline-container-orgcdeda8c" class="outline-2">
+<h2 id="orgcdeda8c">克隆源代码</h2>
+<div class="outline-text-2" id="text-orgcdeda8c">
 <div class="org-src-container">
 <pre class="src src-shell">git clone https://github.com/golang/go.git
 </pre>
@@ -47,9 +48,9 @@
 </div>
 </div>
 
-<div id="outline-container-org563a815" class="outline-2">
-<h2 id="org563a815">安装bootstrap binar</h2>
-<div class="outline-text-2" id="text-org563a815">
+<div id="outline-container-org163ff1b" class="outline-2">
+<h2 id="org163ff1b">安装bootstrap binar</h2>
+<div class="outline-text-2" id="text-org163ff1b">
 <p>
 go1.4以后golang工具链全都由golang编译，所以从源码安装golang需要一个bootstrap环境，也就是说需要一个golang编译器。这里可以通过系统的包管理器安装go1.4后的版本。
 </p>
@@ -60,20 +61,20 @@ go1.4以后golang工具链全都由golang编译，所以从源码安装golang需
 </div>
 </div>
 
-<div id="outline-container-org32887dc" class="outline-2">
-<h2 id="org32887dc">编译安装</h2>
-<div class="outline-text-2" id="text-org32887dc">
+<div id="outline-container-org4a3f37d" class="outline-2">
+<h2 id="org4a3f37d">编译安装</h2>
+<div class="outline-text-2" id="text-org4a3f37d">
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #268bd2;">cd</span> go/src
-<span style="color: #6c71c4;">GOROOT_BOOTSTRAP</span>=/usr/local/opt/go/libexec ./all.bash
+<pre class="src src-shell"><span style="color: #81a2be;">cd</span> go/src
+<span style="color: #cc6666;">GOROOT_BOOTSTRAP</span>=/usr/local/opt/go/libexec ./all.bash
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org9a47f53" class="outline-2">
-<h2 id="org9a47f53">检查</h2>
-<div class="outline-text-2" id="text-org9a47f53">
+<div id="outline-container-orgffce0ec" class="outline-2">
+<h2 id="orgffce0ec">检查</h2>
+<div class="outline-text-2" id="text-orgffce0ec">
 <div class="org-src-container">
 <pre class="src src-text">$ ../bin/go version
 go version devel +739bf6b929 Fri Sep 27 21:17:15 2019 +0000 darwin/amd64

@@ -24,6 +24,7 @@
     <div class="node nav">
       <ul>
           <li><a href="/blog/" id="Blog_tab">Blog</a></li>
+          <li><a href="/media/" id="Media_tab">Media</a></li>
         <li><a href="/tags/">Tags</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="https://github.com/shanexu">GitHub</a></li>
@@ -34,18 +35,18 @@
 
   <h3 class="section">Learning Haskell with nix and Emacs</h3>
 
-<div id="outline-container-org1a5a88a" class="outline-2">
-<h2 id="org1a5a88a">前言</h2>
-<div class="outline-text-2" id="text-org1a5a88a">
+<div id="outline-container-orga9d05e5" class="outline-2">
+<h2 id="orga9d05e5">前言</h2>
+<div class="outline-text-2" id="text-orga9d05e5">
 <p>
 <a href="https://github.com/haskell-servant/servant">haskell-servant</a> 和 <a href="https://github.com/dmjio/miso">miso</a> 等haskell开源项目竟然都是用nix管理依赖的。时隔多年nix竟然被赋予了这样的魔法，不仅让我大跌眼镜。在 <a href="https://github.com/Gabriel439/haskell-nix">Nix and Haskell in production</a> 一文中指出，nix对标的其实是stack，他和stack一样有独立的haskell包缓存，用以达成reproducible的构建。nix胜过stack的唯一个地方，就是他不仅能解决haskell包依赖，还能解决其他任何依赖，甚至可以为你打造一个独立的开发环境。本文就是介绍如何在 <code>macos catalina</code> 上用nix打造一个haskell开发环境。
 </p>
 </div>
 </div>
 
-<div id="outline-container-orge2e9cd3" class="outline-2">
-<h2 id="orge2e9cd3">安装nix和其他工具</h2>
-<div class="outline-text-2" id="text-orge2e9cd3">
+<div id="outline-container-orgb888bbf" class="outline-2">
+<h2 id="orgb888bbf">安装nix和其他工具</h2>
+<div class="outline-text-2" id="text-orgb888bbf">
 <p>
 本来这一个步骤应该是非常简单的。但是在最新版的macos catalina上并不那么容易了。nix需要在根目录上创建文件夹 <code>/nix</code> ，在系统默认开启 <code>SIP</code> 的情况下，根目录是以只读度方式挂载的，所以无法创建。首先需要关闭SIP，创建目录，重新启用SIP，由于启用后根目录仍然只读，还需要创建分区，将分区挂载到 <code>/nix</code> 。
 </p>
@@ -106,9 +107,9 @@ nix安装完之后就可以安装开发工具了。
 </div>
 </div>
 
-<div id="outline-container-orgfe92be8" class="outline-2">
-<h2 id="orgfe92be8">使用stack初始化工程</h2>
-<div class="outline-text-2" id="text-orgfe92be8">
+<div id="outline-container-org33425ca" class="outline-2">
+<h2 id="org33425ca">使用stack初始化工程</h2>
+<div class="outline-text-2" id="text-org33425ca">
 <div class="org-src-container">
 <pre class="src src-shell-script">stack new helloworld new-template
 </pre>
@@ -190,9 +191,9 @@ someFunc
 </div>
 </div>
 
-<div id="outline-container-org3d17c5b" class="outline-2">
-<h2 id="org3d17c5b">编写第一个nix表达式</h2>
-<div class="outline-text-2" id="text-org3d17c5b">
+<div id="outline-container-org10eb9b7" class="outline-2">
+<h2 id="org10eb9b7">编写第一个nix表达式</h2>
+<div class="outline-text-2" id="text-org10eb9b7">
 <p>
 说是编写，其实就是中 cabal2nix 生成。
 </p>
@@ -207,21 +208,21 @@ helloworld.nix 的内容如下：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-nix"><span class="linenr"> 1: </span><span style="color: #268bd2;">{</span> mkDerivation, base, hpack, stdenv <span style="color: #268bd2;">}</span>:
-<span class="linenr"> 2: </span>mkDerivation <span style="color: #268bd2;">{</span>
-<span class="linenr"> 3: </span>  <span style="color: #6c71c4;">pname</span> = <span style="color: #2aa198;">"helloworld"</span>;
-<span class="linenr"> 4: </span>  <span style="color: #6c71c4;">version</span> = <span style="color: #2aa198;">"0.1.0.0"</span>;
-<span class="linenr"> 5: </span>  <span style="color: #6c71c4;">src</span> = <span style="color: #d33682;">./.</span>;
-<span class="linenr"> 6: </span>  <span style="color: #6c71c4;">isLibrary</span> = <span style="color: #268bd2;">true</span>;
-<span class="linenr"> 7: </span>  <span style="color: #6c71c4;">isExecutable</span> = <span style="color: #268bd2;">true</span>;
-<span class="linenr"> 8: </span>  <span style="color: #6c71c4;">libraryHaskellDepends</span> = <span style="color: #d33682;">[</span> base <span style="color: #d33682;">]</span>;
-<span class="linenr"> 9: </span>  <span style="color: #6c71c4;">libraryToolDepends</span> = <span style="color: #d33682;">[</span> hpack <span style="color: #d33682;">]</span>;
-<span class="linenr">10: </span>  <span style="color: #6c71c4;">executableHaskellDepends</span> = <span style="color: #d33682;">[</span> base <span style="color: #d33682;">]</span>;
-<span class="linenr">11: </span>  <span style="color: #6c71c4;">testHaskellDepends</span> = <span style="color: #d33682;">[</span> base <span style="color: #d33682;">]</span>;
-<span class="linenr">12: </span>  <span style="color: #6c71c4;">prePatch</span> = <span style="color: #2aa198;">"hpack"</span>;
-<span class="linenr">13: </span>  <span style="color: #6c71c4;">homepage</span> = <span style="color: #2aa198;">"https://github.com/shanexu/helloworld#readme"</span>;
-<span class="linenr">14: </span>  <span style="color: #6c71c4;">license</span> = stdenv.lib.licenses.bsd3;
-<span class="linenr">15: </span><span style="color: #268bd2;">}</span>  
+<pre class="src src-nix"><span class="linenr"> 1: </span><span style="color: #b294bb;">{</span> mkDerivation, base, hpack, stdenv <span style="color: #b294bb;">}</span>:
+<span class="linenr"> 2: </span>mkDerivation <span style="color: #b294bb;">{</span>
+<span class="linenr"> 3: </span>  <span style="color: #cc6666;">pname</span> = <span style="color: #b5bd68;">"helloworld"</span>;
+<span class="linenr"> 4: </span>  <span style="color: #cc6666;">version</span> = <span style="color: #b5bd68;">"0.1.0.0"</span>;
+<span class="linenr"> 5: </span>  <span style="color: #cc6666;">src</span> = <span style="color: #de935f;">./.</span>;
+<span class="linenr"> 6: </span>  <span style="color: #cc6666;">isLibrary</span> = <span style="color: #81a2be;">true</span>;
+<span class="linenr"> 7: </span>  <span style="color: #cc6666;">isExecutable</span> = <span style="color: #81a2be;">true</span>;
+<span class="linenr"> 8: </span>  <span style="color: #cc6666;">libraryHaskellDepends</span> = <span style="color: #81a2be;">[</span> base <span style="color: #81a2be;">]</span>;
+<span class="linenr"> 9: </span>  <span style="color: #cc6666;">libraryToolDepends</span> = <span style="color: #81a2be;">[</span> hpack <span style="color: #81a2be;">]</span>;
+<span class="linenr">10: </span>  <span style="color: #cc6666;">executableHaskellDepends</span> = <span style="color: #81a2be;">[</span> base <span style="color: #81a2be;">]</span>;
+<span class="linenr">11: </span>  <span style="color: #cc6666;">testHaskellDepends</span> = <span style="color: #81a2be;">[</span> base <span style="color: #81a2be;">]</span>;
+<span class="linenr">12: </span>  <span style="color: #cc6666;">prePatch</span> = <span style="color: #b5bd68;">"hpack"</span>;
+<span class="linenr">13: </span>  <span style="color: #cc6666;">homepage</span> = <span style="color: #b5bd68;">"https://github.com/shanexu/helloworld#readme"</span>;
+<span class="linenr">14: </span>  <span style="color: #cc6666;">license</span> = stdenv.lib.licenses.bsd3;
+<span class="linenr">15: </span><span style="color: #b294bb;">}</span>  
 </pre>
 </div>
 
@@ -230,10 +231,10 @@ helloworld.nix 的内容如下：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-nix"><span class="linenr">1: </span><span style="color: #859900;">let</span>
-<span class="linenr">2: </span>  <span style="color: #6c71c4;">pkgs</span> = <span style="color: #268bd2;">import</span> <span style="color: #d33682;">&lt;nixpkgs&gt;</span> <span style="color: #268bd2;">{</span> <span style="color: #268bd2;">}</span>;
-<span class="linenr">3: </span><span style="color: #859900;">in</span>
-<span class="linenr">4: </span>  pkgs.haskellPackages.callPackage <span style="color: #d33682;">./helloworld.nix</span> <span style="color: #268bd2;">{</span> <span style="color: #268bd2;">}</span>
+<pre class="src src-nix"><span class="linenr">1: </span><span style="color: #b294bb;">let</span>
+<span class="linenr">2: </span>  <span style="color: #cc6666;">pkgs</span> = <span style="color: #81a2be;">import</span> <span style="color: #de935f;">&lt;nixpkgs&gt;</span> <span style="color: #b294bb;">{</span> <span style="color: #b294bb;">}</span>;
+<span class="linenr">3: </span><span style="color: #b294bb;">in</span>
+<span class="linenr">4: </span>  pkgs.haskellPackages.callPackage <span style="color: #de935f;">./helloworld.nix</span> <span style="color: #b294bb;">{</span> <span style="color: #b294bb;">}</span>
 </pre>
 </div>
 
@@ -346,7 +347,7 @@ Linking Setup ...
 </p>
 
 <div class="org-src-container">
-<pre class="src src-nix"><span style="color: #6c71c4;">src</span> = <span style="color: #d33682;">./.</span>;
+<pre class="src src-nix"><span style="color: #cc6666;">src</span> = <span style="color: #de935f;">./.</span>;
 </pre>
 </div>
 
@@ -359,7 +360,7 @@ Linking Setup ...
 </p>
 
 <div class="org-src-container">
-<pre class="src src-nix"><span style="color: #6c71c4;">src</span> = builtins.filterSource <span style="color: #268bd2;">(</span>path: type: type != <span style="color: #2aa198;">"symlink"</span><span style="color: #268bd2;">)</span> <span style="color: #d33682;">./.</span>;
+<pre class="src src-nix"><span style="color: #cc6666;">src</span> = builtins.filterSource <span style="color: #b294bb;">(</span>path: type: type != <span style="color: #b5bd68;">"symlink"</span><span style="color: #b294bb;">)</span> <span style="color: #de935f;">./.</span>;
 </pre>
 </div>
 
@@ -368,29 +369,29 @@ Linking Setup ...
 </p>
 
 <div class="org-src-container">
-<pre class="src src-nix"><span class="linenr"> 1: </span><span style="color: #268bd2;">{</span> nix-gitignore, mkDerivation, base, hpack, stdenv <span style="color: #268bd2;">}</span>:
-<span class="linenr"> 2: </span>mkDerivation <span style="color: #268bd2;">{</span>
-<span class="linenr"> 3: </span>  <span style="color: #6c71c4;">pname</span> = <span style="color: #2aa198;">"helloworld"</span>;
-<span class="linenr"> 4: </span>  <span style="color: #6c71c4;">version</span> = <span style="color: #2aa198;">"0.1.0.0"</span>;
-<span class="linenr"> 5: </span>  <span style="color: #6c71c4;">src</span> = nix-gitignore.gitignoreSourcePure <span style="color: #d33682;">[</span><span style="color: #d33682;">./.gitignore</span><span style="color: #d33682;">]</span> <span style="color: #d33682;">./.</span>;
-<span class="linenr"> 6: </span>  <span style="color: #6c71c4;">isLibrary</span> = <span style="color: #268bd2;">true</span>;
-<span class="linenr"> 7: </span>  <span style="color: #6c71c4;">isExecutable</span> = <span style="color: #268bd2;">true</span>;
-<span class="linenr"> 8: </span>  <span style="color: #6c71c4;">libraryHaskellDepends</span> = <span style="color: #d33682;">[</span> base <span style="color: #d33682;">]</span>;
-<span class="linenr"> 9: </span>  <span style="color: #6c71c4;">libraryToolDepends</span> = <span style="color: #d33682;">[</span> hpack <span style="color: #d33682;">]</span>;
-<span class="linenr">10: </span>  <span style="color: #6c71c4;">executableHaskellDepends</span> = <span style="color: #d33682;">[</span> base <span style="color: #d33682;">]</span>;
-<span class="linenr">11: </span>  <span style="color: #6c71c4;">testHaskellDepends</span> = <span style="color: #d33682;">[</span> base <span style="color: #d33682;">]</span>;
-<span class="linenr">12: </span>  <span style="color: #6c71c4;">prePatch</span> = <span style="color: #2aa198;">"hpack"</span>;
-<span class="linenr">13: </span>  <span style="color: #6c71c4;">homepage</span> = <span style="color: #2aa198;">"https://github.com/githubuser/helloworld#readme"</span>;
-<span class="linenr">14: </span>  <span style="color: #6c71c4;">license</span> = stdenv.lib.licenses.bsd3;
-<span class="linenr">15: </span><span style="color: #268bd2;">}</span>  
+<pre class="src src-nix"><span class="linenr"> 1: </span><span style="color: #b294bb;">{</span> nix-gitignore, mkDerivation, base, hpack, stdenv <span style="color: #b294bb;">}</span>:
+<span class="linenr"> 2: </span>mkDerivation <span style="color: #b294bb;">{</span>
+<span class="linenr"> 3: </span>  <span style="color: #cc6666;">pname</span> = <span style="color: #b5bd68;">"helloworld"</span>;
+<span class="linenr"> 4: </span>  <span style="color: #cc6666;">version</span> = <span style="color: #b5bd68;">"0.1.0.0"</span>;
+<span class="linenr"> 5: </span>  <span style="color: #cc6666;">src</span> = nix-gitignore.gitignoreSourcePure <span style="color: #81a2be;">[</span><span style="color: #de935f;">./.gitignore</span><span style="color: #81a2be;">]</span> <span style="color: #de935f;">./.</span>;
+<span class="linenr"> 6: </span>  <span style="color: #cc6666;">isLibrary</span> = <span style="color: #81a2be;">true</span>;
+<span class="linenr"> 7: </span>  <span style="color: #cc6666;">isExecutable</span> = <span style="color: #81a2be;">true</span>;
+<span class="linenr"> 8: </span>  <span style="color: #cc6666;">libraryHaskellDepends</span> = <span style="color: #81a2be;">[</span> base <span style="color: #81a2be;">]</span>;
+<span class="linenr"> 9: </span>  <span style="color: #cc6666;">libraryToolDepends</span> = <span style="color: #81a2be;">[</span> hpack <span style="color: #81a2be;">]</span>;
+<span class="linenr">10: </span>  <span style="color: #cc6666;">executableHaskellDepends</span> = <span style="color: #81a2be;">[</span> base <span style="color: #81a2be;">]</span>;
+<span class="linenr">11: </span>  <span style="color: #cc6666;">testHaskellDepends</span> = <span style="color: #81a2be;">[</span> base <span style="color: #81a2be;">]</span>;
+<span class="linenr">12: </span>  <span style="color: #cc6666;">prePatch</span> = <span style="color: #b5bd68;">"hpack"</span>;
+<span class="linenr">13: </span>  <span style="color: #cc6666;">homepage</span> = <span style="color: #b5bd68;">"https://github.com/githubuser/helloworld#readme"</span>;
+<span class="linenr">14: </span>  <span style="color: #cc6666;">license</span> = stdenv.lib.licenses.bsd3;
+<span class="linenr">15: </span><span style="color: #b294bb;">}</span>  
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orge075a7f" class="outline-2">
-<h2 id="orge075a7f">添加shell.nix文件</h2>
-<div class="outline-text-2" id="text-orge075a7f">
+<div id="outline-container-org55f83ba" class="outline-2">
+<h2 id="org55f83ba">添加shell.nix文件</h2>
+<div class="outline-text-2" id="text-org55f83ba">
 <blockquote>
 <p>
 nix-shell - start an interactive shell based on a Nix expression
@@ -421,14 +422,14 @@ The Glorious Glasgow Haskell Compilation System, version 8.6.5
 </p>
 
 <div class="org-src-container">
-<pre class="src src-nix"><span class="linenr"> 1: </span><span style="color: #859900;">let</span>
-<span class="linenr"> 2: </span>  <span style="color: #6c71c4;">pkgs</span> = <span style="color: #268bd2;">import</span> <span style="color: #d33682;">&lt;nixpkgs&gt;</span> <span style="color: #268bd2;">{}</span>;
-<span class="linenr"> 3: </span>  <span style="color: #6c71c4;">default</span> = <span style="color: #268bd2;">(</span><span style="color: #268bd2;">import</span> <span style="color: #d33682;">./default.nix</span><span style="color: #268bd2;">)</span>;
-<span class="linenr"> 4: </span><span style="color: #859900;">in</span>
-<span class="linenr"> 5: </span>  pkgs.haskellPackages.shellFor <span style="color: #268bd2;">{</span>
-<span class="linenr"> 6: </span>    <span style="color: #6c71c4;">name</span> = <span style="color: #2aa198;">"helloworld-shell"</span>;
-<span class="linenr"> 7: </span>    <span style="color: #6c71c4;">packages</span> = p: <span style="color: #d33682;">[</span>default<span style="color: #d33682;">]</span>;
-<span class="linenr"> 8: </span>    <span style="color: #6c71c4;">buildInputs</span> = <span style="color: #d33682;">[</span>
+<pre class="src src-nix"><span class="linenr"> 1: </span><span style="color: #b294bb;">let</span>
+<span class="linenr"> 2: </span>  <span style="color: #cc6666;">pkgs</span> = <span style="color: #81a2be;">import</span> <span style="color: #de935f;">&lt;nixpkgs&gt;</span> <span style="color: #b294bb;">{}</span>;
+<span class="linenr"> 3: </span>  <span style="color: #cc6666;">default</span> = <span style="color: #b294bb;">(</span><span style="color: #81a2be;">import</span> <span style="color: #de935f;">./default.nix</span><span style="color: #b294bb;">)</span>;
+<span class="linenr"> 4: </span><span style="color: #b294bb;">in</span>
+<span class="linenr"> 5: </span>  pkgs.haskellPackages.shellFor <span style="color: #b294bb;">{</span>
+<span class="linenr"> 6: </span>    <span style="color: #cc6666;">name</span> = <span style="color: #b5bd68;">"helloworld-shell"</span>;
+<span class="linenr"> 7: </span>    <span style="color: #cc6666;">packages</span> = p: <span style="color: #81a2be;">[</span>default<span style="color: #81a2be;">]</span>;
+<span class="linenr"> 8: </span>    <span style="color: #cc6666;">buildInputs</span> = <span style="color: #81a2be;">[</span>
 <span class="linenr"> 9: </span>      pkgs.cabal-install
 <span class="linenr">10: </span>      pkgs.haskellPackages.apply-refact
 <span class="linenr">11: </span>      pkgs.haskellPackages.hlint
@@ -436,8 +437,8 @@ The Glorious Glasgow Haskell Compilation System, version 8.6.5
 <span class="linenr">13: </span>      pkgs.haskellPackages.hasktags
 <span class="linenr">14: </span>      pkgs.haskellPackages.hoogle
 <span class="linenr">15: </span>      pkgs.haskellPackages.hindent
-<span class="linenr">16: </span>    <span style="color: #d33682;">]</span>;
-<span class="linenr">17: </span>  <span style="color: #268bd2;">}</span>
+<span class="linenr">16: </span>    <span style="color: #81a2be;">]</span>;
+<span class="linenr">17: </span>  <span style="color: #b294bb;">}</span>
 </pre>
 </div>
 
@@ -458,9 +459,9 @@ The Glorious Glasgow Haskell Compilation System, version 8.6.5
 </div>
 </div>
 
-<div id="outline-container-org80d4cd5" class="outline-2">
-<h2 id="org80d4cd5">安装HIE</h2>
-<div class="outline-text-2" id="text-org80d4cd5">
+<div id="outline-container-org40ff030" class="outline-2">
+<h2 id="org40ff030">安装HIE</h2>
+<div class="outline-text-2" id="text-org40ff030">
 <p>
 安装cachix
 </p>
@@ -484,7 +485,7 @@ The Glorious Glasgow Haskell Compilation System, version 8.6.5
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script">nix-env -iA selection --arg selector <span style="color: #2aa198;">'p: { inherit (p) ghc865; }'</span> -f https://github.com/infinisil/all-hies/tarball/master
+<pre class="src src-shell-script">nix-env -iA selection --arg selector <span style="color: #b5bd68;">'p: { inherit (p) ghc865; }'</span> -f https://github.com/infinisil/all-hies/tarball/master
 </pre>
 </div>
 
@@ -493,15 +494,15 @@ The Glorious Glasgow Haskell Compilation System, version 8.6.5
 </p>
 
 <div class="org-src-container">
-<pre class="src src-nix"><span class="linenr"> 1: </span><span style="color: #859900;">let</span>
-<span class="linenr"> 2: </span>  <span style="color: #6c71c4;">pkgs</span> = <span style="color: #268bd2;">import</span> <span style="color: #d33682;">&lt;nixpkgs&gt;</span> <span style="color: #268bd2;">{}</span>;
-<span class="linenr"> 3: </span>  <span style="color: #6c71c4;">default</span> = <span style="color: #268bd2;">(</span><span style="color: #268bd2;">import</span> <span style="color: #d33682;">./default.nix</span><span style="color: #268bd2;">)</span>;
-<span class="linenr"> 4: </span>  <span style="color: #6c71c4;">all-hie</span> = <span style="color: #268bd2;">(</span><span style="color: #268bd2;">import</span> <span style="color: #d33682;">(</span><span style="color: #268bd2;">fetchTarball</span> <span style="color: #2aa198;">"https://github.com/infinisil/all-hies/tarball/master"</span><span style="color: #d33682;">)</span> <span style="color: #d33682;">{}</span><span style="color: #268bd2;">)</span>;
-<span class="linenr"> 5: </span><span style="color: #859900;">in</span>
-<span class="linenr"> 6: </span>  pkgs.haskellPackages.shellFor <span style="color: #268bd2;">{</span>
-<span class="linenr"> 7: </span>    <span style="color: #6c71c4;">name</span> = <span style="color: #2aa198;">"helloworld-shell"</span>;
-<span class="linenr"> 8: </span>    <span style="color: #6c71c4;">packages</span> = p: <span style="color: #d33682;">[</span>default<span style="color: #d33682;">]</span>;
-<span class="linenr"> 9: </span>    <span style="color: #6c71c4;">buildInputs</span> = <span style="color: #d33682;">[</span>
+<pre class="src src-nix"><span class="linenr"> 1: </span><span style="color: #b294bb;">let</span>
+<span class="linenr"> 2: </span>  <span style="color: #cc6666;">pkgs</span> = <span style="color: #81a2be;">import</span> <span style="color: #de935f;">&lt;nixpkgs&gt;</span> <span style="color: #b294bb;">{}</span>;
+<span class="linenr"> 3: </span>  <span style="color: #cc6666;">default</span> = <span style="color: #b294bb;">(</span><span style="color: #81a2be;">import</span> <span style="color: #de935f;">./default.nix</span><span style="color: #b294bb;">)</span>;
+<span class="linenr"> 4: </span>  <span style="color: #cc6666;">all-hie</span> = <span style="color: #b294bb;">(</span><span style="color: #81a2be;">import</span> <span style="color: #81a2be;">(</span><span style="color: #81a2be;">fetchTarball</span> <span style="color: #b5bd68;">"https://github.com/infinisil/all-hies/tarball/master"</span><span style="color: #81a2be;">)</span> <span style="color: #81a2be;">{}</span><span style="color: #b294bb;">)</span>;
+<span class="linenr"> 5: </span><span style="color: #b294bb;">in</span>
+<span class="linenr"> 6: </span>  pkgs.haskellPackages.shellFor <span style="color: #b294bb;">{</span>
+<span class="linenr"> 7: </span>    <span style="color: #cc6666;">name</span> = <span style="color: #b5bd68;">"helloworld-shell"</span>;
+<span class="linenr"> 8: </span>    <span style="color: #cc6666;">packages</span> = p: <span style="color: #81a2be;">[</span>default<span style="color: #81a2be;">]</span>;
+<span class="linenr"> 9: </span>    <span style="color: #cc6666;">buildInputs</span> = <span style="color: #81a2be;">[</span>
 <span class="linenr">10: </span>      pkgs.cabal-install
 <span class="linenr">11: </span>      pkgs.haskellPackages.apply-refact
 <span class="linenr">12: </span>      pkgs.haskellPackages.hlint
@@ -509,17 +510,17 @@ The Glorious Glasgow Haskell Compilation System, version 8.6.5
 <span class="linenr">14: </span>      pkgs.haskellPackages.hasktags
 <span class="linenr">15: </span>      pkgs.haskellPackages.hoogle
 <span class="linenr">16: </span>      pkgs.haskellPackages.hindent
-<span class="linenr">17: </span>      <span style="color: #859900;">(</span>all-hie.selection <span style="color: #cb4b16;">{</span> <span style="color: #6c71c4;">selector</span> = p: <span style="color: #6c71c4;">{</span> <span style="color: #859900;">inherit</span> <span style="color: #b58900;">(</span>p<span style="color: #b58900;">)</span> ghc865; <span style="color: #6c71c4;">}</span>; <span style="color: #cb4b16;">}</span><span style="color: #859900;">)</span>
-<span class="linenr">18: </span>    <span style="color: #d33682;">]</span>;
-<span class="linenr">19: </span>  <span style="color: #268bd2;">}</span>
+<span class="linenr">17: </span>      <span style="color: #de935f;">(</span>all-hie.selection <span style="color: #b5bd68;">{</span> <span style="color: #cc6666;">selector</span> = p: <span style="color: #c9b4cf;">{</span> <span style="color: #b294bb;">inherit</span> <span style="color: #f0c674;">(</span>p<span style="color: #f0c674;">)</span> ghc865; <span style="color: #c9b4cf;">}</span>; <span style="color: #b5bd68;">}</span><span style="color: #de935f;">)</span>
+<span class="linenr">18: </span>    <span style="color: #81a2be;">]</span>;
+<span class="linenr">19: </span>  <span style="color: #b294bb;">}</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org3c8f1c7" class="outline-2">
-<h2 id="org3c8f1c7">nix-shell和direnv</h2>
-<div class="outline-text-2" id="text-org3c8f1c7">
+<div id="outline-container-org7c7e58b" class="outline-2">
+<h2 id="org7c7e58b">nix-shell和direnv</h2>
+<div class="outline-text-2" id="text-org7c7e58b">
 <p>
 nix-shell默认使用bash，但是我平时都用 <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a> 。direnv已经支持nix，可以通过stdlib的use_nix函数，启用nix的环境配置。只要在当前目录下增加.envrc文件便可启用。
 </p>
@@ -544,20 +545,20 @@ direnv: ([/usr/local/bin/direnv export zsh]) is taking a while to execute. Use C
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script"><span class="linenr"> 1: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">Usage: use_nix [...]</span>
-<span class="linenr"> 2: </span><span style="color: #405A61;">#</span>
-<span class="linenr"> 3: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">Load environment variables from `nix-shell`.</span>
-<span class="linenr"> 4: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">If you have a `default.nix` or `shell.nix` these will be</span>
-<span class="linenr"> 5: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">used by default, but you can also specify packages directly</span>
-<span class="linenr"> 6: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">(e.g `use nix -p ocaml`).</span>
-<span class="linenr"> 7: </span><span style="color: #405A61;">#</span>
-<span class="linenr"> 8: </span><span style="color: #268bd2;">use_nix</span><span style="color: #268bd2;">()</span> <span style="color: #268bd2;">{</span>
-<span class="linenr"> 9: </span>  direnv_load nix-shell --show-trace <span style="color: #2aa198;">"$@"</span> --run <span style="color: #2aa198;">"$(join_args "$direnv" dump)"</span>
-<span class="linenr">10: </span>  <span style="color: #859900;">if</span> <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> $<span style="color: #6c71c4;">#</span> == <span style="color: #d33682; font-weight: bold;">0</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span>; <span style="color: #859900;">then</span>
+<pre class="src src-shell-script"><span class="linenr"> 1: </span><span style="color: #5a5b5a;"># </span><span style="color: #5a5b5a;">Usage: use_nix [...]</span>
+<span class="linenr"> 2: </span><span style="color: #5a5b5a;">#</span>
+<span class="linenr"> 3: </span><span style="color: #5a5b5a;"># </span><span style="color: #5a5b5a;">Load environment variables from `nix-shell`.</span>
+<span class="linenr"> 4: </span><span style="color: #5a5b5a;"># </span><span style="color: #5a5b5a;">If you have a `default.nix` or `shell.nix` these will be</span>
+<span class="linenr"> 5: </span><span style="color: #5a5b5a;"># </span><span style="color: #5a5b5a;">used by default, but you can also specify packages directly</span>
+<span class="linenr"> 6: </span><span style="color: #5a5b5a;"># </span><span style="color: #5a5b5a;">(e.g `use nix -p ocaml`).</span>
+<span class="linenr"> 7: </span><span style="color: #5a5b5a;">#</span>
+<span class="linenr"> 8: </span><span style="color: #81a2be;">use_nix</span><span style="color: #b294bb;">()</span> <span style="color: #b294bb;">{</span>
+<span class="linenr"> 9: </span>  direnv_load nix-shell --show-trace <span style="color: #b5bd68;">"$@"</span> --run <span style="color: #b5bd68;">"$(join_args "$direnv" dump)"</span>
+<span class="linenr">10: </span>  <span style="color: #b294bb;">if</span> <span style="color: #81a2be;">[</span><span style="color: #de935f;">[</span> $<span style="color: #cc6666;">#</span> == <span style="color: #de935f; font-weight: bold;">0</span> <span style="color: #de935f;">]</span><span style="color: #81a2be;">]</span>; <span style="color: #b294bb;">then</span>
 <span class="linenr">11: </span>    watch_file default.nix
 <span class="linenr">12: </span>    watch_file shell.nix
-<span class="linenr">13: </span>  <span style="color: #859900;">fi</span>
-<span class="linenr">14: </span><span style="color: #268bd2;">}</span>  
+<span class="linenr">13: </span>  <span style="color: #b294bb;">fi</span>
+<span class="linenr">14: </span><span style="color: #b294bb;">}</span>  
 </pre>
 </div>
 
@@ -570,70 +571,70 @@ direnv: ([/usr/local/bin/direnv export zsh]) is taking a while to execute. Use C
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script"><span class="linenr"> 1: </span><span style="color: #268bd2;">use_nix</span><span style="color: #268bd2;">()</span> <span style="color: #268bd2;">{</span>
-<span class="linenr"> 2: </span>    <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">path</span>=<span style="color: #2aa198;">"$(nix-instantiate --find-file nixpkgs)"</span>
+<pre class="src src-shell-script"><span class="linenr"> 1: </span><span style="color: #81a2be;">use_nix</span><span style="color: #b294bb;">()</span> <span style="color: #b294bb;">{</span>
+<span class="linenr"> 2: </span>    <span style="color: #81a2be;">local</span> <span style="color: #cc6666;">path</span>=<span style="color: #b5bd68;">"$(nix-instantiate --find-file nixpkgs)"</span>
 <span class="linenr"> 3: </span>
-<span class="linenr"> 4: </span>    <span style="color: #859900;">if</span> <span style="color: #d33682;">[</span> -f <span style="color: #2aa198;">"${path}/.version-suffix"</span> <span style="color: #d33682;">]</span>; <span style="color: #859900;">then</span>
-<span class="linenr"> 5: </span>        <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">version</span>=<span style="color: #2aa198;">"$(&lt; $path/.version-suffix)"</span>
-<span class="linenr"> 6: </span>    <span style="color: #859900;">elif</span> <span style="color: #d33682;">[</span> -f <span style="color: #2aa198;">"${path}/.git"</span> <span style="color: #d33682;">]</span>; <span style="color: #859900;">then</span>
-<span class="linenr"> 7: </span>        <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">version</span>=<span style="color: #2aa198;">"$(&lt; $(&lt; ${path}/.git/HEAD))"</span>
-<span class="linenr"> 8: </span>    <span style="color: #859900;">fi</span>
+<span class="linenr"> 4: </span>    <span style="color: #b294bb;">if</span> <span style="color: #81a2be;">[</span> -f <span style="color: #b5bd68;">"${path}/.version-suffix"</span> <span style="color: #81a2be;">]</span>; <span style="color: #b294bb;">then</span>
+<span class="linenr"> 5: </span>        <span style="color: #81a2be;">local</span> <span style="color: #cc6666;">version</span>=<span style="color: #b5bd68;">"$(&lt; $path/.version-suffix)"</span>
+<span class="linenr"> 6: </span>    <span style="color: #b294bb;">elif</span> <span style="color: #81a2be;">[</span> -f <span style="color: #b5bd68;">"${path}/.git"</span> <span style="color: #81a2be;">]</span>; <span style="color: #b294bb;">then</span>
+<span class="linenr"> 7: </span>        <span style="color: #81a2be;">local</span> <span style="color: #cc6666;">version</span>=<span style="color: #b5bd68;">"$(&lt; $(&lt; ${path}/.git/HEAD))"</span>
+<span class="linenr"> 8: </span>    <span style="color: #b294bb;">fi</span>
 <span class="linenr"> 9: </span>
-<span class="linenr">10: </span>    <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">cache</span>=<span style="color: #2aa198;">".direnv/cache-${version:-unknown}"</span>
+<span class="linenr">10: </span>    <span style="color: #81a2be;">local</span> <span style="color: #cc6666;">cache</span>=<span style="color: #b5bd68;">".direnv/cache-${version:-unknown}"</span>
 <span class="linenr">11: </span>
-<span class="linenr">12: </span>    <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">update_drv</span>=<span style="color: #d33682; font-weight: bold;">0</span>
-<span class="linenr">13: </span>    <span style="color: #859900;">if</span> <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> <span style="color: #cb4b16; font-weight: bold;">!</span> -e <span style="color: #2aa198;">"$cache"</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span> || <span style="color: #2aa198;">\</span>
-<span class="linenr">14: </span>           <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> <span style="color: #2aa198;">"$HOME/.direnvrc"</span> -nt <span style="color: #2aa198;">"$cache"</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span> || <span style="color: #2aa198;">\</span>
-<span class="linenr">15: </span>           <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> .envrc -nt <span style="color: #2aa198;">"$cache"</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span> || <span style="color: #2aa198;">\</span>
-<span class="linenr">16: </span>           <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> default.nix -nt <span style="color: #2aa198;">"$cache"</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span> || <span style="color: #2aa198;">\</span>
-<span class="linenr">17: </span>           <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> shell.nix -nt <span style="color: #2aa198;">"$cache"</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span>;
-<span class="linenr">18: </span>    <span style="color: #859900;">then</span>
-<span class="linenr">19: </span>        <span style="color: #d33682;">[</span> -d .direnv <span style="color: #d33682;">]</span> || mkdir .direnv
-<span class="linenr">20: </span>        nix-shell --show-trace <span style="color: #2aa198;">"$@"</span> --run <span style="color: #2aa198;">"\"$direnv\" dump bash"</span> &gt; <span style="color: #2aa198;">"$cache"</span>
-<span class="linenr">21: </span>        <span style="color: #6c71c4;">update_drv</span>=<span style="color: #d33682; font-weight: bold;">1</span>
-<span class="linenr">22: </span>    <span style="color: #859900;">else</span>
+<span class="linenr">12: </span>    <span style="color: #81a2be;">local</span> <span style="color: #cc6666;">update_drv</span>=<span style="color: #de935f; font-weight: bold;">0</span>
+<span class="linenr">13: </span>    <span style="color: #b294bb;">if</span> <span style="color: #81a2be;">[</span><span style="color: #de935f;">[</span> <span style="color: #c5c8c6; font-weight: bold;">!</span> -e <span style="color: #b5bd68;">"$cache"</span> <span style="color: #de935f;">]</span><span style="color: #81a2be;">]</span> || <span style="color: #b5bd68;">\</span>
+<span class="linenr">14: </span>           <span style="color: #81a2be;">[</span><span style="color: #de935f;">[</span> <span style="color: #b5bd68;">"$HOME/.direnvrc"</span> -nt <span style="color: #b5bd68;">"$cache"</span> <span style="color: #de935f;">]</span><span style="color: #81a2be;">]</span> || <span style="color: #b5bd68;">\</span>
+<span class="linenr">15: </span>           <span style="color: #81a2be;">[</span><span style="color: #de935f;">[</span> .envrc -nt <span style="color: #b5bd68;">"$cache"</span> <span style="color: #de935f;">]</span><span style="color: #81a2be;">]</span> || <span style="color: #b5bd68;">\</span>
+<span class="linenr">16: </span>           <span style="color: #81a2be;">[</span><span style="color: #de935f;">[</span> default.nix -nt <span style="color: #b5bd68;">"$cache"</span> <span style="color: #de935f;">]</span><span style="color: #81a2be;">]</span> || <span style="color: #b5bd68;">\</span>
+<span class="linenr">17: </span>           <span style="color: #81a2be;">[</span><span style="color: #de935f;">[</span> shell.nix -nt <span style="color: #b5bd68;">"$cache"</span> <span style="color: #de935f;">]</span><span style="color: #81a2be;">]</span>;
+<span class="linenr">18: </span>    <span style="color: #b294bb;">then</span>
+<span class="linenr">19: </span>        <span style="color: #81a2be;">[</span> -d .direnv <span style="color: #81a2be;">]</span> || mkdir .direnv
+<span class="linenr">20: </span>        nix-shell --show-trace <span style="color: #b5bd68;">"$@"</span> --run <span style="color: #b5bd68;">"\"$direnv\" dump bash"</span> &gt; <span style="color: #b5bd68;">"$cache"</span>
+<span class="linenr">21: </span>        <span style="color: #cc6666;">update_drv</span>=<span style="color: #de935f; font-weight: bold;">1</span>
+<span class="linenr">22: </span>    <span style="color: #b294bb;">else</span>
 <span class="linenr">23: </span>        log_status using cached derivation
-<span class="linenr">24: </span>    <span style="color: #859900;">fi</span>
-<span class="linenr">25: </span>    <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">term_backup</span>=$<span style="color: #6c71c4;">TERM</span> <span style="color: #6c71c4;">path_backup</span>=$<span style="color: #6c71c4;">PATH</span>
-<span class="linenr">26: </span>    <span style="color: #859900;">if</span> <span style="color: #d33682;">[</span> -n $<span style="color: #859900;">{</span><span style="color: #6c71c4;">TMPDIR</span>+x<span style="color: #859900;">}</span> <span style="color: #d33682;">]</span>; <span style="color: #859900;">then</span>
-<span class="linenr">27: </span>        <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">tmp_backup</span>=$<span style="color: #6c71c4;">TMPDIR</span>
-<span class="linenr">28: </span>    <span style="color: #859900;">fi</span>
+<span class="linenr">24: </span>    <span style="color: #b294bb;">fi</span>
+<span class="linenr">25: </span>    <span style="color: #81a2be;">local</span> <span style="color: #cc6666;">term_backup</span>=$<span style="color: #cc6666;">TERM</span> <span style="color: #cc6666;">path_backup</span>=$<span style="color: #cc6666;">PATH</span>
+<span class="linenr">26: </span>    <span style="color: #b294bb;">if</span> <span style="color: #81a2be;">[</span> -n $<span style="color: #de935f;">{</span><span style="color: #cc6666;">TMPDIR</span>+x<span style="color: #de935f;">}</span> <span style="color: #81a2be;">]</span>; <span style="color: #b294bb;">then</span>
+<span class="linenr">27: </span>        <span style="color: #81a2be;">local</span> <span style="color: #cc6666;">tmp_backup</span>=$<span style="color: #cc6666;">TMPDIR</span>
+<span class="linenr">28: </span>    <span style="color: #b294bb;">fi</span>
 <span class="linenr">29: </span>
-<span class="linenr">30: </span>    <span style="color: #268bd2;">eval</span> <span style="color: #2aa198;">"$(&lt; $cache)"</span>
-<span class="linenr">31: </span>    <span style="color: #268bd2;">export</span> <span style="color: #6c71c4;">PATH</span>=$<span style="color: #6c71c4;">PATH</span>:$<span style="color: #6c71c4;">path_backup</span> <span style="color: #6c71c4;">TERM</span>=$<span style="color: #6c71c4;">term_backup</span> <span style="color: #6c71c4;">TMPDIR</span>=$<span style="color: #6c71c4;">tmp_backup</span>
-<span class="linenr">32: </span>    <span style="color: #859900;">if</span> <span style="color: #d33682;">[</span> -n $<span style="color: #859900;">{</span><span style="color: #6c71c4;">tmp_backup</span>+x<span style="color: #859900;">}</span> <span style="color: #d33682;">]</span>; <span style="color: #859900;">then</span>
-<span class="linenr">33: </span>        <span style="color: #268bd2;">export</span> <span style="color: #6c71c4;">TMPDIR</span>=$<span style="color: #d33682;">{</span><span style="color: #6c71c4;">tmp_backup</span><span style="color: #d33682;">}</span>
-<span class="linenr">34: </span>    <span style="color: #859900;">else</span>
-<span class="linenr">35: </span>        <span style="color: #268bd2;">unset</span> TMPDIR
-<span class="linenr">36: </span>    <span style="color: #859900;">fi</span>
+<span class="linenr">30: </span>    <span style="color: #81a2be;">eval</span> <span style="color: #b5bd68;">"$(&lt; $cache)"</span>
+<span class="linenr">31: </span>    <span style="color: #81a2be;">export</span> <span style="color: #cc6666;">PATH</span>=$<span style="color: #cc6666;">PATH</span>:$<span style="color: #cc6666;">path_backup</span> <span style="color: #cc6666;">TERM</span>=$<span style="color: #cc6666;">term_backup</span> <span style="color: #cc6666;">TMPDIR</span>=$<span style="color: #cc6666;">tmp_backup</span>
+<span class="linenr">32: </span>    <span style="color: #b294bb;">if</span> <span style="color: #81a2be;">[</span> -n $<span style="color: #de935f;">{</span><span style="color: #cc6666;">tmp_backup</span>+x<span style="color: #de935f;">}</span> <span style="color: #81a2be;">]</span>; <span style="color: #b294bb;">then</span>
+<span class="linenr">33: </span>        <span style="color: #81a2be;">export</span> <span style="color: #cc6666;">TMPDIR</span>=$<span style="color: #81a2be;">{</span><span style="color: #cc6666;">tmp_backup</span><span style="color: #81a2be;">}</span>
+<span class="linenr">34: </span>    <span style="color: #b294bb;">else</span>
+<span class="linenr">35: </span>        <span style="color: #81a2be;">unset</span> TMPDIR
+<span class="linenr">36: </span>    <span style="color: #b294bb;">fi</span>
 <span class="linenr">37: </span>
-<span class="linenr">38: </span>    <span style="color: #859900;">if</span> <span style="color: #d33682;">[</span> <span style="color: #2aa198;">"$out"</span> <span style="color: #d33682;">]</span> &amp;&amp; <span style="color: #d33682;">(</span><span style="color: #859900;">(</span> $<span style="color: #6c71c4;">update_drv</span> <span style="color: #859900;">)</span><span style="color: #d33682;">)</span>; <span style="color: #859900;">then</span>
-<span class="linenr">39: </span>        <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">drv_link</span>=<span style="color: #2aa198;">".direnv/shell.drv"</span>
-<span class="linenr">40: </span>        <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">drv_dep_link</span>=<span style="color: #2aa198;">".direnv/shell.dep"</span>
-<span class="linenr">41: </span>        <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">drv</span>=<span style="color: #2aa198;">"$(nix show-derivation $out | grep -E -o -m1 '/nix/store/.*.drv')"</span>
-<span class="linenr">42: </span>        <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">stripped_pwd</span>=$<span style="color: #d33682;">{</span><span style="color: #6c71c4;">PWD</span>/<span style="color: #2aa198;">\/</span>/<span style="color: #d33682;">}</span>
-<span class="linenr">43: </span>        <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">escaped_pwd</span>=$<span style="color: #d33682;">{</span><span style="color: #6c71c4;">stripped_pwd</span>//-/--<span style="color: #d33682;">}</span>
-<span class="linenr">44: </span>        <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">escaped_pwd</span>=$<span style="color: #d33682;">{</span><span style="color: #6c71c4;">escaped_pwd</span>//<span style="color: #2aa198;">\/</span>/-<span style="color: #d33682;">}</span>
-<span class="linenr">45: </span>        ln -fs <span style="color: #2aa198;">"$drv"</span> <span style="color: #2aa198;">"$drv_link"</span>
-<span class="linenr">46: </span>        ln -fs <span style="color: #2aa198;">"$PWD/$drv_link"</span> <span style="color: #2aa198;">"/nix/var/nix/gcroots/per-user/$LOGNAME/$escaped_pwd"</span>
-<span class="linenr">47: </span>        rm -f $<span style="color: #d33682;">{</span><span style="color: #6c71c4;">drv_dep_link</span><span style="color: #d33682;">}</span>*
-<span class="linenr">48: </span>        nix-store --indirect --add-root $<span style="color: #6c71c4;">drv_dep_link</span> --realise $<span style="color: #d33682;">(</span>nix-store --query --references $<span style="color: #6c71c4;">drv_link</span><span style="color: #d33682;">)</span>
+<span class="linenr">38: </span>    <span style="color: #b294bb;">if</span> <span style="color: #81a2be;">[</span> <span style="color: #b5bd68;">"$out"</span> <span style="color: #81a2be;">]</span> &amp;&amp; <span style="color: #81a2be;">(</span><span style="color: #de935f;">(</span> $<span style="color: #cc6666;">update_drv</span> <span style="color: #de935f;">)</span><span style="color: #81a2be;">)</span>; <span style="color: #b294bb;">then</span>
+<span class="linenr">39: </span>        <span style="color: #81a2be;">local</span> <span style="color: #cc6666;">drv_link</span>=<span style="color: #b5bd68;">".direnv/shell.drv"</span>
+<span class="linenr">40: </span>        <span style="color: #81a2be;">local</span> <span style="color: #cc6666;">drv_dep_link</span>=<span style="color: #b5bd68;">".direnv/shell.dep"</span>
+<span class="linenr">41: </span>        <span style="color: #81a2be;">local</span> <span style="color: #cc6666;">drv</span>=<span style="color: #b5bd68;">"$(nix show-derivation $out | grep -E -o -m1 '/nix/store/.*.drv')"</span>
+<span class="linenr">42: </span>        <span style="color: #81a2be;">local</span> <span style="color: #cc6666;">stripped_pwd</span>=$<span style="color: #81a2be;">{</span><span style="color: #cc6666;">PWD</span>/<span style="color: #b5bd68;">\/</span>/<span style="color: #81a2be;">}</span>
+<span class="linenr">43: </span>        <span style="color: #81a2be;">local</span> <span style="color: #cc6666;">escaped_pwd</span>=$<span style="color: #81a2be;">{</span><span style="color: #cc6666;">stripped_pwd</span>//-/--<span style="color: #81a2be;">}</span>
+<span class="linenr">44: </span>        <span style="color: #81a2be;">local</span> <span style="color: #cc6666;">escaped_pwd</span>=$<span style="color: #81a2be;">{</span><span style="color: #cc6666;">escaped_pwd</span>//<span style="color: #b5bd68;">\/</span>/-<span style="color: #81a2be;">}</span>
+<span class="linenr">45: </span>        ln -fs <span style="color: #b5bd68;">"$drv"</span> <span style="color: #b5bd68;">"$drv_link"</span>
+<span class="linenr">46: </span>        ln -fs <span style="color: #b5bd68;">"$PWD/$drv_link"</span> <span style="color: #b5bd68;">"/nix/var/nix/gcroots/per-user/$LOGNAME/$escaped_pwd"</span>
+<span class="linenr">47: </span>        rm -f $<span style="color: #81a2be;">{</span><span style="color: #cc6666;">drv_dep_link</span><span style="color: #81a2be;">}</span>*
+<span class="linenr">48: </span>        nix-store --indirect --add-root $<span style="color: #cc6666;">drv_dep_link</span> --realise $<span style="color: #81a2be;">(</span>nix-store --query --references $<span style="color: #cc6666;">drv_link</span><span style="color: #81a2be;">)</span>
 <span class="linenr">49: </span>        log_status renewed cache and derivation link
-<span class="linenr">50: </span>    <span style="color: #859900;">fi</span>
+<span class="linenr">50: </span>    <span style="color: #b294bb;">fi</span>
 <span class="linenr">51: </span>
-<span class="linenr">52: </span>    <span style="color: #859900;">if</span> <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> $<span style="color: #6c71c4;">#</span> = <span style="color: #d33682; font-weight: bold;">0</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span>; <span style="color: #859900;">then</span>
+<span class="linenr">52: </span>    <span style="color: #b294bb;">if</span> <span style="color: #81a2be;">[</span><span style="color: #de935f;">[</span> $<span style="color: #cc6666;">#</span> = <span style="color: #de935f; font-weight: bold;">0</span> <span style="color: #de935f;">]</span><span style="color: #81a2be;">]</span>; <span style="color: #b294bb;">then</span>
 <span class="linenr">53: </span>        watch_file default.nix
 <span class="linenr">54: </span>        watch_file shell.nix
-<span class="linenr">55: </span>    <span style="color: #859900;">fi</span>
-<span class="linenr">56: </span><span style="color: #268bd2;">}</span>
+<span class="linenr">55: </span>    <span style="color: #b294bb;">fi</span>
+<span class="linenr">56: </span><span style="color: #b294bb;">}</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgaebd7a2" class="outline-2">
-<h2 id="orgaebd7a2">配置emacs(spacemacs)</h2>
-<div class="outline-text-2" id="text-orgaebd7a2">
+<div id="outline-container-orgcc4678a" class="outline-2">
+<h2 id="orgcc4678a">配置emacs(spacemacs)</h2>
+<div class="outline-text-2" id="text-orgcc4678a">
 <p>
 我使用的是 <a href="https://github.com/syl20bnr/spacemacs/">spacemacs</a> 的 develop 分支。
 </p>
@@ -643,10 +644,10 @@ direnv: ([/usr/local/bin/direnv export zsh]) is taking a while to execute. Use C
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span class="linenr">1: </span><span style="color: #405A61;">;; </span><span style="color: #405A61;">direnv-mode</span>
-<span class="linenr">2: </span><span style="color: #268bd2;">(</span><span style="color: #859900;">use-package</span> <span style="color: #d33682;">direnv</span>
-<span class="linenr">3: </span>  <span style="color: #268bd2;">:config</span>
-<span class="linenr">4: </span>  <span style="color: #d33682;">(</span>direnv-mode<span style="color: #d33682;">)</span><span style="color: #268bd2;">)</span>
+<pre class="src src-emacs-lisp"><span class="linenr">1: </span><span style="color: #5a5b5a;">;; </span><span style="color: #5a5b5a;">direnv-mode</span>
+<span class="linenr">2: </span><span style="color: #b294bb;">(</span><span style="color: #b294bb;">use-package</span> <span style="color: #de935f;">direnv</span>
+<span class="linenr">3: </span>  <span style="color: #81a2be;">:config</span>
+<span class="linenr">4: </span>  <span style="color: #81a2be;">(</span>direnv-mode<span style="color: #81a2be;">)</span><span style="color: #b294bb;">)</span>
 </pre>
 </div>
 
@@ -658,18 +659,18 @@ direnv: ([/usr/local/bin/direnv export zsh]) is taking a while to execute. Use C
 </div>
 </div>
 
-<div id="outline-container-org022065a" class="outline-2">
-<h2 id="org022065a">仓库地址</h2>
-<div class="outline-text-2" id="text-org022065a">
+<div id="outline-container-org07bd94c" class="outline-2">
+<h2 id="org07bd94c">仓库地址</h2>
+<div class="outline-text-2" id="text-org07bd94c">
 <p>
 <a href="https://github.com/shanexu/helloworld">https://github.com/shanexu/helloworld</a>
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgacabec0" class="outline-2">
-<h2 id="orgacabec0">参考文档</h2>
-<div class="outline-text-2" id="text-orgacabec0">
+<div id="outline-container-orgd8deb81" class="outline-2">
+<h2 id="orgd8deb81">参考文档</h2>
+<div class="outline-text-2" id="text-orgd8deb81">
 <p>
 <a href="https://nixos.org/nix/manual">https://nixos.org/nix/manual</a>
 </p>
