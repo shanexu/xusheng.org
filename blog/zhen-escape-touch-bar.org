@@ -1,0 +1,14 @@
+#+TITLE:       真-摆脱恼人的touch bar
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2019-12-23 Mon
+#+URI:         /blog/%y/%m/%d/zhen-escape-touch-bar
+#+KEYWORDS:    touchbar
+#+TAGS:        life
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: how to escape from touch bar
+
+用Karabine来将ESC键映射到某个物理键上的方式实在是不够优雅。现在我终于找到了最优雅的解决方案，MacBook Pro 16寸。
+
+[[https://user-images.githubusercontent.com/1257453/71352629-b6b27380-256e-11ea-85b1-25d2d4376bb3.png]]
