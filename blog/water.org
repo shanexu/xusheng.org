@@ -1,0 +1,69 @@
+#+TITLE:       阳台漏水解决过程记录
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2019-12-25 Wed
+#+URI:         /blog/%y/%m/%d/water
+#+KEYWORDS:    life
+#+TAGS:        life
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: 阳台漏水解决过程记录
+
+* 2019年12月16日
+  
+  早上出门前发现阳台橱柜下有水，打开橱柜，发现已经全部“长毛”。不确定水是从哪里来。先，上班。
+  
+  晚上回到家，确定天花板没有铺设水管。排除自身问题。
+
+  阳台橱柜“长毛”：
+  
+  [[https://user-images.githubusercontent.com/1257453/71446423-151c5500-271b-11ea-8106-fb91e8202113.png]]
+
+  橱柜背面的主卧的墙：
+
+  [[https://user-images.githubusercontent.com/1257453/71446426-1f3e5380-271b-11ea-890c-dbe3570c7728.png]]
+
+  找到楼上，第一次给出原因是洗衣机水管漏了。观察到楼上阳台没有包，并且阳台异常潮湿：
+
+  [[https://user-images.githubusercontent.com/1257453/71446655-b1dff200-271d-11ea-844a-c77b3e6a4fd9.png]]
+
+* 2019年12月17日
+  
+  早上观察阳台橱柜有肉眼可见的滴水：
+
+  [[https://user-images.githubusercontent.com/1257453/71447399-d6d86300-2725-11ea-8565-d054a0264329.png]]
+
+  
+* 2019年12月22日
+  
+  上午物业来家里，认为阳台柜子上可能是检修口松动，需要割开柜子顶层木板检查。经过物业徐师傅，通过电锯割开顶层木板后发现并没有检修口，上面是一个梁。
+
+  隔开木板的同时，有水直接流下来。在橱柜顶层放置脸盆，用于接水。
+
+  观察到楼上空调冷凝水直接排放到阳台上：
+
+  [[https://user-images.githubusercontent.com/1257453/71448114-97167900-272f-11ea-9919-445bcffcd000.png]]
+
+  让楼上用水桶接冷凝水。
+
+* 2019年12月23日
+  
+  晚上回家，为了确认的确没有滴水，将水倒掉。
+
+* 2019年12月24日
+  
+  早上确认没有滴水。
+
+  晚上回家确认，又有水。
+
+  [[https://user-images.githubusercontent.com/1257453/71448302-43f1f580-2732-11ea-8de8-523af0668057.png]]
+
+  和楼上租客确认，说是将接空调冷凝水的桶踢翻了，重新放置接水桶
+
+* 2019年12月25日
+  
+  早上，观察，仍有滴水。
+
+  晚上回家，观察，仍有滴水。
+
+  [[https://user-images.githubusercontent.com/1257453/71448496-6b49c200-2734-11ea-8e92-8e4be4c550e1.png]]
