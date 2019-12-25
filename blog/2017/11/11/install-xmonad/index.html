@@ -34,9 +34,9 @@
 
   <h3 class="section">Install XMonad</h3>
 
-<div id="outline-container-org5bb494f" class="outline-2">
-<h2 id="org5bb494f">安装XMonad</h2>
-<div class="outline-text-2" id="text-org5bb494f">
+<div id="outline-container-org2385b1a" class="outline-2">
+<h2 id="org2385b1a">安装XMonad</h2>
+<div class="outline-text-2" id="text-org2385b1a">
 <div class="org-src-container">
 <pre class="src src-shell">sudo pacman -S xmonad xmonad-contrib xmonad-utils xmobar dzen2 demnu
 sudo pacman -S termite
@@ -45,99 +45,99 @@ sudo pacman -S termite
 </div>
 
 
-<div id="outline-container-org6c0442d" class="outline-3">
-<h3 id="org6c0442d">最简单的配置</h3>
-<div class="outline-text-3" id="text-org6c0442d">
+<div id="outline-container-org94d5fa6" class="outline-3">
+<h3 id="org94d5fa6">最简单的配置</h3>
+<div class="outline-text-3" id="text-org94d5fa6">
 <div class="org-src-container">
-<pre class="src src-haskell"><span style="color: #5a5b5a;">-- </span><span style="color: #5a5b5a;">Imports.</span>
-<span style="color: #b294bb;">import</span> <span style="color: #f0c674;">XMonad</span>
-<span style="color: #b294bb;">import</span> <span style="color: #f0c674;">XMonad.Hooks.DynamicLog</span>
-<span style="color: #b294bb;">import</span> <span style="color: #f0c674;">XMonad.Layout.NoBorders</span>
-<span style="color: #b294bb;">import</span> <span style="color: #f0c674;">XMonad.Layout.Spacing</span>
-<span style="color: #b294bb;">import</span> <span style="color: #f0c674;">XMonad.Util.SpawnOnce</span>
-<span style="color: #b294bb;">import</span> <span style="color: #f0c674;">XMonad.Util.EZConfig</span>
+<pre class="src src-haskell"><span style="color: #405A61;">-- </span><span style="color: #405A61;">Imports.</span>
+<span style="color: #859900;">import</span> <span style="color: #b58900;">XMonad</span>
+<span style="color: #859900;">import</span> <span style="color: #b58900;">XMonad.Hooks.DynamicLog</span>
+<span style="color: #859900;">import</span> <span style="color: #b58900;">XMonad.Layout.NoBorders</span>
+<span style="color: #859900;">import</span> <span style="color: #b58900;">XMonad.Layout.Spacing</span>
+<span style="color: #859900;">import</span> <span style="color: #b58900;">XMonad.Util.SpawnOnce</span>
+<span style="color: #859900;">import</span> <span style="color: #b58900;">XMonad.Util.EZConfig</span>
 
 
-<span style="color: #5a5b5a;">-- </span><span style="color: #5a5b5a;">The main function.</span>
-<span style="color: #81a2be;">main</span> <span style="color: #cc6666;">=</span> xmonad <span style="color: #cc6666;">=&lt;&lt;</span> statusBar myBar myPP toggleStrutsKey myConfig
+<span style="color: #405A61;">-- </span><span style="color: #405A61;">The main function.</span>
+<span style="color: #268bd2;">main</span> <span style="color: #6c71c4;">=</span> xmonad <span style="color: #6c71c4;">=&lt;&lt;</span> statusBar myBar myPP toggleStrutsKey myConfig
 
-<span style="color: #5a5b5a;">-- </span><span style="color: #5a5b5a;">Command to launch the bar.</span>
-<span style="color: #81a2be;">myBar</span> <span style="color: #cc6666;">=</span> <span style="color: #b5bd68;">"xmobar"</span>
+<span style="color: #405A61;">-- </span><span style="color: #405A61;">Command to launch the bar.</span>
+<span style="color: #268bd2;">myBar</span> <span style="color: #6c71c4;">=</span> <span style="color: #2aa198;">"xmobar"</span>
 
-<span style="color: #5a5b5a;">-- </span><span style="color: #5a5b5a;">Custom PP, configure it as you like. It determines what is being written to the bar.</span>
-<span style="color: #81a2be;">myPP</span> <span style="color: #cc6666;">=</span> xmobarPP <span style="color: #b294bb;">{</span> ppCurrent <span style="color: #cc6666;">=</span> xmobarColor <span style="color: #b5bd68;">"#429942"</span> <span style="color: #b5bd68;">""</span> <span style="color: #cc6666;">.</span> wrap <span style="color: #b5bd68;">"&lt;"</span> <span style="color: #b5bd68;">"&gt;"</span> <span style="color: #b294bb;">}</span>
+<span style="color: #405A61;">-- </span><span style="color: #405A61;">Custom PP, configure it as you like. It determines what is being written to the bar.</span>
+<span style="color: #268bd2;">myPP</span> <span style="color: #6c71c4;">=</span> xmobarPP <span style="color: #268bd2;">{</span> ppCurrent <span style="color: #6c71c4;">=</span> xmobarColor <span style="color: #2aa198;">"#429942"</span> <span style="color: #2aa198;">""</span> <span style="color: #6c71c4;">.</span> wrap <span style="color: #2aa198;">"&lt;"</span> <span style="color: #2aa198;">"&gt;"</span> <span style="color: #268bd2;">}</span>
 
-<span style="color: #5a5b5a;">-- </span><span style="color: #5a5b5a;">Key binding to toggle the gap for the bar.</span>
-<span style="color: #81a2be;">toggleStrutsKey</span> <span style="color: #f0c674;">XConfig</span> <span style="color: #b294bb;">{</span>XMonad.modMask <span style="color: #cc6666;">=</span> modMask<span style="color: #b294bb;">}</span> <span style="color: #cc6666;">=</span> <span style="color: #b294bb;">(</span>modMask, xK_b<span style="color: #b294bb;">)</span>
+<span style="color: #405A61;">-- </span><span style="color: #405A61;">Key binding to toggle the gap for the bar.</span>
+<span style="color: #268bd2;">toggleStrutsKey</span> <span style="color: #b58900;">XConfig</span> <span style="color: #268bd2;">{</span>XMonad.modMask <span style="color: #6c71c4;">=</span> modMask<span style="color: #268bd2;">}</span> <span style="color: #6c71c4;">=</span> <span style="color: #268bd2;">(</span>modMask, xK_b<span style="color: #268bd2;">)</span>
 
 
-<span style="color: #81a2be;">myKeys</span> <span style="color: #cc6666;">=</span> <span style="color: #b294bb;">[</span> <span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"&lt;XF86AudioMute&gt;"</span>, spawn <span style="color: #b5bd68;">"pulseaudio-ctl mute"</span><span style="color: #81a2be;">)</span>
-         , <span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"&lt;XF86AudioRaiseVolume&gt;"</span>, spawn <span style="color: #b5bd68;">"pulseaudio-ctl up"</span><span style="color: #81a2be;">)</span>
-         , <span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"&lt;XF86AudioLowerVolume&gt;"</span>, spawn <span style="color: #b5bd68;">"pulseaudio-ctl down"</span><span style="color: #81a2be;">)</span>
-         , <span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"&lt;XF86MonBrightnessUp&gt;"</span>, spawn <span style="color: #b5bd68;">"gmux_backlight +5"</span><span style="color: #81a2be;">)</span>
-         , <span style="color: #81a2be;">(</span><span style="color: #b5bd68;">"&lt;XF86MonBrightnessDown&gt;"</span>, spawn <span style="color: #b5bd68;">"gmux_backlight -5"</span><span style="color: #81a2be;">)</span>
-         <span style="color: #b294bb;">]</span>
+<span style="color: #268bd2;">myKeys</span> <span style="color: #6c71c4;">=</span> <span style="color: #268bd2;">[</span> <span style="color: #d33682;">(</span><span style="color: #2aa198;">"&lt;XF86AudioMute&gt;"</span>, spawn <span style="color: #2aa198;">"pulseaudio-ctl mute"</span><span style="color: #d33682;">)</span>
+         , <span style="color: #d33682;">(</span><span style="color: #2aa198;">"&lt;XF86AudioRaiseVolume&gt;"</span>, spawn <span style="color: #2aa198;">"pulseaudio-ctl up"</span><span style="color: #d33682;">)</span>
+         , <span style="color: #d33682;">(</span><span style="color: #2aa198;">"&lt;XF86AudioLowerVolume&gt;"</span>, spawn <span style="color: #2aa198;">"pulseaudio-ctl down"</span><span style="color: #d33682;">)</span>
+         , <span style="color: #d33682;">(</span><span style="color: #2aa198;">"&lt;XF86MonBrightnessUp&gt;"</span>, spawn <span style="color: #2aa198;">"gmux_backlight +5"</span><span style="color: #d33682;">)</span>
+         , <span style="color: #d33682;">(</span><span style="color: #2aa198;">"&lt;XF86MonBrightnessDown&gt;"</span>, spawn <span style="color: #2aa198;">"gmux_backlight -5"</span><span style="color: #d33682;">)</span>
+         <span style="color: #268bd2;">]</span>
 
-<span style="color: #81a2be;">myStartupHook</span> <span style="color: #cc6666;">=</span> <span style="color: #b294bb;">do</span>
-  spawnOnce <span style="color: #b5bd68;">"feh --bg-scale ~/Downloads/thorns_by_miv4t-dam5d6v.jpg"</span>
-  spawnOnce <span style="color: #b5bd68;">"xsetroot -cursor_name left_ptr"</span>
-  spawnOnce <span style="color: #b5bd68;">"stalonetray"</span>
-  spawnOnce <span style="color: #b5bd68;">"fcitx"</span>
-  spawnOnce <span style="color: #b5bd68;">"nm-applet"</span>
-  spawnOnce <span style="color: #b5bd68;">"xcompmgr"</span>
+<span style="color: #268bd2;">myStartupHook</span> <span style="color: #6c71c4;">=</span> <span style="color: #859900;">do</span>
+  spawnOnce <span style="color: #2aa198;">"feh --bg-scale ~/Downloads/thorns_by_miv4t-dam5d6v.jpg"</span>
+  spawnOnce <span style="color: #2aa198;">"xsetroot -cursor_name left_ptr"</span>
+  spawnOnce <span style="color: #2aa198;">"stalonetray"</span>
+  spawnOnce <span style="color: #2aa198;">"fcitx"</span>
+  spawnOnce <span style="color: #2aa198;">"nm-applet"</span>
+  spawnOnce <span style="color: #2aa198;">"xcompmgr"</span>
 
-<span style="color: #5a5b5a;">-- </span><span style="color: #5a5b5a;">Main configuration, override the defaults to your liking.</span>
-<span style="color: #81a2be;">myConfig</span> <span style="color: #cc6666;">=</span> def <span style="color: #b294bb;">{</span>
-   modMask <span style="color: #cc6666;">=</span> mod4Mask
- , terminal <span style="color: #cc6666;">=</span> <span style="color: #b5bd68;">"termite"</span>
- , layoutHook <span style="color: #cc6666;">=</span> smartBorders <span style="color: #cc6666;">$</span> smartSpacing <span style="color: #de935f; font-weight: bold;">3</span> <span style="color: #cc6666;">$</span> layoutHook defaultConfig
- , startupHook <span style="color: #cc6666;">=</span> myStartupHook
- , borderWidth <span style="color: #cc6666;">=</span> <span style="color: #de935f; font-weight: bold;">3</span>
- , normalBorderColor <span style="color: #cc6666;">=</span> <span style="color: #b5bd68;">"#777777"</span>
- , focusedBorderColor <span style="color: #cc6666;">=</span> <span style="color: #b5bd68;">"#2980b9"</span>
- <span style="color: #b294bb;">}</span> <span style="color: #cc6666;">`additionalKeysP`</span> myKeys
+<span style="color: #405A61;">-- </span><span style="color: #405A61;">Main configuration, override the defaults to your liking.</span>
+<span style="color: #268bd2;">myConfig</span> <span style="color: #6c71c4;">=</span> def <span style="color: #268bd2;">{</span>
+   modMask <span style="color: #6c71c4;">=</span> mod4Mask
+ , terminal <span style="color: #6c71c4;">=</span> <span style="color: #2aa198;">"termite"</span>
+ , layoutHook <span style="color: #6c71c4;">=</span> smartBorders <span style="color: #6c71c4;">$</span> smartSpacing <span style="color: #d33682; font-weight: bold;">3</span> <span style="color: #6c71c4;">$</span> layoutHook defaultConfig
+ , startupHook <span style="color: #6c71c4;">=</span> myStartupHook
+ , borderWidth <span style="color: #6c71c4;">=</span> <span style="color: #d33682; font-weight: bold;">3</span>
+ , normalBorderColor <span style="color: #6c71c4;">=</span> <span style="color: #2aa198;">"#777777"</span>
+ , focusedBorderColor <span style="color: #6c71c4;">=</span> <span style="color: #2aa198;">"#2980b9"</span>
+ <span style="color: #268bd2;">}</span> <span style="color: #6c71c4;">`additionalKeysP`</span> myKeys
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org4029ed5" class="outline-3">
-<h3 id="org4029ed5">xmobar配置</h3>
-<div class="outline-text-3" id="text-org4029ed5">
+<div id="outline-container-org2ff0504" class="outline-3">
+<h3 id="org2ff0504">xmobar配置</h3>
+<div class="outline-text-3" id="text-org2ff0504">
 <p>
 编辑 <code>~/.xmobarrc</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-haskell"><span style="color: #f0c674;">Config</span> <span style="color: #b294bb;">{</span> font <span style="color: #cc6666;">=</span> <span style="color: #b5bd68;">"xft:Source Code Pro:size=10,WenQuanYi Micro Hei Mono:size=10:antialias=true"</span>
-       , bgColor <span style="color: #cc6666;">=</span> <span style="color: #b5bd68;">"#000000"</span>
-       , fgColor <span style="color: #cc6666;">=</span> <span style="color: #b5bd68;">"#839496"</span>
-       , position <span style="color: #cc6666;">=</span> <span style="color: #f0c674;">Top</span>
-       , lowerOnStart <span style="color: #cc6666;">=</span> <span style="color: #f0c674;">True</span>
-       , commands <span style="color: #cc6666;">=</span> <span style="color: #81a2be;">[</span> <span style="color: #f0c674;">Run</span> <span style="color: #f0c674;">Network</span> <span style="color: #b5bd68;">"wlp4s0"</span> <span style="color: #de935f;">[</span><span style="color: #b5bd68;">"-t"</span>, <span style="color: #b5bd68;">"&lt;fc=#859900&gt;&lt;rx&gt;&#8595;&lt;/fc&gt; &lt;fc=#dc322f&gt;&lt;tx&gt;&#8593;&lt;/fc&gt;"</span>,<span style="color: #b5bd68;">"-S"</span>,<span style="color: #b5bd68;">"True"</span><span style="color: #de935f;">]</span> <span style="color: #de935f; font-weight: bold;">10</span>
-                    , <span style="color: #f0c674;">Run</span> <span style="color: #f0c674;">DynNetwork</span> <span style="color: #de935f;">[</span><span style="color: #b5bd68;">"-t"</span>, <span style="color: #b5bd68;">"&lt;fc=#859900&gt;&lt;rx&gt;&#8595;&lt;/fc&gt; &lt;fc=#dc322f&gt;&lt;tx&gt; &#8593;&lt;/fc&gt;"</span>,<span style="color: #b5bd68;">"-S"</span>,<span style="color: #b5bd68;">"True"</span><span style="color: #de935f;">]</span> <span style="color: #de935f; font-weight: bold;">10</span>
-                    , <span style="color: #f0c674;">Run</span> <span style="color: #f0c674;">MultiCpu</span> <span style="color: #de935f;">[</span><span style="color: #b5bd68;">"-t"</span>, <span style="color: #b5bd68;">"C:&lt;total&gt;%"</span>, <span style="color: #b5bd68;">"-H"</span>,<span style="color: #b5bd68;">"50"</span>,<span style="color: #b5bd68;">"--high"</span>,<span style="color: #b5bd68;">"#dc322f"</span><span style="color: #de935f;">]</span> <span style="color: #de935f; font-weight: bold;">10</span>
-                    , <span style="color: #f0c674;">Run</span> <span style="color: #f0c674;">Memory</span> <span style="color: #de935f;">[</span><span style="color: #b5bd68;">"-t"</span>,<span style="color: #b5bd68;">"M:&lt;usedratio&gt;%"</span>,<span style="color: #b5bd68;">"-H"</span>,<span style="color: #b5bd68;">"80"</span>,<span style="color: #b5bd68;">"--high"</span>,<span style="color: #b5bd68;">"#dc322f"</span><span style="color: #de935f;">]</span> <span style="color: #de935f; font-weight: bold;">10</span>
-                    , <span style="color: #f0c674;">Run</span> <span style="color: #f0c674;">Date</span> <span style="color: #b5bd68;">"%_d %b %H:%M"</span> <span style="color: #b5bd68;">"date"</span> <span style="color: #de935f; font-weight: bold;">10</span>
-                    , <span style="color: #f0c674;">Run</span> <span style="color: #f0c674;">BatteryP</span> <span style="color: #de935f;">[</span><span style="color: #b5bd68;">"BAT0"</span><span style="color: #de935f;">]</span> <span style="color: #de935f;">[</span><span style="color: #b5bd68;">"-t"</span>, <span style="color: #b5bd68;">"B:&lt;left&gt;%"</span>, <span style="color: #b5bd68;">"-L"</span>, <span style="color: #b5bd68;">"10"</span>, <span style="color: #b5bd68;">"-H"</span>, <span style="color: #b5bd68;">"80"</span>, <span style="color: #b5bd68;">"-p"</span>, <span style="color: #b5bd68;">"3"</span>, <span style="color: #b5bd68;">"--"</span>, <span style="color: #b5bd68;">"-O"</span>, <span style="color: #b5bd68;">"&lt;fc=green&gt;On&lt;/fc&gt; - "</span>, <span style="color: #b5bd68;">"-o"</span>, <span style="color: #b5bd68;">""</span>, <span style="color: #b5bd68;">"-L"</span>, <span style="color: #b5bd68;">"-15"</span>, <span style="color: #b5bd68;">"-H"</span>, <span style="color: #b5bd68;">"-5"</span>, <span style="color: #b5bd68;">"-l"</span>, <span style="color: #b5bd68;">"red"</span>, <span style="color: #b5bd68;">"-m"</span>, <span style="color: #b5bd68;">"blue"</span>, <span style="color: #b5bd68;">"-h"</span>, <span style="color: #b5bd68;">"green"</span><span style="color: #de935f;">]</span> <span style="color: #de935f; font-weight: bold;">600</span>
-                    , <span style="color: #f0c674;">Run</span> <span style="color: #f0c674;">StdinReader</span>
-                    <span style="color: #81a2be;">]</span>
-       , sepChar <span style="color: #cc6666;">=</span> <span style="color: #b5bd68;">"%"</span>
-       , alignSep <span style="color: #cc6666;">=</span> <span style="color: #b5bd68;">"}{"</span>
-       , template <span style="color: #cc6666;">=</span> <span style="color: #b5bd68;">"%StdinReader% }{ %battery% %multicpu% %memory% | %dynnetwork% | %date%"</span>
-<span style="color: #b294bb;">}</span>
+<pre class="src src-haskell"><span style="color: #b58900;">Config</span> <span style="color: #268bd2;">{</span> font <span style="color: #6c71c4;">=</span> <span style="color: #2aa198;">"xft:Source Code Pro:size=10,WenQuanYi Micro Hei Mono:size=10:antialias=true"</span>
+       , bgColor <span style="color: #6c71c4;">=</span> <span style="color: #2aa198;">"#000000"</span>
+       , fgColor <span style="color: #6c71c4;">=</span> <span style="color: #2aa198;">"#839496"</span>
+       , position <span style="color: #6c71c4;">=</span> <span style="color: #b58900;">Top</span>
+       , lowerOnStart <span style="color: #6c71c4;">=</span> <span style="color: #b58900;">True</span>
+       , commands <span style="color: #6c71c4;">=</span> <span style="color: #d33682;">[</span> <span style="color: #b58900;">Run</span> <span style="color: #b58900;">Network</span> <span style="color: #2aa198;">"wlp4s0"</span> <span style="color: #859900;">[</span><span style="color: #2aa198;">"-t"</span>, <span style="color: #2aa198;">"&lt;fc=#859900&gt;&lt;rx&gt;&#8595;&lt;/fc&gt; &lt;fc=#dc322f&gt;&lt;tx&gt;&#8593;&lt;/fc&gt;"</span>,<span style="color: #2aa198;">"-S"</span>,<span style="color: #2aa198;">"True"</span><span style="color: #859900;">]</span> <span style="color: #d33682; font-weight: bold;">10</span>
+                    , <span style="color: #b58900;">Run</span> <span style="color: #b58900;">DynNetwork</span> <span style="color: #859900;">[</span><span style="color: #2aa198;">"-t"</span>, <span style="color: #2aa198;">"&lt;fc=#859900&gt;&lt;rx&gt;&#8595;&lt;/fc&gt; &lt;fc=#dc322f&gt;&lt;tx&gt; &#8593;&lt;/fc&gt;"</span>,<span style="color: #2aa198;">"-S"</span>,<span style="color: #2aa198;">"True"</span><span style="color: #859900;">]</span> <span style="color: #d33682; font-weight: bold;">10</span>
+                    , <span style="color: #b58900;">Run</span> <span style="color: #b58900;">MultiCpu</span> <span style="color: #859900;">[</span><span style="color: #2aa198;">"-t"</span>, <span style="color: #2aa198;">"C:&lt;total&gt;%"</span>, <span style="color: #2aa198;">"-H"</span>,<span style="color: #2aa198;">"50"</span>,<span style="color: #2aa198;">"--high"</span>,<span style="color: #2aa198;">"#dc322f"</span><span style="color: #859900;">]</span> <span style="color: #d33682; font-weight: bold;">10</span>
+                    , <span style="color: #b58900;">Run</span> <span style="color: #b58900;">Memory</span> <span style="color: #859900;">[</span><span style="color: #2aa198;">"-t"</span>,<span style="color: #2aa198;">"M:&lt;usedratio&gt;%"</span>,<span style="color: #2aa198;">"-H"</span>,<span style="color: #2aa198;">"80"</span>,<span style="color: #2aa198;">"--high"</span>,<span style="color: #2aa198;">"#dc322f"</span><span style="color: #859900;">]</span> <span style="color: #d33682; font-weight: bold;">10</span>
+                    , <span style="color: #b58900;">Run</span> <span style="color: #b58900;">Date</span> <span style="color: #2aa198;">"%_d %b %H:%M"</span> <span style="color: #2aa198;">"date"</span> <span style="color: #d33682; font-weight: bold;">10</span>
+                    , <span style="color: #b58900;">Run</span> <span style="color: #b58900;">BatteryP</span> <span style="color: #859900;">[</span><span style="color: #2aa198;">"BAT0"</span><span style="color: #859900;">]</span> <span style="color: #859900;">[</span><span style="color: #2aa198;">"-t"</span>, <span style="color: #2aa198;">"B:&lt;left&gt;%"</span>, <span style="color: #2aa198;">"-L"</span>, <span style="color: #2aa198;">"10"</span>, <span style="color: #2aa198;">"-H"</span>, <span style="color: #2aa198;">"80"</span>, <span style="color: #2aa198;">"-p"</span>, <span style="color: #2aa198;">"3"</span>, <span style="color: #2aa198;">"--"</span>, <span style="color: #2aa198;">"-O"</span>, <span style="color: #2aa198;">"&lt;fc=green&gt;On&lt;/fc&gt; - "</span>, <span style="color: #2aa198;">"-o"</span>, <span style="color: #2aa198;">""</span>, <span style="color: #2aa198;">"-L"</span>, <span style="color: #2aa198;">"-15"</span>, <span style="color: #2aa198;">"-H"</span>, <span style="color: #2aa198;">"-5"</span>, <span style="color: #2aa198;">"-l"</span>, <span style="color: #2aa198;">"red"</span>, <span style="color: #2aa198;">"-m"</span>, <span style="color: #2aa198;">"blue"</span>, <span style="color: #2aa198;">"-h"</span>, <span style="color: #2aa198;">"green"</span><span style="color: #859900;">]</span> <span style="color: #d33682; font-weight: bold;">600</span>
+                    , <span style="color: #b58900;">Run</span> <span style="color: #b58900;">StdinReader</span>
+                    <span style="color: #d33682;">]</span>
+       , sepChar <span style="color: #6c71c4;">=</span> <span style="color: #2aa198;">"%"</span>
+       , alignSep <span style="color: #6c71c4;">=</span> <span style="color: #2aa198;">"}{"</span>
+       , template <span style="color: #6c71c4;">=</span> <span style="color: #2aa198;">"%StdinReader% }{ %battery% %multicpu% %memory% | %dynnetwork% | %date%"</span>
+<span style="color: #268bd2;">}</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgf242558" class="outline-3">
-<h3 id="orgf242558">stalonetray配置</h3>
-<div class="outline-text-3" id="text-orgf242558">
+<div id="outline-container-org84507d1" class="outline-3">
+<h3 id="org84507d1">stalonetray配置</h3>
+<div class="outline-text-3" id="text-org84507d1">
 <p>
 编辑 <code>~/.stalonetrayrc</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-conf">background <span style="color: #b5bd68;">"#000000"</span>
+<pre class="src src-conf">background <span style="color: #2aa198;">"#000000"</span>
 decorations none
 dockapp_mode none
 fuzzy_edges 0
@@ -167,96 +167,96 @@ xsync false
 </div>
 </div>
 
-<div id="outline-container-org17cfadd" class="outline-2">
-<h2 id="org17cfadd">修改 <code>.xinitrc</code></h2>
-<div class="outline-text-2" id="text-org17cfadd">
+<div id="outline-container-org217dfb9" class="outline-2">
+<h2 id="org217dfb9">修改 <code>.xinitrc</code></h2>
+<div class="outline-text-2" id="text-org217dfb9">
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">!/bin/</span><span style="color: #b294bb;">sh</span>
+<pre class="src src-shell"><span style="color: #405A61;">#</span><span style="color: #405A61;">!/bin/</span><span style="color: #859900;">sh</span>
 
-<span style="color: #cc6666;">userresources</span>=$<span style="color: #cc6666;">HOME</span>/.Xresources
-<span style="color: #cc6666;">sysresources</span>=/etc/X11/xinit/.Xresources
+<span style="color: #6c71c4;">userresources</span>=$<span style="color: #6c71c4;">HOME</span>/.Xresources
+<span style="color: #6c71c4;">sysresources</span>=/etc/X11/xinit/.Xresources
 
-<span style="color: #5a5b5a;"># </span><span style="color: #5a5b5a;">merge in defaults and keymaps</span>
+<span style="color: #405A61;"># </span><span style="color: #405A61;">merge in defaults and keymaps</span>
 
-<span style="color: #b294bb;">if</span> <span style="color: #b294bb;">[</span> -f $<span style="color: #cc6666;">sysresources</span> <span style="color: #b294bb;">]</span>; <span style="color: #b294bb;">then</span>
-    xrdb -merge $<span style="color: #cc6666;">sysresources</span>
-<span style="color: #b294bb;">fi</span>
+<span style="color: #859900;">if</span> <span style="color: #268bd2;">[</span> -f $<span style="color: #6c71c4;">sysresources</span> <span style="color: #268bd2;">]</span>; <span style="color: #859900;">then</span>
+    xrdb -merge $<span style="color: #6c71c4;">sysresources</span>
+<span style="color: #859900;">fi</span>
 
-<span style="color: #b294bb;">if</span> <span style="color: #b294bb;">[</span> -f <span style="color: #b5bd68;">"$userresources"</span> <span style="color: #b294bb;">]</span>; <span style="color: #b294bb;">then</span>
-    xrdb -merge <span style="color: #b5bd68;">"$userresources"</span>
-<span style="color: #b294bb;">fi</span>
+<span style="color: #859900;">if</span> <span style="color: #268bd2;">[</span> -f <span style="color: #2aa198;">"$userresources"</span> <span style="color: #268bd2;">]</span>; <span style="color: #859900;">then</span>
+    xrdb -merge <span style="color: #2aa198;">"$userresources"</span>
+<span style="color: #859900;">fi</span>
 
-<span style="color: #5a5b5a;"># </span><span style="color: #5a5b5a;">start some nice programs</span>
+<span style="color: #405A61;"># </span><span style="color: #405A61;">start some nice programs</span>
 
-<span style="color: #b294bb;">if</span> <span style="color: #b294bb;">[</span> -d /etc/X11/xinit/xinitrc.d <span style="color: #b294bb;">]</span> ; <span style="color: #b294bb;">then</span>
- <span style="color: #b294bb;">for</span> f<span style="color: #b294bb;"> in</span> /etc/X11/xinit/xinitrc.d/?*.sh ; <span style="color: #b294bb;">do</span>
-  <span style="color: #b294bb;">[</span> -x <span style="color: #b5bd68;">"$f"</span> <span style="color: #b294bb;">]</span> &amp;&amp; . <span style="color: #b5bd68;">"$f"</span>
- <span style="color: #b294bb;">done</span>
- <span style="color: #81a2be;">unset</span> f
-<span style="color: #b294bb;">fi</span>
+<span style="color: #859900;">if</span> <span style="color: #268bd2;">[</span> -d /etc/X11/xinit/xinitrc.d <span style="color: #268bd2;">]</span> ; <span style="color: #859900;">then</span>
+ <span style="color: #859900;">for</span> f<span style="color: #859900;"> in</span> /etc/X11/xinit/xinitrc.d/?*.sh ; <span style="color: #859900;">do</span>
+  <span style="color: #268bd2;">[</span> -x <span style="color: #2aa198;">"$f"</span> <span style="color: #268bd2;">]</span> &amp;&amp; . <span style="color: #2aa198;">"$f"</span>
+ <span style="color: #859900;">done</span>
+ <span style="color: #268bd2;">unset</span> f
+<span style="color: #859900;">fi</span>
 
-<span style="color: #81a2be;">export</span> <span style="color: #cc6666;">LANG</span>=en_US.UTF-8
-<span style="color: #81a2be;">export</span> <span style="color: #cc6666;">LC_CTYPE</span>=zh_CN.UTF-8
-<span style="color: #81a2be;">export</span> <span style="color: #cc6666;">GTK_IM_MODULE</span>=fcitx
-<span style="color: #81a2be;">export</span> <span style="color: #cc6666;">QT_IM_MODULE</span>=fcitx
-<span style="color: #81a2be;">export</span> <span style="color: #cc6666;">XMODIFIERS</span>=@<span style="color: #cc6666;">im</span>=fcitx
+<span style="color: #268bd2;">export</span> <span style="color: #6c71c4;">LANG</span>=en_US.UTF-8
+<span style="color: #268bd2;">export</span> <span style="color: #6c71c4;">LC_CTYPE</span>=zh_CN.UTF-8
+<span style="color: #268bd2;">export</span> <span style="color: #6c71c4;">GTK_IM_MODULE</span>=fcitx
+<span style="color: #268bd2;">export</span> <span style="color: #6c71c4;">QT_IM_MODULE</span>=fcitx
+<span style="color: #268bd2;">export</span> <span style="color: #6c71c4;">XMODIFIERS</span>=@<span style="color: #6c71c4;">im</span>=fcitx
 
-<span style="color: #cc6666;">session</span>=$<span style="color: #b294bb;">{</span><span style="color: #de935f; font-weight: bold;">1:-xmonad</span><span style="color: #b294bb;">}</span>
+<span style="color: #6c71c4;">session</span>=$<span style="color: #268bd2;">{</span><span style="color: #d33682; font-weight: bold;">1:-xmonad</span><span style="color: #268bd2;">}</span>
 
-<span style="color: #b294bb;">case</span> $<span style="color: #cc6666;">session</span><span style="color: #b294bb;"> in</span>
+<span style="color: #859900;">case</span> $<span style="color: #6c71c4;">session</span><span style="color: #859900;"> in</span>
     gnome|gnome-session)
-        <span style="color: #81a2be;">export</span> <span style="color: #cc6666;">QT_AUTO_SCREEN_SCALE_FACTOR</span>=<span style="color: #de935f; font-weight: bold;">1</span>
-        <span style="color: #b294bb;">exec</span> gnome-session
+        <span style="color: #268bd2;">export</span> <span style="color: #6c71c4;">QT_AUTO_SCREEN_SCALE_FACTOR</span>=<span style="color: #d33682; font-weight: bold;">1</span>
+        <span style="color: #859900;">exec</span> gnome-session
         ;;
     i3|i3wm)
-        <span style="color: #b294bb;">exec</span> i3
+        <span style="color: #859900;">exec</span> i3
         ;;
     kde)
-        <span style="color: #b294bb;">exec</span> startkde
+        <span style="color: #859900;">exec</span> startkde
         ;;
     xfce|xfce4)
-        <span style="color: #b294bb;">exec</span> startxfce4
+        <span style="color: #859900;">exec</span> startxfce4
         ;;
     awesome)
-        <span style="color: #81a2be;">export</span> <span style="color: #cc6666;">GDK_SCALE</span>=<span style="color: #de935f; font-weight: bold;">2</span>
-        <span style="color: #81a2be;">export</span> <span style="color: #cc6666;">GDK_DPI_SCALE</span>=<span style="color: #de935f; font-weight: bold;">0.5</span>
-        <span style="color: #b294bb;">exec</span> awesome
+        <span style="color: #268bd2;">export</span> <span style="color: #6c71c4;">GDK_SCALE</span>=<span style="color: #d33682; font-weight: bold;">2</span>
+        <span style="color: #268bd2;">export</span> <span style="color: #6c71c4;">GDK_DPI_SCALE</span>=<span style="color: #d33682; font-weight: bold;">0.5</span>
+        <span style="color: #859900;">exec</span> awesome
         ;;
     xmonad)
-        <span style="color: #81a2be;">export</span> <span style="color: #cc6666;">GDK_SCALE</span>=<span style="color: #de935f; font-weight: bold;">2</span>
-        <span style="color: #81a2be;">export</span> <span style="color: #cc6666;">GDK_DPI_SCALE</span>=<span style="color: #de935f; font-weight: bold;">0.5</span>
-        <span style="color: #b294bb;">exec</span> xmonad
+        <span style="color: #268bd2;">export</span> <span style="color: #6c71c4;">GDK_SCALE</span>=<span style="color: #d33682; font-weight: bold;">2</span>
+        <span style="color: #268bd2;">export</span> <span style="color: #6c71c4;">GDK_DPI_SCALE</span>=<span style="color: #d33682; font-weight: bold;">0.5</span>
+        <span style="color: #859900;">exec</span> xmonad
         ;;
     *)
-        <span style="color: #b294bb;">exec</span>$<span style="color: #de935f; font-weight: bold;">1</span>
+        <span style="color: #859900;">exec</span>$<span style="color: #d33682; font-weight: bold;">1</span>
         ;;
-<span style="color: #b294bb;">esac</span>
+<span style="color: #859900;">esac</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org7f778ce" class="outline-2">
-<h2 id="org7f778ce">配置键盘和触摸板</h2>
-<div class="outline-text-2" id="text-org7f778ce">
+<div id="outline-container-orga414c66" class="outline-2">
+<h2 id="orga414c66">配置键盘和触摸板</h2>
+<div class="outline-text-2" id="text-orga414c66">
 <p>
 使用 gnome-session 的时候，会默认配置触摸板和键盘鼠标等，所以这里就需要在 <code>/etc/X11/xorg.conf.d</code> 下面添加配置文件的方式配置键盘和触摸板了。
 </p>
 </div>
 
-<div id="outline-container-org7578c9a" class="outline-3">
-<h3 id="org7578c9a">键盘配置</h3>
-<div class="outline-text-3" id="text-org7578c9a">
+<div id="outline-container-org25e4d19" class="outline-3">
+<h3 id="org25e4d19">键盘配置</h3>
+<div class="outline-text-3" id="text-org25e4d19">
 <p>
 我是 Emacs 的死衷，所以需要将 <code>ctrl</code> 和 <code>caps lock</code> 交换。
 编写 <code>/etc/X11/xorg.conf.d/00-keyboard.conf</code> 文件
 </p>
 <div class="org-src-container">
-<pre class="src src-conf">Section <span style="color: #b5bd68;">"InputClass"</span>
-        Identifier <span style="color: #b5bd68;">"system-keyboard"</span>
-  MatchIsKeyboard <span style="color: #b5bd68;">"on"</span>
-        Option <span style="color: #b5bd68;">"XkbLayout"</span> <span style="color: #b5bd68;">"us"</span>
-  Option <span style="color: #b5bd68;">"XkbOptions"</span> <span style="color: #b5bd68;">"ctrl:swapcaps"</span>
+<pre class="src src-conf">Section <span style="color: #2aa198;">"InputClass"</span>
+        Identifier <span style="color: #2aa198;">"system-keyboard"</span>
+  MatchIsKeyboard <span style="color: #2aa198;">"on"</span>
+        Option <span style="color: #2aa198;">"XkbLayout"</span> <span style="color: #2aa198;">"us"</span>
+  Option <span style="color: #2aa198;">"XkbOptions"</span> <span style="color: #2aa198;">"ctrl:swapcaps"</span>
 EndSection   
 </pre>
 </div>
@@ -264,11 +264,11 @@ EndSection
 然而当插上 <code>HHKB</code> 的时候则不需要交换案件，编写配置文件 <code>/etc/X11/xorg.conf.d/30-keyboard.conf</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-conf">Section <span style="color: #b5bd68;">"InputClass"</span>
-        Identifier <span style="color: #b5bd68;">"hhkb"</span>
-  MatchProduct <span style="color: #b5bd68;">"HHKB"</span>
-        Option <span style="color: #b5bd68;">"XkbLayout"</span> <span style="color: #b5bd68;">"us"</span>
-  Option <span style="color: #b5bd68;">"XkbOptions"</span> <span style="color: #b5bd68;">","</span>
+<pre class="src src-conf">Section <span style="color: #2aa198;">"InputClass"</span>
+        Identifier <span style="color: #2aa198;">"hhkb"</span>
+  MatchProduct <span style="color: #2aa198;">"HHKB"</span>
+        Option <span style="color: #2aa198;">"XkbLayout"</span> <span style="color: #2aa198;">"us"</span>
+  Option <span style="color: #2aa198;">"XkbOptions"</span> <span style="color: #2aa198;">","</span>
 EndSection   
 </pre>
 </div>
@@ -276,19 +276,19 @@ EndSection
 </div>
 
 
-<div id="outline-container-orgb5516a5" class="outline-3">
-<h3 id="orgb5516a5">触摸板设置</h3>
-<div class="outline-text-3" id="text-orgb5516a5">
+<div id="outline-container-org01dd385" class="outline-3">
+<h3 id="org01dd385">触摸板设置</h3>
+<div class="outline-text-3" id="text-org01dd385">
 <p>
 这么多年被苹果强奸之后，我发现我已经和自然的习惯于苹果的“NatrualScrolling”了。
 编写 <code>/etc/X11/xorg.conf.d/30-touchpad.conf</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-conf">Section <span style="color: #b5bd68;">"InputClass"</span>
-    Identifier <span style="color: #b5bd68;">"bcm5974"</span>
-    Driver <span style="color: #b5bd68;">"libinput"</span>
-    Option <span style="color: #b5bd68;">"Tapping"</span> <span style="color: #b5bd68;">"on"</span>
-    Option <span style="color: #b5bd68;">"NaturalScrolling"</span> <span style="color: #b5bd68;">"true"</span>
+<pre class="src src-conf">Section <span style="color: #2aa198;">"InputClass"</span>
+    Identifier <span style="color: #2aa198;">"bcm5974"</span>
+    Driver <span style="color: #2aa198;">"libinput"</span>
+    Option <span style="color: #2aa198;">"Tapping"</span> <span style="color: #2aa198;">"on"</span>
+    Option <span style="color: #2aa198;">"NaturalScrolling"</span> <span style="color: #2aa198;">"true"</span>
 EndSection   
 </pre>
 </div>
@@ -340,7 +340,7 @@ EndSection
 然后列出目前设备的所有属性，来确认是什么输入设备。
 </p>
 <div class="org-src-container">
-<pre class="src src-shell">xinput list-props <span style="color: #de935f; font-weight: bold;">24</span>
+<pre class="src src-shell">xinput list-props <span style="color: #d33682; font-weight: bold;">24</span>
 </pre>
 </div>
 <p>
@@ -387,102 +387,102 @@ EndSection
 </div>
 </div>
 
-<div id="outline-container-org667a3e4" class="outline-2">
-<h2 id="org667a3e4">微调Emacs的输入法问题</h2>
-<div class="outline-text-2" id="text-org667a3e4">
+<div id="outline-container-org1a6b42d" class="outline-2">
+<h2 id="org1a6b42d">微调Emacs的输入法问题</h2>
+<div class="outline-text-2" id="text-org1a6b42d">
 <p>
 Emacs和输入法是个老问题了， <code>ctrl + space</code> 不能呼出输入法是常态。貌似在gnome环境似乎没有问题。反正我也很少在Emacs下打中文的。想着spacemacs里可能有解决方案，看了下文档果然如此。在spacemacs中增加chinese的layer就自然地解决了问题。
 </p>
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #b294bb;">(</span>chinese <span style="color: #81a2be;">:variables</span>
-              chinese-enable-fcitx t<span style="color: #b294bb;">)</span>
+<pre class="src src-elisp"><span style="color: #268bd2;">(</span>chinese <span style="color: #268bd2;">:variables</span>
+              chinese-enable-fcitx t<span style="color: #268bd2;">)</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org19c7b50" class="outline-2">
-<h2 id="org19c7b50">配置termite</h2>
-<div class="outline-text-2" id="text-org19c7b50">
+<div id="outline-container-orgf60d692" class="outline-2">
+<h2 id="orgf60d692">配置termite</h2>
+<div class="outline-text-2" id="text-orgf60d692">
 <p>
 编辑 <code>~/.config/termite/config</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-conf">[<span style="color: #f0c674;">options</span>]
-<span style="color: #cc6666;">scroll_on_output</span> = false
-<span style="color: #cc6666;">scroll_on_keystroke</span> = true
-<span style="color: #cc6666;">audible_bell</span> = false
-<span style="color: #cc6666;">mouse_autohide</span> = false
-<span style="color: #cc6666;">allow_bold</span> = true
-<span style="color: #cc6666;">dynamic_title</span> = true
-<span style="color: #cc6666;">urgent_on_bell</span> = true
-<span style="color: #cc6666;">clickable_url</span> = true
-<span style="color: #cc6666;">font</span> = Monospace 11
-<span style="color: #cc6666;">scrollback_lines</span> = 10000
-<span style="color: #cc6666;">search_wrap</span> = true
-<span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">icon_name = terminal</span>
-<span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">geometry = 640x480</span>
+<pre class="src src-conf">[<span style="color: #b58900;">options</span>]
+<span style="color: #6c71c4;">scroll_on_output</span> = false
+<span style="color: #6c71c4;">scroll_on_keystroke</span> = true
+<span style="color: #6c71c4;">audible_bell</span> = false
+<span style="color: #6c71c4;">mouse_autohide</span> = false
+<span style="color: #6c71c4;">allow_bold</span> = true
+<span style="color: #6c71c4;">dynamic_title</span> = true
+<span style="color: #6c71c4;">urgent_on_bell</span> = true
+<span style="color: #6c71c4;">clickable_url</span> = true
+<span style="color: #6c71c4;">font</span> = Monospace 11
+<span style="color: #6c71c4;">scrollback_lines</span> = 10000
+<span style="color: #6c71c4;">search_wrap</span> = true
+<span style="color: #405A61;">#</span><span style="color: #405A61;">icon_name = terminal</span>
+<span style="color: #405A61;">#</span><span style="color: #405A61;">geometry = 640x480</span>
 
-<span style="color: #5a5b5a;"># </span><span style="color: #5a5b5a;">"system", "on" or "off"</span>
-<span style="color: #cc6666;">cursor_blink</span> = system
+<span style="color: #405A61;"># </span><span style="color: #405A61;">"system", "on" or "off"</span>
+<span style="color: #6c71c4;">cursor_blink</span> = system
 
-<span style="color: #5a5b5a;"># </span><span style="color: #5a5b5a;">"block", "underline" or "ibeam"</span>
-<span style="color: #cc6666;">cursor_shape</span> = block
+<span style="color: #405A61;"># </span><span style="color: #405A61;">"block", "underline" or "ibeam"</span>
+<span style="color: #6c71c4;">cursor_shape</span> = block
 
-<span style="color: #5a5b5a;"># </span><span style="color: #5a5b5a;">$BROWSER is used by default if set, with xdg-open as a fallback</span>
-<span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">browser = xdg-open</span>
+<span style="color: #405A61;"># </span><span style="color: #405A61;">$BROWSER is used by default if set, with xdg-open as a fallback</span>
+<span style="color: #405A61;">#</span><span style="color: #405A61;">browser = xdg-open</span>
 
-<span style="color: #5a5b5a;"># </span><span style="color: #5a5b5a;">set size hints for the window</span>
-<span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">size_hints = false</span>
+<span style="color: #405A61;"># </span><span style="color: #405A61;">set size hints for the window</span>
+<span style="color: #405A61;">#</span><span style="color: #405A61;">size_hints = false</span>
 
-<span style="color: #5a5b5a;"># </span><span style="color: #5a5b5a;">Hide links that are no longer valid in url select overlay mode</span>
-<span style="color: #cc6666;">filter_unmatched_urls</span> = true
+<span style="color: #405A61;"># </span><span style="color: #405A61;">Hide links that are no longer valid in url select overlay mode</span>
+<span style="color: #6c71c4;">filter_unmatched_urls</span> = true
 
-<span style="color: #5a5b5a;"># </span><span style="color: #5a5b5a;">emit escape sequences for extra modified keys</span>
-<span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">modify_other_keys = false</span>
+<span style="color: #405A61;"># </span><span style="color: #405A61;">emit escape sequences for extra modified keys</span>
+<span style="color: #405A61;">#</span><span style="color: #405A61;">modify_other_keys = false</span>
 
-<span style="color: #5a5b5a;"># </span><span style="color: #5a5b5a;">Solarized dark color scheme</span>
+<span style="color: #405A61;"># </span><span style="color: #405A61;">Solarized dark color scheme</span>
 
-[<span style="color: #f0c674;">colors</span>]
-<span style="color: #cc6666;">foreground</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">839496</span>
-<span style="color: #cc6666;">foreground_bold</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">eee8d5</span>
-<span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">foreground_dim = #888888</span>
-<span style="color: #cc6666;">background</span> = rgba(0, 43, 54, 0.9)
-<span style="color: #cc6666;">cursor</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">93a1a1</span>
+[<span style="color: #b58900;">colors</span>]
+<span style="color: #6c71c4;">foreground</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">839496</span>
+<span style="color: #6c71c4;">foreground_bold</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">eee8d5</span>
+<span style="color: #405A61;">#</span><span style="color: #405A61;">foreground_dim = #888888</span>
+<span style="color: #6c71c4;">background</span> = rgba(0, 43, 54, 0.9)
+<span style="color: #6c71c4;">cursor</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">93a1a1</span>
 
-<span style="color: #5a5b5a;"># </span><span style="color: #5a5b5a;">if unset, will reverse foreground and background</span>
-<span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">highlight = #839496</span>
+<span style="color: #405A61;"># </span><span style="color: #405A61;">if unset, will reverse foreground and background</span>
+<span style="color: #405A61;">#</span><span style="color: #405A61;">highlight = #839496</span>
 
-<span style="color: #5a5b5a;"># </span><span style="color: #5a5b5a;">colors from color0 to color254 can be set</span>
-<span style="color: #cc6666;">color0</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">073642</span>
-<span style="color: #cc6666;">color1</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">dc322f</span>
-<span style="color: #cc6666;">color2</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">859900</span>
-<span style="color: #cc6666;">color3</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">b58900</span>
-<span style="color: #cc6666;">color4</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">268bd2</span>
-<span style="color: #cc6666;">color5</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">d33682</span>
-<span style="color: #cc6666;">color6</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">2aa198</span>
-<span style="color: #cc6666;">color7</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">eee8d5</span>
-<span style="color: #cc6666;">color8</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">002b36</span>
-<span style="color: #cc6666;">color9</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">cb4b16</span>
-<span style="color: #cc6666;">color10</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">586e75</span>
-<span style="color: #cc6666;">color11</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">657b83</span>
-<span style="color: #cc6666;">color12</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">839496</span>
-<span style="color: #cc6666;">color13</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">6c71c4</span>
-<span style="color: #cc6666;">color14</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">93a1a1</span>
-<span style="color: #cc6666;">color15</span> = <span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">fdf6e3</span>
+<span style="color: #405A61;"># </span><span style="color: #405A61;">colors from color0 to color254 can be set</span>
+<span style="color: #6c71c4;">color0</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">073642</span>
+<span style="color: #6c71c4;">color1</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">dc322f</span>
+<span style="color: #6c71c4;">color2</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">859900</span>
+<span style="color: #6c71c4;">color3</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">b58900</span>
+<span style="color: #6c71c4;">color4</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">268bd2</span>
+<span style="color: #6c71c4;">color5</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">d33682</span>
+<span style="color: #6c71c4;">color6</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">2aa198</span>
+<span style="color: #6c71c4;">color7</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">eee8d5</span>
+<span style="color: #6c71c4;">color8</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">002b36</span>
+<span style="color: #6c71c4;">color9</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">cb4b16</span>
+<span style="color: #6c71c4;">color10</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">586e75</span>
+<span style="color: #6c71c4;">color11</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">657b83</span>
+<span style="color: #6c71c4;">color12</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">839496</span>
+<span style="color: #6c71c4;">color13</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">6c71c4</span>
+<span style="color: #6c71c4;">color14</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">93a1a1</span>
+<span style="color: #6c71c4;">color15</span> = <span style="color: #405A61;">#</span><span style="color: #405A61;">fdf6e3</span>
 
-[<span style="color: #f0c674;">hints</span>]
-<span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">font = Monospace 12</span>
-<span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">foreground = #dcdccc</span>
-<span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">background = #3f3f3f</span>
-<span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">active_foreground = #e68080</span>
-<span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">active_background = #3f3f3f</span>
-<span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">padding = 2</span>
-<span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">border = #3f3f3f</span>
-<span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">border_width = 0.5</span>
-<span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">roundness = 2.0</span>
+[<span style="color: #b58900;">hints</span>]
+<span style="color: #405A61;">#</span><span style="color: #405A61;">font = Monospace 12</span>
+<span style="color: #405A61;">#</span><span style="color: #405A61;">foreground = #dcdccc</span>
+<span style="color: #405A61;">#</span><span style="color: #405A61;">background = #3f3f3f</span>
+<span style="color: #405A61;">#</span><span style="color: #405A61;">active_foreground = #e68080</span>
+<span style="color: #405A61;">#</span><span style="color: #405A61;">active_background = #3f3f3f</span>
+<span style="color: #405A61;">#</span><span style="color: #405A61;">padding = 2</span>
+<span style="color: #405A61;">#</span><span style="color: #405A61;">border = #3f3f3f</span>
+<span style="color: #405A61;">#</span><span style="color: #405A61;">border_width = 0.5</span>
+<span style="color: #405A61;">#</span><span style="color: #405A61;">roundness = 2.0</span>
 
-<span style="color: #5a5b5a;"># </span><span style="color: #5a5b5a;">vim: ft=dosini cms=#%s  </span>
+<span style="color: #405A61;"># </span><span style="color: #405A61;">vim: ft=dosini cms=#%s  </span>
 </pre>
 </div>
 </div>
