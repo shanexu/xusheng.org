@@ -37,9 +37,9 @@
 本文的的主要内容来自golang源代码中的 <a href="https://github.com/golang/go/blob/master/doc/install-source.html">install-source.html</a> 内容。
 </p>
 
-<div id="outline-container-org44e7bc1" class="outline-2">
-<h2 id="org44e7bc1">克隆源代码</h2>
-<div class="outline-text-2" id="text-org44e7bc1">
+<div id="outline-container-orgeb95780" class="outline-2">
+<h2 id="orgeb95780">克隆源代码</h2>
+<div class="outline-text-2" id="text-orgeb95780">
 <div class="org-src-container">
 <pre class="src src-shell">git clone https://github.com/golang/go.git
 </pre>
@@ -47,9 +47,9 @@
 </div>
 </div>
 
-<div id="outline-container-orgbc177ab" class="outline-2">
-<h2 id="orgbc177ab">安装bootstrap binar</h2>
-<div class="outline-text-2" id="text-orgbc177ab">
+<div id="outline-container-orgbbaefb8" class="outline-2">
+<h2 id="orgbbaefb8">安装bootstrap binar</h2>
+<div class="outline-text-2" id="text-orgbbaefb8">
 <p>
 go1.4以后golang工具链全都由golang编译，所以从源码安装golang需要一个bootstrap环境，也就是说需要一个golang编译器。这里可以通过系统的包管理器安装go1.4后的版本。
 </p>
@@ -60,20 +60,20 @@ go1.4以后golang工具链全都由golang编译，所以从源码安装golang需
 </div>
 </div>
 
-<div id="outline-container-orgd0a8136" class="outline-2">
-<h2 id="orgd0a8136">编译安装</h2>
-<div class="outline-text-2" id="text-orgd0a8136">
+<div id="outline-container-org5909c0e" class="outline-2">
+<h2 id="org5909c0e">编译安装</h2>
+<div class="outline-text-2" id="text-org5909c0e">
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #268bd2;">cd</span> go/src
-<span style="color: #6c71c4;">GOROOT_BOOTSTRAP</span>=/usr/local/opt/go/libexec ./all.bash
+<pre class="src src-shell"><span style="color: #81a2be;">cd</span> go/src
+<span style="color: #cc6666;">GOROOT_BOOTSTRAP</span>=/usr/local/opt/go/libexec ./all.bash
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgad8d2f1" class="outline-2">
-<h2 id="orgad8d2f1">检查</h2>
-<div class="outline-text-2" id="text-orgad8d2f1">
+<div id="outline-container-orge050bfe" class="outline-2">
+<h2 id="orge050bfe">检查</h2>
+<div class="outline-text-2" id="text-orge050bfe">
 <div class="org-src-container">
 <pre class="src src-text">$ ../bin/go version
 go version devel +739bf6b929 Fri Sep 27 21:17:15 2019 +0000 darwin/amd64

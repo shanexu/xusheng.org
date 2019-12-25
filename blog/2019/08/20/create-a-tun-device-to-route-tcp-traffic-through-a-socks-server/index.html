@@ -81,9 +81,9 @@ default                                 fe80::%utun0                    UGcI    
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span class="linenr">1: </span><span style="color: #268bd2;">cd</span> &lt;badvpn-source-dir&gt;
+<pre class="src src-shell"><span class="linenr">1: </span><span style="color: #81a2be;">cd</span> &lt;badvpn-source-dir&gt;
 <span class="linenr">2: </span>mkdir build
-<span class="linenr">3: </span><span style="color: #268bd2;">cd</span> build
+<span class="linenr">3: </span><span style="color: #81a2be;">cd</span> build
 <span class="linenr">4: </span>cmake .. -DCMAKE_INSTALL_PREFIX=&lt;install-dir&gt;
 <span class="linenr">5: </span>make install
 </pre>
@@ -95,20 +95,20 @@ default                                 fe80::%utun0                    UGcI    
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span class="linenr"> 1: </span><span style="color: #405A61;">#</span><span style="color: #405A61;">!/bin/</span><span style="color: #859900;">bash</span>
+<pre class="src src-shell"><span class="linenr"> 1: </span><span style="color: #5a5b5a;">#</span><span style="color: #5a5b5a;">!/bin/</span><span style="color: #b294bb;">bash</span>
 <span class="linenr"> 2: </span>
 <span class="linenr"> 3: </span>sudo openvpn --mktun --dev tun0
-<span class="linenr"> 4: </span>sudo ifconfig tun0 <span style="color: #d33682; font-weight: bold;">10.0.0.1</span> netmask <span style="color: #d33682; font-weight: bold;">255.255.255.0</span>
+<span class="linenr"> 4: </span>sudo ifconfig tun0 <span style="color: #de935f; font-weight: bold;">10.0.0.1</span> netmask <span style="color: #de935f; font-weight: bold;">255.255.255.0</span>
 <span class="linenr"> 5: </span>
-<span class="linenr"> 6: </span><span style="color: #6c71c4;">array</span>=<span style="color: #268bd2;">(</span> a.b.c.d <span style="color: #268bd2;">)</span>
-<span class="linenr"> 7: </span><span style="color: #859900;">for</span> i<span style="color: #859900;"> in</span> <span style="color: #2aa198;">"${array[@]}"</span>
-<span class="linenr"> 8: </span><span style="color: #859900;">do</span>
-<span class="linenr"> 9: </span>    sudo route add $<span style="color: #6c71c4;">i</span> gw <span style="color: #d33682; font-weight: bold;">192.168.1.1</span> metric <span style="color: #d33682; font-weight: bold;">5</span>
-<span class="linenr">10: </span><span style="color: #859900;">done</span>
+<span class="linenr"> 6: </span><span style="color: #cc6666;">array</span>=<span style="color: #b294bb;">(</span> a.b.c.d <span style="color: #b294bb;">)</span>
+<span class="linenr"> 7: </span><span style="color: #b294bb;">for</span> i<span style="color: #b294bb;"> in</span> <span style="color: #b5bd68;">"${array[@]}"</span>
+<span class="linenr"> 8: </span><span style="color: #b294bb;">do</span>
+<span class="linenr"> 9: </span>    sudo route add $<span style="color: #cc6666;">i</span> gw <span style="color: #de935f; font-weight: bold;">192.168.1.1</span> metric <span style="color: #de935f; font-weight: bold;">5</span>
+<span class="linenr">10: </span><span style="color: #b294bb;">done</span>
 <span class="linenr">11: </span>
-<span class="linenr">12: </span>sudo route add default gw <span style="color: #d33682; font-weight: bold;">10.0.0.2</span> metric <span style="color: #d33682; font-weight: bold;">6</span>
+<span class="linenr">12: </span>sudo route add default gw <span style="color: #de935f; font-weight: bold;">10.0.0.2</span> metric <span style="color: #de935f; font-weight: bold;">6</span>
 <span class="linenr">13: </span>
-<span class="linenr">14: </span>badvpn-tun2socks --tundev tun0 --netif-ipaddr <span style="color: #d33682; font-weight: bold;">10.0.0.2</span> --netif-netmask <span style="color: #d33682; font-weight: bold;">255.255.255.0</span> --socks-server-addr <span style="color: #d33682; font-weight: bold;">127.0.0.1:7591</span> --socks5-udp
+<span class="linenr">14: </span>badvpn-tun2socks --tundev tun0 --netif-ipaddr <span style="color: #de935f; font-weight: bold;">10.0.0.2</span> --netif-netmask <span style="color: #de935f; font-weight: bold;">255.255.255.0</span> --socks-server-addr <span style="color: #de935f; font-weight: bold;">127.0.0.1:7591</span> --socks5-udp
 <span class="linenr">15: </span>
 </pre>
 </div>

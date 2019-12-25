@@ -4,10 +4,17 @@
     <title>Shane Xu&#39;s Home</title>
     <link>http://shanexu.io/</link>
     <description>Life is too short for so much sorrow.</description>
-    <pubDate>Mon, 23 Dec 2019 18:28:45 CST</pubDate>
-    <lastBuildDate>Mon, 23 Dec 2019 18:28:45 CST</lastBuildDate>
+    <pubDate>Thu, 26 Dec 2019 00:36:03 CST</pubDate>
+    <lastBuildDate>Thu, 26 Dec 2019 00:36:03 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
+    <item>
+      <title>阳台漏水解决过程记录</title>
+      <link>http://shanexu.io/blog/2019/12/25/water</link>
+      <description><![CDATA[阳台漏水解决过程记录]]></description>
+      <pubDate>2019-12-26</pubDate>
+      <guid>http://shanexu.io/blog/2019/12/25/water</guid>
+    </item>
     <item>
       <title>Moving from Homebrew to Nix Package Manager</title>
       <link>http://shanexu.io/blog/2019/12/08/moving-from-homebrew-to-nix-package-manager</link>
@@ -70,13 +77,6 @@
       <description><![CDATA[how to escape from touch bar]]></description>
       <pubDate>2019-08-19</pubDate>
       <guid>http://shanexu.io/blog/2019/08/18/escape-touch-bar</guid>
-    </item>
-    <item>
-      <title>Everyman睡眠计划</title>
-      <link>http://shanexu.io/blog/2016/03/07/everyman-sleep-schedule-plain</link>
-      <description><![CDATA[人生苦短]]></description>
-      <pubDate>2019-08-19</pubDate>
-      <guid>http://shanexu.io/blog/2016/03/07/everyman-sleep-schedule-plain</guid>
     </item>
   </channel>
 </rss>
