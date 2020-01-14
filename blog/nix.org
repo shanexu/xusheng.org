@@ -31,12 +31,13 @@
    make install
    #+end_src
 
-   这个流程看似简单，但是对一些较为复杂的软件，
+   这个流程看似简单，但是对一些较为复杂的软件，需要安装其直接运行时依赖，在安装直接依赖的过程还要解决直接依赖的直接依赖，在这个解决依赖的过程中，很容易发生各种不可预知的问题，这就是所谓的 [[https://zh.wikipedia.org/wiki/%E7%9B%B8%E4%BE%9D%E6%80%A7%E5%9C%B0%E7%8B%B1][dependency hell]] 。
+
+   比如，以emacs编辑器为例，通过 =apt-rdepends -d emacs-gtk= 命令绘出它的依赖图如下：
 
    #+begin_src dot :file ./emacs-gtk-dep-tree.png :cmdline -Kdot -Tpng
    digraph packages {
    concentrate=true;
-   size="30,40";
    "emacs-gtk" [shape=box];
    "emacs-gtk" -> "emacs-bin-common";
    "emacs-gtk" -> "emacs-common";
@@ -728,11 +729,22 @@
    "libx11-xcb1" [shape=box];
    }
    #+end_src
+
+   #+RESULTS:
+   [[file:./emacs-gtk-dep-tree.png]]
    
+   大概就是一团乱麻吧。
+
+* Nix包管理器
+  
+  nix是一个纯函数的软件包管理器。
+
 
 * 参考文档
 
   [[https://zh.wikipedia.org/wiki/%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F]]
 
   [[https://zhuanlan.zhihu.com/p/42402896]]
+
+  [[https://nixos.org/nix/manual]]
 
