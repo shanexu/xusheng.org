@@ -739,8 +739,24 @@
 
 * Nix包管理器
   
-  nix是一个引入纯函数概念的软件包管理器。所谓纯函数就是一类函数，相同的输入值时，产生相同的输出。在这里的意思就是，打包是可重现的（reproducible）。在相同的源代码，相同的编译选项，相同的编译环境，必须可以打出相同的包。或者说是在相同环境下，打出的包，能够在相同环境下另一台机器（或本机器）上运行。
+  Nix是一个强大的包管理工具，它使得包管理更可靠并且可重现。Nix提供了原子级别的升级和回滚操作，多版本安装，多用户包管理，和方便的开发环境设置。
 
+  + Reliable
+  + Reproducible
+  + Great for developers
+  + Multi-user, multi-version
+  + Source/binary model
+  + Portable
+  
+** About
+
+   Nix是一个引入了纯函数概念的包管理器。它把软件包当做值来处理。其打包过程也直接用函数来描述。正如函数式编程语言中纯函数的概念一般，相同的输入总会有相同的输出。在nix里面就是，一旦打包成功，包就不会再改变。Nix将软件包，保存在 =/nix/store= 下面，每个软件包都有自己独立的目录，例如：
+   
+   #+begin_src text
+   /nix/store/j5swdjgkmg11x2zhi1gnr92mab46xj00-cmake-3.16.3
+   #+end_src
+   
+   =j5swdjgkmg11x2zhi1gnr92mab46xj00=
 
 * 参考文档
 
