@@ -14,72 +14,87 @@
 我那时候的想法很简单，就是把所有抽奖人的头像，排列成“2015”的字样，今天我排的是 2016。最后实现的效果就是下面这样的。
 
 #+BEGIN_EXPORT html
-<script src="http://cdn.staticfile.org/react/0.14.3/react.js"></script>
-<script src="http://cdn.staticfile.org/react/0.14.3/react-dom.js"></script>
-<script src="http://cdn.staticfile.org/babel-core/5.8.34/browser.min.js"></script>
+<script src="//cdn.staticfile.org/react/0.14.3/react.js"></script>
+<script src="//cdn.staticfile.org/react/0.14.3/react-dom.js"></script>
+<script src="//cdn.staticfile.org/babel-core/5.8.34/browser.min.js"></script>
 <div id="example"></div>
 <script type="text/babel">
-var HiddenCanvas = React.createClass({
-  getInitialState: function() {
-    return {
-      items: []
-    };
-  },
-  componentDidMount: function() {
-    console.log(1);
-    var str = this.props.value;
-    var myCanvas = this.refs.myCanvas;
-    var ctx = myCanvas.getContext("2d");
-    ctx.font="250px Droid Sans Mono";
-    ctx.fillStyle="blue";
-    ctx.fillText(this.props.value, 20, 250);
-
-    function rgbToHex(r, g, b) {
-      if (r > 255 || g > 255 || b > 255)
-        throw "Invalid color component";
-      return ((r << 16) | (g << 8) | b).toString(16);
+class HiddenCanvas extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            value: props.value,
+            items: []
+        }
+        this.handleChange = this.handleChange.bind(this);
     }
 
-    setTimeout(function(){
-      var items = [];
-      var count = 0;
-      for(var i = 0; i < 800; i = i + 24) {
-        for(var j = 0; j < 300; j = j + 24) {
-          var p = ctx.getImageData(i, j, 1, 1).data;
-          var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
-          if(hex == "#0000ff") {
-            items.push({
-              id: count++,
-              left: i - 12,
-              top: j - 12,
-              transform: 'rotate(' + (360 * Math.random()) + 'deg)'
-            });
-          }
+    handleChange(event) {
+        this.setState({ value: event.target.value, items: [] });
+        setTimeout(() => this.draw());
+    }
+
+    draw() {
+        var str = this.state.value;
+        var myCanvas = this.refs.myCanvas;
+        var ctx = myCanvas.getContext("2d");
+        ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+        ctx.font = "250px Droid Sans Mono";
+        ctx.fillStyle = "blue";
+        ctx.fillText(this.state.value, 20, 250);
+
+        var items = [];
+        var count = 0;
+        for (var i = 0; i < 800; i = i + 12) {
+            for (var j = 0; j < 300; j = j + 12) {
+                var p = ctx.getImageData(i, j, 1, 1).data;
+                var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
+                if (hex == "#0000ff") {
+                    items.push({
+                        id: count++,
+                        left: i - 6,
+                        top: j - 6,
+                        transform: 'rotate(' + (360 * Math.random()) + 'deg)'
+                    });
+                }
+            }
         }
-      }
-      this.setState({
-        items: items
-      });
-    }.bind(this));
-  },
-  render: function() {
-    var images = this.state.items.map(function(m){
-      return (
-        <img key={m.id} src="https://avatars1.githubusercontent.com/u/1257453?v=3&s=460" style={{width: '48px', position: 'absolute', left: m.left, top: m.top, transform: m.transform}} />
-      );
-    });
-    return (
-      <div style={{position: 'relative'}}>
-        {images}
-        <canvas ref="myCanvas" width="800" height="300" style={{visibility: 'hidden'}}/>
-      </div>
-    );
-  }
-});
+
+        this.setState({
+            items: items
+        });
+    }
+
+    componentDidMount() {
+        this.draw();
+    }
+
+    render() {
+        var images = this.state.items.map(function (m) {
+            return (
+                <img key={m.id} src="https://avatars1.githubusercontent.com/u/1257453?v=3&s=460" style={{ width: '24px', position: 'absolute', left: m.left, top: m.top, transform: m.transform }} />
+            );
+        });
+
+        return (
+            <div style={{ position: 'relative' }}>
+                <input value={this.state.value} onChange={this.handleChange} />
+                {images}
+                <canvas ref="myCanvas" width="800" height="300" style={{ visibility: 'hidden' }} />
+            </div>
+        );
+    }
+};
+
+function rgbToHex(r, g, b) {
+    if (r > 255 || g > 255 || b > 255)
+        throw "Invalid color component";
+    return ((r << 16) | (g << 8) | b).toString(16);
+}
 
 ReactDOM.render(
-  <HiddenCanvas value="2016"/>,
-  document.getElementById('example')
+    <HiddenCanvas value="2016" />,
+    document.getElementById('example')
 );
 </script>
 #+END_EXPORT
