@@ -44,14 +44,14 @@
 <pre class="src src-ruby"><span class="linenr"> 1: </span><span style="color: #268bd2;">require</span> <span style="color: #2aa198;">'sidekiq'</span>
 <span class="linenr"> 2: </span>
 <span class="linenr"> 3: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">If your client is single-threaded, we just need a single connection in our Redis connection pool</span>
-<span class="linenr"> 4: </span><span style="color: #b58900;">Sidekiq</span>.configure_client <span style="color: #859900;">do</span> |config|
-<span class="linenr"> 5: </span>  config.redis = <span style="color: #268bd2;">{</span> <span style="color: #d33682;">:namespace</span> =&gt; <span style="color: #2aa198;">'x'</span>, <span style="color: #d33682;">:size</span> =&gt; <span style="color: #d33682; font-weight: bold;">1</span> <span style="color: #268bd2;">}</span>
-<span class="linenr"> 6: </span><span style="color: #859900;">end</span>
+<span class="linenr"> 4: </span><span style="color: #b58900;">Sidekiq</span>.configure_client <span style="color: #859900; font-weight: bold;">do</span> |config|
+<span class="linenr"> 5: </span>  config.redis = <span style="color: #268bd2;">{</span> <span style="color: #d33682; font-weight: bold;">:namespace</span> =&gt; <span style="color: #2aa198;">'x'</span>, <span style="color: #d33682; font-weight: bold;">:size</span> =&gt; <span style="color: #d33682; font-weight: bold;">1</span> <span style="color: #268bd2;">}</span>
+<span class="linenr"> 6: </span><span style="color: #859900; font-weight: bold;">end</span>
 <span class="linenr"> 7: </span>
 <span class="linenr"> 8: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">Sidekiq server is multi-threaded so our Redis connection pool size defaults to concurrency (-c)</span>
-<span class="linenr"> 9: </span><span style="color: #b58900;">Sidekiq</span>.configure_server <span style="color: #859900;">do</span> |config|
-<span class="linenr">10: </span>  config.redis = <span style="color: #268bd2;">{</span> <span style="color: #d33682;">:namespace</span> =&gt; <span style="color: #2aa198;">'x'</span> <span style="color: #268bd2;">}</span>
-<span class="linenr">11: </span><span style="color: #859900;">end</span>
+<span class="linenr"> 9: </span><span style="color: #b58900;">Sidekiq</span>.configure_server <span style="color: #859900; font-weight: bold;">do</span> |config|
+<span class="linenr">10: </span>  config.redis = <span style="color: #268bd2;">{</span> <span style="color: #d33682; font-weight: bold;">:namespace</span> =&gt; <span style="color: #2aa198;">'x'</span> <span style="color: #268bd2;">}</span>
+<span class="linenr">11: </span><span style="color: #859900; font-weight: bold;">end</span>
 <span class="linenr">12: </span>
 <span class="linenr">13: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">Start up sidekiq via</span>
 <span class="linenr">14: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">./bin/sidekiq -r ./examples/por.rb</span>
@@ -60,34 +60,34 @@
 <span class="linenr">17: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">where you can then say</span>
 <span class="linenr">18: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">PlainOldRuby.perform_async "like a dog", 3</span>
 <span class="linenr">19: </span><span style="color: #405A61;">#</span>
-<span class="linenr">20: </span><span style="color: #859900;">class</span> <span style="color: #b58900;">PlainOldRuby</span>
+<span class="linenr">20: </span><span style="color: #859900; font-weight: bold;">class</span> <span style="color: #b58900;">PlainOldRuby</span>
 <span class="linenr">21: </span>  <span style="color: #268bd2;">include</span> <span style="color: #b58900;">Sidekiq</span>::<span style="color: #b58900;">Worker</span>
 <span class="linenr">22: </span>
-<span class="linenr">23: </span>  <span style="color: #859900;">def</span> <span style="color: #268bd2;">perform</span><span style="color: #268bd2;">(</span>how_hard=<span style="color: #2aa198;">"super hard"</span>, how_long=<span style="color: #d33682; font-weight: bold;">1</span><span style="color: #268bd2;">)</span>
+<span class="linenr">23: </span>  <span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">perform</span><span style="color: #268bd2;">(</span>how_hard=<span style="color: #2aa198;">"super hard"</span>, how_long=<span style="color: #d33682; font-weight: bold;">1</span><span style="color: #268bd2;">)</span>
 <span class="linenr">24: </span>    <span style="color: #268bd2;">sleep</span> how_long
-<span class="linenr">25: </span>    <span style="color: #268bd2;">puts</span> <span style="color: #2aa198;">"Workin' </span><span style="color: #6c71c4;">#{how_hard}</span><span style="color: #2aa198;">"</span>
-<span class="linenr">26: </span>  <span style="color: #859900;">end</span>
-<span class="linenr">27: </span><span style="color: #859900;">end</span>
+<span class="linenr">25: </span>    <span style="color: #268bd2;">puts</span> <span style="color: #2aa198;">"Workin' </span><span style="color: #839496;">#{how_hard}</span><span style="color: #2aa198;">"</span>
+<span class="linenr">26: </span>  <span style="color: #859900; font-weight: bold;">end</span>
+<span class="linenr">27: </span><span style="color: #859900; font-weight: bold;">end</span>
 </pre>
 </div>
 <p>
 我们撇开前面两段配置Sidekiq的代码，直接看第21行的 <code>include Sidekiq::Worker</code> ，在加了这一行代码之后 <code>PlainOldRuby</code> 才会有 <code>perform_async</code> ， <code>perform_in</code> ， <code>perform_at</code> 这三个方法。我们来具体看下 <code>perform_async</code> 方法。
 </p>
 <div class="org-src-container">
-<pre class="src src-ruby"><span class="linenr"> 1: </span><span style="color: #859900;">def</span> <span style="color: #268bd2;">perform_async</span><span style="color: #268bd2;">(</span>*args<span style="color: #268bd2;">)</span>
-<span class="linenr"> 2: </span>  client_push<span style="color: #268bd2;">(</span><span style="color: #2aa198;">'class'</span> =&gt; <span style="color: #859900;">self</span>, <span style="color: #2aa198;">'args'</span> =&gt; args<span style="color: #268bd2;">)</span>
-<span class="linenr"> 3: </span><span style="color: #859900;">end</span>
+<pre class="src src-ruby"><span class="linenr"> 1: </span><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">perform_async</span><span style="color: #268bd2;">(</span>*args<span style="color: #268bd2;">)</span>
+<span class="linenr"> 2: </span>  client_push<span style="color: #268bd2;">(</span><span style="color: #2aa198;">'class'</span> =&gt; <span style="color: #859900; font-weight: bold;">self</span>, <span style="color: #2aa198;">'args'</span> =&gt; args<span style="color: #268bd2;">)</span>
+<span class="linenr"> 3: </span><span style="color: #859900; font-weight: bold;">end</span>
 <span class="linenr"> 4: </span>
-<span class="linenr"> 5: </span><span style="color: #859900;">def</span> <span style="color: #268bd2;">client_push</span><span style="color: #268bd2;">(</span>item<span style="color: #268bd2;">)</span> <span style="color: #405A61;"># </span><span style="color: #405A61;">:nodoc:</span>
-<span class="linenr"> 6: </span>  pool = <span style="color: #b58900;">Thread</span>.current<span style="color: #268bd2;">[</span><span style="color: #d33682;">:sidekiq_via_pool</span><span style="color: #268bd2;">]</span> || get_sidekiq_options<span style="color: #268bd2;">[</span><span style="color: #2aa198;">'pool'</span><span style="color: #268bd2;">]</span> || <span style="color: #b58900;">Sidekiq</span>.redis_pool
-<span class="linenr"> 7: </span>  hash = <span style="color: #859900;">if</span> <span style="color: #b58900;">Thread</span>.current<span style="color: #268bd2;">[</span><span style="color: #d33682;">:sidekiq_worker_set</span><span style="color: #268bd2;">]</span>
-<span class="linenr"> 8: </span>    x, <span style="color: #b58900;">Thread</span>.current<span style="color: #268bd2;">[</span><span style="color: #d33682;">:sidekiq_worker_set</span><span style="color: #268bd2;">]</span> = <span style="color: #b58900;">Thread</span>.current<span style="color: #268bd2;">[</span><span style="color: #d33682;">:sidekiq_worker_set</span><span style="color: #268bd2;">]</span>, <span style="color: #d33682;">nil</span>
+<span class="linenr"> 5: </span><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">client_push</span><span style="color: #268bd2;">(</span>item<span style="color: #268bd2;">)</span> <span style="color: #405A61;"># </span><span style="color: #405A61;">:nodoc:</span>
+<span class="linenr"> 6: </span>  pool = <span style="color: #b58900;">Thread</span>.current<span style="color: #268bd2;">[</span><span style="color: #d33682; font-weight: bold;">:sidekiq_via_pool</span><span style="color: #268bd2;">]</span> || get_sidekiq_options<span style="color: #268bd2;">[</span><span style="color: #2aa198;">'pool'</span><span style="color: #268bd2;">]</span> || <span style="color: #b58900;">Sidekiq</span>.redis_pool
+<span class="linenr"> 7: </span>  hash = <span style="color: #859900; font-weight: bold;">if</span> <span style="color: #b58900;">Thread</span>.current<span style="color: #268bd2;">[</span><span style="color: #d33682; font-weight: bold;">:sidekiq_worker_set</span><span style="color: #268bd2;">]</span>
+<span class="linenr"> 8: </span>    x, <span style="color: #b58900;">Thread</span>.current<span style="color: #268bd2;">[</span><span style="color: #d33682; font-weight: bold;">:sidekiq_worker_set</span><span style="color: #268bd2;">]</span> = <span style="color: #b58900;">Thread</span>.current<span style="color: #268bd2;">[</span><span style="color: #d33682; font-weight: bold;">:sidekiq_worker_set</span><span style="color: #268bd2;">]</span>, <span style="color: #d33682; font-weight: bold;">nil</span>
 <span class="linenr"> 9: </span>    x.stringify_keys.merge<span style="color: #268bd2;">(</span>item.stringify_keys<span style="color: #268bd2;">)</span>
-<span class="linenr">10: </span>  <span style="color: #859900;">else</span>
+<span class="linenr">10: </span>  <span style="color: #859900; font-weight: bold;">else</span>
 <span class="linenr">11: </span>    item.stringify_keys
-<span class="linenr">12: </span>  <span style="color: #859900;">end</span>
+<span class="linenr">12: </span>  <span style="color: #859900; font-weight: bold;">end</span>
 <span class="linenr">13: </span>  <span style="color: #b58900;">Sidekiq</span>::<span style="color: #b58900;">Client</span>.new<span style="color: #268bd2;">(</span>pool<span style="color: #268bd2;">)</span>.push<span style="color: #268bd2;">(</span>hash<span style="color: #268bd2;">)</span>
-<span class="linenr">14: </span><span style="color: #859900;">end</span>
+<span class="linenr">14: </span><span style="color: #859900; font-weight: bold;">end</span>
 </pre>
 </div>
 <p>
@@ -112,50 +112,50 @@
 <span class="linenr">16: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">Example:</span>
 <span class="linenr">17: </span><span style="color: #405A61;">#   </span><span style="color: #405A61;">push('queue' =&gt; 'my_queue', 'class' =&gt; MyWorker, 'args' =&gt; ['foo', 1, :bat =&gt; 'bar'])</span>
 <span class="linenr">18: </span><span style="color: #405A61;">#</span>
-<span class="linenr">19: </span><span style="color: #859900;">def</span> <span style="color: #268bd2;">push</span><span style="color: #268bd2;">(</span>item<span style="color: #268bd2;">)</span>
+<span class="linenr">19: </span><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">push</span><span style="color: #268bd2;">(</span>item<span style="color: #268bd2;">)</span>
 <span class="linenr">20: </span>  normed = normalize_item<span style="color: #268bd2;">(</span>item<span style="color: #268bd2;">)</span>
 <span class="linenr">21: </span>  payload = process_single<span style="color: #268bd2;">(</span>item<span style="color: #d33682;">[</span><span style="color: #2aa198;">'class'</span><span style="color: #d33682;">]</span>, normed<span style="color: #268bd2;">)</span>
 <span class="linenr">22: </span>
-<span class="linenr">23: </span>  <span style="color: #859900;">if</span> payload
+<span class="linenr">23: </span>  <span style="color: #859900; font-weight: bold;">if</span> payload
 <span class="linenr">24: </span>    raw_push<span style="color: #268bd2;">(</span><span style="color: #d33682;">[</span>payload<span style="color: #d33682;">]</span><span style="color: #268bd2;">)</span>
 <span class="linenr">25: </span>    payload<span style="color: #268bd2;">[</span><span style="color: #2aa198;">'jid'</span><span style="color: #268bd2;">]</span>
-<span class="linenr">26: </span>  <span style="color: #859900;">end</span>
-<span class="linenr">27: </span><span style="color: #859900;">end</span>
+<span class="linenr">26: </span>  <span style="color: #859900; font-weight: bold;">end</span>
+<span class="linenr">27: </span><span style="color: #859900; font-weight: bold;">end</span>
 <span class="linenr">28: </span>
-<span class="linenr">29: </span><span style="color: #859900;">def</span> <span style="color: #268bd2;">raw_push</span><span style="color: #268bd2;">(</span>payloads<span style="color: #268bd2;">)</span>
-<span class="linenr">30: </span>  <span style="color: #6c71c4;">@redis_pool</span>.with <span style="color: #859900;">do</span> |conn|
-<span class="linenr">31: </span>    conn.multi <span style="color: #859900;">do</span>
+<span class="linenr">29: </span><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">raw_push</span><span style="color: #268bd2;">(</span>payloads<span style="color: #268bd2;">)</span>
+<span class="linenr">30: </span>  <span style="color: #839496;">@redis_pool</span>.with <span style="color: #859900; font-weight: bold;">do</span> |conn|
+<span class="linenr">31: </span>    conn.multi <span style="color: #859900; font-weight: bold;">do</span>
 <span class="linenr">32: </span>      atomic_push<span style="color: #268bd2;">(</span>conn, payloads<span style="color: #268bd2;">)</span>
-<span class="linenr">33: </span>    <span style="color: #859900;">end</span>
-<span class="linenr">34: </span>  <span style="color: #859900;">end</span>
-<span class="linenr">35: </span>  <span style="color: #d33682;">true</span>
-<span class="linenr">36: </span><span style="color: #859900;">end</span>
+<span class="linenr">33: </span>    <span style="color: #859900; font-weight: bold;">end</span>
+<span class="linenr">34: </span>  <span style="color: #859900; font-weight: bold;">end</span>
+<span class="linenr">35: </span>  <span style="color: #d33682; font-weight: bold;">true</span>
+<span class="linenr">36: </span><span style="color: #859900; font-weight: bold;">end</span>
 <span class="linenr">37: </span>
-<span class="linenr">38: </span><span style="color: #859900;">def</span> <span style="color: #268bd2;">atomic_push</span><span style="color: #268bd2;">(</span>conn, payloads<span style="color: #268bd2;">)</span>
-<span class="linenr">39: </span>  <span style="color: #859900;">if</span> payloads.first<span style="color: #268bd2;">[</span><span style="color: #2aa198;">'at'</span><span style="color: #268bd2;">]</span>
-<span class="linenr">40: </span>    conn.zadd<span style="color: #268bd2;">(</span><span style="color: #2aa198;">'schedule'</span>.freeze, payloads.map <span style="color: #859900;">do</span> |hash|
+<span class="linenr">38: </span><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">atomic_push</span><span style="color: #268bd2;">(</span>conn, payloads<span style="color: #268bd2;">)</span>
+<span class="linenr">39: </span>  <span style="color: #859900; font-weight: bold;">if</span> payloads.first<span style="color: #268bd2;">[</span><span style="color: #2aa198;">'at'</span><span style="color: #268bd2;">]</span>
+<span class="linenr">40: </span>    conn.zadd<span style="color: #268bd2;">(</span><span style="color: #2aa198;">'schedule'</span>.freeze, payloads.map <span style="color: #859900; font-weight: bold;">do</span> |hash|
 <span class="linenr">41: </span>      at = hash.delete<span style="color: #d33682;">(</span><span style="color: #2aa198;">'at'</span>.freeze<span style="color: #d33682;">)</span>.to_s
 <span class="linenr">42: </span>      <span style="color: #d33682;">[</span>at, <span style="color: #b58900;">Sidekiq</span>.dump_json<span style="color: #859900;">(</span>hash<span style="color: #859900;">)</span><span style="color: #d33682;">]</span>
-<span class="linenr">43: </span>    <span style="color: #859900;">end</span><span style="color: #268bd2;">)</span>
-<span class="linenr">44: </span>  <span style="color: #859900;">else</span>
+<span class="linenr">43: </span>    <span style="color: #859900; font-weight: bold;">end</span><span style="color: #268bd2;">)</span>
+<span class="linenr">44: </span>  <span style="color: #859900; font-weight: bold;">else</span>
 <span class="linenr">45: </span>    q = payloads.first<span style="color: #268bd2;">[</span><span style="color: #2aa198;">'queue'</span><span style="color: #268bd2;">]</span>
 <span class="linenr">46: </span>    now = <span style="color: #b58900;">Time</span>.now.to_f
-<span class="linenr">47: </span>    to_push = payloads.map <span style="color: #859900;">do</span> |entry|
+<span class="linenr">47: </span>    to_push = payloads.map <span style="color: #859900; font-weight: bold;">do</span> |entry|
 <span class="linenr">48: </span>      entry<span style="color: #268bd2;">[</span><span style="color: #2aa198;">'enqueued_at'</span>.freeze<span style="color: #268bd2;">]</span> = now
 <span class="linenr">49: </span>      <span style="color: #b58900;">Sidekiq</span>.dump_json<span style="color: #268bd2;">(</span>entry<span style="color: #268bd2;">)</span>
-<span class="linenr">50: </span>    <span style="color: #859900;">end</span>
+<span class="linenr">50: </span>    <span style="color: #859900; font-weight: bold;">end</span>
 <span class="linenr">51: </span>    conn.sadd<span style="color: #268bd2;">(</span><span style="color: #2aa198;">'queues'</span>.freeze, q<span style="color: #268bd2;">)</span>
-<span class="linenr">52: </span>    conn.lpush<span style="color: #268bd2;">(</span><span style="color: #2aa198;">"queue:</span><span style="color: #6c71c4;">#{q}</span><span style="color: #2aa198;">"</span>, to_push<span style="color: #268bd2;">)</span>
-<span class="linenr">53: </span>  <span style="color: #859900;">end</span>
-<span class="linenr">54: </span><span style="color: #859900;">end</span>
+<span class="linenr">52: </span>    conn.lpush<span style="color: #268bd2;">(</span><span style="color: #2aa198;">"queue:</span><span style="color: #839496;">#{q}</span><span style="color: #2aa198;">"</span>, to_push<span style="color: #268bd2;">)</span>
+<span class="linenr">53: </span>  <span style="color: #859900; font-weight: bold;">end</span>
+<span class="linenr">54: </span><span style="color: #859900; font-weight: bold;">end</span>
 <span class="linenr">55: </span>
-<span class="linenr">56: </span><span style="color: #859900;">def</span> <span style="color: #268bd2;">process_single</span><span style="color: #268bd2;">(</span>worker_class, item<span style="color: #268bd2;">)</span>
+<span class="linenr">56: </span><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">process_single</span><span style="color: #268bd2;">(</span>worker_class, item<span style="color: #268bd2;">)</span>
 <span class="linenr">57: </span>  queue = item<span style="color: #268bd2;">[</span><span style="color: #2aa198;">'queue'</span><span style="color: #268bd2;">]</span>
 <span class="linenr">58: </span>
-<span class="linenr">59: </span>  middleware.invoke<span style="color: #268bd2;">(</span>worker_class, item, queue, <span style="color: #6c71c4;">@redis_pool</span><span style="color: #268bd2;">)</span> <span style="color: #859900;">do</span>
+<span class="linenr">59: </span>  middleware.invoke<span style="color: #268bd2;">(</span>worker_class, item, queue, <span style="color: #839496;">@redis_pool</span><span style="color: #268bd2;">)</span> <span style="color: #859900; font-weight: bold;">do</span>
 <span class="linenr">60: </span>    item
-<span class="linenr">61: </span>  <span style="color: #859900;">end</span>
-<span class="linenr">62: </span><span style="color: #859900;">end</span>
+<span class="linenr">61: </span>  <span style="color: #859900; font-weight: bold;">end</span>
+<span class="linenr">62: </span><span style="color: #859900; font-weight: bold;">end</span>
 <span class="linenr">63: </span>
 <span class="linenr">64: </span><span style="color: #405A61;">##</span>
 <span class="linenr">65: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">Define client-side middleware:</span>
@@ -169,14 +169,14 @@
 <span class="linenr">73: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">All client instances default to the globally-defined</span>
 <span class="linenr">74: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">Sidekiq.client_middleware but you can change as necessary.</span>
 <span class="linenr">75: </span><span style="color: #405A61;">#</span>
-<span class="linenr">76: </span><span style="color: #859900;">def</span> <span style="color: #268bd2;">middleware</span><span style="color: #268bd2;">(</span>&amp;block<span style="color: #268bd2;">)</span>
-<span class="linenr">77: </span>  <span style="color: #6c71c4;">@chain</span> ||= <span style="color: #b58900;">Sidekiq</span>.client_middleware
-<span class="linenr">78: </span>  <span style="color: #859900;">if</span> <span style="color: #268bd2;">block_given?</span>
-<span class="linenr">79: </span>    <span style="color: #6c71c4;">@chain</span> = <span style="color: #6c71c4;">@chain</span>.dup
-<span class="linenr">80: </span>    <span style="color: #859900;">yield</span> <span style="color: #6c71c4;">@chain</span>
-<span class="linenr">81: </span>  <span style="color: #859900;">end</span>
-<span class="linenr">82: </span>  <span style="color: #6c71c4;">@chain</span>
-<span class="linenr">83: </span><span style="color: #859900;">end</span>
+<span class="linenr">76: </span><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">middleware</span><span style="color: #268bd2;">(</span>&amp;block<span style="color: #268bd2;">)</span>
+<span class="linenr">77: </span>  <span style="color: #839496;">@chain</span> ||= <span style="color: #b58900;">Sidekiq</span>.client_middleware
+<span class="linenr">78: </span>  <span style="color: #859900; font-weight: bold;">if</span> <span style="color: #268bd2;">block_given?</span>
+<span class="linenr">79: </span>    <span style="color: #839496;">@chain</span> = <span style="color: #839496;">@chain</span>.dup
+<span class="linenr">80: </span>    <span style="color: #859900; font-weight: bold;">yield</span> <span style="color: #839496;">@chain</span>
+<span class="linenr">81: </span>  <span style="color: #859900; font-weight: bold;">end</span>
+<span class="linenr">82: </span>  <span style="color: #839496;">@chain</span>
+<span class="linenr">83: </span><span style="color: #859900; font-weight: bold;">end</span>
 </pre>
 </div>
 <p>
@@ -191,49 +191,49 @@
 我们首先来看一下 <code>Sidekiq::Manager</code> 类。我这里只摘出 <code>initialize</code> 和 <code>start</code> 方法。
 </p>
 <div class="org-src-container">
-<pre class="src src-ruby"><span class="linenr"> 1: </span><span style="color: #859900;">def</span> <span style="color: #268bd2;">initialize</span><span style="color: #268bd2;">(</span>options=<span style="color: #d33682;">{}</span><span style="color: #268bd2;">)</span>
+<pre class="src src-ruby"><span class="linenr"> 1: </span><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">initialize</span><span style="color: #268bd2;">(</span>options=<span style="color: #d33682;">{}</span><span style="color: #268bd2;">)</span>
 <span class="linenr"> 2: </span>  logger.debug <span style="color: #268bd2;">{</span> options.inspect <span style="color: #268bd2;">}</span>
-<span class="linenr"> 3: </span>  <span style="color: #6c71c4;">@options</span> = options
-<span class="linenr"> 4: </span>  <span style="color: #6c71c4;">@count</span> = options<span style="color: #268bd2;">[</span><span style="color: #d33682;">:concurrency</span><span style="color: #268bd2;">]</span> || <span style="color: #d33682; font-weight: bold;">25</span>
-<span class="linenr"> 5: </span>  <span style="color: #268bd2;">raise</span> <span style="color: #b58900;">ArgumentError</span>, <span style="color: #2aa198;">"Concurrency of </span><span style="color: #6c71c4;">#{@count}</span><span style="color: #2aa198;"> is not supported"</span> <span style="color: #859900;">if</span> <span style="color: #6c71c4;">@count</span> &lt; <span style="color: #d33682; font-weight: bold;">1</span>
+<span class="linenr"> 3: </span>  <span style="color: #839496;">@options</span> = options
+<span class="linenr"> 4: </span>  <span style="color: #839496;">@count</span> = options<span style="color: #268bd2;">[</span><span style="color: #d33682; font-weight: bold;">:concurrency</span><span style="color: #268bd2;">]</span> || <span style="color: #d33682; font-weight: bold;">25</span>
+<span class="linenr"> 5: </span>  <span style="color: #268bd2;">raise</span> <span style="color: #b58900;">ArgumentError</span>, <span style="color: #2aa198;">"Concurrency of </span><span style="color: #839496;">#{@count}</span><span style="color: #2aa198;"> is not supported"</span> <span style="color: #859900; font-weight: bold;">if</span> <span style="color: #839496;">@count</span> &lt; <span style="color: #d33682; font-weight: bold;">1</span>
 <span class="linenr"> 6: </span>
-<span class="linenr"> 7: </span>  <span style="color: #6c71c4;">@done</span> = <span style="color: #d33682;">false</span>
-<span class="linenr"> 8: </span>  <span style="color: #6c71c4;">@workers</span> = <span style="color: #b58900;">Set</span>.new
-<span class="linenr"> 9: </span>  <span style="color: #6c71c4;">@count</span>.times <span style="color: #859900;">do</span>
-<span class="linenr">10: </span>    <span style="color: #6c71c4;">@workers</span> &lt;&lt; <span style="color: #b58900;">Processor</span>.new<span style="color: #268bd2;">(</span><span style="color: #859900;">self</span><span style="color: #268bd2;">)</span>
-<span class="linenr">11: </span>  <span style="color: #859900;">end</span>
-<span class="linenr">12: </span>  <span style="color: #6c71c4;">@plock</span> = <span style="color: #b58900;">Mutex</span>.new
-<span class="linenr">13: </span><span style="color: #859900;">end</span>
+<span class="linenr"> 7: </span>  <span style="color: #839496;">@done</span> = <span style="color: #d33682; font-weight: bold;">false</span>
+<span class="linenr"> 8: </span>  <span style="color: #839496;">@workers</span> = <span style="color: #b58900;">Set</span>.new
+<span class="linenr"> 9: </span>  <span style="color: #839496;">@count</span>.times <span style="color: #859900; font-weight: bold;">do</span>
+<span class="linenr">10: </span>    <span style="color: #839496;">@workers</span> &lt;&lt; <span style="color: #b58900;">Processor</span>.new<span style="color: #268bd2;">(</span><span style="color: #859900; font-weight: bold;">self</span><span style="color: #268bd2;">)</span>
+<span class="linenr">11: </span>  <span style="color: #859900; font-weight: bold;">end</span>
+<span class="linenr">12: </span>  <span style="color: #839496;">@plock</span> = <span style="color: #b58900;">Mutex</span>.new
+<span class="linenr">13: </span><span style="color: #859900; font-weight: bold;">end</span>
 <span class="linenr">14: </span>
-<span class="linenr">15: </span><span style="color: #859900;">def</span> <span style="color: #268bd2;">start</span>
-<span class="linenr">16: </span>  <span style="color: #6c71c4;">@workers</span>.each <span style="color: #859900;">do</span> |x|
+<span class="linenr">15: </span><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">start</span>
+<span class="linenr">16: </span>  <span style="color: #839496;">@workers</span>.each <span style="color: #859900; font-weight: bold;">do</span> |x|
 <span class="linenr">17: </span>    x.start
-<span class="linenr">18: </span>  <span style="color: #859900;">end</span>
-<span class="linenr">19: </span><span style="color: #859900;">end</span>
+<span class="linenr">18: </span>  <span style="color: #859900; font-weight: bold;">end</span>
+<span class="linenr">19: </span><span style="color: #859900; font-weight: bold;">end</span>
 </pre>
 </div>
 <p>
 <code>start</code> 方法其实就是遍历 <code>@wrokers</code> 中的 <code>Sidekiq::Processor</code> 实例，调用其 <code>start</code> 方法。我们来看看 <code>Sidekiq::Processor</code> 中的部分代码。我这里只摘出了 <code>initialize</code> 方法。
 </p>
 <div class="org-src-container">
-<pre class="src src-ruby"><span class="linenr">1: </span><span style="color: #859900;">def</span> <span style="color: #268bd2;">initialize</span><span style="color: #268bd2;">(</span>mgr<span style="color: #268bd2;">)</span>
-<span class="linenr">2: </span>  <span style="color: #6c71c4;">@mgr</span> = mgr
-<span class="linenr">3: </span>  <span style="color: #6c71c4;">@down</span> = <span style="color: #d33682;">false</span>
-<span class="linenr">4: </span>  <span style="color: #6c71c4;">@done</span> = <span style="color: #d33682;">false</span>
-<span class="linenr">5: </span>  <span style="color: #6c71c4;">@job</span> = <span style="color: #d33682;">nil</span>
-<span class="linenr">6: </span>  <span style="color: #6c71c4;">@thread</span> = <span style="color: #d33682;">nil</span>
-<span class="linenr">7: </span>  <span style="color: #6c71c4;">@strategy</span> = <span style="color: #268bd2;">(</span>mgr.options<span style="color: #d33682;">[</span><span style="color: #d33682;">:fetch</span><span style="color: #d33682;">]</span> || <span style="color: #b58900;">Sidekiq</span>::<span style="color: #b58900;">BasicFetch</span><span style="color: #268bd2;">)</span>.new<span style="color: #268bd2;">(</span>mgr.options<span style="color: #268bd2;">)</span>
-<span class="linenr">8: </span><span style="color: #859900;">end</span>
+<pre class="src src-ruby"><span class="linenr">1: </span><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">initialize</span><span style="color: #268bd2;">(</span>mgr<span style="color: #268bd2;">)</span>
+<span class="linenr">2: </span>  <span style="color: #839496;">@mgr</span> = mgr
+<span class="linenr">3: </span>  <span style="color: #839496;">@down</span> = <span style="color: #d33682; font-weight: bold;">false</span>
+<span class="linenr">4: </span>  <span style="color: #839496;">@done</span> = <span style="color: #d33682; font-weight: bold;">false</span>
+<span class="linenr">5: </span>  <span style="color: #839496;">@job</span> = <span style="color: #d33682; font-weight: bold;">nil</span>
+<span class="linenr">6: </span>  <span style="color: #839496;">@thread</span> = <span style="color: #d33682; font-weight: bold;">nil</span>
+<span class="linenr">7: </span>  <span style="color: #839496;">@strategy</span> = <span style="color: #268bd2;">(</span>mgr.options<span style="color: #d33682;">[</span><span style="color: #d33682; font-weight: bold;">:fetch</span><span style="color: #d33682;">]</span> || <span style="color: #b58900;">Sidekiq</span>::<span style="color: #b58900;">BasicFetch</span><span style="color: #268bd2;">)</span>.new<span style="color: #268bd2;">(</span>mgr.options<span style="color: #268bd2;">)</span>
+<span class="linenr">8: </span><span style="color: #859900; font-weight: bold;">end</span>
 </pre>
 </div>
 <p>
 在 <code>Processor</code> 启动之后，也就是调用了 <code>start</code> 方法之后， <code>Processor</code> 会通过@strategy的 <code>retrieve_work</code> 方法从redis中获取任务。再来看一下 <code>Sidekiq::BasicFetch</code> 类中的 <code>retrieve_work</code> 方法。
 </p>
 <div class="org-src-container">
-<pre class="src src-ruby"><span class="linenr">1: </span><span style="color: #859900;">def</span> <span style="color: #268bd2;">retrieve_work</span>
+<pre class="src src-ruby"><span class="linenr">1: </span><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">retrieve_work</span>
 <span class="linenr">2: </span>  work = <span style="color: #b58900;">Sidekiq</span>.redis <span style="color: #268bd2;">{</span> |conn| conn.brpop<span style="color: #d33682;">(</span>*queues_cmd<span style="color: #d33682;">)</span> <span style="color: #268bd2;">}</span>
-<span class="linenr">3: </span>  <span style="color: #b58900;">UnitOfWork</span>.new<span style="color: #268bd2;">(</span>*work<span style="color: #268bd2;">)</span> <span style="color: #859900;">if</span> work
-<span class="linenr">4: </span><span style="color: #859900;">end</span>
+<span class="linenr">3: </span>  <span style="color: #b58900;">UnitOfWork</span>.new<span style="color: #268bd2;">(</span>*work<span style="color: #268bd2;">)</span> <span style="color: #859900; font-weight: bold;">if</span> work
+<span class="linenr">4: </span><span style="color: #859900; font-weight: bold;">end</span>
 </pre>
 </div>
 <p>
@@ -286,7 +286,7 @@ BRPOP就是RPOP的阻塞版本，当list为空的时候，这个命令就一直�
          })();
         </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 27.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
           Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711@gmail.com">Shane Xu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;
