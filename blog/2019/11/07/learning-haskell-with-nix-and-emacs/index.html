@@ -24,6 +24,7 @@
     <div class="node nav">
       <ul>
           <li><a href="/blog/" id="Blog_tab">Blog</a></li>
+          <li><a href="/media/" id="Media_tab">Media</a></li>
         <li><a href="/tags/">Tags</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="https://github.com/shanexu">GitHub</a></li>
@@ -34,18 +35,18 @@
 
   <h3 class="section">Learning Haskell with nix and Emacs</h3>
 
-<div id="outline-container-org3c3e35c" class="outline-2">
-<h2 id="org3c3e35c">前言</h2>
-<div class="outline-text-2" id="text-org3c3e35c">
+<div id="outline-container-orgd546b39" class="outline-2">
+<h2 id="orgd546b39">前言</h2>
+<div class="outline-text-2" id="text-orgd546b39">
 <p>
 <a href="https://github.com/haskell-servant/servant">haskell-servant</a> 和 <a href="https://github.com/dmjio/miso">miso</a> 等haskell开源项目竟然都是用nix管理依赖的。时隔多年nix竟然被赋予了这样的魔法，不仅让我大跌眼镜。在 <a href="https://github.com/Gabriel439/haskell-nix">Nix and Haskell in production</a> 一文中指出，nix对标的其实是stack，他和stack一样有独立的haskell包缓存，用以达成reproducible的构建。nix胜过stack的唯一个地方，就是他不仅能解决haskell包依赖，还能解决其他任何依赖，甚至可以为你打造一个独立的开发环境。本文就是介绍如何在 <code>macos catalina</code> 上用nix打造一个haskell开发环境。
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgefadfc8" class="outline-2">
-<h2 id="orgefadfc8">安装nix和其他工具</h2>
-<div class="outline-text-2" id="text-orgefadfc8">
+<div id="outline-container-org3f2813c" class="outline-2">
+<h2 id="org3f2813c">安装nix和其他工具</h2>
+<div class="outline-text-2" id="text-org3f2813c">
 <p>
 本来这一个步骤应该是非常简单的。但是在最新版的macos catalina上并不那么容易了。nix需要在根目录上创建文件夹 <code>/nix</code> ，在系统默认开启 <code>SIP</code> 的情况下，根目录是以只读度方式挂载的，所以无法创建。首先需要关闭SIP，创建目录，重新启用SIP，由于启用后根目录仍然只读，还需要创建分区，将分区挂载到 <code>/nix</code> 。
 </p>
@@ -106,9 +107,9 @@ nix安装完之后就可以安装开发工具了。
 </div>
 </div>
 
-<div id="outline-container-org004efb9" class="outline-2">
-<h2 id="org004efb9">使用stack初始化工程</h2>
-<div class="outline-text-2" id="text-org004efb9">
+<div id="outline-container-orgfae5afe" class="outline-2">
+<h2 id="orgfae5afe">使用stack初始化工程</h2>
+<div class="outline-text-2" id="text-orgfae5afe">
 <div class="org-src-container">
 <pre class="src src-shell-script">stack new helloworld new-template
 </pre>
@@ -190,9 +191,9 @@ someFunc
 </div>
 </div>
 
-<div id="outline-container-org30b480f" class="outline-2">
-<h2 id="org30b480f">编写第一个nix表达式</h2>
-<div class="outline-text-2" id="text-org30b480f">
+<div id="outline-container-orgbe47d09" class="outline-2">
+<h2 id="orgbe47d09">编写第一个nix表达式</h2>
+<div class="outline-text-2" id="text-orgbe47d09">
 <p>
 说是编写，其实就是中 cabal2nix 生成。
 </p>
@@ -388,9 +389,9 @@ Linking Setup ...
 </div>
 </div>
 
-<div id="outline-container-org00185b6" class="outline-2">
-<h2 id="org00185b6">添加shell.nix文件</h2>
-<div class="outline-text-2" id="text-org00185b6">
+<div id="outline-container-org25f5648" class="outline-2">
+<h2 id="org25f5648">添加shell.nix文件</h2>
+<div class="outline-text-2" id="text-org25f5648">
 <blockquote>
 <p>
 nix-shell - start an interactive shell based on a Nix expression
@@ -458,9 +459,9 @@ The Glorious Glasgow Haskell Compilation System, version 8.6.5
 </div>
 </div>
 
-<div id="outline-container-orge422114" class="outline-2">
-<h2 id="orge422114">安装HIE</h2>
-<div class="outline-text-2" id="text-orge422114">
+<div id="outline-container-orgdb0adb9" class="outline-2">
+<h2 id="orgdb0adb9">安装HIE</h2>
+<div class="outline-text-2" id="text-orgdb0adb9">
 <p>
 安装cachix
 </p>
@@ -517,9 +518,9 @@ The Glorious Glasgow Haskell Compilation System, version 8.6.5
 </div>
 </div>
 
-<div id="outline-container-org45e8e87" class="outline-2">
-<h2 id="org45e8e87">nix-shell和direnv</h2>
-<div class="outline-text-2" id="text-org45e8e87">
+<div id="outline-container-orgb6e201f" class="outline-2">
+<h2 id="orgb6e201f">nix-shell和direnv</h2>
+<div class="outline-text-2" id="text-orgb6e201f">
 <p>
 nix-shell默认使用bash，但是我平时都用 <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a> 。direnv已经支持nix，可以通过stdlib的use_nix函数，启用nix的环境配置。只要在当前目录下增加.envrc文件便可启用。
 </p>
@@ -631,9 +632,9 @@ direnv: ([/usr/local/bin/direnv export zsh]) is taking a while to execute. Use C
 </div>
 </div>
 
-<div id="outline-container-org2746d49" class="outline-2">
-<h2 id="org2746d49">配置emacs(spacemacs)</h2>
-<div class="outline-text-2" id="text-org2746d49">
+<div id="outline-container-org766771e" class="outline-2">
+<h2 id="org766771e">配置emacs(spacemacs)</h2>
+<div class="outline-text-2" id="text-org766771e">
 <p>
 我使用的是 <a href="https://github.com/syl20bnr/spacemacs/">spacemacs</a> 的 develop 分支。
 </p>
@@ -658,18 +659,18 @@ direnv: ([/usr/local/bin/direnv export zsh]) is taking a while to execute. Use C
 </div>
 </div>
 
-<div id="outline-container-org01c62d7" class="outline-2">
-<h2 id="org01c62d7">仓库地址</h2>
-<div class="outline-text-2" id="text-org01c62d7">
+<div id="outline-container-org570855d" class="outline-2">
+<h2 id="org570855d">仓库地址</h2>
+<div class="outline-text-2" id="text-org570855d">
 <p>
 <a href="https://github.com/shanexu/helloworld">https://github.com/shanexu/helloworld</a>
 </p>
 </div>
 </div>
 
-<div id="outline-container-org961816d" class="outline-2">
-<h2 id="org961816d">参考文档</h2>
-<div class="outline-text-2" id="text-org961816d">
+<div id="outline-container-org42f9c30" class="outline-2">
+<h2 id="org42f9c30">参考文档</h2>
+<div class="outline-text-2" id="text-org42f9c30">
 <p>
 <a href="https://nixos.org/nix/manual">https://nixos.org/nix/manual</a>
 </p>

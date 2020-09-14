@@ -24,6 +24,7 @@
     <div class="node nav">
       <ul>
           <li><a href="/blog/" id="Blog_tab">Blog</a></li>
+          <li><a href="/media/" id="Media_tab">Media</a></li>
         <li><a href="/tags/">Tags</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="https://github.com/shanexu">GitHub</a></li>
@@ -272,13 +273,13 @@ RequiredComponents=org.gnome.Shell;org.gnome.SettingsDaemon.A11yKeyboard;org.gno
 <span style="color: #2aa198;">---</span> <span style="color: #268bd2;">a/js/ui/status/keyboard.js</span>
 <span style="color: #2aa198;">+++</span> <span style="color: #268bd2;">b/js/ui/status/keyboard.js</span>
 <span style="color: #6c71c4;">@@</span> <span style="color: #6c71c4;">-266,7</span> <span style="color: #6c71c4;">+266,7</span> <span style="color: #6c71c4;">@@</span> <span style="color: #2aa198;">const</span> <span style="color: #2aa198;">InputSourceSessionSettings</span> <span style="color: #2aa198;">=</span> <span style="color: #2aa198;">new</span> <span style="color: #2aa198;">Lang.Class({</span>
-<span style="color: #dc322f;">    </span> <span style="color: #738284;">_init:</span> <span style="color: #738284;">function()</span> <span style="color: #738284;">{</span>
-<span style="color: #dc322f;">        </span> <span style="color: #738284;">this._settings</span> <span style="color: #738284;">=</span> <span style="color: #738284;">new</span> <span style="color: #738284;">Gio.Settings({</span> <span style="color: #738284;">schema_id:</span> <span style="color: #738284;">this._DESKTOP_INPUT_SOURCES_SCHEMA</span> <span style="color: #738284;">});</span>
-<span style="color: #dc322f;">        </span> <span style="color: #738284;">this._settings.connect('changed::'</span> <span style="color: #738284;">+</span> <span style="color: #738284;">this._KEY_INPUT_SOURCES,</span> <span style="color: #738284;">Lang.bind(this,</span> <span style="color: #738284;">this._emitInputSourcesChanged));</span>
+<span style="color: #56697A;">    </span> <span style="color: #738284;">_init:</span> <span style="color: #738284;">function()</span> <span style="color: #738284;">{</span>
+<span style="color: #56697A;">        </span> <span style="color: #738284;">this._settings</span> <span style="color: #738284;">=</span> <span style="color: #738284;">new</span> <span style="color: #738284;">Gio.Settings({</span> <span style="color: #738284;">schema_id:</span> <span style="color: #738284;">this._DESKTOP_INPUT_SOURCES_SCHEMA</span> <span style="color: #738284;">});</span>
+<span style="color: #56697A;">        </span> <span style="color: #738284;">this._settings.connect('changed::'</span> <span style="color: #738284;">+</span> <span style="color: #738284;">this._KEY_INPUT_SOURCES,</span> <span style="color: #738284;">Lang.bind(this,</span> <span style="color: #738284;">this._emitInputSourcesChanged));</span>
 <span style="color: #aa2222; background-color: #13383C;">-</span>        <span style="color: #dc322f; background-color: #13383C;">this._settings.connect('changed::'</span> <span style="color: #dc322f; background-color: #13383C;">+</span> <span style="color: #dc322f; background-color: #13383C;">this._KEY_KEYBOARD_OPTIONS,</span> <span style="color: #dc322f; background-color: #13383C;">Lang.bind(this,</span> <span style="color: #dc322f; background-color: #13383C;">this._emitKeyboardOptionsChanged));</span>
 <span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span> <span style="color: #859900; background-color: #00212B;">this._settings.connect('changed::'</span> <span style="color: #859900; background-color: #00212B;">+</span> <span style="color: #859900; background-color: #00212B;">this._KEY_KEYBOARD_OPTIONS,</span> <span style="color: #859900; background-color: #00212B;">Lang.bind(this,</span> <span style="color: #859900; background-color: #00212B;">this._emitKeyboardOptionsChanged));</span>
-<span style="color: #dc322f;">        </span> <span style="color: #738284;">this._settings.connect('changed::'</span> <span style="color: #738284;">+</span> <span style="color: #738284;">this._KEY_PER_WINDOW,</span> <span style="color: #738284;">Lang.bind(this,</span> <span style="color: #738284;">this._emitPerWindowChanged));</span>
-<span style="color: #dc322f;">    </span> },
+<span style="color: #56697A;">        </span> <span style="color: #738284;">this._settings.connect('changed::'</span> <span style="color: #738284;">+</span> <span style="color: #738284;">this._KEY_PER_WINDOW,</span> <span style="color: #738284;">Lang.bind(this,</span> <span style="color: #738284;">this._emitPerWindowChanged));</span>
+<span style="color: #56697A;">    </span> },
 </pre>
 </div>
 
@@ -292,9 +293,9 @@ RequiredComponents=org.gnome.Shell;org.gnome.SettingsDaemon.A11yKeyboard;org.gno
 <span style="color: #2aa198;">---</span> <span style="color: #268bd2;">a/js/misc/keyboardManager.js</span>
 <span style="color: #2aa198;">+++</span> <span style="color: #268bd2;">b/js/misc/keyboardManager.js</span>
 <span style="color: #6c71c4;">@@</span> <span style="color: #6c71c4;">-65,27</span> <span style="color: #6c71c4;">+65,27</span> <span style="color: #6c71c4;">@@</span> <span style="color: #2aa198;">const</span> <span style="color: #2aa198;">KeyboardManager</span> <span style="color: #2aa198;">=</span> <span style="color: #2aa198;">new</span> <span style="color: #2aa198;">Lang.Class({</span>
-<span style="color: #dc322f;">    </span> <span style="color: #738284;">},</span>
+<span style="color: #56697A;">    </span> <span style="color: #738284;">},</span>
 
-<span style="color: #dc322f;">    </span> <span style="color: #738284;">apply:</span> <span style="color: #738284;">function(id)</span> <span style="color: #738284;">{</span>
+<span style="color: #56697A;">    </span> <span style="color: #738284;">apply:</span> <span style="color: #738284;">function(id)</span> <span style="color: #738284;">{</span>
 <span style="color: #aa2222; background-color: #13383C;">-</span>        <span style="color: #dc322f; background-color: #13383C;">let</span> <span style="color: #dc322f; background-color: #13383C;">info</span> <span style="color: #dc322f; background-color: #13383C;">=</span> <span style="color: #dc322f; background-color: #13383C;">this._layoutInfos[id];</span>
 <span style="color: #aa2222; background-color: #13383C;">-</span>        <span style="color: #dc322f; background-color: #13383C;">if</span> <span style="color: #dc322f; background-color: #13383C;">(!info)</span>
 <span style="color: #aa2222; background-color: #13383C;">-</span>            <span style="color: #dc322f; background-color: #13383C;">return;</span>
@@ -321,9 +322,9 @@ RequiredComponents=org.gnome.Shell;org.gnome.SettingsDaemon.A11yKeyboard;org.gno
 <span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span> <span style="color: #859900; background-color: #00212B;">}</span>
 <span style="color: #22aa22; background-color: #00212B;">+</span>
 <span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span> <span style="color: #859900; background-color: #00212B;">this._current</span> <span style="color: #859900; background-color: #00212B;">=</span> <span style="color: #859900; background-color: #00212B;">info;</span>
-<span style="color: #dc322f;">    </span> <span style="color: #738284;">},</span>
+<span style="color: #56697A;">    </span> <span style="color: #738284;">},</span>
 
-<span style="color: #dc322f;">    </span> <span style="color: #738284;">reapply:</span> <span style="color: #738284;">function()</span> <span style="color: #738284;">{</span>
+<span style="color: #56697A;">    </span> <span style="color: #738284;">reapply:</span> <span style="color: #738284;">function()</span> <span style="color: #738284;">{</span>
 <span style="color: #aa2222; background-color: #13383C;">-</span>        <span style="color: #dc322f; background-color: #13383C;">if</span> <span style="color: #dc322f; background-color: #13383C;">(!this._current)</span>
 <span style="color: #aa2222; background-color: #13383C;">-</span>            <span style="color: #dc322f; background-color: #13383C;">return;</span>
 <span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span> <span style="color: #859900; background-color: #00212B;">if</span> <span style="color: #859900; background-color: #00212B;">(!this._current)</span>
@@ -333,9 +334,9 @@ RequiredComponents=org.gnome.Shell;org.gnome.SettingsDaemon.A11yKeyboard;org.gno
 <span style="color: #aa2222; background-color: #13383C;">-</span>        <span style="color: #dc322f; background-color: #13383C;">this._applyLayoutGroupIndex(this._current.groupIndex);</span>
 <span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span> <span style="color: #859900; background-color: #00212B;">this._applyLayoutGroup(this._current.group);</span>
 <span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span> <span style="color: #859900; background-color: #00212B;">this._applyLayoutGroupIndex(this._current.groupIndex);</span>
-<span style="color: #dc322f;">    </span> <span style="color: #738284;">},</span>
+<span style="color: #56697A;">    </span> <span style="color: #738284;">},</span>
 
-<span style="color: #dc322f;">    </span> setUserLayouts: function(ids) {
+<span style="color: #56697A;">    </span> setUserLayouts: function(ids) {
 </pre>
 </div>
 
