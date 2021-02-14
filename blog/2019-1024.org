@@ -17,4 +17,4 @@ print  (256 * 4);exit();
 #define/*@+++<>/.@*/exit()
 #+end_src
 
-[[https://user-images.githubusercontent.com/1257453/67612318-33a0b700-f791-11e9-8cdb-303d410dfade.png]]
+[[file:./67612318-33a0b700-f791-11e9-8cdb-303d410dfade.png]]

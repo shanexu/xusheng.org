@@ -31,7 +31,7 @@ Elm，Hmm，不禁让我想起了两年前在小黑屋里的日子。这几年El
 
 如何学习 haskell ：
 
-[[https://user-images.githubusercontent.com/1257453/67538539-e78d3e00-f6ce-11e9-8ea3-8087ce6511f0.png]]
+[[file:./67538539-e78d3e00-f6ce-11e9-8ea3-8087ce6511f0.png]]
 
 呵呵。
 

@@ -17,21 +17,21 @@
 
   阳台橱柜“长毛”：
   
-  [[https://user-images.githubusercontent.com/1257453/71446423-151c5500-271b-11ea-8106-fb91e8202113.png]]
+  [[file:./71446423-151c5500-271b-11ea-8106-fb91e8202113.png]]
 
   橱柜背面的主卧的墙：
 
-  [[https://user-images.githubusercontent.com/1257453/71446426-1f3e5380-271b-11ea-890c-dbe3570c7728.png]]
+  [[file:./71446426-1f3e5380-271b-11ea-890c-dbe3570c7728.png]]
 
   找到楼上，第一次给出原因是洗衣机水管漏了。观察到楼上阳台没有包，并且阳台异常潮湿：
 
-  [[https://user-images.githubusercontent.com/1257453/71446655-b1dff200-271d-11ea-844a-c77b3e6a4fd9.png]]
+  [[file:./71446655-b1dff200-271d-11ea-844a-c77b3e6a4fd9.png]]
 
 * 2019年12月17日
   
   早上观察阳台橱柜有肉眼可见的滴水：
 
-  [[https://user-images.githubusercontent.com/1257453/71447399-d6d86300-2725-11ea-8565-d054a0264329.png]]
+  [[file:./71447399-d6d86300-2725-11ea-8565-d054a0264329.png]]
 
   
 * 2019年12月22日
@@ -42,7 +42,7 @@
 
   观察到楼上空调冷凝水直接排放到阳台上：
 
-  [[https://user-images.githubusercontent.com/1257453/71448114-97167900-272f-11ea-9919-445bcffcd000.png]]
+  [[file:./71448114-97167900-272f-11ea-9919-445bcffcd000.png]]
 
   让楼上用水桶接冷凝水。
 
@@ -56,7 +56,7 @@
 
   晚上回家确认，又有水。
 
-  [[https://user-images.githubusercontent.com/1257453/71448302-43f1f580-2732-11ea-8de8-523af0668057.png]]
+  [[file:./71448302-43f1f580-2732-11ea-8de8-523af0668057.png]]
 
   和楼上租客确认，说是将接空调冷凝水的桶踢翻了，重新放置接水桶
 
@@ -66,7 +66,7 @@
 
   晚上回家，观察，仍有滴水。
 
-  [[https://user-images.githubusercontent.com/1257453/71448496-6b49c200-2734-11ea-8e92-8e4be4c550e1.png]]
+  [[file:./71448496-6b49c200-2734-11ea-8e92-8e4be4c550e1.png]]
 
 * 2019年12月26日
   
@@ -74,29 +74,29 @@
   
   空调冷凝管原始位置：
   
-  [[https://user-images.githubusercontent.com/1257453/71459663-72a6b500-27a0-11ea-900f-61430899b663.png]]
+  [[file:./71459663-72a6b500-27a0-11ea-900f-61430899b663.png]]
 
   维修师傅空调移机：
 
-  [[https://user-images.githubusercontent.com/1257453/71459651-6589c600-27a0-11ea-8a39-17d2228b7ac9.png]]
+  [[file:./71459651-6589c600-27a0-11ea-8a39-17d2228b7ac9.png]]
 
-  [[https://user-images.githubusercontent.com/1257453/71459655-6a4e7a00-27a0-11ea-911e-65b123704aca.png]]
+  [[file:./71459655-6a4e7a00-27a0-11ea-911e-65b123704aca.png]]
 
   观察阳台洗衣机水龙头有漏水现象。要求维修师傅更换水龙头。
 
   阳台洗衣机龙头漏水：
 
-  [[https://user-images.githubusercontent.com/1257453/71459658-6e7a9780-27a0-11ea-8290-78b454f3bb23.png]]
+  [[file:./71459658-6e7a9780-27a0-11ea-8290-78b454f3bb23.png]]
 
   师傅施工完成后。在设备台倒水，观察水流，能够往下水口流动。
 
   在阳台倒水小半桶，发现阳台有积水现象，阳台上方梁，也就是我的橱顶的位置，有积水。
 
-  [[https://user-images.githubusercontent.com/1257453/71460086-4ee46e80-27a2-11ea-8a2e-a28431ece7eb.png]]
+  [[file:./71460086-4ee46e80-27a2-11ea-8a2e-a28431ece7eb.png]]
 
   水不能主动往下水口流动，同时因为洗衣机排水管占有下水口，阳台水很难从下水口下漏。
 
-  [[https://user-images.githubusercontent.com/1257453/71460095-5441b900-27a2-11ea-8cd6-af6b6ec8027b.png]]
+  [[file:./71460095-5441b900-27a2-11ea-8cd6-af6b6ec8027b.png]]
 
   下午联系社区调解办。调解办和物业了解完情况后，与我约定明天下午一点半到现场了解情况。
 

@@ -89,13 +89,13 @@ go version
 *** 创建项目
     File -> Open 选择工程根目录
 
-    [[https://user-images.githubusercontent.com/1257453/66475611-3a39e980-ea83-11e9-802e-3b118d1ac906.png]]
+    [[file:./66475611-3a39e980-ea83-11e9-802e-3b118d1ac906.png]]
      
 *** 设置GOROOT
 
     =$HOME/src/github.com/golang/go=
 
-    [[https://user-images.githubusercontent.com/1257453/66475821-a4528e80-ea83-11e9-970b-8982bafbab77.png]]
+    [[file:./66475821-a4528e80-ea83-11e9-970b-8982bafbab77.png]]
 
 ** 创建一个playground项目，用于测试编译
 
@@ -130,7 +130,7 @@ var CmdBuild = &base.Command{
   #+end_src
 
   配置一个运行配置如下图所示：
-  [[https://user-images.githubusercontent.com/1257453/66554844-37033400-eb3d-11e9-8558-f42b8458b1e7.png]]
+  [[file:./66554844-37033400-eb3d-11e9-8558-f42b8458b1e7.png]]
 
   经过断点和肉眼调试，go build过程大致如下：
 
@@ -380,7 +380,7 @@ packagefile runtime=/Users/shane/src/github.com/golang/go/pkg/darwin_amd64/runti
 
   有了这两个文件以及命令行参数后，我们就可以手动执行compile命令了。在GoLand里添加一个新的run configuration。
 
-  [[https://user-images.githubusercontent.com/1257453/66623436-39b46680-ebdb-11e9-8591-bd88617988ea.png]]
+  [[file:./66623436-39b46680-ebdb-11e9-8591-bd88617988ea.png]]
 
   其中 =Program arguments= 填入如下的值。
 

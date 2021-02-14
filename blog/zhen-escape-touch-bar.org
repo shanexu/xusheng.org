@@ -11,4 +11,4 @@
 
 用Karabine来将ESC键映射到某个物理键上的方式实在是不够优雅。现在我终于找到了最优雅的解决方案，MacBook Pro 16寸。
 
-[[https://user-images.githubusercontent.com/1257453/71352629-b6b27380-256e-11ea-85b1-25d2d4376bb3.png]]
+[[file:./71352629-b6b27380-256e-11ea-85b1-25d2d4376bb3.png]]
