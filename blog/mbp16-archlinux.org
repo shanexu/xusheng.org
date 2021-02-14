@@ -1,0 +1,184 @@
+#+TITLE:       Archlinux on MacbookPro 16inch
+#+AUTHOR:      Shane Xu
+#+EMAIL:       xusheng0711@gmail.com
+#+DATE:        2021-02-14 Sun
+#+URI:         /blog/%y/%m/%d/archlinux-on-macbookpro-16inch
+#+KEYWORDS:    archlinux
+#+TAGS:        life
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: install archlinux on MacbookPro 16inch
+
+* 起因
+
+[[https://www.reddit.com/r/emacs/comments/d2n2wh/emacs_is_slow_on_macos/][Emacs is slow on macOS]]
+
+很难想象 Emacs 在MacOS上有多慢。这个慢，仿佛是一种毒药，慢慢累积在MacOS系统中，直到有一天终于它绷不住了。
+
+[[file:./Xnip2021-02-14_14-03-35.png]]
+
+* 安装过程
+
+基本全程参考这个文档。
+[[https://gist.github.com/TRPB/437f663b545d23cc8a2073253c774be3]]
+
+** bootloader
+
+安装过程颇为曲折，首先我将 =efi= 分区挂载到 =/efi= 。
+
+=/etc/fstab=
+#+begin_src conf
+# Static information about the filesystems.
+# See fstab(5) for details.
+
+# <file system> <dir> <type> <options> <dump> <pass>
+# UUID=c598dc30-85fb-4d9b-bc2a-81fb2b7bbcc3
+/dev/nvme0n1p3      	/         	ext4      	rw,relatime	0 1
+
+# UUID=5F66-17ED LABEL=EFI
+/dev/nvme0n1p1      	/efi      	vfat      	rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro	0 2
+#+end_src
+
+使用了 =--removable= 选项安装grub，每次启动时，按住 =option= 键选择从 =efi= 分区启动。
+#+begin_src shell-script
+grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB --removable
+#+end_src
+
+** 内核
+
+[[https://github.com/aunali1][Aun-Ali Zaidi]] 打了补丁的内核 [[https://github.com/aunali1/linux-mbp-arch][linux-mbp-arch]] 。
+
+修改 =/etc/pacman.conf=
+#+begin_src conf
+[mbp]
+SigLevel = Optional TrustAll
+Server = http://dl.t2linux.org/archlinux/$repo/$arch
+#+end_src
+
+#+begin_src shell-script
+sudo pacman -S linux-mbp linux-mbp-docs linux-mbp-headers
+#+end_src
+
+** 键盘和触摸板
+
+#+begin_src shell-script
+sudo pacman -S apple-bce-dkms-git
+#+end_src
+
+#+begin_src conf
+# /etc/modules-load.d/apple-bce.conf
+apple-bce
+#+end_src
+
+** Touch Bar
+
+#+begin_src shell-script
+yay -G macbook12-spi-driver-dkms
+cd macbook12-spi-driver-dkms
+#+end_src
+
+修改 =PKGBUILD=
+#+begin_src shell-script
+# Maintainer: Christoph Gysin <christoph.gysin@gmail.com>
+# Maintainer: Andrey Melentyev <andrey.melentyev@protonmail.com>
+_pkgbase=macbook12-spi-driver
+pkgname=(${_pkgbase}-dkms)
+pkgver=0+git.304
+pkgrel=1
+pkgdesc="Driver for the keyboard, touchpad and touchbar found in newer MacBook (Pro) models"
+arch=('i686' 'x86_64')
+url="https://github.com/roadrunner2/macbook12-spi-driver"
+license=('GPL2')
+groups=('')
+depends=('dkms')
+makedepends=('git')
+optdepends=()
+source=(git+https://github.com/shanexu/macbook12-spi-driver.git#branch=mbp15
+        dkms.conf)
+sha256sums=('SKIP'
+            'c79e6b20fb188b27ae92c63fabe6bfe1caff21bb7f3a2c14945323cee6bcc8fd')
+
+pkgver() {
+    cd $_pkgbase
+    echo "0+git.$(git rev-list HEAD --count)"
+}
+
+package() {
+    install -dm755 "${pkgdir}"/usr/src/${_pkgbase}-${pkgver}
+
+    # Copy sources (including Makefile)
+    cp -r ${_pkgbase}/* "${pkgdir}"/usr/src/${_pkgbase}-${pkgver}/
+
+    # Copy dkms.conf over the original one from the repo
+    install -Dm644 dkms.conf "${pkgdir}"/usr/src/${_pkgbase}-${pkgver}/dkms.conf
+
+    # Set name and version
+    sed -e "s/@_PKGBASE@/${_pkgbase}/" \
+        -e "s/@PKGVER@/${pkgver}/" \
+        -i "${pkgdir}"/usr/src/${_pkgbase}-${pkgver}/dkms.conf
+}
+#+end_src
+
+修改 =dkms.conf=
+#+begin_src
+PACKAGE_NAME="@_PKGBASE@"
+PACKAGE_VERSION="@PKGVER@"
+AUTOINSTALL="yes"
+CLEAN="make clean"
+
+BUILT_MODULE_NAME[0]="apple-ibridge"
+BUILT_MODULE_NAME[1]="apple-ib-tb"
+BUILT_MODULE_NAME[2]="apple-ib-als"
+MAKE[0]="make KDIR=/usr/lib/modules/$kernelver/build"
+MAKE[1]="make KDIR=/usr/lib/modules/$kernelver/build"
+MAKE[2]="make KDIR=/usr/lib/modules/$kernelver/build"
+DEST_MODULE_LOCATION[0]="/kernel/drivers/misc"
+DEST_MODULE_LOCATION[1]="/kernel/drivers/misc"
+DEST_MODULE_LOCATION[2]="/kernel/drivers/misc"
+#+end_src
+
+添加文件 =/etc/modules-load.d/apple-tb.conf=
+#+begin_src conf
+# /etc/modules-load.d/apple-tb.conf
+apple-ib-tb
+apple-ib-als
+#+end_src
+
+添加文件 =/etc/modprobe.d/apple-tb.conf=
+#+begin_src conf
+# /etc/modprobe.d/apple-tb.conf
+options apple-ib-tb fnmode=2
+#+end_src
+
+** fan control
+
+#+begin_src shell-script
+git clone https://github.com/shanexu/mpb16fand.git
+cd mpb16fand
+go install ./...
+cp mbp16fand.service /usr/lib/systemd/system/
+sudo systemctl enable mbp16fand
+sudo systemctl start mbp16fand
+#+end_src
+
+** xmonad配置
+
+[[https://github.com:shanexu/.xmonad.git]]
+
+* 遗留问题
+
+wifi目前没哟搞定。
+
+* screenshots
+
+[[file:./Screenshot_from_2021-02-14_16-23-12.png]]
+
+[[file:./Screenshot_from_2021-02-14_16-35-54.png]]
+
+* 参考文档
+
+[[https://www.ninjastik.com/support/2018-macbook-pro-boot-from-usb/]]
+
+[[https://gist.github.com/TRPB/437f663b545d23cc8a2073253c774be3]]
+
+[[https://github.com/Dunedan/mbp-2016-linux]]
