@@ -2,81 +2,81 @@
 <rss version="2.0">
   <channel>
     <title>Shane Xu&#39;s Home</title>
-    <link>http://shanexu.io/</link>
+    <link>https://xusheng.org/</link>
     <description>Life is too short for so much sorrow.</description>
-    <pubDate>Mon, 14 Sep 2020 11:31:43 CST</pubDate>
-    <lastBuildDate>Mon, 14 Sep 2020 11:31:43 CST</lastBuildDate>
+    <pubDate>Sun, 14 Feb 2021 17:05:05 CST</pubDate>
+    <lastBuildDate>Sun, 14 Feb 2021 17:05:05 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
     <item>
-      <title>如何用 N 张图片拼出 2016 字样</title>
-      <link>http://shanexu.io/blog/2016/07/13/image-text</link>
-      <description><![CDATA[js 图片拼字 js 效果]]></description>
-      <pubDate>2020-07-24</pubDate>
-      <guid>http://shanexu.io/blog/2016/07/13/image-text</guid>
-    </item>
-    <item>
-      <title>nix作为包管理工具并用于发布软件的可行性研究</title>
-      <link>http://shanexu.io/blog/2020/01/06/nix</link>
-      <description><![CDATA[nix]]></description>
-      <pubDate>2020-02-16</pubDate>
-      <guid>http://shanexu.io/blog/2020/01/06/nix</guid>
-    </item>
-    <item>
-      <title>阳台漏水解决过程记录</title>
-      <link>http://shanexu.io/blog/2019/12/25/water</link>
-      <description><![CDATA[阳台漏水解决过程记录]]></description>
-      <pubDate>2019-12-27</pubDate>
-      <guid>http://shanexu.io/blog/2019/12/25/water</guid>
-    </item>
-    <item>
-      <title>Moving from Homebrew to Nix Package Manager</title>
-      <link>http://shanexu.io/blog/2019/12/08/moving-from-homebrew-to-nix-package-manager</link>
-      <description><![CDATA[Moving from Homebrew to Nix Package Manager]]></description>
-      <pubDate>2019-12-23</pubDate>
-      <guid>http://shanexu.io/blog/2019/12/08/moving-from-homebrew-to-nix-package-manager</guid>
-    </item>
-    <item>
-      <title>真-摆脱恼人的touch bar</title>
-      <link>http://shanexu.io/blog/2019/12/23/zhen-escape-touch-bar</link>
-      <description><![CDATA[how to escape from touch bar]]></description>
-      <pubDate>2019-12-23</pubDate>
-      <guid>http://shanexu.io/blog/2019/12/23/zhen-escape-touch-bar</guid>
-    </item>
-    <item>
-      <title>Learning Haskell with nix and Emacs</title>
-      <link>http://shanexu.io/blog/2019/11/07/learning-haskell-with-nix-and-emacs</link>
-      <description><![CDATA[Learning Haskell with nix and Emacs]]></description>
-      <pubDate>2019-11-07</pubDate>
-      <guid>http://shanexu.io/blog/2019/11/07/learning-haskell-with-nix-and-emacs</guid>
-    </item>
-    <item>
       <title>2019 1024</title>
-      <link>http://shanexu.io/blog/2019/10/24/2019-1024</link>
+      <link>https://xusheng.org/blog/2019/10/24/2019-1024</link>
       <description><![CDATA[Happy Chinese Programmer's Day]]></description>
-      <pubDate>2019-10-26</pubDate>
-      <guid>http://shanexu.io/blog/2019/10/24/2019-1024</guid>
+      <pubDate>2021-02-14</pubDate>
+      <guid>https://xusheng.org/blog/2019/10/24/2019-1024</guid>
     </item>
     <item>
-      <title>In fact, we can even write foldl using foldr!</title>
-      <link>http://shanexu.io/blog/2019/10/25/in-fact-we-can-even-write-foldl-using-foldr</link>
-      <description><![CDATA[In fact, we can even write foldl using foldr!]]></description>
-      <pubDate>2019-10-26</pubDate>
-      <guid>http://shanexu.io/blog/2019/10/25/in-fact-we-can-even-write-foldl-using-foldr</guid>
+      <title>摆脱恼人的touch bar</title>
+      <link>https://xusheng.org/blog/2019/08/18/escape-touch-bar</link>
+      <description><![CDATA[how to escape from touch bar]]></description>
+      <pubDate>2021-02-14</pubDate>
+      <guid>https://xusheng.org/blog/2019/08/18/escape-touch-bar</guid>
     </item>
     <item>
       <title>golang aop的一种实现方法</title>
-      <link>http://shanexu.io/blog/2019/10/09/golang-aop</link>
+      <link>https://xusheng.org/blog/2019/10/09/golang-aop</link>
       <description><![CDATA[golang aop的一种实现方法]]></description>
-      <pubDate>2019-10-11</pubDate>
-      <guid>http://shanexu.io/blog/2019/10/09/golang-aop</guid>
+      <pubDate>2021-02-14</pubDate>
+      <guid>https://xusheng.org/blog/2019/10/09/golang-aop</guid>
     </item>
     <item>
-      <title>从源代码安装golang</title>
-      <link>http://shanexu.io/blog/2019/09/28/install-golang-from-source</link>
-      <description><![CDATA[how to install golang from source]]></description>
-      <pubDate>2019-09-28</pubDate>
-      <guid>http://shanexu.io/blog/2019/09/28/install-golang-from-source</guid>
+      <title>In fact, we can even write foldl using foldr!</title>
+      <link>https://xusheng.org/blog/2019/10/25/in-fact-we-can-even-write-foldl-using-foldr</link>
+      <description><![CDATA[In fact, we can even write foldl using foldr!]]></description>
+      <pubDate>2021-02-14</pubDate>
+      <guid>https://xusheng.org/blog/2019/10/25/in-fact-we-can-even-write-foldl-using-foldr</guid>
+    </item>
+    <item>
+      <title>Learning Haskell with nix and Emacs</title>
+      <link>https://xusheng.org/blog/2019/11/07/learning-haskell-with-nix-and-emacs</link>
+      <description><![CDATA[Learning Haskell with nix and Emacs]]></description>
+      <pubDate>2021-02-14</pubDate>
+      <guid>https://xusheng.org/blog/2019/11/07/learning-haskell-with-nix-and-emacs</guid>
+    </item>
+    <item>
+      <title>Archlinux on MacbookPro 16inch</title>
+      <link>https://xusheng.org/blog/2021/02/14/archlinux-on-macbookpro-16inch</link>
+      <description><![CDATA[install archlinux on MacbookPro 16inch]]></description>
+      <pubDate>2021-02-14</pubDate>
+      <guid>https://xusheng.org/blog/2021/02/14/archlinux-on-macbookpro-16inch</guid>
+    </item>
+    <item>
+      <title>阳台漏水解决过程记录</title>
+      <link>https://xusheng.org/blog/2019/12/25/water</link>
+      <description><![CDATA[阳台漏水解决过程记录]]></description>
+      <pubDate>2021-02-14</pubDate>
+      <guid>https://xusheng.org/blog/2019/12/25/water</guid>
+    </item>
+    <item>
+      <title>真-摆脱恼人的touch bar</title>
+      <link>https://xusheng.org/blog/2019/12/23/zhen-escape-touch-bar</link>
+      <description><![CDATA[how to escape from touch bar]]></description>
+      <pubDate>2021-02-14</pubDate>
+      <guid>https://xusheng.org/blog/2019/12/23/zhen-escape-touch-bar</guid>
+    </item>
+    <item>
+      <title>如何用 N 张图片拼出 2016 字样</title>
+      <link>https://xusheng.org/blog/2016/07/13/image-text</link>
+      <description><![CDATA[js 图片拼字 js 效果]]></description>
+      <pubDate>2020-07-24</pubDate>
+      <guid>https://xusheng.org/blog/2016/07/13/image-text</guid>
+    </item>
+    <item>
+      <title>nix作为包管理工具并用于发布软件的可行性研究</title>
+      <link>https://xusheng.org/blog/2020/01/06/nix</link>
+      <description><![CDATA[nix]]></description>
+      <pubDate>2020-02-16</pubDate>
+      <guid>https://xusheng.org/blog/2020/01/06/nix</guid>
     </item>
   </channel>
 </rss>

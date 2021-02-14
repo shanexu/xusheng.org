@@ -17,7 +17,7 @@
         <blockquote>Life is too short for so much sorrow.</blockquote>
         <form method="get" id="searchform" action="//www.google.com/search">
           <input type="text" class="field" name="q" id="s" placeholder="Search">
-          <input type="hidden" name="as_sitesearch" value="shanexu.io">
+          <input type="hidden" name="as_sitesearch" value="xusheng.org">
         </form>
       </header>
     </div>
@@ -34,32 +34,32 @@
 
   <h3 class="section">Moving from Homebrew to Nix Package Manager</h3>
 
-<div id="outline-container-org5ac3dc6" class="outline-2">
-<h2 id="org5ac3dc6">前言</h2>
-<div class="outline-text-2" id="text-org5ac3dc6">
+<div id="outline-container-orga1efe17" class="outline-2">
+<h2 id="orga1efe17">前言</h2>
+<div class="outline-text-2" id="text-orga1efe17">
 <p>
 2012年我入手了人生第一台MacBook Pro，也正式开启了macOS(以前是 os x)之旅。在很长一段时间里我并不习惯macOS的应用安装方式。应用下载完后，打开dmg，然后拖放到 <code>/Applications</code> 目录下。以及macOS根本就不存在包管理器这种东西，我甚至在MacBook上直接安装了Archlinux。出于某些什么的原因，我又重新返回到了macOS，然后在用了一两个月的MacPorts之后转投了Homebrew。然后在最近重拾了haskell的学习进程之后，又开始折腾起了nix。
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgf488aab" class="outline-2">
-<h2 id="orgf488aab">安装nix</h2>
-<div class="outline-text-2" id="text-orgf488aab">
+<div id="outline-container-orgce9ceff" class="outline-2">
+<h2 id="orgce9ceff">安装nix</h2>
+<div class="outline-text-2" id="text-orgce9ceff">
 <p>
 因为 <code>macOS catalin</code> 的关系，安装 nix 的过程有些许曲折，可以参考我之前的文章 <a href="https://xusheng.org/blog/2019/11/07/learning-haskell-with-nix-and-emacs/">Learning Haskell with nix and Emacs</a> 。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org6767b3b" class="outline-2">
-<h2 id="org6767b3b">卸载Homebrew安装的包</h2>
-<div class="outline-text-2" id="text-org6767b3b">
+<div id="outline-container-org1f0e760" class="outline-2">
+<h2 id="org1f0e760">卸载Homebrew安装的包</h2>
+<div class="outline-text-2" id="text-org1f0e760">
 <p>
 列出已经安装的包
 </p>
 <div class="org-src-container">
-<pre class="src src-shell-script">brew list
+<pre class="src src-shell-script">  brew list
 </pre>
 </div>
 
@@ -68,29 +68,29 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script">brew uninstall <span style="color: #cb4b16; font-weight: bold;">`brew list`</span>
+<pre class="src src-shell-script">  brew uninstall <span style="color: #cb4b16; font-weight: bold;">`brew list`</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org558a3bc" class="outline-2">
-<h2 id="org558a3bc">安装nix包</h2>
-<div class="outline-text-2" id="text-org558a3bc">
+<div id="outline-container-orgfffe7f1" class="outline-2">
+<h2 id="orgfffe7f1">安装nix包</h2>
+<div class="outline-text-2" id="text-orgfffe7f1">
 <div class="org-src-container">
-<pre class="src src-shell-script">nix-env -i coreutils
+<pre class="src src-shell-script">  nix-env -i coreutils
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgd245257" class="outline-2">
-<h2 id="orgd245257">问题</h2>
-<div class="outline-text-2" id="text-orgd245257">
+<div id="outline-container-org5aecedb" class="outline-2">
+<h2 id="org5aecedb">问题</h2>
+<div class="outline-text-2" id="text-org5aecedb">
 </div>
-<div id="outline-container-org3806c05" class="outline-3">
-<h3 id="org3806c05">coreutils包中的命令覆盖了macOS本身的命令</h3>
-<div class="outline-text-3" id="text-org3806c05">
+<div id="outline-container-org941d8b8" class="outline-3">
+<h3 id="org941d8b8">coreutils包中的命令覆盖了macOS本身的命令</h3>
+<div class="outline-text-3" id="text-org941d8b8">
 <p>
 coreutils包中的命令有好几个与macOS命令冲突，并且其行为也不一样，例如 <code>df</code> 命令
 </p>
@@ -99,11 +99,11 @@ coreutils包中的命令有好几个与macOS命令冲突，并且其行为也不
 coreutils的df
 </p>
 <div class="org-src-container">
-<pre class="src src-text">$ df -h
-Filesystem      Size  Used Avail Use% Mounted on
-/dev/disk1s1    932G   11G  695G   2% /
-/dev/disk1s5    932G  4.1G  695G   1% /private/var/vm
-/dev/disk1s6    932G   17G  695G   3% /nix
+<pre class="src src-text">   $ df -h
+   Filesystem      Size  Used Avail Use% Mounted on
+   /dev/disk1s1    932G   11G  695G   2% /
+   /dev/disk1s5    932G  4.1G  695G   1% /private/var/vm
+   /dev/disk1s6    932G   17G  695G   3% /nix
 </pre>
 </div>
 
@@ -111,14 +111,14 @@ Filesystem      Size  Used Avail Use% Mounted on
 macOS 的 df
 </p>
 <div class="org-src-container">
-<pre class="src src-text">$ df -h
-Filesystem      Size   Used  Avail Capacity iused      ifree %iused  Mounted on
-/dev/disk1s1   932Gi   10Gi  694Gi     2%  484150 9767494010    0%   /
-devfs          205Ki  205Ki    0Bi   100%     712          0  100%   /dev
-/dev/disk1s2   932Gi  206Gi  694Gi    23% 2334824 9765643336    0%   /System/Volumes/Data
-/dev/disk1s5   932Gi  4.0Gi  694Gi     1%       4 9767978156    0%   /private/var/vm
-map auto_home    0Bi    0Bi    0Bi   100%       0          0  100%   /System/Volumes/Data/home
-/dev/disk1s6   932Gi   16Gi  694Gi     3%  436832 9767541328    0%   /nix
+<pre class="src src-text">   $ df -h
+   Filesystem      Size   Used  Avail Capacity iused      ifree %iused  Mounted on
+   /dev/disk1s1   932Gi   10Gi  694Gi     2%  484150 9767494010    0%   /
+   devfs          205Ki  205Ki    0Bi   100%     712          0  100%   /dev
+   /dev/disk1s2   932Gi  206Gi  694Gi    23% 2334824 9765643336    0%   /System/Volumes/Data
+   /dev/disk1s5   932Gi  4.0Gi  694Gi     1%       4 9767978156    0%   /private/var/vm
+   map auto_home    0Bi    0Bi    0Bi   100%       0          0  100%   /System/Volumes/Data/home
+   /dev/disk1s6   932Gi   16Gi  694Gi     3%  436832 9767541328    0%   /nix
 </pre>
 </div>
 
@@ -127,249 +127,249 @@ map auto_home    0Bi    0Bi    0Bi   100%       0          0  100%   /System/Vol
 </p>
 
 <div class="org-src-container">
-<pre class="src src-nix"><span class="linenr">  1: </span><span style="color: #268bd2;">{</span> stdenv, lib, buildPackages
-<span class="linenr">  2: </span>, autoreconfHook, bison, texinfo, fetchurl, perl, xz, libiconv, gmp ? <span style="color: #268bd2;">null</span>
-<span class="linenr">  3: </span>, aclSupport ? stdenv.isLinux, acl ? <span style="color: #268bd2;">null</span>
-<span class="linenr">  4: </span>, attrSupport ? stdenv.isLinux, attr ? <span style="color: #268bd2;">null</span>
-<span class="linenr">  5: </span>, selinuxSupport? false, libselinux ? null, libsepol ? <span style="color: #268bd2;">null</span>
-<span class="linenr">  6: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">No openssl in default version, so openssl-induced rebuilds aren't too big.</span>
-<span class="linenr">  7: </span><span style="color: #405A61;"># </span><span style="color: #405A61;">It makes *sum functions significantly faster.</span>
-<span class="linenr">  8: </span>, minimal ? true, withOpenssl ? !minimal, openssl ? <span style="color: #268bd2;">null</span>
-<span class="linenr">  9: </span>, withPrefix ? <span style="color: #268bd2;">false</span>
-<span class="linenr"> 10: </span>, singleBinary ? <span style="color: #2aa198;">"symlinks"</span> <span style="color: #405A61;"># you can also pass "shebangs" or false</span>
-<span class="linenr"> 11: </span>, unprefixNoConflict ? <span style="color: #268bd2;">false</span>
-<span class="linenr"> 12: </span><span style="color: #268bd2;">}</span>:
+<pre class="src src-nix"><span class="linenr">  1: </span>   { stdenv, lib, buildPackages
+<span class="linenr">  2: </span>   , autoreconfHook, bison, texinfo, fetchurl, perl, xz, libiconv, gmp ? null
+<span class="linenr">  3: </span>   , aclSupport ? stdenv.isLinux, acl ? null
+<span class="linenr">  4: </span>   , attrSupport ? stdenv.isLinux, attr ? null
+<span class="linenr">  5: </span>   , selinuxSupport? false, libselinux ? null, libsepol ? null
+<span class="linenr">  6: </span>   # No openssl in default version, so openssl-induced rebuilds aren't too big.
+<span class="linenr">  7: </span>   # It makes *sum functions significantly faster.
+<span class="linenr">  8: </span>   , minimal ? true, withOpenssl ? !minimal, openssl ? null
+<span class="linenr">  9: </span>   , withPrefix ? false
+<span class="linenr"> 10: </span>   , singleBinary ? "symlinks" # you can also pass "shebangs" or false
+<span class="linenr"> 11: </span>   , unprefixNoConflict ? false
+<span class="linenr"> 12: </span>   }:
 <span class="linenr"> 13: </span>
-<span class="linenr"> 14: </span><span style="color: #b58900;">assert</span> aclSupport -&gt; acl != <span style="color: #268bd2;">null</span>;
-<span class="linenr"> 15: </span><span style="color: #b58900;">assert</span> selinuxSupport -&gt; libselinux != <span style="color: #268bd2;">null</span> &amp;&amp; libsepol != <span style="color: #268bd2;">null</span>;
+<span class="linenr"> 14: </span>   assert aclSupport -&gt; acl != null;
+<span class="linenr"> 15: </span>   assert selinuxSupport -&gt; libselinux != null &amp;&amp; libsepol != null;
 <span class="linenr"> 16: </span>
-<span class="linenr"> 17: </span><span style="color: #859900; font-weight: bold;">with</span> lib;
+<span class="linenr"> 17: </span>   with lib;
 <span class="linenr"> 18: </span>
-<span class="linenr"> 19: </span>stdenv.mkDerivation <span style="color: #859900; font-weight: bold;">rec</span> <span style="color: #268bd2;">{</span>
-<span class="linenr"> 20: </span>  <span style="color: #839496;">pname</span> = <span style="color: #2aa198;">"coreutils"</span>;
-<span class="linenr"> 21: </span>  <span style="color: #839496;">version</span> = <span style="color: #2aa198;">"8.31"</span>;
+<span class="linenr"> 19: </span>   stdenv.mkDerivation rec {
+<span class="linenr"> 20: </span>     pname = "coreutils";
+<span class="linenr"> 21: </span>     version = "8.31";
 <span class="linenr"> 22: </span>
-<span class="linenr"> 23: </span>  <span style="color: #839496;">src</span> = fetchurl <span style="color: #d33682;">{</span>
-<span class="linenr"> 24: </span>    <span style="color: #839496;">url</span> = <span style="color: #2aa198;">"mirror://gnu/</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #859900; font-weight: bold;">{</span>pname<span style="color: #859900; font-weight: bold;">}</span><span style="color: #2aa198;">/</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #859900; font-weight: bold;">{</span>pname<span style="color: #859900; font-weight: bold;">}</span><span style="color: #2aa198;">-</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #859900; font-weight: bold;">{</span>version<span style="color: #859900; font-weight: bold;">}</span><span style="color: #2aa198;">.tar.xz"</span>;
-<span class="linenr"> 25: </span>    <span style="color: #839496;">sha256</span> = <span style="color: #2aa198;">"1zg9m79x1i2nifj4kb0waf9x3i5h6ydkypkjnbsb9rnwis8rqypz"</span>;
-<span class="linenr"> 26: </span>  <span style="color: #d33682;">}</span>;
+<span class="linenr"> 23: </span>     src = fetchurl {
+<span class="linenr"> 24: </span>       url = "mirror://gnu/${pname}/${pname}-${version}.tar.xz";
+<span class="linenr"> 25: </span>       sha256 = "1zg9m79x1i2nifj4kb0waf9x3i5h6ydkypkjnbsb9rnwis8rqypz";
+<span class="linenr"> 26: </span>     };
 <span class="linenr"> 27: </span>
-<span class="linenr"> 28: </span>  <span style="color: #839496;">patches</span> = optional stdenv.hostPlatform.isCygwin ./coreutils-8.<span style="color: #d33682; font-weight: bold;">23-4</span>.cygwin.patch
-<span class="linenr"> 29: </span>         <span style="color: #405A61;"># Fix failing test with musl. See https://lists.gnu.org/r/coreutils/2019-05/msg00031.html</span>
-<span class="linenr"> 30: </span>         <span style="color: #405A61;"># To be removed in coreutils-8.32.</span>
-<span class="linenr"> 31: </span>         ++ optional stdenv.hostPlatform.isMusl <span style="color: #d33682; font-weight: bold;">./avoid-false-positive-in-date-debug-test.patch</span>
-<span class="linenr"> 32: </span>         <span style="color: #405A61;"># Fix compilation in musl-cross environments. To be removed in coreutils-8.32.</span>
-<span class="linenr"> 33: </span>         ++ optional stdenv.hostPlatform.isMusl ./coreutils-8.<span style="color: #d33682; font-weight: bold;">31-musl-cross</span>.patch;
+<span class="linenr"> 28: </span>     patches = optional stdenv.hostPlatform.isCygwin ./coreutils-8.23-4.cygwin.patch
+<span class="linenr"> 29: </span>            # Fix failing test with musl. See https://lists.gnu.org/r/coreutils/2019-05/msg00031.html
+<span class="linenr"> 30: </span>            # To be removed in coreutils-8.32.
+<span class="linenr"> 31: </span>            ++ optional stdenv.hostPlatform.isMusl ./avoid-false-positive-in-date-debug-test.patch
+<span class="linenr"> 32: </span>            # Fix compilation in musl-cross environments. To be removed in coreutils-8.32.
+<span class="linenr"> 33: </span>            ++ optional stdenv.hostPlatform.isMusl ./coreutils-8.31-musl-cross.patch;
 <span class="linenr"> 34: </span>
-<span class="linenr"> 35: </span>  <span style="color: #839496;">postPatch</span> = <span style="color: #2aa198;">''</span>
-<span class="linenr"> 36: </span><span style="color: #2aa198;">    # The test tends to fail on btrfs,f2fs and maybe other unusual filesystems.</span>
-<span class="linenr"> 37: </span><span style="color: #2aa198;">    sed '2i echo Skipping dd sparse test &amp;&amp; exit 77' -i ./tests/dd/sparse.sh</span>
-<span class="linenr"> 38: </span><span style="color: #2aa198;">    sed '2i echo Skipping du threshold test &amp;&amp; exit 77' -i ./tests/du/threshold.sh</span>
-<span class="linenr"> 39: </span><span style="color: #2aa198;">    sed '2i echo Skipping cp sparse test &amp;&amp; exit 77' -i ./tests/cp/sparse.sh</span>
-<span class="linenr"> 40: </span><span style="color: #2aa198;">    sed '2i echo Skipping rm deep-2 test &amp;&amp; exit 77' -i ./tests/rm/deep-2.sh</span>
-<span class="linenr"> 41: </span><span style="color: #2aa198;">    sed '2i echo Skipping du long-from-unreadable test &amp;&amp; exit 77' -i ./tests/du/long-from-unreadable.sh</span>
+<span class="linenr"> 35: </span>     postPatch = ''
+<span class="linenr"> 36: </span>       # The test tends to fail on btrfs,f2fs and maybe other unusual filesystems.
+<span class="linenr"> 37: </span>       sed '2i echo Skipping dd sparse test &amp;&amp; exit 77' -i ./tests/dd/sparse.sh
+<span class="linenr"> 38: </span>       sed '2i echo Skipping du threshold test &amp;&amp; exit 77' -i ./tests/du/threshold.sh
+<span class="linenr"> 39: </span>       sed '2i echo Skipping cp sparse test &amp;&amp; exit 77' -i ./tests/cp/sparse.sh
+<span class="linenr"> 40: </span>       sed '2i echo Skipping rm deep-2 test &amp;&amp; exit 77' -i ./tests/rm/deep-2.sh
+<span class="linenr"> 41: </span>       sed '2i echo Skipping du long-from-unreadable test &amp;&amp; exit 77' -i ./tests/du/long-from-unreadable.sh
 <span class="linenr"> 42: </span>
-<span class="linenr"> 43: </span><span style="color: #2aa198;">    # Some target platforms, especially when building inside a container have</span>
-<span class="linenr"> 44: </span><span style="color: #2aa198;">    # issues with the inotify test.</span>
-<span class="linenr"> 45: </span><span style="color: #2aa198;">    sed '2i echo Skipping tail inotify dir recreate test &amp;&amp; exit 77' -i ./tests/tail-2/inotify-dir-recreate.sh</span>
+<span class="linenr"> 43: </span>       # Some target platforms, especially when building inside a container have
+<span class="linenr"> 44: </span>       # issues with the inotify test.
+<span class="linenr"> 45: </span>       sed '2i echo Skipping tail inotify dir recreate test &amp;&amp; exit 77' -i ./tests/tail-2/inotify-dir-recreate.sh
 <span class="linenr"> 46: </span>
-<span class="linenr"> 47: </span><span style="color: #2aa198;">    # sandbox does not allow setgid</span>
-<span class="linenr"> 48: </span><span style="color: #2aa198;">    sed '2i echo Skipping chmod setgid test &amp;&amp; exit 77' -i ./tests/chmod/setgid.sh</span>
-<span class="linenr"> 49: </span><span style="color: #2aa198;">    substituteInPlace ./tests/install/install-C.sh \</span>
-<span class="linenr"> 50: </span><span style="color: #2aa198;">      --replace 'mode3=2755' 'mode3=1755'</span>
+<span class="linenr"> 47: </span>       # sandbox does not allow setgid
+<span class="linenr"> 48: </span>       sed '2i echo Skipping chmod setgid test &amp;&amp; exit 77' -i ./tests/chmod/setgid.sh
+<span class="linenr"> 49: </span>       substituteInPlace ./tests/install/install-C.sh \
+<span class="linenr"> 50: </span>         --replace 'mode3=2755' 'mode3=1755'
 <span class="linenr"> 51: </span>
-<span class="linenr"> 52: </span><span style="color: #2aa198;">    sed '2i print "Skipping env -S test";  exit 77;' -i ./tests/misc/env-S.pl</span>
+<span class="linenr"> 52: </span>       sed '2i print "Skipping env -S test";  exit 77;' -i ./tests/misc/env-S.pl
 <span class="linenr"> 53: </span>
-<span class="linenr"> 54: </span><span style="color: #2aa198;">    # these tests fail in the unprivileged nix sandbox (without nix-daemon) as we break posix assumptions</span>
-<span class="linenr"> 55: </span><span style="color: #2aa198;">    for f in ./tests/chgrp/{basic.sh,recurse.sh,default-no-deref.sh,no-x.sh,posix-H.sh}; do</span>
-<span class="linenr"> 56: </span><span style="color: #2aa198;">      sed '2i echo Skipping chgrp &amp;&amp; exit 77' -i "$f"</span>
-<span class="linenr"> 57: </span><span style="color: #2aa198;">    done</span>
-<span class="linenr"> 58: </span><span style="color: #2aa198;">    for f in gnulib-tests/{test-chown.c,test-fchownat.c,test-lchown.c}; do</span>
-<span class="linenr"> 59: </span><span style="color: #2aa198;">      echo "int main() { return 77; }" &gt; "$f"</span>
-<span class="linenr"> 60: </span><span style="color: #2aa198;">    done</span>
-<span class="linenr"> 61: </span><span style="color: #2aa198;">  ''</span> + optionalString <span style="color: #d33682;">(</span>stdenv.hostPlatform.libc == <span style="color: #2aa198;">"musl"</span><span style="color: #d33682;">)</span> <span style="color: #d33682;">(</span>lib.concatStringsSep <span style="color: #2aa198;">"\n"</span> <span style="color: #859900;">[</span>
-<span class="linenr"> 62: </span>    <span style="color: #2aa198;">''</span>
-<span class="linenr"> 63: </span><span style="color: #2aa198;">      echo "int main() { return 77; }" &gt; gnulib-tests/test-parse-datetime.c</span>
-<span class="linenr"> 64: </span><span style="color: #2aa198;">      echo "int main() { return 77; }" &gt; gnulib-tests/test-getlogin.c</span>
-<span class="linenr"> 65: </span><span style="color: #2aa198;">    ''</span>
-<span class="linenr"> 66: </span>  <span style="color: #859900;">]</span><span style="color: #d33682;">)</span>;
+<span class="linenr"> 54: </span>       # these tests fail in the unprivileged nix sandbox (without nix-daemon) as we break posix assumptions
+<span class="linenr"> 55: </span>       for f in ./tests/chgrp/{basic.sh,recurse.sh,default-no-deref.sh,no-x.sh,posix-H.sh}; do
+<span class="linenr"> 56: </span>         sed '2i echo Skipping chgrp &amp;&amp; exit 77' -i "$f"
+<span class="linenr"> 57: </span>       done
+<span class="linenr"> 58: </span>       for f in gnulib-tests/{test-chown.c,test-fchownat.c,test-lchown.c}; do
+<span class="linenr"> 59: </span>         echo "int main() { return 77; }" &gt; "$f"
+<span class="linenr"> 60: </span>       done
+<span class="linenr"> 61: </span>     '' + optionalString (stdenv.hostPlatform.libc == "musl") (lib.concatStringsSep "\n" [
+<span class="linenr"> 62: </span>       ''
+<span class="linenr"> 63: </span>         echo "int main() { return 77; }" &gt; gnulib-tests/test-parse-datetime.c
+<span class="linenr"> 64: </span>         echo "int main() { return 77; }" &gt; gnulib-tests/test-getlogin.c
+<span class="linenr"> 65: </span>       ''
+<span class="linenr"> 66: </span>     ]);
 <span class="linenr"> 67: </span>
-<span class="linenr"> 68: </span>  <span style="color: #839496;">outputs</span> = <span style="color: #d33682;">[</span> <span style="color: #2aa198;">"out"</span> <span style="color: #2aa198;">"info"</span> <span style="color: #d33682;">]</span>;
+<span class="linenr"> 68: </span>     outputs = [ "out" "info" ];
 <span class="linenr"> 69: </span>
-<span class="linenr"> 70: </span>  <span style="color: #839496;">nativeBuildInputs</span> = <span style="color: #d33682;">[</span> perl xz.bin <span style="color: #d33682;">]</span>
-<span class="linenr"> 71: </span>    ++ optionals stdenv.hostPlatform.isCygwin <span style="color: #d33682;">[</span> autoreconfHook texinfo <span style="color: #d33682;">]</span>   <span style="color: #405A61;"># due to patch</span>
-<span class="linenr"> 72: </span>    ++ optionals stdenv.hostPlatform.isMusl <span style="color: #d33682;">[</span> autoreconfHook bison <span style="color: #d33682;">]</span>;   <span style="color: #405A61;"># due to patch</span>
-<span class="linenr"> 73: </span>  <span style="color: #839496;">configureFlags</span> = <span style="color: #d33682;">[</span> <span style="color: #2aa198;">"--with-packager=https://NixOS.org"</span> <span style="color: #d33682;">]</span>
-<span class="linenr"> 74: </span>    ++ optional <span style="color: #d33682;">(</span>singleBinary != <span style="color: #268bd2;">false</span><span style="color: #d33682;">)</span>
-<span class="linenr"> 75: </span>      <span style="color: #d33682;">(</span><span style="color: #2aa198;">"--enable-single-binary"</span> + optionalString <span style="color: #859900;">(</span>isString singleBinary<span style="color: #859900;">)</span> <span style="color: #2aa198;">"=</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #859900; font-weight: bold;">{</span>singleBinary<span style="color: #859900; font-weight: bold;">}</span>"<span style="color: #d33682;">)</span>
-<span class="linenr"> 76: </span>    ++ optional withOpenssl <span style="color: #2aa198;">"--with-openssl"</span>
-<span class="linenr"> 77: </span>    ++ optional stdenv.hostPlatform.isSunOS <span style="color: #2aa198;">"ac_cv_func_inotify_init=no"</span>
-<span class="linenr"> 78: </span>    ++ optional withPrefix <span style="color: #2aa198;">"--program-prefix=g"</span>
-<span class="linenr"> 79: </span>    ++ optionals <span style="color: #d33682;">(</span>stdenv.hostPlatform != stdenv.buildPlatform &amp;&amp; stdenv.hostPlatform.libc == <span style="color: #2aa198;">"glibc"</span><span style="color: #d33682;">)</span> <span style="color: #d33682;">[</span>
-<span class="linenr"> 80: </span>      <span style="color: #405A61;"># </span><span style="color: #cc9393;">TODO</span><span style="color: #405A61;">(19b98110126fde7cbb1127af7e3fe1568eacad3d): Needed for fstatfs() I</span>
-<span class="linenr"> 81: </span>      <span style="color: #405A61;"># don't know why it is not properly detected cross building with glibc.</span>
-<span class="linenr"> 82: </span>      <span style="color: #2aa198;">"fu_cv_sys_stat_statfs2_bsize=yes"</span>
-<span class="linenr"> 83: </span>    <span style="color: #d33682;">]</span>;
+<span class="linenr"> 70: </span>     nativeBuildInputs = [ perl xz.bin ]
+<span class="linenr"> 71: </span>       ++ optionals stdenv.hostPlatform.isCygwin [ autoreconfHook texinfo ]   # due to patch
+<span class="linenr"> 72: </span>       ++ optionals stdenv.hostPlatform.isMusl [ autoreconfHook bison ];   # due to patch
+<span class="linenr"> 73: </span>     configureFlags = [ "--with-packager=https://NixOS.org" ]
+<span class="linenr"> 74: </span>       ++ optional (singleBinary != false)
+<span class="linenr"> 75: </span>         ("--enable-single-binary" + optionalString (isString singleBinary) "=${singleBinary}")
+<span class="linenr"> 76: </span>       ++ optional withOpenssl "--with-openssl"
+<span class="linenr"> 77: </span>       ++ optional stdenv.hostPlatform.isSunOS "ac_cv_func_inotify_init=no"
+<span class="linenr"> 78: </span>       ++ optional withPrefix "--program-prefix=g"
+<span class="linenr"> 79: </span>       ++ optionals (stdenv.hostPlatform != stdenv.buildPlatform &amp;&amp; stdenv.hostPlatform.libc == "glibc") [
+<span class="linenr"> 80: </span>         # TODO(19b98110126fde7cbb1127af7e3fe1568eacad3d): Needed for fstatfs() I
+<span class="linenr"> 81: </span>         # don't know why it is not properly detected cross building with glibc.
+<span class="linenr"> 82: </span>         "fu_cv_sys_stat_statfs2_bsize=yes"
+<span class="linenr"> 83: </span>       ];
 <span class="linenr"> 84: </span>
 <span class="linenr"> 85: </span>
-<span class="linenr"> 86: </span>  <span style="color: #839496;">buildInputs</span> = <span style="color: #d33682;">[</span> gmp <span style="color: #d33682;">]</span>
-<span class="linenr"> 87: </span>    ++ optional aclSupport acl
-<span class="linenr"> 88: </span>    ++ optional attrSupport attr
-<span class="linenr"> 89: </span>    ++ optional withOpenssl openssl
-<span class="linenr"> 90: </span>    ++ optionals selinuxSupport <span style="color: #d33682;">[</span> libselinux libsepol <span style="color: #d33682;">]</span>
-<span class="linenr"> 91: </span>       <span style="color: #405A61;"># </span><span style="color: #cc9393;">TODO</span><span style="color: #405A61;">(@Ericson2314): Investigate whether Darwin could benefit too</span>
-<span class="linenr"> 92: </span>    ++ optional <span style="color: #d33682;">(</span>stdenv.hostPlatform != stdenv.buildPlatform &amp;&amp; stdenv.hostPlatform.libc != <span style="color: #2aa198;">"glibc"</span><span style="color: #d33682;">)</span> libiconv;
+<span class="linenr"> 86: </span>     buildInputs = [ gmp ]
+<span class="linenr"> 87: </span>       ++ optional aclSupport acl
+<span class="linenr"> 88: </span>       ++ optional attrSupport attr
+<span class="linenr"> 89: </span>       ++ optional withOpenssl openssl
+<span class="linenr"> 90: </span>       ++ optionals selinuxSupport [ libselinux libsepol ]
+<span class="linenr"> 91: </span>          # TODO(@Ericson2314): Investigate whether Darwin could benefit too
+<span class="linenr"> 92: </span>       ++ optional (stdenv.hostPlatform != stdenv.buildPlatform &amp;&amp; stdenv.hostPlatform.libc != "glibc") libiconv;
 <span class="linenr"> 93: </span>
-<span class="linenr"> 94: </span>  <span style="color: #405A61;"># The tests are known broken on Cygwin</span>
-<span class="linenr"> 95: </span>  <span style="color: #405A61;"># (http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/19025),</span>
-<span class="linenr"> 96: </span>  <span style="color: #405A61;"># Darwin (http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/19351),</span>
-<span class="linenr"> 97: </span>  <span style="color: #405A61;"># and {Open,Free}BSD.</span>
-<span class="linenr"> 98: </span>  <span style="color: #405A61;"># With non-standard storeDir: https://github.com/NixOS/nix/issues/512</span>
-<span class="linenr"> 99: </span>  <span style="color: #839496;">doCheck</span> = stdenv.hostPlatform == stdenv.buildPlatform
-<span class="linenr">100: </span>    &amp;&amp; <span style="color: #d33682;">(</span>stdenv.hostPlatform.libc == <span style="color: #2aa198;">"glibc"</span> || stdenv.hostPlatform.isMusl<span style="color: #d33682;">)</span>
-<span class="linenr">101: </span>    &amp;&amp; builtins.storeDir == <span style="color: #2aa198;">"/nix/store"</span>;
+<span class="linenr"> 94: </span>     # The tests are known broken on Cygwin
+<span class="linenr"> 95: </span>     # (http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/19025),
+<span class="linenr"> 96: </span>     # Darwin (http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/19351),
+<span class="linenr"> 97: </span>     # and {Open,Free}BSD.
+<span class="linenr"> 98: </span>     # With non-standard storeDir: https://github.com/NixOS/nix/issues/512
+<span class="linenr"> 99: </span>     doCheck = stdenv.hostPlatform == stdenv.buildPlatform
+<span class="linenr">100: </span>       &amp;&amp; (stdenv.hostPlatform.libc == "glibc" || stdenv.hostPlatform.isMusl)
+<span class="linenr">101: </span>       &amp;&amp; builtins.storeDir == "/nix/store";
 <span class="linenr">102: </span>
-<span class="linenr">103: </span>  <span style="color: #405A61;"># Prevents attempts of running 'help2man' on cross-built binaries.</span>
-<span class="linenr">104: </span>  <span style="color: #839496;">PERL</span> = <span style="color: #859900; font-weight: bold;">if</span> stdenv.hostPlatform == stdenv.buildPlatform <span style="color: #859900; font-weight: bold;">then</span> <span style="color: #268bd2;">null</span> <span style="color: #859900; font-weight: bold;">else</span> <span style="color: #2aa198;">"missing"</span>;
+<span class="linenr">103: </span>     # Prevents attempts of running 'help2man' on cross-built binaries.
+<span class="linenr">104: </span>     PERL = if stdenv.hostPlatform == stdenv.buildPlatform then null else "missing";
 <span class="linenr">105: </span>
-<span class="linenr">106: </span>  <span style="color: #405A61;"># Saw random failures like &#8216;help2man: can't get '--help' info from</span>
-<span class="linenr">107: </span>  <span style="color: #405A61;"># man/sha512sum.td/sha512sum&#8217;.</span>
-<span class="linenr">108: </span>  <span style="color: #839496;">enableParallelBuilding</span> = <span style="color: #268bd2;">false</span>;
+<span class="linenr">106: </span>     # Saw random failures like ‘help2man: can't get '--help' info from
+<span class="linenr">107: </span>     # man/sha512sum.td/sha512sum’.
+<span class="linenr">108: </span>     enableParallelBuilding = false;
 <span class="linenr">109: </span>
-<span class="linenr">110: </span>  <span style="color: #839496;">NIX_LDFLAGS</span> = optionalString selinuxSupport <span style="color: #2aa198;">"-lsepol"</span>;
-<span class="linenr">111: </span>  <span style="color: #839496;">FORCE_UNSAFE_CONFIGURE</span> = optionalString stdenv.hostPlatform.isSunOS <span style="color: #2aa198;">"1"</span>;
+<span class="linenr">110: </span>     NIX_LDFLAGS = optionalString selinuxSupport "-lsepol";
+<span class="linenr">111: </span>     FORCE_UNSAFE_CONFIGURE = optionalString stdenv.hostPlatform.isSunOS "1";
 <span class="linenr">112: </span>
-<span class="linenr">113: </span>  <span style="color: #405A61;"># Works around a bug with 8.26:</span>
-<span class="linenr">114: </span>  <span style="color: #405A61;"># Makefile:3440: *** Recursive variable 'INSTALL' references itself (eventually).  Stop.</span>
-<span class="linenr">115: </span>  <span style="color: #839496;">preInstall</span> = optionalString <span style="color: #d33682;">(</span>stdenv.hostPlatform != stdenv.buildPlatform<span style="color: #d33682;">)</span> <span style="color: #2aa198;">''</span>
-<span class="linenr">116: </span><span style="color: #2aa198;">    sed -i Makefile -e 's|^INSTALL =.*|INSTALL = </span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span>buildPackages.coreutils<span style="color: #d33682; font-weight: bold;">}</span><span style="color: #2aa198;">/bin/install -c|'</span>
-<span class="linenr">117: </span><span style="color: #2aa198;">  ''</span>;
+<span class="linenr">113: </span>     # Works around a bug with 8.26:
+<span class="linenr">114: </span>     # Makefile:3440: *** Recursive variable 'INSTALL' references itself (eventually).  Stop.
+<span class="linenr">115: </span>     preInstall = optionalString (stdenv.hostPlatform != stdenv.buildPlatform) ''
+<span class="linenr">116: </span>       sed -i Makefile -e 's|^INSTALL =.*|INSTALL = ${buildPackages.coreutils}/bin/install -c|'
+<span class="linenr">117: </span>     '';
 <span class="linenr">118: </span>
-<span class="linenr">119: </span>  <span style="color: #839496;">postInstall</span> = optionalString <span style="color: #d33682;">(</span>stdenv.hostPlatform != stdenv.buildPlatform &amp;&amp; !minimal<span style="color: #d33682;">)</span> <span style="color: #2aa198;">''</span>
-<span class="linenr">120: </span><span style="color: #2aa198;">    rm $out/share/man/man1/*</span>
-<span class="linenr">121: </span><span style="color: #2aa198;">    cp </span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span>buildPackages.coreutils-full<span style="color: #d33682; font-weight: bold;">}</span><span style="color: #2aa198;">/share/man/man1/* $out/share/man/man1</span>
-<span class="linenr">122: </span><span style="color: #2aa198;">  ''</span>
-<span class="linenr">123: </span>  <span style="color: #405A61;"># du: 8.7 M locale + 0.4 M man pages</span>
-<span class="linenr">124: </span>  + optionalString minimal <span style="color: #2aa198;">''</span>
-<span class="linenr">125: </span><span style="color: #2aa198;">    rm -r "$out/share"</span>
-<span class="linenr">126: </span><span style="color: #2aa198;">  ''</span>
-<span class="linenr">127: </span>  + optionalString <span style="color: #d33682;">(</span>stdenv.isDarwin &amp;&amp; withPrefix &amp;&amp; unprefixNoConflict<span style="color: #d33682;">)</span> <span style="color: #2aa198;">''</span>
-<span class="linenr">128: </span><span style="color: #2aa198;">    cd $out/bin</span>
-<span class="linenr">129: </span><span style="color: #2aa198;">    </span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span>concatStringsSep <span style="color: #2aa198;">"\n"</span> <span style="color: #859900;">(</span>builtins.map <span style="color: #cb4b16;">(</span>x: <span style="color: #2aa198;">"ln -s g</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold;">{</span>x<span style="color: #6c71c4; font-weight: bold;">}</span><span style="color: #2aa198;"> </span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold;">{</span>x<span style="color: #6c71c4; font-weight: bold;">}</span>"<span style="color: #cb4b16;">)</span> <span style="color: #cb4b16;">(</span>splitString <span style="color: #2aa198;">" "</span> <span style="color: #2aa198;">"b2sum base32 chcon hostid md5sum nproc numfmt pinky ptx realpath runcon sha1sum sha224sum sha256sum sha384sum sha512sum shred shuf stdbuf tac timeout truncate"</span><span style="color: #cb4b16;">)</span><span style="color: #859900;">)</span><span style="color: #d33682; font-weight: bold;">}</span>
-<span class="linenr">130: </span><span style="color: #2aa198;">  ''</span>;
+<span class="linenr">119: </span>     postInstall = optionalString (stdenv.hostPlatform != stdenv.buildPlatform &amp;&amp; !minimal) ''
+<span class="linenr">120: </span>       rm $out/share/man/man1/*
+<span class="linenr">121: </span>       cp ${buildPackages.coreutils-full}/share/man/man1/* $out/share/man/man1
+<span class="linenr">122: </span>     ''
+<span class="linenr">123: </span>     # du: 8.7 M locale + 0.4 M man pages
+<span class="linenr">124: </span>     + optionalString minimal ''
+<span class="linenr">125: </span>       rm -r "$out/share"
+<span class="linenr">126: </span>     ''
+<span class="linenr">127: </span>     + optionalString (stdenv.isDarwin &amp;&amp; withPrefix &amp;&amp; unprefixNoConflict) ''
+<span class="linenr">128: </span>       cd $out/bin
+<span class="linenr">129: </span>       ${concatStringsSep "\n" (builtins.map (x: "ln -s g${x} ${x}") (splitString " " "b2sum base32 chcon hostid md5sum nproc numfmt pinky ptx realpath runcon sha1sum sha224sum sha256sum sha384sum sha512sum shred shuf stdbuf tac timeout truncate"))}
+<span class="linenr">130: </span>     '';
 <span class="linenr">131: </span>
-<span class="linenr">132: </span>  <span style="color: #839496;">meta</span> = <span style="color: #d33682;">{</span>
-<span class="linenr">133: </span>    <span style="color: #839496;">homepage</span> = <span style="color: #d33682; font-weight: bold;">https://www.gnu.org/software/coreutils/</span>;
-<span class="linenr">134: </span>    <span style="color: #839496;">description</span> = <span style="color: #2aa198;">"The basic file, shell and text manipulation utilities of the GNU operating system"</span>;
+<span class="linenr">132: </span>     meta = {
+<span class="linenr">133: </span>       homepage = https://www.gnu.org/software/coreutils/;
+<span class="linenr">134: </span>       description = "The basic file, shell and text manipulation utilities of the GNU operating system";
 <span class="linenr">135: </span>
-<span class="linenr">136: </span>    <span style="color: #839496;">longDescription</span> = <span style="color: #2aa198;">''</span>
-<span class="linenr">137: </span><span style="color: #2aa198;">      The GNU Core Utilities are the basic file, shell and text</span>
-<span class="linenr">138: </span><span style="color: #2aa198;">      manipulation utilities of the GNU operating system.  These are</span>
-<span class="linenr">139: </span><span style="color: #2aa198;">      the core utilities which are expected to exist on every</span>
-<span class="linenr">140: </span><span style="color: #2aa198;">      operating system.</span>
-<span class="linenr">141: </span><span style="color: #2aa198;">    ''</span>;
+<span class="linenr">136: </span>       longDescription = ''
+<span class="linenr">137: </span>         The GNU Core Utilities are the basic file, shell and text
+<span class="linenr">138: </span>         manipulation utilities of the GNU operating system.  These are
+<span class="linenr">139: </span>         the core utilities which are expected to exist on every
+<span class="linenr">140: </span>         operating system.
+<span class="linenr">141: </span>       '';
 <span class="linenr">142: </span>
-<span class="linenr">143: </span>    <span style="color: #839496;">license</span> = licenses.gpl3Plus;
+<span class="linenr">143: </span>       license = licenses.gpl3Plus;
 <span class="linenr">144: </span>
-<span class="linenr">145: </span>    <span style="color: #839496;">platforms</span> = platforms.unix ++ platforms.windows;
+<span class="linenr">145: </span>       platforms = platforms.unix ++ platforms.windows;
 <span class="linenr">146: </span>
-<span class="linenr">147: </span>    <span style="color: #839496;">priority</span> = <span style="color: #d33682; font-weight: bold;">10</span>;
+<span class="linenr">147: </span>       priority = 10;
 <span class="linenr">148: </span>
-<span class="linenr">149: </span>    <span style="color: #839496;">maintainers</span> = <span style="color: #859900;">[</span> maintainers.eelco <span style="color: #859900;">]</span>;
-<span class="linenr">150: </span>  <span style="color: #d33682;">}</span>;
+<span class="linenr">149: </span>       maintainers = [ maintainers.eelco ];
+<span class="linenr">150: </span>     };
 <span class="linenr">151: </span>
-<span class="linenr">152: </span><span style="color: #268bd2;">}</span> // optionalAttrs stdenv.hostPlatform.isMusl <span style="color: #268bd2;">{</span>
-<span class="linenr">153: </span>  <span style="color: #405A61;"># Work around a bogus warning in conjunction with musl.</span>
-<span class="linenr">154: </span>  <span style="color: #839496;">NIX_CFLAGS_COMPILE</span> = <span style="color: #2aa198;">"-Wno-error"</span>;
-<span class="linenr">155: </span><span style="color: #268bd2;">}</span>
+<span class="linenr">152: </span>   } // optionalAttrs stdenv.hostPlatform.isMusl {
+<span class="linenr">153: </span>     # Work around a bogus warning in conjunction with musl.
+<span class="linenr">154: </span>     NIX_CFLAGS_COMPILE = "-Wno-error";
+<span class="linenr">155: </span>   }
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org0b8a8d1" class="outline-3">
-<h3 id="org0b8a8d1">emacs-libvterm 编译问题</h3>
-<div class="outline-text-3" id="text-org0b8a8d1">
+<div id="outline-container-org534a0cc" class="outline-3">
+<h3 id="org534a0cc">emacs-libvterm 编译问题</h3>
+<div class="outline-text-3" id="text-org534a0cc">
 <p>
 <a href="https://github.com/akermu/emacs-libvterm">emacs-libvterm</a> 前段时间开始使用这个包，可以说这个包是目前为止，我用过的在emacs下表现最好的终端模拟器了。然后在换成nix之后遇到了些问题。
 </p>
 </div>
 
-<div id="outline-container-org896f5f4" class="outline-4">
-<h4 id="org896f5f4">glibtool 命令找不到</h4>
-<div class="outline-text-4" id="text-org896f5f4">
+<div id="outline-container-org2b9c8f5" class="outline-4">
+<h4 id="org2b9c8f5">glibtool 命令找不到</h4>
+<div class="outline-text-4" id="text-org2b9c8f5">
 <p>
 emacs-libvterm在macOS下，回去寻找glibtool这个命令，而glibtool这个命令实际上就是libtool命令加了前缀 <code>g</code> 。nix里面对应的包名是libtool。需要修改nix增加前缀。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org6d1b7c1" class="outline-4">
-<h4 id="org6d1b7c1">libtool 静态编译问题</h4>
-<div class="outline-text-4" id="text-org6d1b7c1">
+<div id="outline-container-org0f08479" class="outline-4">
+<h4 id="org0f08479">libtool 静态编译问题</h4>
+<div class="outline-text-4" id="text-org0f08479">
 <p>
 nix下的包默认都是非静态编译，而emacs-libvterm又需要静态编译。这里又要改glibtool的nix表达式。
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgf58336e" class="outline-4">
-<h4 id="orgf58336e">综上，最后修改完的 nix 文件</h4>
-<div class="outline-text-4" id="text-orgf58336e">
+<div id="outline-container-org42a3ee3" class="outline-4">
+<h4 id="org42a3ee3">综上，最后修改完的 nix 文件</h4>
+<div class="outline-text-4" id="text-org42a3ee3">
 <div class="org-src-container">
-<pre class="src src-nix"><span class="linenr"> 1: </span><span style="color: #268bd2;">{</span> stdenv, fetchurl, m4, perl, help2man
-<span class="linenr"> 2: </span>, withPrefix ? <span style="color: #268bd2;">false</span>
-<span class="linenr"> 3: </span>, static ? <span style="color: #268bd2;">false</span>
-<span class="linenr"> 4: </span><span style="color: #268bd2;">}</span>:
+<pre class="src src-nix"><span class="linenr"> 1: </span>    { stdenv, fetchurl, m4, perl, help2man
+<span class="linenr"> 2: </span>    , withPrefix ? false
+<span class="linenr"> 3: </span>    , static ? false
+<span class="linenr"> 4: </span>    }:
 <span class="linenr"> 5: </span>
-<span class="linenr"> 6: </span>stdenv.mkDerivation <span style="color: #859900; font-weight: bold;">rec</span> <span style="color: #268bd2;">{</span>
-<span class="linenr"> 7: </span>  <span style="color: #839496;">pname</span> = <span style="color: #2aa198;">"libtool"</span>;
-<span class="linenr"> 8: </span>  <span style="color: #839496;">version</span> = <span style="color: #2aa198;">"2.4.6"</span>;
+<span class="linenr"> 6: </span>    stdenv.mkDerivation rec {
+<span class="linenr"> 7: </span>      pname = "libtool";
+<span class="linenr"> 8: </span>      version = "2.4.6";
 <span class="linenr"> 9: </span>
-<span class="linenr">10: </span>  <span style="color: #839496;">src</span> = fetchurl <span style="color: #d33682;">{</span>
-<span class="linenr">11: </span>    <span style="color: #839496;">url</span> = <span style="color: #2aa198;">"mirror://gnu/libtool/</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #859900; font-weight: bold;">{</span>pname<span style="color: #859900; font-weight: bold;">}</span><span style="color: #2aa198;">-</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #859900; font-weight: bold;">{</span>version<span style="color: #859900; font-weight: bold;">}</span><span style="color: #2aa198;">.tar.gz"</span>;
-<span class="linenr">12: </span>    <span style="color: #839496;">sha256</span> = <span style="color: #2aa198;">"1qq61k6lp1fp75xs398yzi6wvbx232l7xbyn3p13cnh27mflvgg3"</span>;
-<span class="linenr">13: </span>  <span style="color: #d33682;">}</span>;
+<span class="linenr">10: </span>      src = fetchurl {
+<span class="linenr">11: </span>        url = "mirror://gnu/libtool/${pname}-${version}.tar.gz";
+<span class="linenr">12: </span>        sha256 = "1qq61k6lp1fp75xs398yzi6wvbx232l7xbyn3p13cnh27mflvgg3";
+<span class="linenr">13: </span>      };
 <span class="linenr">14: </span>
-<span class="linenr">15: </span>  <span style="color: #839496;">outputs</span> = <span style="color: #d33682;">[</span> <span style="color: #2aa198;">"out"</span> <span style="color: #2aa198;">"lib"</span> <span style="color: #d33682;">]</span>;
+<span class="linenr">15: </span>      outputs = [ "out" "lib" ];
 <span class="linenr">16: </span>
-<span class="linenr">17: </span>  <span style="color: #839496;">nativeBuildInputs</span> = <span style="color: #d33682;">[</span> perl help2man m4 <span style="color: #d33682;">]</span>;
-<span class="linenr">18: </span>  <span style="color: #839496;">propagatedBuildInputs</span> = <span style="color: #d33682;">[</span> m4 <span style="color: #d33682;">]</span>;
-<span class="linenr">19: </span>  <span style="color: #839496;">configureFlags</span> = <span style="color: #859900; font-weight: bold;">if</span> withPrefix <span style="color: #859900; font-weight: bold;">then</span> <span style="color: #d33682;">[</span> <span style="color: #2aa198;">"--program-prefix=g"</span> <span style="color: #d33682;">]</span> <span style="color: #859900; font-weight: bold;">else</span> <span style="color: #d33682;">[]</span>;
-<span class="linenr">20: </span>  <span style="color: #839496;">dontDisableStatic</span> = static;
+<span class="linenr">17: </span>      nativeBuildInputs = [ perl help2man m4 ];
+<span class="linenr">18: </span>      propagatedBuildInputs = [ m4 ];
+<span class="linenr">19: </span>      configureFlags = if withPrefix then [ "--program-prefix=g" ] else [];
+<span class="linenr">20: </span>      dontDisableStatic = static;
 <span class="linenr">21: </span>
-<span class="linenr">22: </span>  <span style="color: #405A61;"># Don't fixup "#! /bin/sh" in Libtool, otherwise it will use the</span>
-<span class="linenr">23: </span>  <span style="color: #405A61;"># "fixed" path in generated files!</span>
-<span class="linenr">24: </span>  <span style="color: #839496;">dontPatchShebangs</span> = <span style="color: #268bd2;">true</span>;
+<span class="linenr">22: </span>      # Don't fixup "#! /bin/sh" in Libtool, otherwise it will use the
+<span class="linenr">23: </span>      # "fixed" path in generated files!
+<span class="linenr">24: </span>      dontPatchShebangs = true;
 <span class="linenr">25: </span>
-<span class="linenr">26: </span>  <span style="color: #405A61;"># </span><span style="color: #cc9393;">XXX</span><span style="color: #405A61;">: The GNU ld wrapper does all sorts of nasty things wrt. RPATH, which</span>
-<span class="linenr">27: </span>  <span style="color: #405A61;"># leads to the failure of a number of tests.</span>
-<span class="linenr">28: </span>  <span style="color: #839496;">doCheck</span> = <span style="color: #268bd2;">false</span>;
-<span class="linenr">29: </span>  <span style="color: #839496;">doInstallCheck</span> = <span style="color: #268bd2;">false</span>;
+<span class="linenr">26: </span>      # XXX: The GNU ld wrapper does all sorts of nasty things wrt. RPATH, which
+<span class="linenr">27: </span>      # leads to the failure of a number of tests.
+<span class="linenr">28: </span>      doCheck = false;
+<span class="linenr">29: </span>      doInstallCheck = false;
 <span class="linenr">30: </span>
-<span class="linenr">31: </span>  <span style="color: #839496;">enableParallelBuilding</span> = <span style="color: #268bd2;">true</span>;
+<span class="linenr">31: </span>      enableParallelBuilding = true;
 <span class="linenr">32: </span>
-<span class="linenr">33: </span>  <span style="color: #405A61;"># Don't run the native `strip' when cross-compiling.  This breaks at least</span>
-<span class="linenr">34: </span>  <span style="color: #405A61;"># with `.a' files for MinGW.</span>
-<span class="linenr">35: </span>  <span style="color: #839496;">dontStrip</span> = stdenv.hostPlatform != stdenv.buildPlatform;
+<span class="linenr">33: </span>      # Don't run the native `strip' when cross-compiling.  This breaks at least
+<span class="linenr">34: </span>      # with `.a' files for MinGW.
+<span class="linenr">35: </span>      dontStrip = stdenv.hostPlatform != stdenv.buildPlatform;
 <span class="linenr">36: </span>
-<span class="linenr">37: </span>  <span style="color: #839496;">meta</span> = <span style="color: #859900; font-weight: bold;">with</span> stdenv.lib; <span style="color: #d33682;">{</span>
-<span class="linenr">38: </span>    <span style="color: #839496;">description</span> = <span style="color: #2aa198;">"GNU Libtool, a generic library support script"</span>;
-<span class="linenr">39: </span>    <span style="color: #839496;">longDescription</span> = <span style="color: #2aa198;">''</span>
-<span class="linenr">40: </span><span style="color: #2aa198;">      GNU libtool is a generic library support script.  Libtool hides</span>
-<span class="linenr">41: </span><span style="color: #2aa198;">      the complexity of using shared libraries behind a consistent,</span>
-<span class="linenr">42: </span><span style="color: #2aa198;">      portable interface.</span>
+<span class="linenr">37: </span>      meta = with stdenv.lib; {
+<span class="linenr">38: </span>        description = "GNU Libtool, a generic library support script";
+<span class="linenr">39: </span>        longDescription = ''
+<span class="linenr">40: </span>          GNU libtool is a generic library support script.  Libtool hides
+<span class="linenr">41: </span>          the complexity of using shared libraries behind a consistent,
+<span class="linenr">42: </span>          portable interface.
 <span class="linenr">43: </span>
-<span class="linenr">44: </span><span style="color: #2aa198;">      To use libtool, add the new generic library building commands to</span>
-<span class="linenr">45: </span><span style="color: #2aa198;">      your Makefile, Makefile.in, or Makefile.am.  See the</span>
-<span class="linenr">46: </span><span style="color: #2aa198;">      documentation for details.</span>
-<span class="linenr">47: </span><span style="color: #2aa198;">    ''</span>;
-<span class="linenr">48: </span>    <span style="color: #839496;">homepage</span> = <span style="color: #d33682; font-weight: bold;">https://www.gnu.org/software/libtool/</span>;
-<span class="linenr">49: </span>    <span style="color: #839496;">license</span> = licenses.gpl2Plus;
-<span class="linenr">50: </span>    <span style="color: #839496;">maintainers</span> = <span style="color: #859900;">[</span> <span style="color: #859900;">]</span>;
-<span class="linenr">51: </span>    <span style="color: #839496;">platforms</span> = platforms.unix;
-<span class="linenr">52: </span>  <span style="color: #d33682;">}</span>;
-<span class="linenr">53: </span><span style="color: #268bd2;">}</span>
+<span class="linenr">44: </span>          To use libtool, add the new generic library building commands to
+<span class="linenr">45: </span>          your Makefile, Makefile.in, or Makefile.am.  See the
+<span class="linenr">46: </span>          documentation for details.
+<span class="linenr">47: </span>        '';
+<span class="linenr">48: </span>        homepage = https://www.gnu.org/software/libtool/;
+<span class="linenr">49: </span>        license = licenses.gpl2Plus;
+<span class="linenr">50: </span>        maintainers = [ ];
+<span class="linenr">51: </span>        platforms = platforms.unix;
+<span class="linenr">52: </span>      };
+<span class="linenr">53: </span>    }
 <span class="linenr">54: </span>
 </pre>
 </div>
@@ -377,212 +377,212 @@ nix下的包默认都是非静态编译，而emacs-libvterm又需要静态编译
 </div>
 </div>
 
-<div id="outline-container-org04143cc" class="outline-3">
-<h3 id="org04143cc">jenv 包不存在问题</h3>
-<div class="outline-text-3" id="text-org04143cc">
+<div id="outline-container-orgd9219af" class="outline-3">
+<h3 id="orgd9219af">jenv 包不存在问题</h3>
+<div class="outline-text-3" id="text-orgd9219af">
 <p>
 jenv包是为了解决java环境问题的。而nix本身就是为了解决开发环境问题的“终极”方案。理论上根本就不需要jenv这样的工具。但是所有开发都使用 <code>nix-shell</code> 去定制开发环境，又稍显太重。所以有时候还是需要jenv这样的工具的。于是自己写个 nix表达式。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-nix"><span class="linenr"> 1: </span><span style="color: #268bd2;">{</span> stdenv, fetchurl <span style="color: #268bd2;">}</span>:
+<pre class="src src-nix"><span class="linenr"> 1: </span>   { stdenv, fetchurl }:
 <span class="linenr"> 2: </span>
-<span class="linenr"> 3: </span>stdenv.mkDerivation <span style="color: #859900; font-weight: bold;">rec</span> <span style="color: #268bd2;">{</span>
-<span class="linenr"> 4: </span>  <span style="color: #839496;">version</span> = <span style="color: #2aa198;">"0.5.2"</span>;
-<span class="linenr"> 5: </span>  <span style="color: #839496;">pname</span> = <span style="color: #2aa198;">"jenv"</span>;
-<span class="linenr"> 6: </span>  <span style="color: #839496;">src</span> = fetchurl <span style="color: #d33682;">{</span>
-<span class="linenr"> 7: </span>    <span style="color: #839496;">url</span> = <span style="color: #2aa198;">"https://github.com/jenv/jenv/archive/</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #859900; font-weight: bold;">{</span>version<span style="color: #859900; font-weight: bold;">}</span><span style="color: #2aa198;">.tar.gz"</span>;
-<span class="linenr"> 8: </span>    <span style="color: #839496;">sha256</span> = <span style="color: #2aa198;">"4cdce828bfaeb6561733bab641ed2912107a8bc24758a17f2387ee78403afb9a"</span>;
-<span class="linenr"> 9: </span>  <span style="color: #d33682;">}</span>;
-<span class="linenr">10: </span>  <span style="color: #839496;">buildPhase</span> =
-<span class="linenr">11: </span>    <span style="color: #2aa198;">''</span>
-<span class="linenr">12: </span><span style="color: #2aa198;">    outdir=$out/libexec</span>
-<span class="linenr">13: </span><span style="color: #2aa198;">    mkdir -p $outdir</span>
-<span class="linenr">14: </span><span style="color: #2aa198;">    cp -r * $outdir</span>
-<span class="linenr">15: </span><span style="color: #2aa198;">    ''</span>;
-<span class="linenr">16: </span>  <span style="color: #839496;">installPhase</span> =
-<span class="linenr">17: </span>    <span style="color: #2aa198;">''</span>
-<span class="linenr">18: </span><span style="color: #2aa198;">    mkdir $out/bin</span>
-<span class="linenr">19: </span><span style="color: #2aa198;">    ln -s $outdir/libexec/jenv $out/bin/jenv;</span>
-<span class="linenr">20: </span><span style="color: #2aa198;">    ''</span>;
-<span class="linenr">21: </span>  <span style="color: #839496;">dontFixup</span> = <span style="color: #268bd2;">true</span>;
-<span class="linenr">22: </span>  <span style="color: #839496;">meta</span> = <span style="color: #859900; font-weight: bold;">with</span> stdenv.lib; <span style="color: #d33682;">{</span>
-<span class="linenr">23: </span>    <span style="color: #839496;">description</span> = <span style="color: #2aa198;">"jEnv is an updated fork of jenv, a beloved Java environment manager adapted from rbenv."</span>;
-<span class="linenr">24: </span>    <span style="color: #839496;">longDescription</span> =
-<span class="linenr">25: </span>      <span style="color: #2aa198;">''This is an updated fork of jenv, a beloved Java environment manager adapted from rbenv.</span>
+<span class="linenr"> 3: </span>   stdenv.mkDerivation rec {
+<span class="linenr"> 4: </span>     version = "0.5.2";
+<span class="linenr"> 5: </span>     pname = "jenv";
+<span class="linenr"> 6: </span>     src = fetchurl {
+<span class="linenr"> 7: </span>       url = "https://github.com/jenv/jenv/archive/${version}.tar.gz";
+<span class="linenr"> 8: </span>       sha256 = "4cdce828bfaeb6561733bab641ed2912107a8bc24758a17f2387ee78403afb9a";
+<span class="linenr"> 9: </span>     };
+<span class="linenr">10: </span>     buildPhase =
+<span class="linenr">11: </span>       ''
+<span class="linenr">12: </span>       outdir=$out/libexec
+<span class="linenr">13: </span>       mkdir -p $outdir
+<span class="linenr">14: </span>       cp -r * $outdir
+<span class="linenr">15: </span>       '';
+<span class="linenr">16: </span>     installPhase =
+<span class="linenr">17: </span>       ''
+<span class="linenr">18: </span>       mkdir $out/bin
+<span class="linenr">19: </span>       ln -s $outdir/libexec/jenv $out/bin/jenv;
+<span class="linenr">20: </span>       '';
+<span class="linenr">21: </span>     dontFixup = true;
+<span class="linenr">22: </span>     meta = with stdenv.lib; {
+<span class="linenr">23: </span>       description = "jEnv is an updated fork of jenv, a beloved Java environment manager adapted from rbenv.";
+<span class="linenr">24: </span>       longDescription =
+<span class="linenr">25: </span>         ''This is an updated fork of jenv, a beloved Java environment manager adapted from rbenv.
 <span class="linenr">26: </span>
-<span class="linenr">27: </span><span style="color: #2aa198;">        jenv gives you a few critical affordances for using java on development machines:</span>
+<span class="linenr">27: </span>           jenv gives you a few critical affordances for using java on development machines:
 <span class="linenr">28: </span>
-<span class="linenr">29: </span><span style="color: #2aa198;">          * It lets you switch between java versions. This is useful when developing Android applications, which generally require Java 8 for its tools, versus server applications, which use later versions like Java 11.</span>
-<span class="linenr">30: </span><span style="color: #2aa198;">          * It sets JAVA_HOME inside your shell, in a way that can be set globally, local to the current working directory or per shell.</span>
+<span class="linenr">29: </span>             * It lets you switch between java versions. This is useful when developing Android applications, which generally require Java 8 for its tools, versus server applications, which use later versions like Java 11.
+<span class="linenr">30: </span>             * It sets JAVA_HOME inside your shell, in a way that can be set globally, local to the current working directory or per shell.
 <span class="linenr">31: </span>
-<span class="linenr">32: </span><span style="color: #2aa198;">        However, this project does not:</span>
+<span class="linenr">32: </span>           However, this project does not:
 <span class="linenr">33: </span>
-<span class="linenr">34: </span><span style="color: #2aa198;">          * Install java for you. Use your platform appropriate package manager to install java. On macOS, brew is recommended.</span>
-<span class="linenr">35: </span><span style="color: #2aa198;">          * This document will show you how to install jenv, review its most common commands, show example workflows and identify known issues.</span>
-<span class="linenr">36: </span><span style="color: #2aa198;">      ''</span>;
-<span class="linenr">37: </span>    <span style="color: #839496;">homepage</span> = <span style="color: #d33682; font-weight: bold;">http://www.jenv.be</span>;
-<span class="linenr">38: </span>    <span style="color: #839496;">license</span> = licenses.mit;
-<span class="linenr">39: </span>    <span style="color: #839496;">platforms</span> = platforms.all;
-<span class="linenr">40: </span>    <span style="color: #839496;">maintainers</span> = <span style="color: #859900;">[</span> <span style="color: #859900;">]</span>;
-<span class="linenr">41: </span>  <span style="color: #d33682;">}</span>;
-<span class="linenr">42: </span><span style="color: #268bd2;">}</span>
+<span class="linenr">34: </span>             * Install java for you. Use your platform appropriate package manager to install java. On macOS, brew is recommended.
+<span class="linenr">35: </span>             * This document will show you how to install jenv, review its most common commands, show example workflows and identify known issues.
+<span class="linenr">36: </span>         '';
+<span class="linenr">37: </span>       homepage = http://www.jenv.be;
+<span class="linenr">38: </span>       license = licenses.mit;
+<span class="linenr">39: </span>       platforms = platforms.all;
+<span class="linenr">40: </span>       maintainers = [ ];
+<span class="linenr">41: </span>     };
+<span class="linenr">42: </span>   }
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgddde187" class="outline-3">
-<h3 id="orgddde187">mit-scheme 安装问题</h3>
-<div class="outline-text-3" id="text-orgddde187">
+<div id="outline-container-orgeb554c7" class="outline-3">
+<h3 id="orgeb554c7">mit-scheme 安装问题</h3>
+<div class="outline-text-3" id="text-orgeb554c7">
 <p>
 nix的channel里有mit-scheme包，但是不支持darwin平台。使用mit-scheme-c的包来安装的话，又有编译问题。nix编译darwin包用的stdenv中clang的版本比较低。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">$ nix-shell --pure -p stdenv --command "clang --version"
-clang version 7.1.0 (tags/RELEASE_710/final)
-Target: x86_64-apple-darwin19.2.0
-Thread model: posix
-InstalledDir: /nix/store/jdmg20b8rgvs1s4fxb585lffz07vv52a-clang-7.1.0/bin
+<pre class="src src-text">   $ nix-shell --pure -p stdenv --command "clang --version"
+   clang version 7.1.0 (tags/RELEASE_710/final)
+   Target: x86_64-apple-darwin19.2.0
+   Thread model: posix
+   InstalledDir: /nix/store/jdmg20b8rgvs1s4fxb585lffz07vv52a-clang-7.1.0/bin
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgaa2050e" class="outline-4">
-<h4 id="orgaa2050e">解决clang版本低问题，可以直接使用xcode command line tools编译</h4>
-<div class="outline-text-4" id="text-orgaa2050e">
+<div id="outline-container-orga08ade2" class="outline-4">
+<h4 id="orga08ade2">解决clang版本低问题，可以直接使用xcode command line tools编译</h4>
+<div class="outline-text-4" id="text-orga08ade2">
 <div class="org-src-container">
-<pre class="src src-nix"><span class="linenr"> 1: </span><span style="color: #268bd2;">{</span> stdenv, requireFile, lib <span style="color: #268bd2;">}</span>:
+<pre class="src src-nix"><span class="linenr"> 1: </span>    { stdenv, requireFile, lib }:
 <span class="linenr"> 2: </span>
-<span class="linenr"> 3: </span><span style="color: #859900; font-weight: bold;">let</span> <span style="color: #839496;">requireCLTool</span> = version: sha256:
-<span class="linenr"> 4: </span>  <span style="color: #859900; font-weight: bold;">let</span>
-<span class="linenr"> 5: </span>    <span style="color: #839496;">version'</span> = lib.replaceStrings <span style="color: #268bd2;">[</span><span style="color: #2aa198;">"."</span><span style="color: #268bd2;">]</span> <span style="color: #268bd2;">[</span><span style="color: #2aa198;">"_"</span><span style="color: #268bd2;">]</span> version;
-<span class="linenr"> 6: </span>    <span style="color: #839496;">dmg</span> = <span style="color: #2aa198;">"Command_Line_Tools_for_Xcode_</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #268bd2; font-weight: bold;">{</span>version'<span style="color: #268bd2; font-weight: bold;">}</span><span style="color: #2aa198;">.dmg"</span>;
-<span class="linenr"> 7: </span>    <span style="color: #839496;">app</span> = requireFile <span style="color: #859900; font-weight: bold;">rec</span> <span style="color: #268bd2;">{</span>
-<span class="linenr"> 8: </span>      <span style="color: #839496;">name</span> = <span style="color: #2aa198;">"CommandLineTools"</span>;
-<span class="linenr"> 9: </span>      <span style="color: #839496;">url</span> = <span style="color: #2aa198;">"https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span>version'<span style="color: #d33682; font-weight: bold;">}</span><span style="color: #2aa198;">/Command_Line_Tools_for_Xcode_</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span>version'<span style="color: #d33682; font-weight: bold;">}</span><span style="color: #2aa198;">.dmg"</span>;
-<span class="linenr">10: </span>      <span style="color: #839496;">hashMode</span> = <span style="color: #2aa198;">"recursive"</span>;
-<span class="linenr">11: </span>      <span style="color: #859900; font-weight: bold;">inherit</span> sha256;
-<span class="linenr">12: </span>      <span style="color: #839496;">message</span>  = <span style="color: #2aa198;">''</span>
-<span class="linenr">13: </span><span style="color: #2aa198;">        Unfortunately, we cannot download </span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span>name<span style="color: #d33682; font-weight: bold;">}</span><span style="color: #2aa198;"> automatically.</span>
-<span class="linenr">14: </span><span style="color: #2aa198;">        Please go to </span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span>url<span style="color: #d33682; font-weight: bold;">}</span>
-<span class="linenr">15: </span><span style="color: #2aa198;">        to download it yourself, and add it to the Nix store by running the following commands.</span>
-<span class="linenr">16: </span><span style="color: #2aa198;">        Note: download (~ 5GB), extraction and storing of Xcode will take a while</span>
+<span class="linenr"> 3: </span>    let requireCLTool = version: sha256:
+<span class="linenr"> 4: </span>      let
+<span class="linenr"> 5: </span>        version' = lib.replaceStrings ["."] ["_"] version;
+<span class="linenr"> 6: </span>        dmg = "Command_Line_Tools_for_Xcode_${version'}.dmg";
+<span class="linenr"> 7: </span>        app = requireFile rec {
+<span class="linenr"> 8: </span>          name = "CommandLineTools";
+<span class="linenr"> 9: </span>          url = "https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_${version'}/Command_Line_Tools_for_Xcode_${version'}.dmg";
+<span class="linenr">10: </span>          hashMode = "recursive";
+<span class="linenr">11: </span>          inherit sha256;
+<span class="linenr">12: </span>          message  = ''
+<span class="linenr">13: </span>            Unfortunately, we cannot download ${name} automatically.
+<span class="linenr">14: </span>            Please go to ${url}
+<span class="linenr">15: </span>            to download it yourself, and add it to the Nix store by running the following commands.
+<span class="linenr">16: </span>            Note: download (~ 5GB), extraction and storing of Xcode will take a while
 <span class="linenr">17: </span>
-<span class="linenr">18: </span><span style="color: #2aa198;">        nix-store --add-fixed --recursive sha256 /Library/Developer/CommandLineTools</span>
-<span class="linenr">19: </span><span style="color: #2aa198;">      ''</span>;
-<span class="linenr">20: </span>    <span style="color: #268bd2;">}</span>;
-<span class="linenr">21: </span>    <span style="color: #839496;">meta</span> = <span style="color: #859900; font-weight: bold;">with</span> stdenv.lib; <span style="color: #268bd2;">{</span>
-<span class="linenr">22: </span>      <span style="color: #839496;">homepage</span> = <span style="color: #d33682; font-weight: bold;">https://developer.apple.com/downloads/</span>;
-<span class="linenr">23: </span>      <span style="color: #839496;">description</span> = <span style="color: #2aa198;">"Apple's Command Line Tools for Xcode"</span>;
-<span class="linenr">24: </span>      <span style="color: #839496;">license</span> = licenses.unfree;
-<span class="linenr">25: </span>      <span style="color: #839496;">platforms</span> = platforms.darwin;
-<span class="linenr">26: </span>    <span style="color: #268bd2;">}</span>;
-<span class="linenr">27: </span>  <span style="color: #859900; font-weight: bold;">in</span> app.overrideAttrs <span style="color: #268bd2;">(</span>oldAttrs : oldAttrs // <span style="color: #d33682;">{</span> <span style="color: #859900; font-weight: bold;">inherit</span> meta; <span style="color: #d33682;">}</span><span style="color: #268bd2;">)</span>;
+<span class="linenr">18: </span>            nix-store --add-fixed --recursive sha256 /Library/Developer/CommandLineTools
+<span class="linenr">19: </span>          '';
+<span class="linenr">20: </span>        };
+<span class="linenr">21: </span>        meta = with stdenv.lib; {
+<span class="linenr">22: </span>          homepage = https://developer.apple.com/downloads/;
+<span class="linenr">23: </span>          description = "Apple's Command Line Tools for Xcode";
+<span class="linenr">24: </span>          license = licenses.unfree;
+<span class="linenr">25: </span>          platforms = platforms.darwin;
+<span class="linenr">26: </span>        };
+<span class="linenr">27: </span>      in app.overrideAttrs (oldAttrs : oldAttrs // { inherit meta; });
 <span class="linenr">28: </span>
-<span class="linenr">29: </span><span style="color: #859900; font-weight: bold;">in</span> lib.makeExtensible <span style="color: #268bd2;">(</span>self: <span style="color: #d33682;">{</span>
-<span class="linenr">30: </span>  <span style="color: #839496;">Command_Line_Tools_for_Xcode_11_2</span> = requireCLTool <span style="color: #2aa198;">"11.2"</span> <span style="color: #2aa198;">"76ec9816dc26955c0d3d05cbd39b9500d18842ddd33a448c98fb896f1a917dc5"</span>;
-<span class="linenr">31: </span>  <span style="color: #839496;">Command_Line_Tools_for_Xcode</span> = self.<span style="color: #2aa198;">"Command_Line_Tools_for_Xcode_</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #859900; font-weight: bold;">{</span>lib.replaceStrings <span style="color: #cb4b16;">[</span><span style="color: #2aa198;">"."</span><span style="color: #cb4b16;">]</span> <span style="color: #cb4b16;">[</span><span style="color: #2aa198;">"_"</span><span style="color: #cb4b16;">]</span> <span style="color: #cb4b16;">(</span><span style="color: #859900; font-weight: bold;">if</span> stdenv.targetPlatform.useiOSPrebuilt <span style="color: #859900; font-weight: bold;">then</span> stdenv.targetPlatform.xcodeVer <span style="color: #859900; font-weight: bold;">else</span> <span style="color: #2aa198;">"11.2"</span><span style="color: #cb4b16;">)</span><span style="color: #859900; font-weight: bold;">}</span>";
-<span class="linenr">32: </span><span style="color: #d33682;">}</span><span style="color: #268bd2;">)</span>
+<span class="linenr">29: </span>    in lib.makeExtensible (self: {
+<span class="linenr">30: </span>      Command_Line_Tools_for_Xcode_11_2 = requireCLTool "11.2" "76ec9816dc26955c0d3d05cbd39b9500d18842ddd33a448c98fb896f1a917dc5";
+<span class="linenr">31: </span>      Command_Line_Tools_for_Xcode = self."Command_Line_Tools_for_Xcode_${lib.replaceStrings ["."] ["_"] (if stdenv.targetPlatform.useiOSPrebuilt then stdenv.targetPlatform.xcodeVer else "11.2")}";
+<span class="linenr">32: </span>    })
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orga07e3ce" class="outline-4">
-<h4 id="orga07e3ce">修改 mit-scheme nix表达式，使用xcode command line tools编译</h4>
-<div class="outline-text-4" id="text-orga07e3ce">
+<div id="outline-container-org9e5a44e" class="outline-4">
+<h4 id="org9e5a44e">修改 mit-scheme nix表达式，使用xcode command line tools编译</h4>
+<div class="outline-text-4" id="text-org9e5a44e">
 <div class="org-src-container">
-<pre class="src src-nix"><span class="linenr"> 1: </span><span style="color: #268bd2;">{</span> pkgs, stdenvNoCC, fetchurl, makeWrapper, gnum4, texinfo, texLive, automake, lib, macosVersion, xcodeVersion <span style="color: #268bd2;">}</span>:
+<pre class="src src-nix"><span class="linenr"> 1: </span>    { pkgs, stdenvNoCC, fetchurl, makeWrapper, gnum4, texinfo, texLive, automake, lib, macosVersion, xcodeVersion }:
 <span class="linenr"> 2: </span>
-<span class="linenr"> 3: </span><span style="color: #859900; font-weight: bold;">let</span>
-<span class="linenr"> 4: </span>  <span style="color: #839496;">version</span> = <span style="color: #2aa198;">"9.2"</span>;
-<span class="linenr"> 5: </span>  <span style="color: #839496;">xcode</span> = pkgs.darwin.<span style="color: #2aa198;">"Command_Line_Tools_for_Xcode_</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #268bd2; font-weight: bold;">{</span>lib.replaceStrings <span style="color: #d33682;">[</span><span style="color: #2aa198;">"."</span><span style="color: #d33682;">]</span> <span style="color: #d33682;">[</span><span style="color: #2aa198;">"_"</span><span style="color: #d33682;">]</span> xcodeVersion<span style="color: #268bd2; font-weight: bold;">}</span>";
-<span class="linenr"> 6: </span><span style="color: #859900; font-weight: bold;">in</span>
-<span class="linenr"> 7: </span>stdenvNoCC.mkDerivation <span style="color: #268bd2;">{</span>
-<span class="linenr"> 8: </span>  <span style="color: #839496;">name</span> = <span style="color: #2aa198;">"mit-scheme-macos</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span>lib.replaceStrings <span style="color: #859900;">[</span><span style="color: #2aa198;">"."</span><span style="color: #859900;">]</span> <span style="color: #859900;">[</span><span style="color: #2aa198;">"_"</span><span style="color: #859900;">]</span> macosVersion<span style="color: #d33682; font-weight: bold;">}</span><span style="color: #2aa198;">-xcode</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span>lib.replaceStrings <span style="color: #859900;">[</span><span style="color: #2aa198;">"."</span><span style="color: #859900;">]</span> <span style="color: #859900;">[</span><span style="color: #2aa198;">"_"</span><span style="color: #859900;">]</span> xcodeVersion<span style="color: #d33682; font-weight: bold;">}</span><span style="color: #2aa198;">-</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span>version<span style="color: #d33682; font-weight: bold;">}</span>";
+<span class="linenr"> 3: </span>    let
+<span class="linenr"> 4: </span>      version = "9.2";
+<span class="linenr"> 5: </span>      xcode = pkgs.darwin."Command_Line_Tools_for_Xcode_${lib.replaceStrings ["."] ["_"] xcodeVersion}";
+<span class="linenr"> 6: </span>    in
+<span class="linenr"> 7: </span>    stdenvNoCC.mkDerivation {
+<span class="linenr"> 8: </span>      name = "mit-scheme-macos${lib.replaceStrings ["."] ["_"] macosVersion}-xcode${lib.replaceStrings ["."] ["_"] xcodeVersion}-${version}";
 <span class="linenr"> 9: </span>
-<span class="linenr">10: </span>  <span style="color: #405A61;"># MIT/GNU Scheme is not bootstrappable, so it's recommended to compile from</span>
-<span class="linenr">11: </span>  <span style="color: #405A61;"># the platform-specific tarballs, which contain pre-built binaries.  It</span>
-<span class="linenr">12: </span>  <span style="color: #405A61;"># leads to more efficient code than when building the tarball that contains</span>
-<span class="linenr">13: </span>  <span style="color: #405A61;"># generated C code instead of those binaries.</span>
-<span class="linenr">14: </span>  <span style="color: #839496;">src</span> = fetchurl <span style="color: #d33682;">{</span>
-<span class="linenr">15: </span>      <span style="color: #839496;">url</span> = <span style="color: #2aa198;">"mirror://gnu/mit-scheme/stable.pkg/</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #859900; font-weight: bold;">{</span>version<span style="color: #859900; font-weight: bold;">}</span><span style="color: #2aa198;">/mit-scheme-c-</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #859900; font-weight: bold;">{</span>version<span style="color: #859900; font-weight: bold;">}</span><span style="color: #2aa198;">.tar.gz"</span>;
-<span class="linenr">16: </span>      <span style="color: #839496;">sha256</span> = <span style="color: #2aa198;">"0w5ib5vsidihb4hb6fma3sp596ykr8izagm57axvgd6lqzwicsjg"</span>;
-<span class="linenr">17: </span>    <span style="color: #d33682;">}</span>;
+<span class="linenr">10: </span>      # MIT/GNU Scheme is not bootstrappable, so it's recommended to compile from
+<span class="linenr">11: </span>      # the platform-specific tarballs, which contain pre-built binaries.  It
+<span class="linenr">12: </span>      # leads to more efficient code than when building the tarball that contains
+<span class="linenr">13: </span>      # generated C code instead of those binaries.
+<span class="linenr">14: </span>      src = fetchurl {
+<span class="linenr">15: </span>          url = "mirror://gnu/mit-scheme/stable.pkg/${version}/mit-scheme-c-${version}.tar.gz";
+<span class="linenr">16: </span>          sha256 = "0w5ib5vsidihb4hb6fma3sp596ykr8izagm57axvgd6lqzwicsjg";
+<span class="linenr">17: </span>        };
 <span class="linenr">18: </span>
-<span class="linenr">19: </span>  <span style="color: #839496;">buildInputs</span> = <span style="color: #d33682;">[</span> xcode <span style="color: #d33682;">]</span>;
+<span class="linenr">19: </span>      buildInputs = [ xcode ];
 <span class="linenr">20: </span>
-<span class="linenr">21: </span>  <span style="color: #839496;">configurePhase</span> = <span style="color: #2aa198;">"(cd doc &amp;&amp; ./configure)"</span>;
+<span class="linenr">21: </span>      configurePhase = "(cd doc &amp;&amp; ./configure)";
 <span class="linenr">22: </span>
-<span class="linenr">23: </span>  <span style="color: #839496;">buildPhase</span> =
-<span class="linenr">24: </span>    <span style="color: #2aa198;">'' export PATH=</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span>xcode<span style="color: #d33682; font-weight: bold;">}</span><span style="color: #2aa198;">/usr/bin:$PATH</span>
-<span class="linenr">25: </span><span style="color: #2aa198;">       export CPATH=</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span>xcode<span style="color: #d33682; font-weight: bold;">}</span><span style="color: #2aa198;">/SDKs/MacOSX</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span>macosVersion<span style="color: #d33682; font-weight: bold;">}</span><span style="color: #2aa198;">.sdk/usr/include</span>
+<span class="linenr">23: </span>      buildPhase =
+<span class="linenr">24: </span>        '' export PATH=${xcode}/usr/bin:$PATH
+<span class="linenr">25: </span>           export CPATH=${xcode}/SDKs/MacOSX${macosVersion}.sdk/usr/include
 <span class="linenr">26: </span>
-<span class="linenr">27: </span><span style="color: #2aa198;">       cd src</span>
-<span class="linenr">28: </span><span style="color: #2aa198;">       for i in 6001/edextra.scm \</span>
-<span class="linenr">29: </span><span style="color: #2aa198;">                6001/floppy.scm \</span>
-<span class="linenr">30: </span><span style="color: #2aa198;">                compiler/etc/disload.scm \</span>
-<span class="linenr">31: </span><span style="color: #2aa198;">                edwin/techinfo.scm \</span>
-<span class="linenr">32: </span><span style="color: #2aa198;">                edwin/unix.scm \</span>
-<span class="linenr">33: </span><span style="color: #2aa198;">                swat/c/tk3.2-custom/Makefile \</span>
-<span class="linenr">34: </span><span style="color: #2aa198;">                swat/c/tk3.2-custom/tcl/Makefile \</span>
-<span class="linenr">35: </span><span style="color: #2aa198;">                swat/scheme/other/btest.scm \</span>
-<span class="linenr">36: </span><span style="color: #2aa198;">                microcode/configure</span>
-<span class="linenr">37: </span><span style="color: #2aa198;">       do</span>
-<span class="linenr">38: </span><span style="color: #2aa198;">           sed -i "s~/usr/local~$out~g" $i</span>
-<span class="linenr">39: </span><span style="color: #2aa198;">       done</span>
-<span class="linenr">40: </span><span style="color: #2aa198;">       sed -i 's/run_configure/run_configure --without-x --with-macosx-version=10.15/g' ./etc/make-liarc.sh</span>
-<span class="linenr">41: </span><span style="color: #2aa198;">       ./etc/make-liarc.sh --prefix=$out</span>
+<span class="linenr">27: </span>           cd src
+<span class="linenr">28: </span>           for i in 6001/edextra.scm \
+<span class="linenr">29: </span>                    6001/floppy.scm \
+<span class="linenr">30: </span>                    compiler/etc/disload.scm \
+<span class="linenr">31: </span>                    edwin/techinfo.scm \
+<span class="linenr">32: </span>                    edwin/unix.scm \
+<span class="linenr">33: </span>                    swat/c/tk3.2-custom/Makefile \
+<span class="linenr">34: </span>                    swat/c/tk3.2-custom/tcl/Makefile \
+<span class="linenr">35: </span>                    swat/scheme/other/btest.scm \
+<span class="linenr">36: </span>                    microcode/configure
+<span class="linenr">37: </span>           do
+<span class="linenr">38: </span>               sed -i "s~/usr/local~$out~g" $i
+<span class="linenr">39: </span>           done
+<span class="linenr">40: </span>           sed -i 's/run_configure/run_configure --without-x --with-macosx-version=10.15/g' ./etc/make-liarc.sh
+<span class="linenr">41: </span>           ./etc/make-liarc.sh --prefix=$out
 <span class="linenr">42: </span>
-<span class="linenr">43: </span><span style="color: #2aa198;">       cd ../doc</span>
+<span class="linenr">43: </span>           cd ../doc
 <span class="linenr">44: </span>
-<span class="linenr">45: </span><span style="color: #2aa198;">       # Provide a `texinfo.tex'.</span>
-<span class="linenr">46: </span><span style="color: #2aa198;">       export TEXINPUTS="$(echo </span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span>automake<span style="color: #d33682; font-weight: bold;">}</span><span style="color: #2aa198;">/share/automake-*)"</span>
-<span class="linenr">47: </span><span style="color: #2aa198;">       echo "\$TEXINPUTS is \`$TEXINPUTS'"</span>
-<span class="linenr">48: </span><span style="color: #2aa198;">       make</span>
+<span class="linenr">45: </span>           # Provide a `texinfo.tex'.
+<span class="linenr">46: </span>           export TEXINPUTS="$(echo ${automake}/share/automake-*)"
+<span class="linenr">47: </span>           echo "\$TEXINPUTS is \`$TEXINPUTS'"
+<span class="linenr">48: </span>           make
 <span class="linenr">49: </span>
-<span class="linenr">50: </span><span style="color: #2aa198;">       cd ..</span>
-<span class="linenr">51: </span><span style="color: #2aa198;">    ''</span>;
+<span class="linenr">50: </span>           cd ..
+<span class="linenr">51: </span>        '';
 <span class="linenr">52: </span>
-<span class="linenr">53: </span>  <span style="color: #839496;">installPhase</span> =
-<span class="linenr">54: </span>    <span style="color: #2aa198;">'' make prefix=$out install -C src</span>
-<span class="linenr">55: </span><span style="color: #2aa198;">       make prefix=$out install -C doc</span>
-<span class="linenr">56: </span><span style="color: #2aa198;">    ''</span>;
+<span class="linenr">53: </span>      installPhase =
+<span class="linenr">54: </span>        '' make prefix=$out install -C src
+<span class="linenr">55: </span>           make prefix=$out install -C doc
+<span class="linenr">56: </span>        '';
 <span class="linenr">57: </span>
-<span class="linenr">58: </span>  <span style="color: #839496;">fixupPhase</span> =
-<span class="linenr">59: </span>    <span style="color: #2aa198;">'' wrapProgram $out/bin/mit-scheme-c --set MITSCHEME_LIBRARY_PATH \</span>
-<span class="linenr">60: </span><span style="color: #2aa198;">         $out/lib/mit-scheme-c</span>
-<span class="linenr">61: </span><span style="color: #2aa198;">    ''</span>;
+<span class="linenr">58: </span>      fixupPhase =
+<span class="linenr">59: </span>        '' wrapProgram $out/bin/mit-scheme-c --set MITSCHEME_LIBRARY_PATH \
+<span class="linenr">60: </span>             $out/lib/mit-scheme-c
+<span class="linenr">61: </span>        '';
 <span class="linenr">62: </span>
-<span class="linenr">63: </span>  <span style="color: #839496;">nativeBuildInputs</span> = <span style="color: #d33682;">[</span> makeWrapper gnum4 texinfo texLive automake <span style="color: #d33682;">]</span>;
+<span class="linenr">63: </span>      nativeBuildInputs = [ makeWrapper gnum4 texinfo texLive automake ];
 <span class="linenr">64: </span>
-<span class="linenr">65: </span>  <span style="color: #405A61;"># </span><span style="color: #cc9393;">XXX</span><span style="color: #405A61;">: The `check' target doesn't exist.</span>
-<span class="linenr">66: </span>  <span style="color: #839496;">doCheck</span> = <span style="color: #268bd2;">false</span>;
+<span class="linenr">65: </span>      # XXX: The `check' target doesn't exist.
+<span class="linenr">66: </span>      doCheck = false;
 <span class="linenr">67: </span>
-<span class="linenr">68: </span>  <span style="color: #839496;">meta</span> = <span style="color: #859900; font-weight: bold;">with</span> stdenvNoCC.lib; <span style="color: #d33682;">{</span>
-<span class="linenr">69: </span>    <span style="color: #839496;">description</span> = <span style="color: #2aa198;">"MIT/GNU Scheme, a native code Scheme compiler"</span>;
+<span class="linenr">68: </span>      meta = with stdenvNoCC.lib; {
+<span class="linenr">69: </span>        description = "MIT/GNU Scheme, a native code Scheme compiler";
 <span class="linenr">70: </span>
-<span class="linenr">71: </span>    <span style="color: #839496;">longDescription</span> =
-<span class="linenr">72: </span>      <span style="color: #2aa198;">'' MIT/GNU Scheme is an implementation of the Scheme programming</span>
-<span class="linenr">73: </span><span style="color: #2aa198;">         language, providing an interpreter, compiler, source-code debugger,</span>
-<span class="linenr">74: </span><span style="color: #2aa198;">         integrated Emacs-like editor, and a large runtime library.  MIT/GNU</span>
-<span class="linenr">75: </span><span style="color: #2aa198;">         Scheme is best suited to programming large applications with a rapid</span>
-<span class="linenr">76: </span><span style="color: #2aa198;">         development cycle.</span>
-<span class="linenr">77: </span><span style="color: #2aa198;">      ''</span>;
+<span class="linenr">71: </span>        longDescription =
+<span class="linenr">72: </span>          '' MIT/GNU Scheme is an implementation of the Scheme programming
+<span class="linenr">73: </span>             language, providing an interpreter, compiler, source-code debugger,
+<span class="linenr">74: </span>             integrated Emacs-like editor, and a large runtime library.  MIT/GNU
+<span class="linenr">75: </span>             Scheme is best suited to programming large applications with a rapid
+<span class="linenr">76: </span>             development cycle.
+<span class="linenr">77: </span>          '';
 <span class="linenr">78: </span>
-<span class="linenr">79: </span>    <span style="color: #839496;">homepage</span> = <span style="color: #d33682; font-weight: bold;">https://www.gnu.org/software/mit-scheme/</span>;
+<span class="linenr">79: </span>        homepage = https://www.gnu.org/software/mit-scheme/;
 <span class="linenr">80: </span>
-<span class="linenr">81: </span>    <span style="color: #839496;">license</span> = licenses.gpl2Plus;
+<span class="linenr">81: </span>        license = licenses.gpl2Plus;
 <span class="linenr">82: </span>
-<span class="linenr">83: </span>    <span style="color: #839496;">maintainers</span> = <span style="color: #859900;">[</span> <span style="color: #859900;">]</span>;
+<span class="linenr">83: </span>        maintainers = [ ];
 <span class="linenr">84: </span>
-<span class="linenr">85: </span>    <span style="color: #405A61;"># Build fails on Cygwin and Darwin:</span>
-<span class="linenr">86: </span>    <span style="color: #405A61;"># <a href="http://article.gmane.org/gmane.lisp.scheme.mit-scheme.devel/489">&lt;http://article.gmane.org/gmane.lisp.scheme.mit-scheme.devel/489&gt;</a>.</span>
-<span class="linenr">87: </span>    <span style="color: #839496;">platforms</span> = platforms.darwin;
-<span class="linenr">88: </span>  <span style="color: #d33682;">}</span>;
-<span class="linenr">89: </span><span style="color: #268bd2;">}</span>
+<span class="linenr">85: </span>        # Build fails on Cygwin and Darwin:
+<span class="linenr">86: </span>        # &lt;http://article.gmane.org/gmane.lisp.scheme.mit-scheme.devel/489&gt;.
+<span class="linenr">87: </span>        platforms = platforms.darwin;
+<span class="linenr">88: </span>      };
+<span class="linenr">89: </span>    }
 </pre>
 </div>
 </div>
@@ -590,9 +590,9 @@ InstalledDir: /nix/store/jdmg20b8rgvs1s4fxb585lffz07vv52a-clang-7.1.0/bin
 </div>
 
 
-<div id="outline-container-org4b3b6a1" class="outline-3">
-<h3 id="org4b3b6a1">我的自定义nix-channels</h3>
-<div class="outline-text-3" id="text-org4b3b6a1">
+<div id="outline-container-orgea73061" class="outline-3">
+<h3 id="orgea73061">我的自定义nix-channels</h3>
+<div class="outline-text-3" id="text-orgea73061">
 <p>
 <a href="https://github.com/shanexu/nixpkgs-channels">https://github.com/shanexu/nixpkgs-channels</a>
 </p>
@@ -600,9 +600,9 @@ InstalledDir: /nix/store/jdmg20b8rgvs1s4fxb585lffz07vv52a-clang-7.1.0/bin
 </div>
 </div>
 
-<div id="outline-container-orgab6bb73" class="outline-2">
-<h2 id="orgab6bb73">后记</h2>
-<div class="outline-text-2" id="text-orgab6bb73">
+<div id="outline-container-orgefdfefc" class="outline-2">
+<h2 id="orgefdfefc">后记</h2>
+<div class="outline-text-2" id="text-orgefdfefc">
 <p>
 nix是个好工具，对于构建应用的开发环境来说是一个杀手级的工具，但是对于macOS这种系统的日常使用来说还是有些不方便。最后我给自己定下了一些使用策略。
 </p>
@@ -614,9 +614,9 @@ nix是个好工具，对于构建应用的开发环境来说是一个杀手级�
 </div>
 </div>
 
-<div id="outline-container-orgec1512c" class="outline-2">
-<h2 id="orgec1512c">参考文档</h2>
-<div class="outline-text-2" id="text-orgec1512c">
+<div id="outline-container-orgcdf1575" class="outline-2">
+<h2 id="orgcdf1575">参考文档</h2>
+<div class="outline-text-2" id="text-orgcdf1575">
 <p>
 <a href="https://www.softinio.com/post/moving-from-homebrew-to-nix-package-manager/">https://www.softinio.com/post/moving-from-homebrew-to-nix-package-manager/</a>
 </p>
@@ -637,7 +637,7 @@ nix是个好工具，对于构建应用的开发环境来说是一个杀手级�
         <script type="text/javascript">
           //var disqus_developer = 1;
           var disqus_identifier = "/blog/2019/12/08/moving-from-homebrew-to-nix-package-manager";
-          var disqus_url = "http://shanexu.io/blog/2019/12/08/moving-from-homebrew-to-nix-package-manager";
+          var disqus_url = "https://xusheng.org/blog/2019/12/08/moving-from-homebrew-to-nix-package-manager";
           var disqus_shortname = 'shanexu';
           /* * * DON'T EDIT BELOW THIS LINE * * */
           (function() {
@@ -661,9 +661,9 @@ nix是个好工具，对于构建应用的开发环境来说是一个杀手级�
          })();
         </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 27.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 28.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
-          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711@gmail.com">Shane Xu</a>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">Shane Xu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;
           Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
           <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>

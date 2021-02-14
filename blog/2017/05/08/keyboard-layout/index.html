@@ -17,7 +17,7 @@
         <blockquote>Life is too short for so much sorrow.</blockquote>
         <form method="get" id="searchform" action="//www.google.com/search">
           <input type="text" class="field" name="q" id="s" placeholder="Search">
-          <input type="hidden" name="as_sitesearch" value="shanexu.io">
+          <input type="hidden" name="as_sitesearch" value="xusheng.org">
         </form>
       </header>
     </div>
@@ -46,7 +46,7 @@
 </p>
 
 
-<div class="figure">
+<div id="org58d3625" class="figure">
 <p><img src="/assets/blog/2017/05/08/keyboard-layout/sharpkeys.png" alt="sharpkeys.png" />
 </p>
 </div>
@@ -60,7 +60,7 @@
 </p>
 
 
-<div class="figure">
+<div id="org7911be8" class="figure">
 <p><img src="/assets/blog/2017/05/08/keyboard-layout/macos_keyboard.png" alt="macos_keyboard.png" />
 </p>
 </div>
@@ -107,20 +107,20 @@ setxkbmap -device <span style="color: #d33682; font-weight: bold;">15</span> -op
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">&#9121; Virtual core pointer                      id=2  [master pointer  (3)]
-&#9116;   &#8627; Virtual core XTEST pointer                id=4  [slave  pointer  (2)]
-&#9116;   &#8627; bcm5974                                   id=12 [slave  pointer  (2)]
-&#9116;   &#8627; Broadcom Corp. Bluetooth USB Host Controller  id=14 [slave  pointer  (2)]
-&#9123; Virtual core keyboard                     id=3  [master keyboard (2)]
-    &#8627; Virtual core XTEST keyboard               id=5  [slave  keyboard (3)]
-    &#8627; Power Button                              id=6  [slave  keyboard (3)]
-    &#8627; Video Bus                                 id=7  [slave  keyboard (3)]
-    &#8627; Video Bus                                 id=8  [slave  keyboard (3)]
-    &#8627; Power Button                              id=9  [slave  keyboard (3)]
-    &#8627; Sleep Button                              id=10 [slave  keyboard (3)]
-    &#8627; Apple Inc. Apple Internal Keyboard / Trackpad id=11 [slave  keyboard (3)]
-    &#8627; Broadcom Corp. Bluetooth USB Host Controller  id=13 [slave  keyboard (3)]
-    &#8627; Topre Corporation HHKB Professional       id=15 [slave  keyboard (3)]
+<pre class="src src-text">&#9121; Virtual core pointer                      id=2    [master pointer  (3)]
+&#9116;   &#8627; Virtual core XTEST pointer                id=4    [slave  pointer  (2)]
+&#9116;   &#8627; bcm5974                                   id=12   [slave  pointer  (2)]
+&#9116;   &#8627; Broadcom Corp. Bluetooth USB Host Controller  id=14   [slave  pointer  (2)]
+&#9123; Virtual core keyboard                     id=3    [master keyboard (2)]
+    &#8627; Virtual core XTEST keyboard               id=5    [slave  keyboard (3)]
+    &#8627; Power Button                              id=6    [slave  keyboard (3)]
+    &#8627; Video Bus                                 id=7    [slave  keyboard (3)]
+    &#8627; Video Bus                                 id=8    [slave  keyboard (3)]
+    &#8627; Power Button                              id=9    [slave  keyboard (3)]
+    &#8627; Sleep Button                              id=10   [slave  keyboard (3)]
+    &#8627; Apple Inc. Apple Internal Keyboard / Trackpad id=11   [slave  keyboard (3)]
+    &#8627; Broadcom Corp. Bluetooth USB Host Controller  id=13   [slave  keyboard (3)]
+    &#8627; Topre Corporation HHKB Professional       id=15   [slave  keyboard (3)]
 </pre>
 </div>
 
@@ -135,9 +135,9 @@ xorg.conf中有一个Section —— InputClass，专门用来设置输入设备�
 <div class="org-src-container">
 <pre class="src src-conf">Section <span style="color: #2aa198;">"InputClass"</span>
   Identifier <span style="color: #2aa198;">"system-keyboard"</span>
-  MatchIsKeyboard <span style="color: #2aa198;">"on"</span>
+    MatchIsKeyboard <span style="color: #2aa198;">"on"</span>
   Option <span style="color: #2aa198;">"XkbLayout"</span> <span style="color: #2aa198;">"us"</span>
-  Option <span style="color: #2aa198;">"XkbOptions"</span> <span style="color: #2aa198;">"ctrl:swapcaps"</span>
+    Option <span style="color: #2aa198;">"XkbOptions"</span> <span style="color: #2aa198;">"ctrl:swapcaps"</span>
 EndSection
 </pre>
 </div>
@@ -145,9 +145,9 @@ EndSection
 <div class="org-src-container">
 <pre class="src src-conf">Section <span style="color: #2aa198;">"InputClass"</span>
   Identifier <span style="color: #2aa198;">"hhkb"</span>
-  MatchProduct <span style="color: #2aa198;">"HHKB"</span>
+    MatchProduct <span style="color: #2aa198;">"HHKB"</span>
   Option <span style="color: #2aa198;">"XkbLayout"</span> <span style="color: #2aa198;">"us"</span>
-  Option <span style="color: #2aa198;">"XkbOptions"</span> <span style="color: #2aa198;">","</span>
+    Option <span style="color: #2aa198;">"XkbOptions"</span> <span style="color: #2aa198;">","</span>
 EndSection
 </pre>
 </div>
@@ -217,7 +217,7 @@ shane    14268  8246  0 07:25 tty2     00:00:00 /usr/lib/gnome-settings-daemon/g
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell">ps -ef | grep <span style="color: #2aa198;">'[g]sd-keyboard'</span> | grep <span style="color: #cb4b16; font-weight: bold;">`whoami`</span> | awk <span style="color: #2aa198;">'{print $2}'</span> | xargs kill -9
+<pre class="src src-shell">ps -ef | <span style="color: #b58900;">grep</span> <span style="color: #2aa198;">'[g]sd-keyboard'</span> | <span style="color: #b58900;">grep</span> <span style="color: #cb4b16; font-weight: bold;">`whoami`</span> | awk <span style="color: #2aa198;">'{print $2}'</span> | xargs <span style="color: #b58900;">kill</span> -9
 </pre>
 </div>
 
@@ -239,7 +239,7 @@ gnome-settings-daemon /usr/lib/gnome-settings-daemon/gsd-keyboard
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell">sudo mv /etc/xdg/autostart/org.gnome.SettingsDaemon.A11yKeyboard.desktop ~/Desktop
+<pre class="src src-shell"><span style="color: #b58900;">sudo</span> <span style="color: #b58900;">mv</span> /etc/xdg/autostart/org.gnome.SettingsDaemon.A11yKeyboard.desktop ~/Desktop
 </pre>
 </div>
 
@@ -267,18 +267,18 @@ RequiredComponents=org.gnome.Shell;org.gnome.SettingsDaemon.A11yKeyboard;org.gno
 </p>
 
 <div class="org-src-container">
-<pre class="src src-diff"><span style="color: #2aa198;">diff</span> <span style="color: #2aa198;">--git</span> <span style="color: #2aa198;">a/js/ui/status/keyboard.js</span> <span style="color: #2aa198;">b/js/ui/status/keyboard.js</span>
-<span style="color: #2aa198;">index</span> <span style="color: #2aa198;">d4b14d538..5796afd5e</span> <span style="color: #2aa198;">100644</span>
-<span style="color: #2aa198;">---</span> <span style="color: #268bd2;">a/js/ui/status/keyboard.js</span>
-<span style="color: #2aa198;">+++</span> <span style="color: #268bd2;">b/js/ui/status/keyboard.js</span>
-<span style="color: #6c71c4;">@@</span> <span style="color: #6c71c4;">-266,7</span> <span style="color: #6c71c4;">+266,7</span> <span style="color: #6c71c4;">@@</span> <span style="color: #2aa198;">const</span> <span style="color: #2aa198;">InputSourceSessionSettings</span> <span style="color: #2aa198;">=</span> <span style="color: #2aa198;">new</span> <span style="color: #2aa198;">Lang.Class({</span>
-<span style="color: #56697A;">    </span> <span style="color: #738284;">_init:</span> <span style="color: #738284;">function()</span> <span style="color: #738284;">{</span>
-<span style="color: #56697A;">        </span> <span style="color: #738284;">this._settings</span> <span style="color: #738284;">=</span> <span style="color: #738284;">new</span> <span style="color: #738284;">Gio.Settings({</span> <span style="color: #738284;">schema_id:</span> <span style="color: #738284;">this._DESKTOP_INPUT_SOURCES_SCHEMA</span> <span style="color: #738284;">});</span>
-<span style="color: #56697A;">        </span> <span style="color: #738284;">this._settings.connect('changed::'</span> <span style="color: #738284;">+</span> <span style="color: #738284;">this._KEY_INPUT_SOURCES,</span> <span style="color: #738284;">Lang.bind(this,</span> <span style="color: #738284;">this._emitInputSourcesChanged));</span>
-<span style="color: #aa2222; background-color: #13383C;">-</span>        <span style="color: #dc322f; background-color: #13383C;">this._settings.connect('changed::'</span> <span style="color: #dc322f; background-color: #13383C;">+</span> <span style="color: #dc322f; background-color: #13383C;">this._KEY_KEYBOARD_OPTIONS,</span> <span style="color: #dc322f; background-color: #13383C;">Lang.bind(this,</span> <span style="color: #dc322f; background-color: #13383C;">this._emitKeyboardOptionsChanged));</span>
-<span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span> <span style="color: #859900; background-color: #00212B;">this._settings.connect('changed::'</span> <span style="color: #859900; background-color: #00212B;">+</span> <span style="color: #859900; background-color: #00212B;">this._KEY_KEYBOARD_OPTIONS,</span> <span style="color: #859900; background-color: #00212B;">Lang.bind(this,</span> <span style="color: #859900; background-color: #00212B;">this._emitKeyboardOptionsChanged));</span>
-<span style="color: #56697A;">        </span> <span style="color: #738284;">this._settings.connect('changed::'</span> <span style="color: #738284;">+</span> <span style="color: #738284;">this._KEY_PER_WINDOW,</span> <span style="color: #738284;">Lang.bind(this,</span> <span style="color: #738284;">this._emitPerWindowChanged));</span>
-<span style="color: #56697A;">    </span> },
+<pre class="src src-diff"><span style="color: #2aa198;">diff --git a/js/ui/status/keyboard.js b/js/ui/status/keyboard.js</span>
+<span style="color: #2aa198;">index d4b14d538..5796afd5e 100644</span>
+<span style="color: #2aa198;">--- </span><span style="color: #268bd2;">a/js/ui/status/keyboard.js</span>
+<span style="color: #2aa198;">+++ </span><span style="color: #268bd2;">b/js/ui/status/keyboard.js</span>
+<span style="color: #6c71c4;">@@ -266,7 +266,7 @@</span><span style="color: #2aa198;"> const InputSourceSessionSettings = new Lang.Class({</span>
+<span style="color: #738284;">     _init: function() {</span>
+<span style="color: #738284;">         this._settings = new Gio.Settings({ schema_id: this._DESKTOP_INPUT_SOURCES_SCHEMA });</span>
+<span style="color: #738284;">         this._settings.connect('changed::' + this._KEY_INPUT_SOURCES, Lang.bind(this, this._emitInputSourcesChanged));</span>
+<span style="color: #aa2222; background-color: #13383C;">-</span><span style="color: #dc322f; background-color: #13383C;">        this._settings.connect('changed::' + this._KEY_KEYBOARD_OPTIONS, Lang.bind(this, this._emitKeyboardOptionsChanged));</span>
+<span style="color: #22aa22; background-color: #002b36;">+</span><span style="color: #859900; background-color: #002b36;">        // this._settings.connect('changed::' + this._KEY_KEYBOARD_OPTIONS, Lang.bind(this, this._emitKeyboardOptionsChanged));</span>
+<span style="color: #738284;">         this._settings.connect('changed::' + this._KEY_PER_WINDOW, Lang.bind(this, this._emitPerWindowChanged));</span>
+     },
 </pre>
 </div>
 
@@ -287,55 +287,55 @@ RequiredComponents=org.gnome.Shell;org.gnome.SettingsDaemon.A11yKeyboard;org.gno
 </p>
 
 <div class="org-src-container">
-<pre class="src src-diff"><span style="color: #2aa198;">diff</span> <span style="color: #2aa198;">--git</span> <span style="color: #2aa198;">a/js/misc/keyboardManager.js</span> <span style="color: #2aa198;">b/js/misc/keyboardManager.js</span>
-<span style="color: #2aa198;">index</span> <span style="color: #2aa198;">95afb4a8c..129e5bbe9</span> <span style="color: #2aa198;">100644</span>
-<span style="color: #2aa198;">---</span> <span style="color: #268bd2;">a/js/misc/keyboardManager.js</span>
-<span style="color: #2aa198;">+++</span> <span style="color: #268bd2;">b/js/misc/keyboardManager.js</span>
-<span style="color: #6c71c4;">@@</span> <span style="color: #6c71c4;">-65,27</span> <span style="color: #6c71c4;">+65,27</span> <span style="color: #6c71c4;">@@</span> <span style="color: #2aa198;">const</span> <span style="color: #2aa198;">KeyboardManager</span> <span style="color: #2aa198;">=</span> <span style="color: #2aa198;">new</span> <span style="color: #2aa198;">Lang.Class({</span>
-<span style="color: #56697A;">    </span> <span style="color: #738284;">},</span>
-
-<span style="color: #56697A;">    </span> <span style="color: #738284;">apply:</span> <span style="color: #738284;">function(id)</span> <span style="color: #738284;">{</span>
-<span style="color: #aa2222; background-color: #13383C;">-</span>        <span style="color: #dc322f; background-color: #13383C;">let</span> <span style="color: #dc322f; background-color: #13383C;">info</span> <span style="color: #dc322f; background-color: #13383C;">=</span> <span style="color: #dc322f; background-color: #13383C;">this._layoutInfos[id];</span>
-<span style="color: #aa2222; background-color: #13383C;">-</span>        <span style="color: #dc322f; background-color: #13383C;">if</span> <span style="color: #dc322f; background-color: #13383C;">(!info)</span>
-<span style="color: #aa2222; background-color: #13383C;">-</span>            <span style="color: #dc322f; background-color: #13383C;">return;</span>
+<pre class="src src-diff"><span style="color: #2aa198;">diff --git a/js/misc/keyboardManager.js b/js/misc/keyboardManager.js</span>
+<span style="color: #2aa198;">index 95afb4a8c..129e5bbe9 100644</span>
+<span style="color: #2aa198;">--- </span><span style="color: #268bd2;">a/js/misc/keyboardManager.js</span>
+<span style="color: #2aa198;">+++ </span><span style="color: #268bd2;">b/js/misc/keyboardManager.js</span>
+<span style="color: #6c71c4;">@@ -65,27 +65,27 @@</span><span style="color: #2aa198;"> const KeyboardManager = new Lang.Class({</span>
+<span style="color: #738284;">     },</span>
+<span style="color: #738284;"> </span>
+<span style="color: #738284;">     apply: function(id) {</span>
+<span style="color: #aa2222; background-color: #13383C;">-</span><span style="color: #dc322f; background-color: #13383C;">        let info = this._layoutInfos[id];</span>
+<span style="color: #aa2222; background-color: #13383C;">-</span><span style="color: #dc322f; background-color: #13383C;">        if (!info)</span>
+<span style="color: #aa2222; background-color: #13383C;">-</span><span style="color: #dc322f; background-color: #13383C;">            return;</span>
 <span style="color: #aa2222; background-color: #13383C;">-</span>
-<span style="color: #aa2222; background-color: #13383C;">-</span>        <span style="color: #dc322f; background-color: #13383C;">if</span> <span style="color: #dc322f; background-color: #13383C;">(this._current</span> <span style="color: #dc322f; background-color: #13383C;">&amp;&amp;</span> <span style="color: #dc322f; background-color: #13383C;">this._current.group</span> <span style="color: #dc322f; background-color: #13383C;">==</span> <span style="color: #dc322f; background-color: #13383C;">info.group)</span> <span style="color: #dc322f; background-color: #13383C;">{</span>
-<span style="color: #aa2222; background-color: #13383C;">-</span>            <span style="color: #dc322f; background-color: #13383C;">if</span> <span style="color: #dc322f; background-color: #13383C;">(this._current.groupIndex</span> <span style="color: #dc322f; background-color: #13383C;">!=</span> <span style="color: #dc322f; background-color: #13383C;">info.groupIndex)</span>
-<span style="color: #aa2222; background-color: #13383C;">-</span>                <span style="color: #dc322f; background-color: #13383C;">this._applyLayoutGroupIndex(info.groupIndex);</span>
-<span style="color: #aa2222; background-color: #13383C;">-</span>        <span style="color: #dc322f; background-color: #13383C;">}</span> <span style="color: #dc322f; background-color: #13383C;">else</span> <span style="color: #dc322f; background-color: #13383C;">{</span>
-<span style="color: #aa2222; background-color: #13383C;">-</span>            <span style="color: #dc322f; background-color: #13383C;">this._applyLayoutGroup(info.group);</span>
-<span style="color: #aa2222; background-color: #13383C;">-</span>            <span style="color: #dc322f; background-color: #13383C;">this._applyLayoutGroupIndex(info.groupIndex);</span>
-<span style="color: #aa2222; background-color: #13383C;">-</span>        <span style="color: #dc322f; background-color: #13383C;">}</span>
+<span style="color: #aa2222; background-color: #13383C;">-</span><span style="color: #dc322f; background-color: #13383C;">        if (this._current &amp;&amp; this._current.group == info.group) {</span>
+<span style="color: #aa2222; background-color: #13383C;">-</span><span style="color: #dc322f; background-color: #13383C;">            if (this._current.groupIndex != info.groupIndex)</span>
+<span style="color: #aa2222; background-color: #13383C;">-</span><span style="color: #dc322f; background-color: #13383C;">                this._applyLayoutGroupIndex(info.groupIndex);</span>
+<span style="color: #aa2222; background-color: #13383C;">-</span><span style="color: #dc322f; background-color: #13383C;">        } else {</span>
+<span style="color: #aa2222; background-color: #13383C;">-</span><span style="color: #dc322f; background-color: #13383C;">            this._applyLayoutGroup(info.group);</span>
+<span style="color: #aa2222; background-color: #13383C;">-</span><span style="color: #dc322f; background-color: #13383C;">            this._applyLayoutGroupIndex(info.groupIndex);</span>
+<span style="color: #aa2222; background-color: #13383C;">-</span><span style="color: #dc322f; background-color: #13383C;">        }</span>
 <span style="color: #aa2222; background-color: #13383C;">-</span>
-<span style="color: #aa2222; background-color: #13383C;">-</span>        <span style="color: #dc322f; background-color: #13383C;">this._current</span> <span style="color: #dc322f; background-color: #13383C;">=</span> <span style="color: #dc322f; background-color: #13383C;">info;</span>
-<span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span> <span style="color: #859900; background-color: #00212B;">let</span> <span style="color: #859900; background-color: #00212B;">info</span> <span style="color: #859900; background-color: #00212B;">=</span> <span style="color: #859900; background-color: #00212B;">this._layoutInfos[id];</span>
-<span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span> <span style="color: #859900; background-color: #00212B;">if</span> <span style="color: #859900; background-color: #00212B;">(!info)</span>
-<span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span>     <span style="color: #859900; background-color: #00212B;">return;</span>
-<span style="color: #22aa22; background-color: #00212B;">+</span>
-<span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span> <span style="color: #859900; background-color: #00212B;">if</span> <span style="color: #859900; background-color: #00212B;">(this._current</span> <span style="color: #859900; background-color: #00212B;">&amp;&amp;</span> <span style="color: #859900; background-color: #00212B;">this._current.group</span> <span style="color: #859900; background-color: #00212B;">==</span> <span style="color: #859900; background-color: #00212B;">info.group)</span> <span style="color: #859900; background-color: #00212B;">{</span>
-<span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span>     <span style="color: #859900; background-color: #00212B;">if</span> <span style="color: #859900; background-color: #00212B;">(this._current.groupIndex</span> <span style="color: #859900; background-color: #00212B;">!=</span> <span style="color: #859900; background-color: #00212B;">info.groupIndex)</span>
-<span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span>         <span style="color: #859900; background-color: #00212B;">this._applyLayoutGroupIndex(info.groupIndex);</span>
-<span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span> <span style="color: #859900; background-color: #00212B;">}</span> <span style="color: #859900; background-color: #00212B;">else</span> <span style="color: #859900; background-color: #00212B;">{</span>
-<span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span>     <span style="color: #859900; background-color: #00212B;">this._applyLayoutGroup(info.group);</span>
-<span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span>     <span style="color: #859900; background-color: #00212B;">this._applyLayoutGroupIndex(info.groupIndex);</span>
-<span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span> <span style="color: #859900; background-color: #00212B;">}</span>
-<span style="color: #22aa22; background-color: #00212B;">+</span>
-<span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span> <span style="color: #859900; background-color: #00212B;">this._current</span> <span style="color: #859900; background-color: #00212B;">=</span> <span style="color: #859900; background-color: #00212B;">info;</span>
-<span style="color: #56697A;">    </span> <span style="color: #738284;">},</span>
-
-<span style="color: #56697A;">    </span> <span style="color: #738284;">reapply:</span> <span style="color: #738284;">function()</span> <span style="color: #738284;">{</span>
-<span style="color: #aa2222; background-color: #13383C;">-</span>        <span style="color: #dc322f; background-color: #13383C;">if</span> <span style="color: #dc322f; background-color: #13383C;">(!this._current)</span>
-<span style="color: #aa2222; background-color: #13383C;">-</span>            <span style="color: #dc322f; background-color: #13383C;">return;</span>
-<span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span> <span style="color: #859900; background-color: #00212B;">if</span> <span style="color: #859900; background-color: #00212B;">(!this._current)</span>
-<span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span>     <span style="color: #859900; background-color: #00212B;">return;</span>
-
-<span style="color: #aa2222; background-color: #13383C;">-</span>        <span style="color: #dc322f; background-color: #13383C;">this._applyLayoutGroup(this._current.group);</span>
-<span style="color: #aa2222; background-color: #13383C;">-</span>        <span style="color: #dc322f; background-color: #13383C;">this._applyLayoutGroupIndex(this._current.groupIndex);</span>
-<span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span> <span style="color: #859900; background-color: #00212B;">this._applyLayoutGroup(this._current.group);</span>
-<span style="color: #22aa22; background-color: #00212B;">+</span>        <span style="color: #859900; background-color: #00212B;">//</span> <span style="color: #859900; background-color: #00212B;">this._applyLayoutGroupIndex(this._current.groupIndex);</span>
-<span style="color: #56697A;">    </span> <span style="color: #738284;">},</span>
-
-<span style="color: #56697A;">    </span> setUserLayouts: function(ids) {
+<span style="color: #aa2222; background-color: #13383C;">-</span><span style="color: #dc322f; background-color: #13383C;">        this._current = info;</span>
+<span style="color: #22aa22; background-color: #002b36;">+</span><span style="color: #859900; background-color: #002b36;">        </span><span style="color: #859900; background-color: #002b36;">//</span><span style="color: #859900; background-color: #002b36;"> let info = this._layoutInfos[id];</span>
+<span style="color: #22aa22; background-color: #002b36;">+</span><span style="color: #859900; background-color: #002b36;">        </span><span style="color: #859900; background-color: #002b36;">//</span><span style="color: #859900; background-color: #002b36;"> if (!info)</span>
+<span style="color: #22aa22; background-color: #002b36;">+</span><span style="color: #859900; background-color: #002b36;">        </span><span style="color: #859900; background-color: #002b36;">//</span><span style="color: #859900; background-color: #002b36;">     return;</span>
+<span style="color: #22aa22; background-color: #002b36;">+</span>
+<span style="color: #22aa22; background-color: #002b36;">+</span><span style="color: #859900; background-color: #002b36;">        </span><span style="color: #859900; background-color: #002b36;">//</span><span style="color: #859900; background-color: #002b36;"> if (this._current &amp;&amp; this._current.group == info.group) {</span>
+<span style="color: #22aa22; background-color: #002b36;">+</span><span style="color: #859900; background-color: #002b36;">        </span><span style="color: #859900; background-color: #002b36;">//</span><span style="color: #859900; background-color: #002b36;">     if (this._current.groupIndex != info.groupIndex)</span>
+<span style="color: #22aa22; background-color: #002b36;">+</span><span style="color: #859900; background-color: #002b36;">        </span><span style="color: #859900; background-color: #002b36;">//</span><span style="color: #859900; background-color: #002b36;">         this._applyLayoutGroupIndex(info.groupIndex);</span>
+<span style="color: #22aa22; background-color: #002b36;">+</span><span style="color: #859900; background-color: #002b36;">        </span><span style="color: #859900; background-color: #002b36;">//</span><span style="color: #859900; background-color: #002b36;"> } else {</span>
+<span style="color: #22aa22; background-color: #002b36;">+</span><span style="color: #859900; background-color: #002b36;">        </span><span style="color: #859900; background-color: #002b36;">//</span><span style="color: #859900; background-color: #002b36;">     this._applyLayoutGroup(info.group);</span>
+<span style="color: #22aa22; background-color: #002b36;">+</span><span style="color: #859900; background-color: #002b36;">        </span><span style="color: #859900; background-color: #002b36;">//</span><span style="color: #859900; background-color: #002b36;">     this._applyLayoutGroupIndex(info.groupIndex);</span>
+<span style="color: #22aa22; background-color: #002b36;">+</span><span style="color: #859900; background-color: #002b36;">        </span><span style="color: #859900; background-color: #002b36;">//</span><span style="color: #859900; background-color: #002b36;"> }</span>
+<span style="color: #22aa22; background-color: #002b36;">+</span>
+<span style="color: #22aa22; background-color: #002b36;">+</span><span style="color: #859900; background-color: #002b36;">        </span><span style="color: #859900; background-color: #002b36;">//</span><span style="color: #859900; background-color: #002b36;"> this._current = info;</span>
+<span style="color: #738284;">     },</span>
+<span style="color: #738284;"> </span>
+<span style="color: #738284;">     reapply: function() {</span>
+<span style="color: #aa2222; background-color: #13383C;">-</span><span style="color: #dc322f; background-color: #13383C;">        if (!this._current)</span>
+<span style="color: #aa2222; background-color: #13383C;">-</span><span style="color: #dc322f; background-color: #13383C;">            return;</span>
+<span style="color: #22aa22; background-color: #002b36;">+</span><span style="color: #859900; background-color: #002b36;">        </span><span style="color: #859900; background-color: #002b36;">//</span><span style="color: #859900; background-color: #002b36;"> if (!this._current)</span>
+<span style="color: #22aa22; background-color: #002b36;">+</span><span style="color: #859900; background-color: #002b36;">        </span><span style="color: #859900; background-color: #002b36;">//</span><span style="color: #859900; background-color: #002b36;">     return;</span>
+<span style="color: #738284;"> </span>
+<span style="color: #aa2222; background-color: #13383C;">-</span><span style="color: #dc322f; background-color: #13383C;">        this._applyLayoutGroup(this._current.group);</span>
+<span style="color: #aa2222; background-color: #13383C;">-</span><span style="color: #dc322f; background-color: #13383C;">        this._applyLayoutGroupIndex(this._current.groupIndex);</span>
+<span style="color: #22aa22; background-color: #002b36;">+</span><span style="color: #859900; background-color: #002b36;">        </span><span style="color: #859900; background-color: #002b36;">//</span><span style="color: #859900; background-color: #002b36;"> this._applyLayoutGroup(this._current.group);</span>
+<span style="color: #22aa22; background-color: #002b36;">+</span><span style="color: #859900; background-color: #002b36;">        </span><span style="color: #859900; background-color: #002b36;">//</span><span style="color: #859900; background-color: #002b36;"> this._applyLayoutGroupIndex(this._current.groupIndex);</span>
+<span style="color: #738284;">     },</span>
+<span style="color: #738284;"> </span>
+     setUserLayouts: function(ids) {
 </pre>
 </div>
 
@@ -361,7 +361,7 @@ RequiredComponents=org.gnome.Shell;org.gnome.SettingsDaemon.A11yKeyboard;org.gno
         <script type="text/javascript">
           //var disqus_developer = 1;
           var disqus_identifier = "/blog/2017/05/08/keyboard-layout";
-          var disqus_url = "http://shanexu.io/blog/2017/05/08/keyboard-layout";
+          var disqus_url = "https://xusheng.org/blog/2017/05/08/keyboard-layout";
           var disqus_shortname = 'shanexu';
           /* * * DON'T EDIT BELOW THIS LINE * * */
           (function() {
@@ -385,9 +385,9 @@ RequiredComponents=org.gnome.Shell;org.gnome.SettingsDaemon.A11yKeyboard;org.gno
          })();
         </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 27.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 28.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
-          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711@gmail.com">Shane Xu</a>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">Shane Xu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;
           Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
           <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>

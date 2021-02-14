@@ -17,7 +17,7 @@
         <blockquote>Life is too short for so much sorrow.</blockquote>
         <form method="get" id="searchform" action="//www.google.com/search">
           <input type="text" class="field" name="q" id="s" placeholder="Search">
-          <input type="hidden" name="as_sitesearch" value="shanexu.io">
+          <input type="hidden" name="as_sitesearch" value="xusheng.org">
         </form>
       </header>
     </div>
@@ -81,11 +81,11 @@ default                                 fe80::%utun0                    UGcI    
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span class="linenr">1: </span><span style="color: #268bd2;">cd</span> &lt;badvpn-source-dir&gt;
-<span class="linenr">2: </span>mkdir build
-<span class="linenr">3: </span><span style="color: #268bd2;">cd</span> build
+<pre class="src src-shell"><span class="linenr">1: </span><span style="color: #b58900;">cd</span> &lt;badvpn-source-dir&gt;
+<span class="linenr">2: </span><span style="color: #b58900;">mkdir</span> build
+<span class="linenr">3: </span><span style="color: #b58900;">cd</span> build
 <span class="linenr">4: </span>cmake .. -DCMAKE_INSTALL_PREFIX=&lt;install-dir&gt;
-<span class="linenr">5: </span>make install
+<span class="linenr">5: </span><span style="color: #b58900;">make</span> install
 </pre>
 </div>
 
@@ -97,18 +97,18 @@ default                                 fe80::%utun0                    UGcI    
 <div class="org-src-container">
 <pre class="src src-shell"><span class="linenr"> 1: </span><span style="color: #405A61;">#</span><span style="color: #405A61;">!/bin/</span><span style="color: #859900; font-weight: bold;">bash</span>
 <span class="linenr"> 2: </span>
-<span class="linenr"> 3: </span>sudo openvpn --mktun --dev tun0
-<span class="linenr"> 4: </span>sudo ifconfig tun0 <span style="color: #d33682; font-weight: bold;">10.0.0.1</span> netmask <span style="color: #d33682; font-weight: bold;">255.255.255.0</span>
+<span class="linenr"> 3: </span><span style="color: #b58900;">sudo</span> openvpn --mktun --dev tun0
+<span class="linenr"> 4: </span><span style="color: #b58900;">sudo</span> ifconfig tun0 10.0.0.1 netmask 255.255.255.0
 <span class="linenr"> 5: </span>
-<span class="linenr"> 6: </span><span style="color: #839496;">array</span>=<span style="color: #268bd2;">(</span> a.b.c.d <span style="color: #268bd2;">)</span>
-<span class="linenr"> 7: </span><span style="color: #859900; font-weight: bold;">for</span> i<span style="color: #859900; font-weight: bold;"> in</span> <span style="color: #2aa198;">"${array[@]}"</span>
+<span class="linenr"> 6: </span><span style="color: #6c71c4;">array</span>=<span style="color: #268bd2;">(</span> a.b.c.d <span style="color: #268bd2;">)</span>
+<span class="linenr"> 7: </span><span style="color: #859900; font-weight: bold;">for</span> i<span style="color: #859900; font-weight: bold;"> in</span> <span style="color: #2aa198;">"</span><span style="color: #d33682; font-weight: bold;">$</span><span style="color: #6c71c4;">{array[@]}</span><span style="color: #2aa198;">"</span>
 <span class="linenr"> 8: </span><span style="color: #859900; font-weight: bold;">do</span>
-<span class="linenr"> 9: </span>    sudo route add $<span style="color: #839496;">i</span> gw <span style="color: #d33682; font-weight: bold;">192.168.1.1</span> metric <span style="color: #d33682; font-weight: bold;">5</span>
+<span class="linenr"> 9: </span>    <span style="color: #b58900;">sudo</span> route add $<span style="color: #6c71c4;">i</span> gw 192.168.1.1 metric <span style="color: #d33682; font-weight: bold;">5</span>
 <span class="linenr">10: </span><span style="color: #859900; font-weight: bold;">done</span>
 <span class="linenr">11: </span>
-<span class="linenr">12: </span>sudo route add default gw <span style="color: #d33682; font-weight: bold;">10.0.0.2</span> metric <span style="color: #d33682; font-weight: bold;">6</span>
+<span class="linenr">12: </span><span style="color: #b58900;">sudo</span> route add default gw 10.0.0.2 metric <span style="color: #d33682; font-weight: bold;">6</span>
 <span class="linenr">13: </span>
-<span class="linenr">14: </span>badvpn-tun2socks --tundev tun0 --netif-ipaddr <span style="color: #d33682; font-weight: bold;">10.0.0.2</span> --netif-netmask <span style="color: #d33682; font-weight: bold;">255.255.255.0</span> --socks-server-addr <span style="color: #d33682; font-weight: bold;">127.0.0.1:7591</span> --socks5-udp
+<span class="linenr">14: </span>badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:7591 --socks5-udp
 <span class="linenr">15: </span>
 </pre>
 </div>
@@ -137,7 +137,7 @@ nameserver 192.168.1.1
         <script type="text/javascript">
           //var disqus_developer = 1;
           var disqus_identifier = "/blog/2019/08/20/create-a-tun-device-to-route-tcp-traffic-through-a-socks-server";
-          var disqus_url = "http://shanexu.io/blog/2019/08/20/create-a-tun-device-to-route-tcp-traffic-through-a-socks-server";
+          var disqus_url = "https://xusheng.org/blog/2019/08/20/create-a-tun-device-to-route-tcp-traffic-through-a-socks-server";
           var disqus_shortname = 'shanexu';
           /* * * DON'T EDIT BELOW THIS LINE * * */
           (function() {
@@ -161,9 +161,9 @@ nameserver 192.168.1.1
          })();
         </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 27.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 28.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
-          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711@gmail.com">shanexu</a>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">shanexu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;
           Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
           <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>

@@ -17,7 +17,7 @@
         <blockquote>Life is too short for so much sorrow.</blockquote>
         <form method="get" id="searchform" action="//www.google.com/search">
           <input type="text" class="field" name="q" id="s" placeholder="Search">
-          <input type="hidden" name="as_sitesearch" value="shanexu.io">
+          <input type="hidden" name="as_sitesearch" value="xusheng.org">
         </form>
       </header>
     </div>
@@ -34,15 +34,15 @@
 
   <h3 class="section">InfluxDB负载测试设计</h3>
 
-<div id="outline-container-orgc625734" class="outline-2">
-<h2 id="orgc625734">重新看一遍tsm1的DESIGN.md</h2>
-<div class="outline-text-2" id="text-orgc625734">
+<div id="outline-container-orgef7d47d" class="outline-2">
+<h2 id="orgef7d47d">重新看一遍tsm1的DESIGN.md</h2>
+<div class="outline-text-2" id="text-orgef7d47d">
 </div>
-<div id="outline-container-org0d80427" class="outline-3">
-<h3 id="org0d80427">数据写入</h3>
-<div class="outline-text-3" id="text-org0d80427">
+<div id="outline-container-org5732f0c" class="outline-3">
+<h3 id="org5732f0c">数据写入</h3>
+<div class="outline-text-3" id="text-org5732f0c">
 <p>
-Write throughput is bounded by the time to process the write on the CPU (parsing, sorting, etc..), adding and evicting to the Cache and appending the write to the WAL.  The first two items are CPU bound and can be tuned and optimized if they become a bottleneck.  The WAL write can be tuned such that in the worst case every write requires at least 2 IOPS (write + fsync) or batched so that multiple writes are queued and fsync'd in sizes matching one or more disk blocks.  Performing more work with each IO will improve throughput
+Write throughput is bounded by the time to process the write on the CPU (parsing, sorting, etc..), adding and evicting to the Cache and appending the write to the WAL.  The first two items are CPU bound and can be tuned and optimized if they become a bottleneck.  The WAL write can be tuned such that in the worst case every write requires at least 2 IOPS (write + fsync) or batched so that multiple writes are queued and fsync&rsquo;d in sizes matching one or more disk blocks.  Performing more work with each IO will improve throughput
 </p>
 
 <p>
@@ -50,9 +50,9 @@ Write latency is minimal for the WAL write since there are no seeks.  The latenc
 </p>
 </div>
 </div>
-<div id="outline-container-orgb7f7e50" class="outline-3">
-<h3 id="orgb7f7e50">数据查询</h3>
-<div class="outline-text-3" id="text-orgb7f7e50">
+<div id="outline-container-orgb355ade" class="outline-3">
+<h3 id="orgb355ade">数据查询</h3>
+<div class="outline-text-3" id="text-orgb355ade">
 <p>
 Query throughput is directly related to how many blocks can be read in a period of time.  The index structure contains enough information to determine if one or multiple blocks can be read in a single IO.
 </p>
@@ -63,9 +63,9 @@ Query latency is determine by how long it takes to find and read the relevant bl
 </div>
 </div>
 
-<div id="outline-container-org4bdaad2" class="outline-3">
-<h3 id="org4bdaad2">我粗鄙的结论</h3>
-<div class="outline-text-3" id="text-org4bdaad2">
+<div id="outline-container-orgdbcd1de" class="outline-3">
+<h3 id="orgdbcd1de">我粗鄙的结论</h3>
+<div class="outline-text-3" id="text-orgdbcd1de">
 <p>
 我一直认为influxdb的瓶颈不在写，而是在于读。
 </p>
@@ -73,22 +73,22 @@ Query latency is determine by how long it takes to find and read the relevant bl
 </div>
 </div>
 
-<div id="outline-container-orga53aa94" class="outline-2">
-<h2 id="orga53aa94">压力测试工具选择</h2>
-<div class="outline-text-2" id="text-orga53aa94">
+<div id="outline-container-org287beb3" class="outline-2">
+<h2 id="org287beb3">压力测试工具选择</h2>
+<div class="outline-text-2" id="text-org287beb3">
 <p>
 前几天看到ES的测试工具 <a href="https://github.com/elastic/rally">rally</a> 中用了Actor模型，于是突发奇想，找一个基于Akka的测试工具，于是找到了 <a href="http://gatling.io/">gatling</a> 。我的想法是如果底层使用Akka的话, 利用Akka-cluster应该很容易实现分布式测试。然而这个功能在商业版中才有。<a href="https://github.com/gatling/gatling/issues/415">https://github.com/gatling/gatling/issues/415</a>
 </p>
 </div>
 </div>
 
-<div id="outline-container-org11d6a70" class="outline-2">
-<h2 id="org11d6a70">Gatling简单的使用方法</h2>
-<div class="outline-text-2" id="text-org11d6a70">
+<div id="outline-container-org41b74c0" class="outline-2">
+<h2 id="org41b74c0">Gatling简单的使用方法</h2>
+<div class="outline-text-2" id="text-org41b74c0">
 </div>
-<div id="outline-container-org58f94b0" class="outline-3">
-<h3 id="org58f94b0">使用Zip bundle</h3>
-<div class="outline-text-3" id="text-org58f94b0">
+<div id="outline-container-org9199f66" class="outline-3">
+<h3 id="org9199f66">使用Zip bundle</h3>
+<div class="outline-text-3" id="text-org9199f66">
 <p>
 从 <a href="https://repo1.maven.org/maven2/io/gatling/highcharts/gatling-charts-highcharts-bundle/2.2.2/gatling-charts-highcharts-bundle-2.2.2-bundle.zip">https://repo1.maven.org/maven2/io/gatling/highcharts/gatling-charts-highcharts-bundle/2.2.2/gatling-charts-highcharts-bundle-2.2.2-bundle.zip</a> 下载zip包。并解压到某处，然后在 <code>user-files/simulations/computerdatabase/</code> 目录里面增加test case。
 用这种方式，有个弊端，就是我想添加依赖的jar包的话，就只能手动将包放到 <code>lib</code> 下面。
@@ -96,11 +96,11 @@ Query latency is determine by how long it takes to find and read the relevant bl
 </div>
 </div>
 
-<div id="outline-container-org1fbd10f" class="outline-3">
-<h3 id="org1fbd10f">或者使用SBT Plugin</h3>
-<div class="outline-text-3" id="text-org1fbd10f">
+<div id="outline-container-org4b7423c" class="outline-3">
+<h3 id="org4b7423c">或者使用SBT Plugin</h3>
+<div class="outline-text-3" id="text-org4b7423c">
 <div class="org-src-container">
-<pre class="src src-bash">git clone https://github.com/gatling/gatling-sbt-plugin-demo.git
+<pre class="src src-bash">   <span style="color: #b58900;">git</span> clone https://github.com/gatling/gatling-sbt-plugin-demo.git
 </pre>
 </div>
 <p>
@@ -111,38 +111,38 @@ Query latency is determine by how long it takes to find and read the relevant bl
 </div>
 </div>
 
-<div id="outline-container-orga51a999" class="outline-2">
-<h2 id="orga51a999">简单的test case</h2>
-<div class="outline-text-2" id="text-orga51a999">
+<div id="outline-container-org6b3d7f3" class="outline-2">
+<h2 id="org6b3d7f3">简单的test case</h2>
+<div class="outline-text-2" id="text-org6b3d7f3">
 <p>
 Gatling自己有一套完整的http调用的api，并且压力测试还需依赖于通过这套api获得的请求结果，所以 <code>influxdb-java</code> 的client在这里没有用武之地。但是这个包的完整的influxdb的dto，却是非常有用。于是在工程里添加依赖。
 </p>
 <div class="org-src-container">
-<pre class="src src-scala">libraryDependencies += <span style="color: #2aa198;">"org.influxdb"</span> % <span style="color: #2aa198;">"influxdb-java"</span> % <span style="color: #2aa198;">"2.3"</span>
+<pre class="src src-scala">  libraryDependencies += <span style="color: #2aa198;">"org.influxdb"</span> % <span style="color: #2aa198;">"influxdb-java"</span> % <span style="color: #2aa198;">"2.3"</span>
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgff1c908" class="outline-3">
-<h3 id="orgff1c908">一个简单的query test case</h3>
-<div class="outline-text-3" id="text-orgff1c908">
+<div id="outline-container-org07d8189" class="outline-3">
+<h3 id="org07d8189">一个简单的query test case</h3>
+<div class="outline-text-3" id="text-org07d8189">
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #859900; font-weight: bold;">package</span> <span style="color: #2aa198;">org.xusheng.influxdbloadtest</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span>   <span style="color: #859900; font-weight: bold;">package</span> <span style="color: #2aa198;">org.xusheng.influxdbloadtest</span>
 <span class="linenr"> 2: </span>
-<span class="linenr"> 3: </span><span style="color: #859900; font-weight: bold;">import</span> io.gatling.core.<span style="color: #d33682; font-weight: bold;">Predef</span>.<span style="color: #859900; font-weight: bold;">_</span>
-<span class="linenr"> 4: </span><span style="color: #859900; font-weight: bold;">import</span> io.gatling.http.<span style="color: #d33682; font-weight: bold;">Predef</span>.<span style="color: #859900; font-weight: bold;">_</span>
-<span class="linenr"> 5: </span><span style="color: #859900; font-weight: bold;">import</span> scala.concurrent.duration.<span style="color: #859900; font-weight: bold;">_</span>
-<span class="linenr"> 6: </span>
-<span class="linenr"> 7: </span><span style="color: #859900; font-weight: bold;">class</span> <span style="color: #b58900;">InfluxQuerySimulation</span> <span style="color: #859900; font-weight: bold;">extends</span> <span style="color: #b58900;">Simulation</span> <span style="color: #268bd2;">{</span>
-<span class="linenr"> 8: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #839496;">httpConf</span> <span style="color: #859900; font-weight: bold;">=</span> http
-<span class="linenr"> 9: </span>    .baseURL<span style="color: #d33682;">(</span><span style="color: #2aa198;">"http://127.0.0.1:8086"</span><span style="color: #d33682;">)</span>
-<span class="linenr">10: </span>
-<span class="linenr">11: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #839496;">h</span> <span style="color: #859900; font-weight: bold;">=</span> http<span style="color: #d33682;">(</span><span style="color: #2aa198;">"query"</span><span style="color: #d33682;">)</span>.get<span style="color: #d33682;">(</span><span style="color: #2aa198;">"/query"</span><span style="color: #d33682;">)</span>.queryParam<span style="color: #d33682;">(</span><span style="color: #2aa198;">"db"</span>, <span style="color: #2aa198;">"mytest"</span><span style="color: #d33682;">)</span>.queryParam<span style="color: #d33682;">(</span><span style="color: #2aa198;">"q"</span>, <span style="color: #2aa198;">"select sum(value) from cpu where time &gt; now() - 1m"</span><span style="color: #d33682;">)</span>
-<span class="linenr">12: </span>
-<span class="linenr">13: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #839496;">scn</span> <span style="color: #859900; font-weight: bold;">=</span> scenario<span style="color: #d33682;">(</span><span style="color: #2aa198;">"query"</span><span style="color: #d33682;">)</span>.exec<span style="color: #d33682;">(</span>h<span style="color: #d33682;">)</span>.pause<span style="color: #d33682;">(</span><span style="color: #d33682; font-weight: bold;">1</span> minute<span style="color: #d33682;">)</span>
-<span class="linenr">14: </span>
-<span class="linenr">15: </span>  setUp<span style="color: #d33682;">(</span>scn.inject<span style="color: #859900;">(</span>atOnceUsers<span style="color: #cb4b16;">(</span><span style="color: #d33682; font-weight: bold;">1</span><span style="color: #cb4b16;">)</span><span style="color: #859900;">)</span><span style="color: #d33682;">)</span>.protocols<span style="color: #d33682;">(</span>httpConf<span style="color: #d33682;">)</span>
-<span class="linenr">16: </span><span style="color: #268bd2;">}</span>
+<span class="linenr"> 3: </span>   <span style="color: #859900; font-weight: bold;">import</span> io.gatling.core.<span style="color: #d33682; font-weight: bold;">Predef</span>.<span style="color: #859900; font-weight: bold;">_</span>
+<span class="linenr"> 4: </span>   <span style="color: #859900; font-weight: bold;">import</span> io.gatling.http.<span style="color: #d33682; font-weight: bold;">Predef</span>.<span style="color: #859900; font-weight: bold;">_</span>
+<span class="linenr"> 5: </span>   <span style="color: #859900; font-weight: bold;">import</span> scala.concurrent.duration.<span style="color: #859900; font-weight: bold;">_</span>
+<span class="linenr"> 6: </span>   
+<span class="linenr"> 7: </span>   <span style="color: #859900; font-weight: bold;">class</span> <span style="color: #b58900;">InfluxQuerySimulation</span> <span style="color: #859900; font-weight: bold;">extends</span> <span style="color: #b58900;">Simulation</span> {
+<span class="linenr"> 8: </span>     <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">httpConf</span> <span style="color: #859900; font-weight: bold;">=</span> http
+<span class="linenr"> 9: </span>       .baseURL(<span style="color: #2aa198;">"http://127.0.0.1:8086"</span>)
+<span class="linenr">10: </span>   
+<span class="linenr">11: </span>     <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">h</span> <span style="color: #859900; font-weight: bold;">=</span> http(<span style="color: #2aa198;">"query"</span>).get(<span style="color: #2aa198;">"/query"</span>).queryParam(<span style="color: #2aa198;">"db"</span>, <span style="color: #2aa198;">"mytest"</span>).queryParam(<span style="color: #2aa198;">"q"</span>, <span style="color: #2aa198;">"select sum(value) from cpu where time &gt; now() - 1m"</span>)
+<span class="linenr">12: </span>   
+<span class="linenr">13: </span>     <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">scn</span> <span style="color: #859900; font-weight: bold;">=</span> scenario(<span style="color: #2aa198;">"query"</span>).exec(h).pause(<span style="color: #d33682; font-weight: bold;">1</span> minute)
+<span class="linenr">14: </span>   
+<span class="linenr">15: </span>     setUp(scn.inject(atOnceUsers(<span style="color: #d33682; font-weight: bold;">1</span>))).protocols(httpConf)
+<span class="linenr">16: </span>   }
 </pre>
 </div>
 
@@ -152,31 +152,31 @@ influxdb的查询就是一个普通的带query parameter的get请求，所以这
 </div>
 </div>
 
-<div id="outline-container-org4373a42" class="outline-3">
-<h3 id="org4373a42">一个简单的write test case</h3>
-<div class="outline-text-3" id="text-org4373a42">
+<div id="outline-container-orgc27e2eb" class="outline-3">
+<h3 id="orgc27e2eb">一个简单的write test case</h3>
+<div class="outline-text-3" id="text-orgc27e2eb">
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #859900; font-weight: bold;">package</span> <span style="color: #2aa198;">org.xusheng.influxdbloadtest</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span>   <span style="color: #859900; font-weight: bold;">package</span> <span style="color: #2aa198;">org.xusheng.influxdbloadtest</span>
 <span class="linenr"> 2: </span>
-<span class="linenr"> 3: </span><span style="color: #859900; font-weight: bold;">import</span> io.gatling.core.<span style="color: #d33682; font-weight: bold;">Predef</span>.<span style="color: #859900; font-weight: bold;">_</span>
-<span class="linenr"> 4: </span><span style="color: #859900; font-weight: bold;">import</span> io.gatling.http.<span style="color: #d33682; font-weight: bold;">Predef</span>.<span style="color: #859900; font-weight: bold;">_</span>
-<span class="linenr"> 5: </span><span style="color: #859900; font-weight: bold;">import</span> java.util.concurrent.<span style="color: #d33682; font-weight: bold;">TimeUnit</span>
-<span class="linenr"> 6: </span><span style="color: #859900; font-weight: bold;">import</span> scala.concurrent.duration.<span style="color: #859900; font-weight: bold;">_</span>
-<span class="linenr"> 7: </span><span style="color: #859900; font-weight: bold;">import</span> org.influxdb.dto.<span style="color: #859900; font-weight: bold;">_</span>
-<span class="linenr"> 8: </span>
-<span class="linenr"> 9: </span><span style="color: #859900; font-weight: bold;">class</span> <span style="color: #b58900;">InfluxWriteSimulation</span> <span style="color: #859900; font-weight: bold;">extends</span> <span style="color: #b58900;">Simulation</span> <span style="color: #268bd2;">{</span>
-<span class="linenr">10: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #839496;">httpConf</span> <span style="color: #859900; font-weight: bold;">=</span> http
-<span class="linenr">11: </span>    .baseURL<span style="color: #d33682;">(</span><span style="color: #2aa198;">"http://127.0.0.1:8086"</span><span style="color: #d33682;">)</span>
-<span class="linenr">12: </span>
-<span class="linenr">13: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #839496;">p</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">Point</span>.measurement<span style="color: #d33682;">(</span><span style="color: #2aa198;">"cpu"</span><span style="color: #d33682;">)</span>.addField<span style="color: #d33682;">(</span><span style="color: #2aa198;">"value"</span>, scala.util.<span style="color: #d33682; font-weight: bold;">Random</span>.nextInt<span style="color: #859900;">(</span><span style="color: #d33682; font-weight: bold;">100</span><span style="color: #859900;">)</span><span style="color: #d33682;">)</span>.tag<span style="color: #d33682;">(</span><span style="color: #2aa198;">"partner"</span>, <span style="color: #2aa198;">"hello"</span><span style="color: #d33682;">)</span>.time<span style="color: #d33682;">(</span><span style="color: #d33682; font-weight: bold;">System</span>.nanoTime<span style="color: #859900;">()</span>, <span style="color: #d33682; font-weight: bold;">TimeUnit</span>.<span style="color: #d33682; font-weight: bold;">NANOSECONDS</span><span style="color: #d33682;">)</span>.build<span style="color: #d33682;">()</span>
-<span class="linenr">14: </span>
-<span class="linenr">15: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #839496;">h</span> <span style="color: #859900; font-weight: bold;">=</span> http<span style="color: #d33682;">(</span><span style="color: #2aa198;">"write"</span><span style="color: #d33682;">)</span>.post<span style="color: #d33682;">(</span><span style="color: #2aa198;">"/write"</span><span style="color: #d33682;">)</span>.body<span style="color: #d33682;">(</span><span style="color: #d33682; font-weight: bold;">StringBody</span><span style="color: #859900;">(</span>p.lineProtocol<span style="color: #cb4b16;">()</span><span style="color: #859900;">)</span><span style="color: #d33682;">)</span>.queryParam<span style="color: #d33682;">(</span><span style="color: #2aa198;">"db"</span>, <span style="color: #2aa198;">"mytest"</span><span style="color: #d33682;">)</span>
-<span class="linenr">16: </span>
-<span class="linenr">17: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #839496;">scn</span> <span style="color: #859900; font-weight: bold;">=</span> scenario<span style="color: #d33682;">(</span><span style="color: #2aa198;">"write"</span><span style="color: #d33682;">)</span>
-<span class="linenr">18: </span>    .exec<span style="color: #d33682;">(</span>h<span style="color: #d33682;">)</span>.pause<span style="color: #d33682;">(</span><span style="color: #d33682; font-weight: bold;">1</span> second<span style="color: #d33682;">)</span>
-<span class="linenr">19: </span>
-<span class="linenr">20: </span>  setUp<span style="color: #d33682;">(</span>scn.inject<span style="color: #859900;">(</span>atOnceUsers<span style="color: #cb4b16;">(</span><span style="color: #d33682; font-weight: bold;">1</span><span style="color: #cb4b16;">)</span><span style="color: #859900;">)</span><span style="color: #d33682;">)</span>.protocols<span style="color: #d33682;">(</span>httpConf<span style="color: #d33682;">)</span>
-<span class="linenr">21: </span><span style="color: #268bd2;">}</span>
+<span class="linenr"> 3: </span>   <span style="color: #859900; font-weight: bold;">import</span> io.gatling.core.<span style="color: #d33682; font-weight: bold;">Predef</span>.<span style="color: #859900; font-weight: bold;">_</span>
+<span class="linenr"> 4: </span>   <span style="color: #859900; font-weight: bold;">import</span> io.gatling.http.<span style="color: #d33682; font-weight: bold;">Predef</span>.<span style="color: #859900; font-weight: bold;">_</span>
+<span class="linenr"> 5: </span>   <span style="color: #859900; font-weight: bold;">import</span> java.util.concurrent.<span style="color: #d33682; font-weight: bold;">TimeUnit</span>
+<span class="linenr"> 6: </span>   <span style="color: #859900; font-weight: bold;">import</span> scala.concurrent.duration.<span style="color: #859900; font-weight: bold;">_</span>
+<span class="linenr"> 7: </span>   <span style="color: #859900; font-weight: bold;">import</span> org.influxdb.dto.<span style="color: #859900; font-weight: bold;">_</span>
+<span class="linenr"> 8: </span>   
+<span class="linenr"> 9: </span>   <span style="color: #859900; font-weight: bold;">class</span> <span style="color: #b58900;">InfluxWriteSimulation</span> <span style="color: #859900; font-weight: bold;">extends</span> <span style="color: #b58900;">Simulation</span> {
+<span class="linenr">10: </span>     <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">httpConf</span> <span style="color: #859900; font-weight: bold;">=</span> http
+<span class="linenr">11: </span>       .baseURL(<span style="color: #2aa198;">"http://127.0.0.1:8086"</span>)
+<span class="linenr">12: </span>   
+<span class="linenr">13: </span>     <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">p</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">Point</span>.measurement(<span style="color: #2aa198;">"cpu"</span>).addField(<span style="color: #2aa198;">"value"</span>, scala.util.<span style="color: #d33682; font-weight: bold;">Random</span>.nextInt(<span style="color: #d33682; font-weight: bold;">100</span>)).tag(<span style="color: #2aa198;">"partner"</span>, <span style="color: #2aa198;">"hello"</span>).time(<span style="color: #d33682; font-weight: bold;">System</span>.nanoTime(), <span style="color: #d33682; font-weight: bold;">TimeUnit</span>.<span style="color: #d33682; font-weight: bold;">NANOSECONDS</span>).build()
+<span class="linenr">14: </span>   
+<span class="linenr">15: </span>     <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">h</span> <span style="color: #859900; font-weight: bold;">=</span> http(<span style="color: #2aa198;">"write"</span>).post(<span style="color: #2aa198;">"/write"</span>).body(<span style="color: #d33682; font-weight: bold;">StringBody</span>(p.lineProtocol())).queryParam(<span style="color: #2aa198;">"db"</span>, <span style="color: #2aa198;">"mytest"</span>)
+<span class="linenr">16: </span>   
+<span class="linenr">17: </span>     <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">scn</span> <span style="color: #859900; font-weight: bold;">=</span> scenario(<span style="color: #2aa198;">"write"</span>)
+<span class="linenr">18: </span>       .exec(h).pause(<span style="color: #d33682; font-weight: bold;">1</span> second)
+<span class="linenr">19: </span>   
+<span class="linenr">20: </span>     setUp(scn.inject(atOnceUsers(<span style="color: #d33682; font-weight: bold;">1</span>))).protocols(httpConf)
+<span class="linenr">21: </span>   }
 </pre>
 </div>
 
@@ -186,47 +186,47 @@ influxdb的查询就是一个普通的带query parameter的get请求，所以这
 </div>
 </div>
 
-<div id="outline-container-org3226d45" class="outline-3">
-<h3 id="org3226d45">一个Query 和 Write 组合的test case</h3>
-<div class="outline-text-3" id="text-org3226d45">
+<div id="outline-container-org4e75a3d" class="outline-3">
+<h3 id="org4e75a3d">一个Query 和 Write 组合的test case</h3>
+<div class="outline-text-3" id="text-org4e75a3d">
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #859900; font-weight: bold;">package</span> <span style="color: #2aa198;">org.xusheng.influxdbloadtest</span>
-<span class="linenr"> 2: </span>
-<span class="linenr"> 3: </span><span style="color: #859900; font-weight: bold;">import</span> io.gatling.core.<span style="color: #d33682; font-weight: bold;">Predef</span>.<span style="color: #859900; font-weight: bold;">_</span>
-<span class="linenr"> 4: </span><span style="color: #859900; font-weight: bold;">import</span> io.gatling.http.<span style="color: #d33682; font-weight: bold;">Predef</span>.<span style="color: #859900; font-weight: bold;">_</span>
-<span class="linenr"> 5: </span><span style="color: #859900; font-weight: bold;">import</span> scala.concurrent.duration.<span style="color: #859900; font-weight: bold;">_</span>
-<span class="linenr"> 6: </span>
-<span class="linenr"> 7: </span><span style="color: #859900; font-weight: bold;">class</span> <span style="color: #b58900;">InfluxWriteQuerySimulation</span> <span style="color: #859900; font-weight: bold;">extends</span> <span style="color: #b58900;">Simulation</span> <span style="color: #268bd2;">{</span>
-<span class="linenr"> 8: </span>
-<span class="linenr"> 9: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #839496;">httpConf</span> <span style="color: #859900; font-weight: bold;">=</span> http.baseURL<span style="color: #d33682;">(</span><span style="color: #d33682; font-weight: bold;">Generator</span>.url<span style="color: #d33682;">)</span>
-<span class="linenr">10: </span>
-<span class="linenr">11: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #839496;">hw</span> <span style="color: #859900; font-weight: bold;">=</span> http<span style="color: #d33682;">(</span><span style="color: #2aa198;">"write"</span><span style="color: #d33682;">)</span>
-<span class="linenr">12: </span>    .post<span style="color: #d33682;">(</span><span style="color: #2aa198;">"/write"</span><span style="color: #d33682;">)</span>
-<span class="linenr">13: </span>    .body<span style="color: #d33682;">(</span><span style="color: #d33682; font-weight: bold;">StringBody</span> <span style="color: #859900;">{</span> session <span style="color: #859900; font-weight: bold;">=&gt;</span>
-<span class="linenr">14: </span>            <span style="color: #d33682; font-weight: bold;">Generator</span>.genBatchPoints<span style="color: #cb4b16;">(</span>session.userId, isWriter <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">true</span><span style="color: #cb4b16;">)</span>.lineProtocol<span style="color: #cb4b16;">()</span>
-<span class="linenr">15: </span>          <span style="color: #859900;">}</span><span style="color: #d33682;">)</span>.queryParam<span style="color: #d33682;">(</span><span style="color: #2aa198;">"db"</span>, <span style="color: #d33682; font-weight: bold;">Generator</span>.db<span style="color: #d33682;">)</span>
-<span class="linenr">16: </span>
-<span class="linenr">17: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #839496;">scnw</span> <span style="color: #859900; font-weight: bold;">=</span> scenario<span style="color: #d33682;">(</span><span style="color: #2aa198;">"write"</span><span style="color: #d33682;">)</span>.exec<span style="color: #d33682;">(</span>forever<span style="color: #859900;">{</span>
-<span class="linenr">18: </span>                                      exec<span style="color: #cb4b16;">(</span>hw<span style="color: #cb4b16;">)</span>.pace<span style="color: #cb4b16;">(</span><span style="color: #d33682; font-weight: bold;">1</span> second, <span style="color: #d33682; font-weight: bold;">2</span> seconds<span style="color: #cb4b16;">)</span>
-<span class="linenr">19: </span>                                    <span style="color: #859900;">}</span><span style="color: #d33682;">)</span>
-<span class="linenr">20: </span>
-<span class="linenr">21: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #839496;">hr</span> <span style="color: #859900; font-weight: bold;">=</span> http<span style="color: #d33682;">(</span><span style="color: #2aa198;">"query"</span><span style="color: #d33682;">)</span>.
-<span class="linenr">22: </span>    get<span style="color: #d33682;">(</span><span style="color: #2aa198;">"/query"</span><span style="color: #d33682;">)</span>.
-<span class="linenr">23: </span>    queryParam<span style="color: #d33682;">(</span><span style="color: #2aa198;">"db"</span>, <span style="color: #d33682; font-weight: bold;">Generator</span>.db<span style="color: #d33682;">)</span>.
-<span class="linenr">24: </span>    queryParam<span style="color: #d33682;">(</span><span style="color: #2aa198;">"q"</span>, <span style="color: #859900;">{</span> session <span style="color: #859900; font-weight: bold;">=&gt;</span>
-<span class="linenr">25: </span>                 <span style="color: #d33682; font-weight: bold;">Generator</span>.getQueryStringByUserId<span style="color: #cb4b16;">(</span>session.userId, isWriter <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">false</span><span style="color: #cb4b16;">)</span>
-<span class="linenr">26: </span>               <span style="color: #859900;">}</span><span style="color: #d33682;">)</span>
-<span class="linenr">27: </span>
-<span class="linenr">28: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #839496;">scnr</span> <span style="color: #859900; font-weight: bold;">=</span> scenario<span style="color: #d33682;">(</span><span style="color: #2aa198;">"query"</span><span style="color: #d33682;">)</span>.
-<span class="linenr">29: </span>    exec<span style="color: #d33682;">(</span>forever<span style="color: #859900;">{</span>
-<span class="linenr">30: </span>           exec<span style="color: #cb4b16;">(</span>hr<span style="color: #cb4b16;">)</span>.pause<span style="color: #cb4b16;">{</span>session <span style="color: #859900; font-weight: bold;">=&gt;</span> <span style="color: #d33682; font-weight: bold;">Generator</span>.getIntervalByUserId<span style="color: #6c71c4;">(</span>session.userId, isWriter <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">false</span><span style="color: #6c71c4;">)</span><span style="color: #cb4b16;">}</span>
-<span class="linenr">31: </span>         <span style="color: #859900;">}</span><span style="color: #d33682;">)</span>
-<span class="linenr">32: </span>
-<span class="linenr">33: </span>  setUp<span style="color: #d33682;">(</span>
-<span class="linenr">34: </span>    scnw.inject<span style="color: #859900;">(</span>rampUsers<span style="color: #cb4b16;">(</span><span style="color: #d33682; font-weight: bold;">Generator</span>.userCount<span style="color: #cb4b16;">)</span>.over<span style="color: #cb4b16;">(</span><span style="color: #d33682; font-weight: bold;">Generator</span>.duringSeconds seconds<span style="color: #cb4b16;">)</span><span style="color: #859900;">)</span>,
-<span class="linenr">35: </span>    scnr.inject<span style="color: #859900;">(</span>rampUsers<span style="color: #cb4b16;">(</span><span style="color: #d33682; font-weight: bold;">Generator</span>.userCount<span style="color: #cb4b16;">)</span>.over<span style="color: #cb4b16;">(</span><span style="color: #d33682; font-weight: bold;">Generator</span>.duringSeconds seconds<span style="color: #cb4b16;">)</span><span style="color: #859900;">)</span>
-<span class="linenr">36: </span>  <span style="color: #d33682;">)</span>.protocols<span style="color: #d33682;">(</span>httpConf<span style="color: #d33682;">)</span>
-<span class="linenr">37: </span><span style="color: #268bd2;">}</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span>   <span style="color: #859900; font-weight: bold;">package</span> <span style="color: #2aa198;">org.xusheng.influxdbloadtest</span>
+<span class="linenr"> 2: </span>   
+<span class="linenr"> 3: </span>   <span style="color: #859900; font-weight: bold;">import</span> io.gatling.core.<span style="color: #d33682; font-weight: bold;">Predef</span>.<span style="color: #859900; font-weight: bold;">_</span>
+<span class="linenr"> 4: </span>   <span style="color: #859900; font-weight: bold;">import</span> io.gatling.http.<span style="color: #d33682; font-weight: bold;">Predef</span>.<span style="color: #859900; font-weight: bold;">_</span>
+<span class="linenr"> 5: </span>   <span style="color: #859900; font-weight: bold;">import</span> scala.concurrent.duration.<span style="color: #859900; font-weight: bold;">_</span>
+<span class="linenr"> 6: </span>   
+<span class="linenr"> 7: </span>   <span style="color: #859900; font-weight: bold;">class</span> <span style="color: #b58900;">InfluxWriteQuerySimulation</span> <span style="color: #859900; font-weight: bold;">extends</span> <span style="color: #b58900;">Simulation</span> {
+<span class="linenr"> 8: </span>   
+<span class="linenr"> 9: </span>     <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">httpConf</span> <span style="color: #859900; font-weight: bold;">=</span> http.baseURL(<span style="color: #d33682; font-weight: bold;">Generator</span>.url)
+<span class="linenr">10: </span>   
+<span class="linenr">11: </span>     <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">hw</span> <span style="color: #859900; font-weight: bold;">=</span> http(<span style="color: #2aa198;">"write"</span>)
+<span class="linenr">12: </span>       .post(<span style="color: #2aa198;">"/write"</span>)
+<span class="linenr">13: </span>       .body(<span style="color: #d33682; font-weight: bold;">StringBody</span> { session <span style="color: #859900; font-weight: bold;">=&gt;</span>
+<span class="linenr">14: </span>               <span style="color: #d33682; font-weight: bold;">Generator</span>.genBatchPoints(session.userId, isWriter <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">true</span>).lineProtocol()
+<span class="linenr">15: </span>             }).queryParam(<span style="color: #2aa198;">"db"</span>, <span style="color: #d33682; font-weight: bold;">Generator</span>.db)
+<span class="linenr">16: </span>   
+<span class="linenr">17: </span>     <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">scnw</span> <span style="color: #859900; font-weight: bold;">=</span> scenario(<span style="color: #2aa198;">"write"</span>).exec(forever{
+<span class="linenr">18: </span>                                         exec(hw).pace(<span style="color: #d33682; font-weight: bold;">1</span> second, <span style="color: #d33682; font-weight: bold;">2</span> seconds)
+<span class="linenr">19: </span>                                       })
+<span class="linenr">20: </span>   
+<span class="linenr">21: </span>     <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">hr</span> <span style="color: #859900; font-weight: bold;">=</span> http(<span style="color: #2aa198;">"query"</span>).
+<span class="linenr">22: </span>       get(<span style="color: #2aa198;">"/query"</span>).
+<span class="linenr">23: </span>       queryParam(<span style="color: #2aa198;">"db"</span>, <span style="color: #d33682; font-weight: bold;">Generator</span>.db).
+<span class="linenr">24: </span>       queryParam(<span style="color: #2aa198;">"q"</span>, { session <span style="color: #859900; font-weight: bold;">=&gt;</span>
+<span class="linenr">25: </span>                    <span style="color: #d33682; font-weight: bold;">Generator</span>.getQueryStringByUserId(session.userId, isWriter <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">false</span>)
+<span class="linenr">26: </span>                  })
+<span class="linenr">27: </span>   
+<span class="linenr">28: </span>     <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">scnr</span> <span style="color: #859900; font-weight: bold;">=</span> scenario(<span style="color: #2aa198;">"query"</span>).
+<span class="linenr">29: </span>       exec(forever{
+<span class="linenr">30: </span>              exec(hr).pause{session <span style="color: #859900; font-weight: bold;">=&gt;</span> <span style="color: #d33682; font-weight: bold;">Generator</span>.getIntervalByUserId(session.userId, isWriter <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">false</span>)}
+<span class="linenr">31: </span>            })
+<span class="linenr">32: </span>   
+<span class="linenr">33: </span>     setUp(
+<span class="linenr">34: </span>       scnw.inject(rampUsers(<span style="color: #d33682; font-weight: bold;">Generator</span>.userCount).over(<span style="color: #d33682; font-weight: bold;">Generator</span>.duringSeconds seconds)),
+<span class="linenr">35: </span>       scnr.inject(rampUsers(<span style="color: #d33682; font-weight: bold;">Generator</span>.userCount).over(<span style="color: #d33682; font-weight: bold;">Generator</span>.duringSeconds seconds))
+<span class="linenr">36: </span>     ).protocols(httpConf)
+<span class="linenr">37: </span>   }
 </pre>
 </div>
 
@@ -251,7 +251,7 @@ influxdb的查询就是一个普通的带query parameter的get请求，所以这
         <script type="text/javascript">
           //var disqus_developer = 1;
           var disqus_identifier = "/blog/2016/10/20/influxdb-load-test-design";
-          var disqus_url = "http://shanexu.io/blog/2016/10/20/influxdb-load-test-design";
+          var disqus_url = "https://xusheng.org/blog/2016/10/20/influxdb-load-test-design";
           var disqus_shortname = 'shanexu';
           /* * * DON'T EDIT BELOW THIS LINE * * */
           (function() {
@@ -275,9 +275,9 @@ influxdb的查询就是一个普通的带query parameter的get请求，所以这
          })();
         </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 27.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 28.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
-          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711@gmail.com">Shane Xu</a>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">Shane Xu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;
           Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
           <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
