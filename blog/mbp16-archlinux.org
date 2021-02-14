@@ -120,7 +120,7 @@ package() {
 #+end_src
 
 修改 =dkms.conf=
-#+begin_src
+#+begin_src conf
 PACKAGE_NAME="@_PKGBASE@"
 PACKAGE_VERSION="@PKGVER@"
 AUTOINSTALL="yes"
@@ -167,7 +167,7 @@ sudo systemctl start mbp16fand
 
 * 遗留问题
 
-wifi目前没哟搞定。
+wifi目前没有搞定。
 
 * screenshots
 
