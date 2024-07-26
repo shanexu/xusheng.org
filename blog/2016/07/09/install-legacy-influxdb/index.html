@@ -35,9 +35,9 @@
 因为工作需要，所以接触了 influxdb，而工作中用的 <a href="https://influxdata.com/">influxdb</a> 的版本则是 0.10.2 的版本，官方只提供了最新稳定版的下载。看了官网的角角落落，也没有找到明显的下载地方，那就只有自己编译了。以下内容基本都是 influxdb 源码中 CONTRIBUTING.md 中的内容。
 </p>
 
-<div id="outline-container-org11110be" class="outline-2">
-<h2 id="org11110be">安装 Go</h2>
-<div class="outline-text-2" id="text-org11110be">
+<div id="outline-container-org9a1e6f9" class="outline-2">
+<h2 id="org9a1e6f9">安装 Go</h2>
+<div class="outline-text-2" id="text-org9a1e6f9">
 <p>
 InfluxDB 0.10.2 需要 Go 1.4.3。目前 Go 的稳定版已经跑到 1.6.2 了。和很多语言一样（例如 node 的 nvm, ruby 的 rvm），Go 也出现了版本管理工具 <a href="https://github.com/moovweb/gvm">gvm</a> 。可以用下面命令安装 gvm
 </p>
@@ -58,25 +58,25 @@ gvm use go1.4.3 --default #可以不设置为 default, 下次使用时需要执�
 </div>
 </div>
 
-<div id="outline-container-org09bafdf" class="outline-2">
-<h2 id="org09bafdf">安装版本控制系统</h2>
-<div class="outline-text-2" id="text-org09bafdf">
+<div id="outline-container-org6b5b4ad" class="outline-2">
+<h2 id="org6b5b4ad">安装版本控制系统</h2>
+<div class="outline-text-2" id="text-org6b5b4ad">
 <p>
 Go 能够通过版本控制系统引入远端的包，目前 influxdb 只依赖于 <code>git</code> 和 <code>mercurial</code>
 </p>
 </div>
-<div id="outline-container-orgecdb16f" class="outline-3">
-<h3 id="orgecdb16f">安装 <a href="http://git-scm.com/book/en/Getting-Started-Installing-Git">Git</a></h3>
-<div class="outline-text-3" id="text-orgecdb16f">
+<div id="outline-container-orgc2c1b61" class="outline-3">
+<h3 id="orgc2c1b61">安装 <a href="http://git-scm.com/book/en/Getting-Started-Installing-Git">Git</a></h3>
+<div class="outline-text-3" id="text-orgc2c1b61">
 <div class="org-src-container">
 <pre class="src src-sh">brew install git
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgeffcfb7" class="outline-3">
-<h3 id="orgeffcfb7">安装 <a href="http://mercurial.selenic.com/wiki/Download">Mercurial</a></h3>
-<div class="outline-text-3" id="text-orgeffcfb7">
+<div id="outline-container-org7ca759e" class="outline-3">
+<h3 id="org7ca759e">安装 <a href="http://mercurial.selenic.com/wiki/Download">Mercurial</a></h3>
+<div class="outline-text-3" id="text-org7ca759e">
 <div class="org-src-container">
 <pre class="src src-sh">brew install mercurial
 </pre>
@@ -84,9 +84,9 @@ Go 能够通过版本控制系统引入远端的包，目前 influxdb 只依赖�
 </div>
 </div>
 </div>
-<div id="outline-container-org21f00ae" class="outline-2">
-<h2 id="org21f00ae">下载源代码</h2>
-<div class="outline-text-2" id="text-org21f00ae">
+<div id="outline-container-org99c3639" class="outline-2">
+<h2 id="org99c3639">下载源代码</h2>
+<div class="outline-text-2" id="text-org99c3639">
 <p>
 设置项目结构并从仓库中获取代码：
 </p>
@@ -105,9 +105,9 @@ git checkout v0.10.2
 </div>
 </div>
 
-<div id="outline-container-orge5d7135" class="outline-2">
-<h2 id="orge5d7135">编译和测试</h2>
-<div class="outline-text-2" id="text-orge5d7135">
+<div id="outline-container-org602597d" class="outline-2">
+<h2 id="org602597d">编译和测试</h2>
+<div class="outline-text-2" id="text-org602597d">
 <p>
 确保 Go 已经正确安装，然后执行以下命令。可能需要翻墙。
 </p>
@@ -154,9 +154,9 @@ go install ./...
 </div>
 </div>
 
-<div id="outline-container-orgdd01609" class="outline-2">
-<h2 id="orgdd01609">启动 InfluxDB</h2>
-<div class="outline-text-2" id="text-orgdd01609">
+<div id="outline-container-org0a1fc9b" class="outline-2">
+<h2 id="org0a1fc9b">启动 InfluxDB</h2>
+<div class="outline-text-2" id="text-org0a1fc9b">
 <p>
 正常情况下，直接运行 influxd 就可以启动 influxdb 了。通过命令生成配置文件，修改后，在启动参数中加入 <code>-config filepath</code> 参数，就可以以指定配置文件启动 influxdb。
 </p>
