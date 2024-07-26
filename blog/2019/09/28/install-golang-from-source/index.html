@@ -1,55 +1,53 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>从源代码安装golang - Shane Xu&#39;s Home</title>
+    <title>从源代码安装golang - org-page</title>
     <meta charset="utf-8" />
     <meta name="author" content="shanexu" />
-      <meta name="description" content="how to install golang from source" />
-      <meta name="keywords" content="golang" />
-    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/code-solarized-dark.css" type="text/css">
+    <meta name="description" content="how to install golang from source" />
+    <meta name="keywords" content="golang" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
-
-  <body>
+  <body class="container">
     <div>
       <header class="masthead">
-        <h1 class="settitle"><a href="/">Shane Xu&#39;s Home</a></h1>
-        <blockquote>Life is too short for so much sorrow.</blockquote>
+        <h1 class="masthead-title"><a href="/">org-page</a></h1>
+        <p>static site generator</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/kelvinh/org-page">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
         <form method="get" id="searchform" action="//www.google.com/search">
           <input type="text" class="field" name="q" id="s" placeholder="Search">
           <input type="hidden" name="as_sitesearch" value="xusheng.org">
         </form>
       </header>
     </div>
-    <div class="node nav">
-      <ul>
-          <li><a href="/blog/" id="Blog_tab">Blog</a></li>
-        <li><a href="/tags/">Tags</a></li>
-        <li><a href="/about/">About</a></li>
-        <li><a href="https://github.com/shanexu">GitHub</a></li>
-        <li><a href="/rss.xml">RSS</a></li>
-      </ul>
-    </div>
 
-
-  <h3 class="section">从源代码安装golang</h3>
+<div>
+<div class="post">
+<h1>从源代码安装golang</h1>
 <p>
 本文的的主要内容来自golang源代码中的 <a href="https://github.com/golang/go/blob/master/doc/install-source.html">install-source.html</a> 内容。
 </p>
 
-<div id="outline-container-orge22655f" class="outline-2">
-<h2 id="orge22655f">克隆源代码</h2>
-<div class="outline-text-2" id="text-orge22655f">
+<div id="outline-container-org1ba3b7b" class="outline-2">
+<h2 id="org1ba3b7b">克隆源代码</h2>
+<div class="outline-text-2" id="text-org1ba3b7b">
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #b58900;">git</span> clone https://github.com/golang/go.git
+<pre class="src src-shell">git clone https://github.com/golang/go.git
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org5606387" class="outline-2">
-<h2 id="org5606387">安装bootstrap binar</h2>
-<div class="outline-text-2" id="text-org5606387">
+<div id="outline-container-orgb0040ab" class="outline-2">
+<h2 id="orgb0040ab">安装bootstrap binar</h2>
+<div class="outline-text-2" id="text-orgb0040ab">
 <p>
 go1.4以后golang工具链全都由golang编译，所以从源码安装golang需要一个bootstrap环境，也就是说需要一个golang编译器。这里可以通过系统的包管理器安装go1.4后的版本。
 </p>
@@ -60,20 +58,20 @@ go1.4以后golang工具链全都由golang编译，所以从源码安装golang需
 </div>
 </div>
 
-<div id="outline-container-orge4d66fa" class="outline-2">
-<h2 id="orge4d66fa">编译安装</h2>
-<div class="outline-text-2" id="text-orge4d66fa">
+<div id="outline-container-org035ae51" class="outline-2">
+<h2 id="org035ae51">编译安装</h2>
+<div class="outline-text-2" id="text-org035ae51">
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #b58900;">cd</span> go/src
-<span style="color: #6c71c4;">GOROOT_BOOTSTRAP</span>=/usr/local/opt/go/libexec ./all.bash
+<pre class="src src-shell">cd go/src
+GOROOT_BOOTSTRAP=/usr/local/opt/go/libexec ./all.bash
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgd8580b0" class="outline-2">
-<h2 id="orgd8580b0">检查</h2>
-<div class="outline-text-2" id="text-orgd8580b0">
+<div id="outline-container-orgbeedf00" class="outline-2">
+<h2 id="orgbeedf00">检查</h2>
+<div class="outline-text-2" id="text-orgbeedf00">
 <div class="org-src-container">
 <pre class="src src-text">$ ../bin/go version
 go version devel +739bf6b929 Fri Sep 27 21:17:15 2019 +0000 darwin/amd64
@@ -82,7 +80,8 @@ go version devel +739bf6b929 Fri Sep 27 21:17:15 2019 +0000 darwin/amd64
 </div>
 </div>
 
-
+</div>
+</div>
     <div>
       <div class="post-meta">
         <span title="post date" class="post-info">2019-09-28</span>
@@ -91,7 +90,7 @@ go version devel +739bf6b929 Fri Sep 27 21:17:15 2019 +0000 darwin/amd64
         <span title="author" class="post-info">shanexu</span>
       </div>
       <section>
-        <h2 class="chapter">Comments</h2>
+        <h1>Comments</h1>
         <div id="disqus_thread"></div>
         <script type="text/javascript">
           //var disqus_developer = 1;
@@ -107,20 +106,26 @@ go version devel +739bf6b929 Fri Sep 27 21:17:15 2019 +0000 darwin/amd64
         </script>
         <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
         <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
       </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="/media/js/main.js"></script>
-        <script type="text/javascript">
-         var _gaq = _gaq || [];
-         _gaq.push(['_setAccount', 'UA-74684473-1']);
-         _gaq.push(['_trackPageview']);
-         (function() {
-           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-         })();
-        </script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-74684473-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 28.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 29.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
           Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">shanexu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;

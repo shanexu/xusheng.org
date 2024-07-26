@@ -1,38 +1,36 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>520 - Shane Xu&#39;s Home</title>
+    <title>520 - org-page</title>
     <meta charset="utf-8" />
     <meta name="author" content="Shane Xu" />
-      <meta name="description" content="&lt;TODO: insert your description here&gt;" />
-      <meta name="keywords" content="狗粮" />
-    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/code-solarized-dark.css" type="text/css">
+    <meta name="description" content="&lt;TODO: insert your description here&gt;" />
+    <meta name="keywords" content="狗粮" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
-
-  <body>
+  <body class="container">
     <div>
       <header class="masthead">
-        <h1 class="settitle"><a href="/">Shane Xu&#39;s Home</a></h1>
-        <blockquote>Life is too short for so much sorrow.</blockquote>
+        <h1 class="masthead-title"><a href="/">org-page</a></h1>
+        <p>static site generator</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/kelvinh/org-page">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
         <form method="get" id="searchform" action="//www.google.com/search">
           <input type="text" class="field" name="q" id="s" placeholder="Search">
           <input type="hidden" name="as_sitesearch" value="xusheng.org">
         </form>
       </header>
     </div>
-    <div class="node nav">
-      <ul>
-          <li><a href="/blog/" id="Blog_tab">Blog</a></li>
-        <li><a href="/tags/">Tags</a></li>
-        <li><a href="/about/">About</a></li>
-        <li><a href="https://github.com/shanexu">GitHub</a></li>
-        <li><a href="/rss.xml">RSS</a></li>
-      </ul>
-    </div>
 
-
-  <h3 class="section">520</h3>
+<div>
+<div class="post">
+<h1>520</h1>
 <p>
 今天是五月二十号，是一个传统的狗粮丰收日。今天应邀参加了萧大爷和韩小豚的婚礼。在去开化的路上，偶然听到了王若琳的迷宫。真的感觉悲从中来。今天还是浙大一百二十周年校庆日。
 稍微思量一下，竟然发现十年已经过去，上一次有如此感慨的时候是想起后某个朋友认识十年的时候。
@@ -73,7 +71,7 @@
 Starry starry night<br />
 flaming flowers that brightly blaze<br />
 swirling clouds in violet haze<br />
-reflect in Vincent&rsquo;s eyes of china blue.
+reflect in Vincent's eyes of china blue.
 </p>
 </blockquote>
 
@@ -97,7 +95,8 @@ reflect in Vincent&rsquo;s eyes of china blue.
 如今，你离开我已经五年了。
 </p>
 
-
+</div>
+</div>
     <div>
       <div class="post-meta">
         <span title="post date" class="post-info">2017-05-20</span>
@@ -106,7 +105,7 @@ reflect in Vincent&rsquo;s eyes of china blue.
         <span title="author" class="post-info">Shane Xu</span>
       </div>
       <section>
-        <h2 class="chapter">Comments</h2>
+        <h1>Comments</h1>
         <div id="disqus_thread"></div>
         <script type="text/javascript">
           //var disqus_developer = 1;
@@ -122,20 +121,26 @@ reflect in Vincent&rsquo;s eyes of china blue.
         </script>
         <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
         <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
       </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="/media/js/main.js"></script>
-        <script type="text/javascript">
-         var _gaq = _gaq || [];
-         _gaq.push(['_setAccount', 'UA-74684473-1']);
-         _gaq.push(['_trackPageview']);
-         (function() {
-           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-         })();
-        </script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-74684473-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 28.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 29.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
           Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">Shane Xu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;

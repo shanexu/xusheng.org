@@ -1,38 +1,36 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>How to escape single-quotes within single-quoted strings in bash - Shane Xu&#39;s Home</title>
+    <title>How to escape single-quotes within single-quoted strings in bash - org-page</title>
     <meta charset="utf-8" />
     <meta name="author" content="Shane Xu" />
-      <meta name="description" content="How to escape single-quotes within single-quoted strings in bash" />
-      <meta name="keywords" content="bash" />
-    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/code-solarized-dark.css" type="text/css">
+    <meta name="description" content="How to escape single-quotes within single-quoted strings in bash" />
+    <meta name="keywords" content="bash" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
-
-  <body>
+  <body class="container">
     <div>
       <header class="masthead">
-        <h1 class="settitle"><a href="/">Shane Xu&#39;s Home</a></h1>
-        <blockquote>Life is too short for so much sorrow.</blockquote>
+        <h1 class="masthead-title"><a href="/">org-page</a></h1>
+        <p>static site generator</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/kelvinh/org-page">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
         <form method="get" id="searchform" action="//www.google.com/search">
           <input type="text" class="field" name="q" id="s" placeholder="Search">
           <input type="hidden" name="as_sitesearch" value="xusheng.org">
         </form>
       </header>
     </div>
-    <div class="node nav">
-      <ul>
-          <li><a href="/blog/" id="Blog_tab">Blog</a></li>
-        <li><a href="/tags/">Tags</a></li>
-        <li><a href="/about/">About</a></li>
-        <li><a href="https://github.com/shanexu">GitHub</a></li>
-        <li><a href="/rss.xml">RSS</a></li>
-      </ul>
-    </div>
 
-
-  <h3 class="section">How to escape single-quotes within single-quoted strings in bash</h3>
+<div>
+<div class="post">
+<h1>How to escape single-quotes within single-quoted strings in bash</h1>
 <p>
 事情的始末是这样的。那天我部署了一个 <a href="https://www.influxdata.com/time-series-platform/kapacitor/">Kapacitor</a> ，然后尝试调用它的rest api添加一个Task。然而令我没想到是，习惯了使用 <code>curl</code> 的我，这次竟然迟迟没有搞定这个这个rest接口。
 </p>
@@ -42,15 +40,15 @@ Kapacitor的这个接口其实很简单，就是往 <code>/kapacitor/v1/tasks</c
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #b58900;">curl</span> -X POST -H <span style="color: #2aa198;">"Content-Type: application/json"</span> -d <span style="color: #2aa198;">'</span>
-<span style="color: #2aa198;">{</span>
-<span style="color: #2aa198;">    "id" : "quote1",</span>
-<span style="color: #2aa198;">    "type" : "stream",</span>
-<span style="color: #2aa198;">    "dbrps": [{"db": "udp", "rp" : "autogen"}],</span>
-<span style="color: #2aa198;">    "script": "stream|from().measurement(\'</span>quote<span style="color: #2aa198;">\'</span><span style="color: #dc322f; font-weight: bold;">)</span>|alert<span style="color: #dc322f; font-weight: bold;">()</span>.crit<span style="color: #dc322f; font-weight: bold;">(</span>lambda: <span style="color: #2aa198;">\"</span>price<span style="color: #2aa198;">\"</span> &lt; <span style="color: #d33682; font-weight: bold;">174</span><span style="color: #dc322f; font-weight: bold;">)</span>.log<span style="color: #dc322f; font-weight: bold;">(</span><span style="color: #2aa198;">\'</span>/tmp/price1.log<span style="color: #2aa198;">\'</span><span style="color: #dc322f; font-weight: bold;">)</span><span style="color: #2aa198;">",</span>
-<span style="color: #2aa198;">    "</span>status<span style="color: #2aa198;">": "</span>enabled<span style="color: #2aa198;">"</span>
-<span style="color: #2aa198;">}</span>
-<span style="color: #2aa198;">' "</span>http://127.0.0.1:9092/kapacitor/v1/tasks<span style="color: #2aa198;">"</span>
+<pre class="src src-bash">curl -X POST -H "Content-Type: application/json" -d '
+{
+    "id" : "quote1",
+    "type" : "stream",
+    "dbrps": [{"db": "udp", "rp" : "autogen"}],
+    "script": "stream|from().measurement(\'quote\')|alert().crit(lambda: \"price\" &lt; 174).log(\'/tmp/price1.log\')",
+    "status": "enabled"
+}
+' "http://127.0.0.1:9092/kapacitor/v1/tasks"
 </pre>
 </div>
 
@@ -69,15 +67,15 @@ Kapacitor的这个接口其实很简单，就是往 <code>/kapacitor/v1/tasks</c
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #b58900;">curl</span> -X POST -H <span style="color: #2aa198;">"Content-Type: application/json"</span> -d <span style="color: #2aa198;">'</span>
-<span style="color: #2aa198;">{</span>
-<span style="color: #2aa198;">    "id" : "quote1",</span>
-<span style="color: #2aa198;">    "type" : "stream",</span>
-<span style="color: #2aa198;">    "dbrps": [{"db": "udp", "rp" : "autogen"}],</span>
-<span style="color: #2aa198;">    "script": "stream|from().measurement('"'"'quote'"'"')|alert().crit(lambda: \"price\" &lt; 174).log('"'"'/tmp/price1.log'"'"')",</span>
-<span style="color: #2aa198;">    "status": "enabled"</span>
-<span style="color: #2aa198;">}</span>
-<span style="color: #2aa198;">'</span> <span style="color: #2aa198;">"http://127.0.0.1:9092/kapacitor/v1/tasks"</span>
+<pre class="src src-bash">curl -X POST -H "Content-Type: application/json" -d '
+{
+    "id" : "quote1",
+    "type" : "stream",
+    "dbrps": [{"db": "udp", "rp" : "autogen"}],
+    "script": "stream|from().measurement('"'"'quote'"'"')|alert().crit(lambda: \"price\" &lt; 174).log('"'"'/tmp/price1.log'"'"')",
+    "status": "enabled"
+}
+' "http://127.0.0.1:9092/kapacitor/v1/tasks"
 </pre>
 </div>
 
@@ -90,8 +88,8 @@ Kapacitor的这个接口其实很简单，就是往 <code>/kapacitor/v1/tasks</c
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #b58900;">echo</span> $<span style="color: #2aa198;">'It\'</span>s Shell Programming<span style="color: #2aa198;">'  # ksh, bash, and zsh only, does not expand variables</span>
-<span style="color: #2aa198;">echo</span><span style="color: #2aa198;"> '</span>It<span style="color: #2aa198;">'\''s Shell Programming'</span> <span style="color: #405A61;"># </span><span style="color: #405A61;">all shells, single quote is outside the quotes</span>
+<pre class="src src-bash">echo $'It\'s Shell Programming'  # ksh, bash, and zsh only, does not expand variables
+echo 'It'\''s Shell Programming' # all shells, single quote is outside the quotes
 </pre>
 </div>
 
@@ -105,7 +103,7 @@ Kapacitor的这个接口其实很简单，就是往 <code>/kapacitor/v1/tasks</c
 
 <blockquote>
 <p>
-Words of the form $&rsquo;string&rsquo; are treated specially. The word expands to string, with backslash-escaped characters replaced as specified by the ANSI C standard. Backslash escape sequences, if present, are decoded as follows:
+Words of the form $'string' are treated specially. The word expands to string, with backslash-escaped characters replaced as specified by the ANSI C standard. Backslash escape sequences, if present, are decoded as follows:
 </p>
 
 <p>
@@ -185,7 +183,7 @@ backslash
 </p>
 
 <p>
-\&rsquo;
+\'
 </p>
 
 <p>
@@ -193,7 +191,7 @@ single quote
 </p>
 
 <p>
-\&ldquo;
+\"
 </p>
 
 <p>
@@ -231,15 +229,15 @@ The expanded result is single-quoted, as if the dollar sign had not been present
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #b58900;">curl</span> -X POST -H <span style="color: #2aa198;">"Content-Type: application/json"</span> -d $<span style="color: #2aa198;">'</span>
-<span style="color: #2aa198;">{</span>
-<span style="color: #2aa198;">    "id" : "quote1",</span>
-<span style="color: #2aa198;">    "type" : "stream",</span>
-<span style="color: #2aa198;">    "dbrps": [{"db": "udp", "rp" : "autogen"}],</span>
-<span style="color: #2aa198;">    "script": "stream|from().measurement(\'</span>quote<span style="color: #2aa198;">\'</span><span style="color: #dc322f; font-weight: bold;">)</span>|alert<span style="color: #dc322f; font-weight: bold;">()</span>.crit<span style="color: #dc322f; font-weight: bold;">(</span>lambda: <span style="color: #2aa198;">\\"price\\"</span> &lt; <span style="color: #d33682; font-weight: bold;">174</span><span style="color: #dc322f; font-weight: bold;">)</span>.log<span style="color: #dc322f; font-weight: bold;">(</span><span style="color: #2aa198;">\'</span>/tmp/price1.log<span style="color: #2aa198;">\'</span><span style="color: #dc322f; font-weight: bold;">)</span><span style="color: #2aa198;">",</span>
-<span style="color: #2aa198;">    "</span>status<span style="color: #2aa198;">": "</span>enabled<span style="color: #2aa198;">"</span>
-<span style="color: #2aa198;">}</span>
-<span style="color: #2aa198;">' "</span>http://127.0.0.1:9092/kapacitor/v1/tasks<span style="color: #2aa198;">"</span>
+<pre class="src src-bash">curl -X POST -H "Content-Type: application/json" -d $'
+{
+    "id" : "quote1",
+    "type" : "stream",
+    "dbrps": [{"db": "udp", "rp" : "autogen"}],
+    "script": "stream|from().measurement(\'quote\')|alert().crit(lambda: \\"price\\" &lt; 174).log(\'/tmp/price1.log\')",
+    "status": "enabled"
+}
+' "http://127.0.0.1:9092/kapacitor/v1/tasks"
 </pre>
 </div>
 
@@ -247,7 +245,8 @@ The expanded result is single-quoted, as if the dollar sign had not been present
 没想到在这个简单的问题上我花费了那么多时间。所以要经常 <code>RTFM</code> 啊。
 </p>
 
-
+</div>
+</div>
     <div>
       <div class="post-meta">
         <span title="post date" class="post-info">2016-09-14</span>
@@ -256,7 +255,7 @@ The expanded result is single-quoted, as if the dollar sign had not been present
         <span title="author" class="post-info">Shane Xu</span>
       </div>
       <section>
-        <h2 class="chapter">Comments</h2>
+        <h1>Comments</h1>
         <div id="disqus_thread"></div>
         <script type="text/javascript">
           //var disqus_developer = 1;
@@ -272,20 +271,26 @@ The expanded result is single-quoted, as if the dollar sign had not been present
         </script>
         <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
         <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
       </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="/media/js/main.js"></script>
-        <script type="text/javascript">
-         var _gaq = _gaq || [];
-         _gaq.push(['_setAccount', 'UA-74684473-1']);
-         _gaq.push(['_trackPageview']);
-         (function() {
-           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-         })();
-        </script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-74684473-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 28.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 29.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
           Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">Shane Xu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;

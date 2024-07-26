@@ -1,40 +1,38 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>in girum imus nocte et consumimur igni - Shane Xu&#39;s Home</title>
+    <title>in girum imus nocte et consumimur igni - org-page</title>
     <meta charset="utf-8" />
     <meta name="author" content="Shane Xu" />
-      <meta name="description" content="in girum imus nocte et consumimur igni" />
-      <meta name="keywords" content="in girum imus nocte et consumimur igni" />
-    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/code-solarized-dark.css" type="text/css">
+    <meta name="description" content="in girum imus nocte et consumimur igni" />
+    <meta name="keywords" content="in girum imus nocte et consumimur igni" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
-
-  <body>
+  <body class="container">
     <div>
       <header class="masthead">
-        <h1 class="settitle"><a href="/">Shane Xu&#39;s Home</a></h1>
-        <blockquote>Life is too short for so much sorrow.</blockquote>
+        <h1 class="masthead-title"><a href="/">org-page</a></h1>
+        <p>static site generator</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/kelvinh/org-page">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
         <form method="get" id="searchform" action="//www.google.com/search">
           <input type="text" class="field" name="q" id="s" placeholder="Search">
           <input type="hidden" name="as_sitesearch" value="xusheng.org">
         </form>
       </header>
     </div>
-    <div class="node nav">
-      <ul>
-          <li><a href="/blog/" id="Blog_tab">Blog</a></li>
-        <li><a href="/tags/">Tags</a></li>
-        <li><a href="/about/">About</a></li>
-        <li><a href="https://github.com/shanexu">GitHub</a></li>
-        <li><a href="/rss.xml">RSS</a></li>
-      </ul>
-    </div>
 
-
-  <h3 class="section">in girum imus nocte et consumimur igni</h3>
+<div>
+<div class="post">
+<h1>in girum imus nocte et consumimur igni</h1>
 <p>
-我 25 岁的时候在 Alan&rsquo;s Bar，认识了与我同龄的晓树。那时，他总是躲在酒吧最靠里的角落，独自一人一边一杯接着一杯喝咖啡，一边全神贯注地看小说，有时是托马斯·曼的《魔山》，有时是普鲁斯特的《追忆似水年华》，有时是加缪的《局外人》……总之，就是这样。
+我 25 岁的时候在 Alan's Bar，认识了与我同龄的晓树。那时，他总是躲在酒吧最靠里的角落，独自一人一边一杯接着一杯喝咖啡，一边全神贯注地看小说，有时是托马斯·曼的《魔山》，有时是普鲁斯特的《追忆似水年华》，有时是加缪的《局外人》……总之，就是这样。
 </p>
 
 <p>
@@ -139,7 +137,8 @@ in girum imus nocte et consumimur igni（生硬的印刷体）
 我直觉得秒针向前走了半圈，然后又回转了半圈，如此反反复复，知道纷纷扬扬的雪飘摇而至……
 </p>
 
-
+</div>
+</div>
     <div>
       <div class="post-meta">
         <span title="post date" class="post-info">2006-10-08</span>
@@ -148,7 +147,7 @@ in girum imus nocte et consumimur igni（生硬的印刷体）
         <span title="author" class="post-info">Shane Xu</span>
       </div>
       <section>
-        <h2 class="chapter">Comments</h2>
+        <h1>Comments</h1>
         <div id="disqus_thread"></div>
         <script type="text/javascript">
           //var disqus_developer = 1;
@@ -164,20 +163,26 @@ in girum imus nocte et consumimur igni（生硬的印刷体）
         </script>
         <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
         <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
       </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="/media/js/main.js"></script>
-        <script type="text/javascript">
-         var _gaq = _gaq || [];
-         _gaq.push(['_setAccount', 'UA-74684473-1']);
-         _gaq.push(['_trackPageview']);
-         (function() {
-           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-         })();
-        </script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-74684473-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 28.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 29.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
           Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">Shane Xu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;

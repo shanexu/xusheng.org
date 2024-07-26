@@ -1,38 +1,36 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>Binding.scala in Practice - Shane Xu&#39;s Home</title>
+    <title>Binding.scala in Practice - org-page</title>
     <meta charset="utf-8" />
     <meta name="author" content="Shane Xu" />
-      <meta name="description" content="&lt;TODO: insert your description here&gt;" />
-      <meta name="keywords" content="scala.js, Binding.scala, scala" />
-    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/code-solarized-dark.css" type="text/css">
+    <meta name="description" content="&lt;TODO: insert your description here&gt;" />
+    <meta name="keywords" content="scala.js, Binding.scala, scala" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
-
-  <body>
+  <body class="container">
     <div>
       <header class="masthead">
-        <h1 class="settitle"><a href="/">Shane Xu&#39;s Home</a></h1>
-        <blockquote>Life is too short for so much sorrow.</blockquote>
+        <h1 class="masthead-title"><a href="/">org-page</a></h1>
+        <p>static site generator</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/kelvinh/org-page">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
         <form method="get" id="searchform" action="//www.google.com/search">
           <input type="text" class="field" name="q" id="s" placeholder="Search">
           <input type="hidden" name="as_sitesearch" value="xusheng.org">
         </form>
       </header>
     </div>
-    <div class="node nav">
-      <ul>
-          <li><a href="/blog/" id="Blog_tab">Blog</a></li>
-        <li><a href="/tags/">Tags</a></li>
-        <li><a href="/about/">About</a></li>
-        <li><a href="https://github.com/shanexu">GitHub</a></li>
-        <li><a href="/rss.xml">RSS</a></li>
-      </ul>
-    </div>
 
-
-  <h3 class="section">Binding.scala in Practice</h3>
+<div>
+<div class="post">
+<h1>Binding.scala in Practice</h1>
 <p>
 开了这个题目之后，我久久不知道如何动笔。搁置了一周之后，我终于下定决心写好这篇文章。我就来写写，我这两星期 <code>我</code> 和 <a href="https://www.scala-js.org/">scala.js</a> 以及 <a href="https://github.com/ThoughtWorksInc/Binding.scala">Binding.scala</a> 浴血奋战的故事(<a href="http://music.163.com/#/song?id=22790726">You and Music and Dream</a>)。
 </p>
@@ -42,18 +40,18 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #b58900;">mkdir</span> simple-scala.js-Binding.scala
-<span style="color: #b58900;">cd</span> simple-scala.js-Binding.scala
-<span style="color: #b58900;">mkdir</span> -p js/src/<span style="color: #268bd2;">{</span>main,test<span style="color: #268bd2;">}</span>/scala
-<span style="color: #b58900;">mkdir</span> project
-<span style="color: #b58900;">echo</span> sbt.version=0.13.13 &gt; project/build.properties
-<span style="color: #b58900;">echo</span> <span style="color: #2aa198;">'resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/"</span>
+<pre class="src src-shell">mkdir simple-scala.js-Binding.scala
+cd simple-scala.js-Binding.scala
+mkdir -p js/src/{main,test}/scala
+mkdir project
+echo sbt.version=0.13.13 &gt; project/build.properties
+echo 'resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/"
 
-<span style="color: #2aa198;">addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.14")</span>
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.14")
 
-<span style="color: #2aa198;">addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.3")</span>
-<span style="color: #2aa198;">'</span> &gt; project/plugin.sbt
-<span style="color: #b58900;">touch</span> build.sbt
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.3")
+' &gt; project/plugin.sbt
+touch build.sbt
 </pre>
 </div>
 
@@ -62,31 +60,31 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">commonSettings</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">Seq</span>(
-<span class="linenr"> 2: </span>  version := <span style="color: #2aa198;">"0.0.1"</span>,
-<span class="linenr"> 3: </span>  scalaVersion := <span style="color: #2aa198;">"2.11.8"</span>,
-<span class="linenr"> 4: </span>  addCompilerPlugin(<span style="color: #2aa198;">"org.scalamacros"</span> % <span style="color: #2aa198;">"paradise"</span> % <span style="color: #2aa198;">"2.1.0"</span> cross <span style="color: #d33682; font-weight: bold;">CrossVersion</span>.full),
-<span class="linenr"> 5: </span>  scalacOptions ++= <span style="color: #d33682; font-weight: bold;">Seq</span>(<span style="color: #2aa198;">"-feature"</span>, <span style="color: #2aa198;">"-language:implicitConversions"</span>)
+<pre class="src src-scala"><span class="linenr"> 1: </span>lazy val commonSettings = Seq(
+<span class="linenr"> 2: </span>  version := "0.0.1",
+<span class="linenr"> 3: </span>  scalaVersion := "2.11.8",
+<span class="linenr"> 4: </span>  addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
+<span class="linenr"> 5: </span>  scalacOptions ++= Seq("-feature", "-language:implicitConversions")
 <span class="linenr"> 6: </span>)
 <span class="linenr"> 7: </span>
-<span class="linenr"> 8: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">BindingScalaVersion</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">"10.0.1"</span>
+<span class="linenr"> 8: </span>lazy val BindingScalaVersion = "10.0.1"
 <span class="linenr"> 9: </span>
-<span class="linenr">10: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">root</span> <span style="color: #859900; font-weight: bold;">=</span> (project in file(<span style="color: #2aa198;">"."</span>)).
-<span class="linenr">11: </span>  settings(commonSettings<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #859900; font-weight: bold;">_</span>*).
+<span class="linenr">10: </span>lazy val root = (project in file(".")).
+<span class="linenr">11: </span>  settings(commonSettings: _*).
 <span class="linenr">12: </span>  aggregate(js)
 <span class="linenr">13: </span>
-<span class="linenr">14: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">js</span> <span style="color: #859900; font-weight: bold;">=</span> (project in file(<span style="color: #2aa198;">"js"</span>)).
-<span class="linenr">15: </span>  settings(commonSettings<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #859900; font-weight: bold;">_</span>*).
+<span class="linenr">14: </span>lazy val js = (project in file("js")).
+<span class="linenr">15: </span>  settings(commonSettings: _*).
 <span class="linenr">16: </span>  settings(
-<span class="linenr">17: </span>    mainClass in (<span style="color: #d33682; font-weight: bold;">Compile</span>) := <span style="color: #d33682; font-weight: bold;">Some</span>(<span style="color: #2aa198;">"Application"</span>),
-<span class="linenr">18: </span>    persistLauncher := <span style="color: #d33682; font-weight: bold;">true</span>,
-<span class="linenr">19: </span>    libraryDependencies ++= <span style="color: #d33682; font-weight: bold;">Seq</span>(
-<span class="linenr">20: </span>      <span style="color: #2aa198;">"org.scala-js"</span> %%% <span style="color: #2aa198;">"scalajs-dom"</span> % <span style="color: #2aa198;">"0.9.1"</span>,
-<span class="linenr">21: </span>      <span style="color: #2aa198;">"com.thoughtworks.binding"</span> %%% <span style="color: #2aa198;">"dom"</span> % <span style="color: #d33682; font-weight: bold;">BindingScalaVersion</span>,
-<span class="linenr">22: </span>      <span style="color: #2aa198;">"com.thoughtworks.binding"</span> %%% <span style="color: #2aa198;">"route"</span> % <span style="color: #d33682; font-weight: bold;">BindingScalaVersion</span>
+<span class="linenr">17: </span>    mainClass in (Compile) := Some("Application"),
+<span class="linenr">18: </span>    persistLauncher := true,
+<span class="linenr">19: </span>    libraryDependencies ++= Seq(
+<span class="linenr">20: </span>      "org.scala-js" %%% "scalajs-dom" % "0.9.1",
+<span class="linenr">21: </span>      "com.thoughtworks.binding" %%% "dom" % BindingScalaVersion,
+<span class="linenr">22: </span>      "com.thoughtworks.binding" %%% "route" % BindingScalaVersion
 <span class="linenr">23: </span>    )
 <span class="linenr">24: </span>  ).
-<span class="linenr">25: </span>  enablePlugins(<span style="color: #d33682; font-weight: bold;">ScalaJSPlugin</span>)
+<span class="linenr">25: </span>  enablePlugins(ScalaJSPlugin)
 </pre>
 </div>
 
@@ -95,11 +93,11 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr">1: </span><span style="color: #405A61;">/* </span><span style="color: #405A61;">js/src/main/scala/Application.scala */</span>
-<span class="linenr">2: </span><span style="color: #859900; font-weight: bold;">import</span> scala.scalajs.js.<span style="color: #d33682; font-weight: bold;">JSApp</span>
+<pre class="src src-scala"><span class="linenr">1: </span>/* js/src/main/scala/Application.scala */
+<span class="linenr">2: </span>import scala.scalajs.js.JSApp
 <span class="linenr">3: </span>
-<span class="linenr">4: </span><span style="color: #859900; font-weight: bold;">object</span> <span style="color: #d33682; font-weight: bold;">Application</span> <span style="color: #859900; font-weight: bold;">extends</span> <span style="color: #b58900;">JSApp</span> {
-<span class="linenr">5: </span>  <span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">main</span>()<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Unit</span> <span style="color: #859900; font-weight: bold;">=</span> println(<span style="color: #2aa198;">"Hello World!"</span>)
+<span class="linenr">4: </span>object Application extends JSApp {
+<span class="linenr">5: </span>  def main(): Unit = println("Hello World!")
 <span class="linenr">6: </span>}
 </pre>
 </div>
@@ -112,7 +110,7 @@
 执行 <code>sbt fastOptJS</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-shell">$ <span style="color: #b58900;">ls</span> js/target/scala-2.11
+<pre class="src src-shell">$ ls js/target/scala-2.11
 classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launcher.js
 </pre>
 </div>
@@ -121,21 +119,21 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 在项目根目录下新建一个 <code>index.html</code> 
 </p>
 <div class="org-src-container">
-<pre class="src src-html"><span class="linenr"> 1: </span><span style="color: #d33682; font-weight: bold;">&lt;!doctype html</span><span style="color: #d33682; background-color: #00212B; font-weight: bold;">&gt;</span>
-<span class="linenr"> 2: </span><span style="color: #839496; background-color: #00212B;">&lt;</span><span style="color: #268bd2;">html</span><span style="color: #839496; background-color: #00212B;">&gt;</span>
-<span class="linenr"> 3: </span>  <span style="color: #839496; background-color: #00212B;">&lt;</span><span style="color: #268bd2;">head</span><span style="color: #839496; background-color: #00212B;">&gt;</span>
-<span class="linenr"> 4: </span>    <span style="color: #839496; background-color: #00212B;">&lt;</span><span style="color: #268bd2;">meta</span> <span style="color: #cb4b16; font-weight: bold;">charset</span>="<span style="color: #2aa198;">utf-8</span>"<span style="color: #839496; background-color: #00212B;">&gt;</span>
-<span class="linenr"> 5: </span>    <span style="color: #839496; background-color: #00212B;">&lt;</span><span style="color: #268bd2;">meta</span> <span style="color: #cb4b16; font-weight: bold;">http-equiv</span>="<span style="color: #2aa198;">X-UA-Compatible</span>" <span style="color: #cb4b16; font-weight: bold;">content</span>="<span style="color: #2aa198;">IE=edge,chrome=1</span>"<span style="color: #839496; background-color: #00212B;">&gt;</span>
-<span class="linenr"> 6: </span>    <span style="color: #839496; background-color: #00212B;">&lt;</span><span style="color: #268bd2;">meta</span> <span style="color: #cb4b16; font-weight: bold;">name</span>="<span style="color: #2aa198;">description</span>" <span style="color: #cb4b16; font-weight: bold;">content</span>=""<span style="color: #839496; background-color: #00212B;">&gt;</span>
-<span class="linenr"> 7: </span>    <span style="color: #839496; background-color: #00212B;">&lt;</span><span style="color: #268bd2;">meta</span> <span style="color: #cb4b16; font-weight: bold;">name</span>="<span style="color: #2aa198;">viewport</span>" <span style="color: #cb4b16; font-weight: bold;">content</span>="<span style="color: #2aa198;">width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no</span>"<span style="color: #839496; background-color: #00212B;">&gt;</span>
-<span class="linenr"> 8: </span>    <span style="color: #839496; background-color: #00212B;">&lt;</span><span style="color: #268bd2;">title</span><span style="color: #839496; background-color: #00212B;">&gt;</span>Hello World!<span style="color: #839496; background-color: #00212B;">&lt;/</span><span style="color: #268bd2;">title</span><span style="color: #839496; background-color: #00212B;">&gt;</span>
-<span class="linenr"> 9: </span>    <span style="color: #839496; background-color: #00212B;">&lt;</span><span style="color: #268bd2;">script</span> <span style="color: #cb4b16; font-weight: bold;">type</span>="<span style="color: #2aa198;">text/javascript</span>" <span style="color: #cb4b16; font-weight: bold;">src</span>="<span style="color: #2aa198;">./js/target/scala-2.11/js-jsdeps.js</span>"<span style="color: #839496; background-color: #00212B;">&gt;&lt;/</span><span style="color: #268bd2;">script</span><span style="color: #839496; background-color: #00212B;">&gt;</span>
-<span class="linenr">10: </span>    <span style="color: #839496; background-color: #00212B;">&lt;</span><span style="color: #268bd2;">script</span> <span style="color: #cb4b16; font-weight: bold;">type</span>="<span style="color: #2aa198;">text/javascript</span>" <span style="color: #cb4b16; font-weight: bold;">src</span>="<span style="color: #2aa198;">./js/target/scala-2.11/js-fastopt.js</span>"<span style="color: #839496; background-color: #00212B;">&gt;&lt;/</span><span style="color: #268bd2;">script</span><span style="color: #839496; background-color: #00212B;">&gt;</span>
-<span class="linenr">11: </span>  <span style="color: #839496; background-color: #00212B;">&lt;/</span><span style="color: #268bd2;">head</span><span style="color: #839496; background-color: #00212B;">&gt;</span>
-<span class="linenr">12: </span>  <span style="color: #839496; background-color: #00212B;">&lt;</span><span style="color: #268bd2;">body</span><span style="color: #839496; background-color: #00212B;">&gt;</span>
-<span class="linenr">13: </span>    <span style="color: #839496; background-color: #00212B;">&lt;</span><span style="color: #268bd2;">script</span> <span style="color: #cb4b16; font-weight: bold;">type</span>="<span style="color: #2aa198;">text/javascript</span>" <span style="color: #cb4b16; font-weight: bold;">src</span>="<span style="color: #2aa198;">./js/target/scala-2.11/js-launcher.js</span>"<span style="color: #839496; background-color: #00212B;">&gt;&lt;/</span><span style="color: #268bd2;">script</span><span style="color: #839496; background-color: #00212B;">&gt;</span>
-<span class="linenr">14: </span>  <span style="color: #839496; background-color: #00212B;">&lt;/</span><span style="color: #268bd2;">body</span><span style="color: #839496; background-color: #00212B;">&gt;</span>
-<span class="linenr">15: </span><span style="color: #839496; background-color: #00212B;">&lt;/</span><span style="color: #268bd2;">html</span><span style="color: #839496; background-color: #00212B;">&gt;</span>
+<pre class="src src-html"><span class="linenr"> 1: </span>&lt;!doctype html&gt;
+<span class="linenr"> 2: </span>&lt;html&gt;
+<span class="linenr"> 3: </span>  &lt;head&gt;
+<span class="linenr"> 4: </span>    &lt;meta charset="utf-8"&gt;
+<span class="linenr"> 5: </span>    &lt;meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"&gt;
+<span class="linenr"> 6: </span>    &lt;meta name="description" content=""&gt;
+<span class="linenr"> 7: </span>    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"&gt;
+<span class="linenr"> 8: </span>    &lt;title&gt;Hello World!&lt;/title&gt;
+<span class="linenr"> 9: </span>    &lt;script type="text/javascript" src="./js/target/scala-2.11/js-jsdeps.js"&gt;&lt;/script&gt;
+<span class="linenr">10: </span>    &lt;script type="text/javascript" src="./js/target/scala-2.11/js-fastopt.js"&gt;&lt;/script&gt;
+<span class="linenr">11: </span>  &lt;/head&gt;
+<span class="linenr">12: </span>  &lt;body&gt;
+<span class="linenr">13: </span>    &lt;script type="text/javascript" src="./js/target/scala-2.11/js-launcher.js"&gt;&lt;/script&gt;
+<span class="linenr">14: </span>  &lt;/body&gt;
+<span class="linenr">15: </span>&lt;/html&gt;
 </pre>
 </div>
 
@@ -151,88 +149,88 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">commonSettings</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">Seq</span>(
-<span class="linenr"> 2: </span>  version := <span style="color: #2aa198;">"0.0.1"</span>,
-<span class="linenr"> 3: </span>  scalaVersion := <span style="color: #2aa198;">"2.11.8"</span>,
-<span class="linenr"> 4: </span>  addCompilerPlugin(<span style="color: #2aa198;">"org.scalamacros"</span> % <span style="color: #2aa198;">"paradise"</span> % <span style="color: #2aa198;">"2.1.0"</span> cross <span style="color: #d33682; font-weight: bold;">CrossVersion</span>.full),
-<span class="linenr"> 5: </span>  scalacOptions ++= <span style="color: #d33682; font-weight: bold;">Seq</span>(<span style="color: #2aa198;">"-feature"</span>, <span style="color: #2aa198;">"-language:implicitConversions"</span>)
+<pre class="src src-scala"><span class="linenr"> 1: </span>lazy val commonSettings = Seq(
+<span class="linenr"> 2: </span>  version := "0.0.1",
+<span class="linenr"> 3: </span>  scalaVersion := "2.11.8",
+<span class="linenr"> 4: </span>  addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
+<span class="linenr"> 5: </span>  scalacOptions ++= Seq("-feature", "-language:implicitConversions")
 <span class="linenr"> 6: </span>)
 <span class="linenr"> 7: </span>
-<span class="linenr"> 8: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">AkkaVersion</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">"2.4.16"</span>
+<span class="linenr"> 8: </span>lazy val AkkaVersion = "2.4.16"
 <span class="linenr"> 9: </span>
-<span class="linenr">10: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">AkkaHttpVersion</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">"10.0.1"</span>
+<span class="linenr">10: </span>lazy val AkkaHttpVersion = "10.0.1"
 <span class="linenr">11: </span>
-<span class="linenr">12: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">BindingScalaVersion</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">"10.0.1"</span>
+<span class="linenr">12: </span>lazy val BindingScalaVersion = "10.0.1"
 <span class="linenr">13: </span>
-<span class="linenr">14: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">CirceVersion</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">"0.6.1"</span>
+<span class="linenr">14: </span>lazy val CirceVersion = "0.6.1"
 <span class="linenr">15: </span>
-<span class="linenr">16: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">ScalazVersion</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">"7.2.8"</span>
+<span class="linenr">16: </span>lazy val ScalazVersion = "7.2.8"
 <span class="linenr">17: </span>
-<span class="linenr">18: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">compileCopyTask</span> <span style="color: #859900; font-weight: bold;">=</span> taskKey[<span style="color: #d33682; font-weight: bold;">Unit</span>](<span style="color: #2aa198;">"compile and copy"</span>)
+<span class="linenr">18: </span>lazy val compileCopyTask = taskKey[Unit]("compile and copy")
 <span class="linenr">19: </span>
 <span class="linenr">20: </span>
-<span class="linenr">21: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">root</span> <span style="color: #859900; font-weight: bold;">=</span> (project in file(<span style="color: #2aa198;">"."</span>)).
-<span class="linenr">22: </span>  settings(commonSettings<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #859900; font-weight: bold;">_</span>*).
+<span class="linenr">21: </span>lazy val root = (project in file(".")).
+<span class="linenr">22: </span>  settings(commonSettings: _*).
 <span class="linenr">23: </span>  aggregate(server, js)
 <span class="linenr">24: </span>
-<span class="linenr">25: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">server</span> <span style="color: #859900; font-weight: bold;">=</span> (project in file(<span style="color: #2aa198;">"server"</span>)).
-<span class="linenr">26: </span>  settings(commonSettings<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #859900; font-weight: bold;">_</span>*).
+<span class="linenr">25: </span>lazy val server = (project in file("server")).
+<span class="linenr">26: </span>  settings(commonSettings: _*).
 <span class="linenr">27: </span>  settings(
-<span class="linenr">28: </span>    cancelable in <span style="color: #d33682; font-weight: bold;">Global</span> := <span style="color: #d33682; font-weight: bold;">true</span>,
-<span class="linenr">29: </span>    fork in run := <span style="color: #d33682; font-weight: bold;">true</span>,
-<span class="linenr">30: </span>    libraryDependencies ++= <span style="color: #d33682; font-weight: bold;">Seq</span>(
-<span class="linenr">31: </span>      <span style="color: #2aa198;">"com.typesafe.akka"</span> %% <span style="color: #2aa198;">"akka-actor"</span> % <span style="color: #d33682; font-weight: bold;">AkkaVersion</span>,
-<span class="linenr">32: </span>      <span style="color: #2aa198;">"com.typesafe.akka"</span> %% <span style="color: #2aa198;">"akka-stream"</span> % <span style="color: #d33682; font-weight: bold;">AkkaVersion</span>,
-<span class="linenr">33: </span>      <span style="color: #2aa198;">"com.typesafe.akka"</span> %% <span style="color: #2aa198;">"akka-http"</span> % <span style="color: #d33682; font-weight: bold;">AkkaHttpVersion</span>,
-<span class="linenr">34: </span>      <span style="color: #2aa198;">"ch.qos.logback"</span> %  <span style="color: #2aa198;">"logback-classic"</span> % <span style="color: #2aa198;">"1.1.7"</span>,
-<span class="linenr">35: </span>      <span style="color: #2aa198;">"com.typesafe.scala-logging"</span> %% <span style="color: #2aa198;">"scala-logging"</span> % <span style="color: #2aa198;">"3.5.0"</span>
+<span class="linenr">28: </span>    cancelable in Global := true,
+<span class="linenr">29: </span>    fork in run := true,
+<span class="linenr">30: </span>    libraryDependencies ++= Seq(
+<span class="linenr">31: </span>      "com.typesafe.akka" %% "akka-actor" % AkkaVersion,
+<span class="linenr">32: </span>      "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
+<span class="linenr">33: </span>      "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
+<span class="linenr">34: </span>      "ch.qos.logback" %  "logback-classic" % "1.1.7",
+<span class="linenr">35: </span>      "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0"
 <span class="linenr">36: </span>    )
 <span class="linenr">37: </span>  ).
 <span class="linenr">38: </span>  settings(
 <span class="linenr">39: </span>    compileCopyTask := {
-<span class="linenr">40: </span>      <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">mainVersion</span> <span style="color: #859900; font-weight: bold;">=</span> scalaVersion.value.split(<span style="color: #2aa198;">"""\."""</span>).take(<span style="color: #d33682; font-weight: bold;">2</span>).mkString(<span style="color: #2aa198;">"."</span>)
-<span class="linenr">41: </span>      <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">to</span> <span style="color: #859900; font-weight: bold;">=</span> target.value / (<span style="color: #2aa198;">"scala-"</span> + mainVersion) / <span style="color: #2aa198;">"classes"</span> / <span style="color: #2aa198;">"static"</span> / <span style="color: #2aa198;">"js"</span>
+<span class="linenr">40: </span>      val mainVersion = scalaVersion.value.split("""\.""").take(2).mkString(".")
+<span class="linenr">41: </span>      val to = target.value / ("scala-" + mainVersion) / "classes" / "static" / "js"
 <span class="linenr">42: </span>      to.mkdirs()
-<span class="linenr">43: </span>      <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">fastJs</span> <span style="color: #859900; font-weight: bold;">=</span> (fastOptJS in <span style="color: #d33682; font-weight: bold;">Compile</span> in js).value.data
-<span class="linenr">44: </span>      <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">fastJsSourceMap</span> <span style="color: #859900; font-weight: bold;">=</span> fastJs.getParentFile / (fastJs.getName + <span style="color: #2aa198;">".map"</span>)
-<span class="linenr">45: </span>      <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">fastJsLauncher</span> <span style="color: #859900; font-weight: bold;">=</span> (packageScalaJSLauncher in <span style="color: #d33682; font-weight: bold;">Compile</span> in js).value.data
-<span class="linenr">46: </span>      <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">fastJsDeps</span> <span style="color: #859900; font-weight: bold;">=</span> (packageJSDependencies in <span style="color: #d33682; font-weight: bold;">Compile</span> in js).value
-<span class="linenr">47: </span>      <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">fullJs</span> <span style="color: #859900; font-weight: bold;">=</span> (fullOptJS in <span style="color: #d33682; font-weight: bold;">Compile</span> in js).value.data
-<span class="linenr">48: </span>      <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">fullJsSourceMap</span> <span style="color: #859900; font-weight: bold;">=</span> fullJs.getParentFile / (fullJs.getName + <span style="color: #2aa198;">".map"</span>)
-<span class="linenr">49: </span>      <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">fullJsDeps</span> <span style="color: #859900; font-weight: bold;">=</span> (packageMinifiedJSDependencies in <span style="color: #d33682; font-weight: bold;">Compile</span> in js).value
+<span class="linenr">43: </span>      val fastJs = (fastOptJS in Compile in js).value.data
+<span class="linenr">44: </span>      val fastJsSourceMap = fastJs.getParentFile / (fastJs.getName + ".map")
+<span class="linenr">45: </span>      val fastJsLauncher = (packageScalaJSLauncher in Compile in js).value.data
+<span class="linenr">46: </span>      val fastJsDeps = (packageJSDependencies in Compile in js).value
+<span class="linenr">47: </span>      val fullJs = (fullOptJS in Compile in js).value.data
+<span class="linenr">48: </span>      val fullJsSourceMap = fullJs.getParentFile / (fullJs.getName + ".map")
+<span class="linenr">49: </span>      val fullJsDeps = (packageMinifiedJSDependencies in Compile in js).value
 <span class="linenr">50: </span>
-<span class="linenr">51: </span>      <span style="color: #859900; font-weight: bold;">for</span>(f <span style="color: #859900; font-weight: bold;">&lt;-</span> <span style="color: #d33682; font-weight: bold;">Seq</span>(fastJs, fastJsSourceMap, fastJsLauncher, fastJsDeps, fullJs, fullJsSourceMap, fullJsDeps)) {
-<span class="linenr">52: </span>        <span style="color: #d33682; font-weight: bold;">IO</span>.copyFile(f, to / f.getName)
+<span class="linenr">51: </span>      for(f &lt;- Seq(fastJs, fastJsSourceMap, fastJsLauncher, fastJsDeps, fullJs, fullJsSourceMap, fullJsDeps)) {
+<span class="linenr">52: </span>        IO.copyFile(f, to / f.getName)
 <span class="linenr">53: </span>      }
 <span class="linenr">54: </span>    }
 <span class="linenr">55: </span>  ).
 <span class="linenr">56: </span>  settings(
-<span class="linenr">57: </span>    compile in <span style="color: #d33682; font-weight: bold;">Compile</span> := {
+<span class="linenr">57: </span>    compile in Compile := {
 <span class="linenr">58: </span>      compileCopyTask.value
-<span class="linenr">59: </span>      (compile in <span style="color: #d33682; font-weight: bold;">Compile</span>).value
+<span class="linenr">59: </span>      (compile in Compile).value
 <span class="linenr">60: </span>    }
 <span class="linenr">61: </span>  ).
 <span class="linenr">62: </span>  settings(
-<span class="linenr">63: </span>    mainClass in assembly := <span style="color: #d33682; font-weight: bold;">Some</span>(<span style="color: #2aa198;">"Server"</span>),
-<span class="linenr">64: </span>    assemblyJarName in assembly := <span style="color: #2aa198;">"server.jar"</span>
+<span class="linenr">63: </span>    mainClass in assembly := Some("Server"),
+<span class="linenr">64: </span>    assemblyJarName in assembly := "server.jar"
 <span class="linenr">65: </span>  )
 <span class="linenr">66: </span>
-<span class="linenr">67: </span><span style="color: #268bd2;">lazy</span> <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">js</span> <span style="color: #859900; font-weight: bold;">=</span> (project in file(<span style="color: #2aa198;">"js"</span>)).
-<span class="linenr">68: </span>  settings(commonSettings<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #859900; font-weight: bold;">_</span>*).
+<span class="linenr">67: </span>lazy val js = (project in file("js")).
+<span class="linenr">68: </span>  settings(commonSettings: _*).
 <span class="linenr">69: </span>  settings(
-<span class="linenr">70: </span>    mainClass in (<span style="color: #d33682; font-weight: bold;">Compile</span>) := <span style="color: #d33682; font-weight: bold;">Some</span>(<span style="color: #2aa198;">"Application"</span>),
-<span class="linenr">71: </span>    persistLauncher := <span style="color: #d33682; font-weight: bold;">true</span>,
-<span class="linenr">72: </span>    libraryDependencies ++= <span style="color: #d33682; font-weight: bold;">Seq</span>(
-<span class="linenr">73: </span>      <span style="color: #2aa198;">"org.scala-js"</span> %%% <span style="color: #2aa198;">"scalajs-dom"</span> % <span style="color: #2aa198;">"0.9.1"</span>,
-<span class="linenr">74: </span>      <span style="color: #2aa198;">"com.thoughtworks.binding"</span> %%% <span style="color: #2aa198;">"dom"</span> % <span style="color: #d33682; font-weight: bold;">BindingScalaVersion</span>,
-<span class="linenr">75: </span>      <span style="color: #2aa198;">"com.thoughtworks.binding"</span> %%% <span style="color: #2aa198;">"route"</span> % <span style="color: #d33682; font-weight: bold;">BindingScalaVersion</span>,
-<span class="linenr">76: </span>      <span style="color: #2aa198;">"io.circe"</span> %%% <span style="color: #2aa198;">"circe-core"</span> % <span style="color: #d33682; font-weight: bold;">CirceVersion</span>,
-<span class="linenr">77: </span>      <span style="color: #2aa198;">"io.circe"</span> %%% <span style="color: #2aa198;">"circe-parser"</span> % <span style="color: #d33682; font-weight: bold;">CirceVersion</span>,
-<span class="linenr">78: </span>      <span style="color: #2aa198;">"io.circe"</span> %%% <span style="color: #2aa198;">"circe-generic"</span> % <span style="color: #d33682; font-weight: bold;">CirceVersion</span>,
-<span class="linenr">79: </span>      <span style="color: #2aa198;">"org.scalaz"</span> %%% <span style="color: #2aa198;">"scalaz-core"</span> % <span style="color: #d33682; font-weight: bold;">ScalazVersion</span>
+<span class="linenr">70: </span>    mainClass in (Compile) := Some("Application"),
+<span class="linenr">71: </span>    persistLauncher := true,
+<span class="linenr">72: </span>    libraryDependencies ++= Seq(
+<span class="linenr">73: </span>      "org.scala-js" %%% "scalajs-dom" % "0.9.1",
+<span class="linenr">74: </span>      "com.thoughtworks.binding" %%% "dom" % BindingScalaVersion,
+<span class="linenr">75: </span>      "com.thoughtworks.binding" %%% "route" % BindingScalaVersion,
+<span class="linenr">76: </span>      "io.circe" %%% "circe-core" % CirceVersion,
+<span class="linenr">77: </span>      "io.circe" %%% "circe-parser" % CirceVersion,
+<span class="linenr">78: </span>      "io.circe" %%% "circe-generic" % CirceVersion,
+<span class="linenr">79: </span>      "org.scalaz" %%% "scalaz-core" % ScalazVersion
 <span class="linenr">80: </span>    )
 <span class="linenr">81: </span>  ).
-<span class="linenr">82: </span>  enablePlugins(<span style="color: #d33682; font-weight: bold;">ScalaJSPlugin</span>)
+<span class="linenr">82: </span>  enablePlugins(ScalaJSPlugin)
 <span class="linenr">83: </span>
 </pre>
 </div>
@@ -242,7 +240,7 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #b58900;">mkdir</span> -p server/src/<span style="color: #268bd2;">{</span>main,test<span style="color: #268bd2;">}</span>/<span style="color: #268bd2;">{</span>scala,resources<span style="color: #268bd2;">}</span>
+<pre class="src src-shell">mkdir -p server/src/{main,test}/{scala,resources}
 </pre>
 </div>
 
@@ -251,61 +249,61 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #859900; font-weight: bold;">import</span> java.util.concurrent.<span style="color: #d33682; font-weight: bold;">CountDownLatch</span>
-<span class="linenr"> 2: </span><span style="color: #859900; font-weight: bold;">import</span> akka.actor.<span style="color: #d33682; font-weight: bold;">ActorSystem</span>
-<span class="linenr"> 3: </span><span style="color: #859900; font-weight: bold;">import</span> akka.stream.<span style="color: #d33682; font-weight: bold;">ActorMaterializer</span>
-<span class="linenr"> 4: </span><span style="color: #859900; font-weight: bold;">import</span> akka.http.scaladsl.<span style="color: #d33682; font-weight: bold;">Http</span>
-<span class="linenr"> 5: </span><span style="color: #859900; font-weight: bold;">import</span> akka.http.scaladsl.server.<span style="color: #d33682; font-weight: bold;">Directives</span>.<span style="color: #859900; font-weight: bold;">_</span>
-<span class="linenr"> 6: </span><span style="color: #859900; font-weight: bold;">import</span> com.typesafe.config.<span style="color: #d33682; font-weight: bold;">ConfigFactory</span>
-<span class="linenr"> 7: </span><span style="color: #859900; font-weight: bold;">import</span> com.typesafe.scalalogging.<span style="color: #d33682; font-weight: bold;">Logger</span>
-<span class="linenr"> 8: </span><span style="color: #859900; font-weight: bold;">import</span> scala.concurrent.<span style="color: #d33682; font-weight: bold;">Await</span>
-<span class="linenr"> 9: </span><span style="color: #859900; font-weight: bold;">import</span> scala.concurrent.duration.<span style="color: #859900; font-weight: bold;">_</span>
+<pre class="src src-scala"><span class="linenr"> 1: </span>import java.util.concurrent.CountDownLatch
+<span class="linenr"> 2: </span>import akka.actor.ActorSystem
+<span class="linenr"> 3: </span>import akka.stream.ActorMaterializer
+<span class="linenr"> 4: </span>import akka.http.scaladsl.Http
+<span class="linenr"> 5: </span>import akka.http.scaladsl.server.Directives._
+<span class="linenr"> 6: </span>import com.typesafe.config.ConfigFactory
+<span class="linenr"> 7: </span>import com.typesafe.scalalogging.Logger
+<span class="linenr"> 8: </span>import scala.concurrent.Await
+<span class="linenr"> 9: </span>import scala.concurrent.duration._
 <span class="linenr">10: </span>
-<span class="linenr">11: </span><span style="color: #859900; font-weight: bold;">object</span> <span style="color: #d33682; font-weight: bold;">Server</span> <span style="color: #859900; font-weight: bold;">extends</span> <span style="color: #b58900;">App</span> {
-<span class="linenr">12: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">logger</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">Logger</span>(<span style="color: #d33682; font-weight: bold;">Server</span>.getClass)
-<span class="linenr">13: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">conf</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">ConfigFactory</span>.load().withFallback(<span style="color: #d33682; font-weight: bold;">ConfigFactory</span>.load(<span style="color: #2aa198;">"default.conf"</span>))
+<span class="linenr">11: </span>object Server extends App {
+<span class="linenr">12: </span>  val logger = Logger(Server.getClass)
+<span class="linenr">13: </span>  val conf = ConfigFactory.load().withFallback(ConfigFactory.load("default.conf"))
 <span class="linenr">14: </span>
-<span class="linenr">15: </span>  <span style="color: #268bd2;">implicit</span> <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">actorSystem</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">ActorSystem</span>()
-<span class="linenr">16: </span>  <span style="color: #268bd2;">implicit</span> <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">materializer</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">ActorMaterializer</span>()
-<span class="linenr">17: </span>  <span style="color: #268bd2;">implicit</span> <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">executionContext</span> <span style="color: #859900; font-weight: bold;">=</span> actorSystem.dispatcher
+<span class="linenr">15: </span>  implicit val actorSystem = ActorSystem()
+<span class="linenr">16: </span>  implicit val materializer = ActorMaterializer()
+<span class="linenr">17: </span>  implicit val executionContext = actorSystem.dispatcher
 <span class="linenr">18: </span>
-<span class="linenr">19: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">shutdownLatch</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #859900; font-weight: bold;">new</span> <span style="color: #b58900;">CountDownLatch</span>(<span style="color: #d33682; font-weight: bold;">1</span>)
+<span class="linenr">19: </span>  val shutdownLatch = new CountDownLatch(1)
 <span class="linenr">20: </span>
-<span class="linenr">21: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">devRoute</span> <span style="color: #859900; font-weight: bold;">=</span> pathSingleSlash {
-<span class="linenr">22: </span>    parameter(<span style="color: #2aa198;">"fast"</span>) { <span style="color: #859900; font-weight: bold;">_</span> <span style="color: #859900; font-weight: bold;">=&gt;</span>
-<span class="linenr">23: </span>      getFromFile(<span style="color: #2aa198;">"./src/main/resources/static/index-fastopt.html"</span>)
+<span class="linenr">21: </span>  val devRoute = pathSingleSlash {
+<span class="linenr">22: </span>    parameter("fast") { _ =&gt;
+<span class="linenr">23: </span>      getFromFile("./src/main/resources/static/index-fastopt.html")
 <span class="linenr">24: </span>    } ~
-<span class="linenr">25: </span>      getFromFile(<span style="color: #2aa198;">"./src/main/resources/static/index-fullopt.html"</span>)
+<span class="linenr">25: </span>      getFromFile("./src/main/resources/static/index-fullopt.html")
 <span class="linenr">26: </span>  } ~
 <span class="linenr">27: </span>    encodeResponse {
-<span class="linenr">28: </span>      getFromDirectory(<span style="color: #2aa198;">"./src/main/resources/static"</span>) ~
-<span class="linenr">29: </span>        pathPrefix(<span style="color: #2aa198;">"js"</span>) {
-<span class="linenr">30: </span>          getFromDirectory(<span style="color: #2aa198;">"../js/target/scala-2.11"</span>)
+<span class="linenr">28: </span>      getFromDirectory("./src/main/resources/static") ~
+<span class="linenr">29: </span>        pathPrefix("js") {
+<span class="linenr">30: </span>          getFromDirectory("../js/target/scala-2.11")
 <span class="linenr">31: </span>        }
 <span class="linenr">32: </span>    }
 <span class="linenr">33: </span>
-<span class="linenr">34: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">productionRoute</span> <span style="color: #859900; font-weight: bold;">=</span> pathSingleSlash {
-<span class="linenr">35: </span>    parameter(<span style="color: #2aa198;">"fast"</span>) { <span style="color: #859900; font-weight: bold;">_</span> <span style="color: #859900; font-weight: bold;">=&gt;</span>
-<span class="linenr">36: </span>      getFromResource(<span style="color: #2aa198;">"static/index-fastopt.html"</span>)
+<span class="linenr">34: </span>  val productionRoute = pathSingleSlash {
+<span class="linenr">35: </span>    parameter("fast") { _ =&gt;
+<span class="linenr">36: </span>      getFromResource("static/index-fastopt.html")
 <span class="linenr">37: </span>    } ~
-<span class="linenr">38: </span>      getFromResource(<span style="color: #2aa198;">"static/index-fullopt.html"</span>)
+<span class="linenr">38: </span>      getFromResource("static/index-fullopt.html")
 <span class="linenr">39: </span>  } ~
 <span class="linenr">40: </span>    encodeResponse {
-<span class="linenr">41: </span>      getFromResourceDirectory(<span style="color: #2aa198;">"static"</span>)
+<span class="linenr">41: </span>      getFromResourceDirectory("static")
 <span class="linenr">42: </span>    }
 <span class="linenr">43: </span>
-<span class="linenr">44: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">host</span> <span style="color: #859900; font-weight: bold;">=</span> conf.getString(<span style="color: #2aa198;">"server.host"</span>)
-<span class="linenr">45: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">port</span> <span style="color: #859900; font-weight: bold;">=</span> conf.getInt(<span style="color: #2aa198;">"server.port"</span>)
-<span class="linenr">46: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">bindingFuture</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">Http</span>().bindAndHandle(devRoute ~ productionRoute, host, port)
-<span class="linenr">47: </span>  logger.info(s<span style="color: #2aa198;">"Server online as http://</span><span style="color: #6c71c4;">${host}</span><span style="color: #2aa198;">:</span><span style="color: #6c71c4;">${port}</span><span style="color: #2aa198;">"</span>)
+<span class="linenr">44: </span>  val host = conf.getString("server.host")
+<span class="linenr">45: </span>  val port = conf.getInt("server.port")
+<span class="linenr">46: </span>  val bindingFuture = Http().bindAndHandle(devRoute ~ productionRoute, host, port)
+<span class="linenr">47: </span>  logger.info(s"Server online as http://${host}:${port}")
 <span class="linenr">48: </span>
-<span class="linenr">49: </span>  <span style="color: #d33682; font-weight: bold;">Runtime</span>.getRuntime().addShutdownHook(<span style="color: #859900; font-weight: bold;">new</span> <span style="color: #b58900;">Thread</span>() {
-<span class="linenr">50: </span>    <span style="color: #268bd2;">override</span> <span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">run</span>() <span style="color: #859900; font-weight: bold;">=</span> {
-<span class="linenr">51: </span>      <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">f</span> <span style="color: #859900; font-weight: bold;">=</span> bindingFuture.flatMap(<span style="color: #859900; font-weight: bold;">_</span>.unbind()) andThen {
-<span class="linenr">52: </span>        <span style="color: #859900; font-weight: bold;">case</span> <span style="color: #859900; font-weight: bold;">_</span> <span style="color: #859900; font-weight: bold;">=&gt;</span> actorSystem.terminate()
+<span class="linenr">49: </span>  Runtime.getRuntime().addShutdownHook(new Thread() {
+<span class="linenr">50: </span>    override def run() = {
+<span class="linenr">51: </span>      val f = bindingFuture.flatMap(_.unbind()) andThen {
+<span class="linenr">52: </span>        case _ =&gt; actorSystem.terminate()
 <span class="linenr">53: </span>      }
-<span class="linenr">54: </span>      <span style="color: #d33682; font-weight: bold;">Await</span>.ready(f, <span style="color: #d33682; font-weight: bold;">1</span> minute)
-<span class="linenr">55: </span>      logger.info(<span style="color: #2aa198;">"Goodbye!"</span>)
+<span class="linenr">54: </span>      Await.ready(f, 1 minute)
+<span class="linenr">55: </span>      logger.info("Goodbye!")
 <span class="linenr">56: </span>      shutdownLatch.countDown()
 <span class="linenr">57: </span>    }
 <span class="linenr">58: </span>  })
@@ -340,14 +338,14 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 </p>
 
 <div class="org-src-container">
-<pre class="src src-javascript"><span class="linenr">1: </span><span style="color: #859900; font-weight: bold;">function</span> <span style="color: #b58900;">AppViewModel</span><span style="color: #839496; background-color: #00212B;">()</span> <span style="color: #839496; background-color: #00212B;">{</span>
-<span class="linenr">2: </span>  <span style="color: #268bd2;">this</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">firstName</span> <span style="color: #859900; font-weight: bold;">=</span> ko<span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">observable</span><span style="color: #839496; background-color: #00212B;">(</span><span style="color: #2aa198;">'Bob'</span><span style="color: #839496; background-color: #00212B;">)</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">3: </span>  <span style="color: #268bd2;">this</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">lastName</span> <span style="color: #859900; font-weight: bold;">=</span> ko<span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">observable</span><span style="color: #839496; background-color: #00212B;">(</span><span style="color: #2aa198;">'Smith'</span><span style="color: #839496; background-color: #00212B;">)</span><span style="color: #839496; background-color: #00212B;">;</span>
+<pre class="src src-javascript"><span class="linenr">1: </span>function AppViewModel() {
+<span class="linenr">2: </span>  this.firstName = ko.observable('Bob');
+<span class="linenr">3: </span>  this.lastName = ko.observable('Smith');
 <span class="linenr">4: </span>
-<span class="linenr">5: </span>  <span style="color: #268bd2;">this</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">fullName</span> <span style="color: #859900; font-weight: bold;">=</span> ko<span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">computed</span><span style="color: #839496; background-color: #00212B;">(</span><span style="color: #859900; font-weight: bold;">function</span><span style="color: #839496; background-color: #00212B;">()</span> <span style="color: #839496; background-color: #00212B;">{</span>
-<span class="linenr">6: </span>    <span style="color: #859900; font-weight: bold;">return</span> <span style="color: #268bd2;">this</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">firstName</span><span style="color: #839496; background-color: #00212B;">()</span> <span style="color: #859900; font-weight: bold;">+</span> <span style="color: #2aa198;">" "</span> <span style="color: #859900; font-weight: bold;">+</span> <span style="color: #268bd2;">this</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">lastName</span><span style="color: #839496; background-color: #00212B;">()</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">7: </span>  <span style="color: #839496; background-color: #00212B;">}</span><span style="color: #839496; background-color: #00212B;">,</span> <span style="color: #268bd2;">this</span><span style="color: #839496; background-color: #00212B;">)</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">8: </span><span style="color: #839496; background-color: #00212B;">}</span>
+<span class="linenr">5: </span>  this.fullName = ko.computed(function() {
+<span class="linenr">6: </span>    return this.firstName() + " " + this.lastName();
+<span class="linenr">7: </span>  }, this);
+<span class="linenr">8: </span>}
 </pre>
 </div>
 
@@ -356,11 +354,11 @@ classes           js-fastopt.js     js-fastopt.js.map js-jsdeps.js      js-launc
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr">1: </span><span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">firstName</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">Var</span>(<span style="color: #2aa198;">"Shane"</span>)
-<span class="linenr">2: </span><span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">lastName</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">Var</span>(<span style="color: #2aa198;">"Xu"</span>)
+<pre class="src src-scala"><span class="linenr">1: </span>val firstName = Var("Shane")
+<span class="linenr">2: </span>val lastName = Var("Xu")
 <span class="linenr">3: </span>
-<span class="linenr">4: </span><span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">fullName</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">Binding</span> {
-<span class="linenr">5: </span>  s<span style="color: #2aa198;">"</span><span style="color: #6c71c4;">${firstName.bind}</span><span style="color: #2aa198;"> </span><span style="color: #6c71c4;">${lastName.bind}</span><span style="color: #2aa198;">"</span>
+<span class="linenr">4: </span>val fullName = Binding {
+<span class="linenr">5: </span>  s"${firstName.bind} ${lastName.bind}"
 <span class="linenr">6: </span>}
 </pre>
 </div>
@@ -391,22 +389,22 @@ Binding.scala 不发明“组件”之类的噱头，而以更轻巧的“方法
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #cb4b16; font-weight: bold;">@dom</span> <span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">tagPicker</span>(tags<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Vars</span>[<span style="color: #d33682; font-weight: bold;">String</span>]) <span style="color: #859900; font-weight: bold;">=</span> {
-<span class="linenr"> 2: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">input</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Input</span> <span style="color: #859900; font-weight: bold;">=</span> &lt;input <span style="color: #859900; font-weight: bold;">type=</span><span style="color: #2aa198;">"text"</span>/&gt;
-<span class="linenr"> 3: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">addHandler</span> <span style="color: #859900; font-weight: bold;">=</span> { event<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Event</span> <span style="color: #859900; font-weight: bold;">=&gt;</span>
-<span class="linenr"> 4: </span>    <span style="color: #859900; font-weight: bold;">if</span> (input.value != <span style="color: #2aa198;">""</span> &amp;&amp; !tags.get.contains(input.value)) {
+<pre class="src src-scala"><span class="linenr"> 1: </span>@dom def tagPicker(tags: Vars[String]) = {
+<span class="linenr"> 2: </span>  val input: Input = &lt;input type="text"/&gt;
+<span class="linenr"> 3: </span>  val addHandler = { event: Event =&gt;
+<span class="linenr"> 4: </span>    if (input.value != "" &amp;&amp; !tags.get.contains(input.value)) {
 <span class="linenr"> 5: </span>      tags.get += input.value
-<span class="linenr"> 6: </span>      input.value <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">""</span>
+<span class="linenr"> 6: </span>      input.value = ""
 <span class="linenr"> 7: </span>    }
 <span class="linenr"> 8: </span>  }
 <span class="linenr"> 9: </span>  &lt;section&gt;
 <span class="linenr">10: </span>    &lt;div&gt;{
-<span class="linenr">11: </span>      <span style="color: #859900; font-weight: bold;">for</span> (tag <span style="color: #859900; font-weight: bold;">&lt;-</span> tags) <span style="color: #859900; font-weight: bold;">yield</span> &lt;q&gt;
+<span class="linenr">11: </span>      for (tag &lt;- tags) yield &lt;q&gt;
 <span class="linenr">12: </span>        { tag }
-<span class="linenr">13: </span>        &lt;button onclick<span style="color: #859900; font-weight: bold;">=</span>{ event<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Event</span> <span style="color: #859900; font-weight: bold;">=&gt;</span> tags.get -= tag }&gt;x&lt;/button&gt;
+<span class="linenr">13: </span>        &lt;button onclick={ event: Event =&gt; tags.get -= tag }&gt;x&lt;/button&gt;
 <span class="linenr">14: </span>      &lt;/q&gt;
 <span class="linenr">15: </span>    }&lt;/div&gt;
-<span class="linenr">16: </span>    &lt;div&gt;{ input } &lt;button onclick<span style="color: #859900; font-weight: bold;">=</span>{ addHandler }&gt;<span style="color: #d33682; font-weight: bold;">Add</span>&lt;/button&gt;&lt;/div&gt;
+<span class="linenr">16: </span>    &lt;div&gt;{ input } &lt;button onclick={ addHandler }&gt;Add&lt;/button&gt;&lt;/div&gt;
 <span class="linenr">17: </span>  &lt;/section&gt;
 <span class="linenr">18: </span>}
 </pre>
@@ -417,65 +415,65 @@ Binding.scala 不发明“组件”之类的噱头，而以更轻巧的“方法
 </p>
 
 <div class="org-src-container">
-<pre class="src src-xml"><span class="linenr"> 1: </span>&lt;<span style="color: #268bd2;">Window</span> <span style="color: #268bd2;">x</span>:<span style="color: #6c71c4;">Class</span> = <span style="color: #2aa198;">"TemplateDemo.MainWindow"</span> 
-<span class="linenr"> 2: </span>   <span style="color: #268bd2;">xmlns</span> = <span style="color: #2aa198;">"http://schemas.microsoft.com/winfx/2006/xaml/presentation"</span> 
-<span class="linenr"> 3: </span>   <span style="color: #268bd2;">xmlns</span>:<span style="color: #6c71c4;">x</span> = <span style="color: #2aa198;">"http://schemas.microsoft.com/winfx/2006/xaml"</span> 
-<span class="linenr"> 4: </span>   <span style="color: #6c71c4;">Title</span> = <span style="color: #2aa198;">"MainWindow"</span> <span style="color: #6c71c4;">Height</span> = <span style="color: #2aa198;">"350"</span> <span style="color: #6c71c4;">Width</span> = <span style="color: #2aa198;">"604"</span>&gt; 
-<span class="linenr"> 5: </span>    
-<span class="linenr"> 6: </span>   &lt;<span style="color: #268bd2;">Window.Resources</span>&gt; 
-<span class="linenr"> 7: </span>      &lt;<span style="color: #268bd2;">ControlTemplate</span> <span style="color: #268bd2;">x</span>:<span style="color: #6c71c4;">Key</span>= <span style="color: #2aa198;">"ButtonTemplate"</span> <span style="color: #6c71c4;">TargetType</span> = <span style="color: #2aa198;">"Button"</span>&gt;
-<span class="linenr"> 8: </span>        
-<span class="linenr"> 9: </span>         &lt;<span style="color: #268bd2;">Grid</span>&gt; 
-<span class="linenr">10: </span>            &lt;<span style="color: #268bd2;">Ellipse</span> <span style="color: #268bd2;">x</span>:<span style="color: #6c71c4;">Name</span> = <span style="color: #2aa198;">"ButtonEllipse"</span> <span style="color: #6c71c4;">Height</span> = <span style="color: #2aa198;">"100"</span> <span style="color: #6c71c4;">Width</span> = <span style="color: #2aa198;">"150"</span> &gt; 
-<span class="linenr">11: </span>               &lt;<span style="color: #268bd2;">Ellipse.Fill</span>&gt; 
-<span class="linenr">12: </span>                  &lt;<span style="color: #268bd2;">LinearGradientBrush</span> <span style="color: #6c71c4;">StartPoint</span> = <span style="color: #2aa198;">"0,0.2"</span> <span style="color: #6c71c4;">EndPoint</span> = <span style="color: #2aa198;">"0.2,1.4"</span>&gt; 
-<span class="linenr">13: </span>                     &lt;<span style="color: #268bd2;">GradientStop</span> <span style="color: #6c71c4;">Offset</span> = <span style="color: #2aa198;">"0"</span> <span style="color: #6c71c4;">Color</span> = <span style="color: #2aa198;">"Red"</span> /&gt; 
-<span class="linenr">14: </span>                     &lt;<span style="color: #268bd2;">GradientStop</span> <span style="color: #6c71c4;">Offset</span> = <span style="color: #2aa198;">"1"</span> <span style="color: #6c71c4;">Color</span> = <span style="color: #2aa198;">"Orange"</span> /&gt; 
-<span class="linenr">15: </span>                  &lt;/<span style="color: #268bd2;">LinearGradientBrush</span>&gt; 
-<span class="linenr">16: </span>               &lt;/<span style="color: #268bd2;">Ellipse.Fill</span>&gt; 
-<span class="linenr">17: </span>            &lt;/<span style="color: #268bd2;">Ellipse</span>&gt; 
-<span class="linenr">18: </span>                
-<span class="linenr">19: </span>            &lt;<span style="color: #268bd2;">ContentPresenter</span> <span style="color: #6c71c4;">Content</span> = <span style="color: #2aa198;">"{TemplateBinding Content}"</span> 
-<span class="linenr">20: </span>               <span style="color: #6c71c4;">HorizontalAlignment</span> = <span style="color: #2aa198;">"Center"</span> <span style="color: #6c71c4;">VerticalAlignment</span> = <span style="color: #2aa198;">"Center"</span> /&gt; 
-<span class="linenr">21: </span>         &lt;/<span style="color: #268bd2;">Grid</span>&gt; 
-<span class="linenr">22: </span>            
-<span class="linenr">23: </span>         &lt;<span style="color: #268bd2;">ControlTemplate.Triggers</span>&gt; 
-<span class="linenr">24: </span>            
-<span class="linenr">25: </span>            &lt;<span style="color: #268bd2;">Trigger</span> <span style="color: #6c71c4;">Property</span> = <span style="color: #2aa198;">"IsMouseOver"</span> <span style="color: #6c71c4;">Value</span> = <span style="color: #2aa198;">"True"</span>&gt; 
-<span class="linenr">26: </span>               &lt;<span style="color: #268bd2;">Setter</span> <span style="color: #6c71c4;">TargetName</span> = <span style="color: #2aa198;">"ButtonEllipse"</span> <span style="color: #6c71c4;">Property</span> = <span style="color: #2aa198;">"Fill"</span> &gt; 
-<span class="linenr">27: </span>                  &lt;<span style="color: #268bd2;">Setter.Value</span>&gt; 
-<span class="linenr">28: </span>                     &lt;<span style="color: #268bd2;">LinearGradientBrush</span> <span style="color: #6c71c4;">StartPoint</span> = <span style="color: #2aa198;">"0,0.2"</span> <span style="color: #6c71c4;">EndPoint</span> = <span style="color: #2aa198;">"0.2,1.4"</span>&gt; 
-<span class="linenr">29: </span>                        &lt;<span style="color: #268bd2;">GradientStop</span> <span style="color: #6c71c4;">Offset</span> = <span style="color: #2aa198;">"0"</span> <span style="color: #6c71c4;">Color</span> = <span style="color: #2aa198;">"YellowGreen"</span> /&gt; 
-<span class="linenr">30: </span>                        &lt;<span style="color: #268bd2;">GradientStop</span> <span style="color: #6c71c4;">Offset</span> = <span style="color: #2aa198;">"1"</span> <span style="color: #6c71c4;">Color</span> = <span style="color: #2aa198;">"Gold"</span> /&gt; 
-<span class="linenr">31: </span>                     &lt;/<span style="color: #268bd2;">LinearGradientBrush</span>&gt; 
-<span class="linenr">32: </span>                  &lt;/<span style="color: #268bd2;">Setter.Value</span>&gt; 
-<span class="linenr">33: </span>               &lt;/<span style="color: #268bd2;">Setter</span>&gt; 
-<span class="linenr">34: </span>            &lt;/<span style="color: #268bd2;">Trigger</span>&gt; 
-<span class="linenr">35: </span>                
-<span class="linenr">36: </span>            &lt;<span style="color: #268bd2;">Trigger</span> <span style="color: #6c71c4;">Property</span> = <span style="color: #2aa198;">"IsPressed"</span> <span style="color: #6c71c4;">Value</span> = <span style="color: #2aa198;">"True"</span>&gt; 
-<span class="linenr">37: </span>               &lt;<span style="color: #268bd2;">Setter</span> <span style="color: #6c71c4;">Property</span> = <span style="color: #2aa198;">"RenderTransform"</span>&gt; 
-<span class="linenr">38: </span>                  &lt;<span style="color: #268bd2;">Setter.Value</span>&gt; 
-<span class="linenr">39: </span>                     &lt;<span style="color: #268bd2;">ScaleTransform</span> <span style="color: #6c71c4;">ScaleX</span> = <span style="color: #2aa198;">"0.8"</span> <span style="color: #6c71c4;">ScaleY</span> = <span style="color: #2aa198;">"0.8"</span> 
-<span class="linenr">40: </span>                        <span style="color: #6c71c4;">CenterX</span> = <span style="color: #2aa198;">"0"</span> <span style="color: #6c71c4;">CenterY</span> = <span style="color: #2aa198;">"0"</span>  /&gt; 
-<span class="linenr">41: </span>                  &lt;/<span style="color: #268bd2;">Setter.Value</span>&gt; 
-<span class="linenr">42: </span>               &lt;/<span style="color: #268bd2;">Setter</span>&gt; 
-<span class="linenr">43: </span>               &lt;<span style="color: #268bd2;">Setter</span> <span style="color: #6c71c4;">Property</span> = <span style="color: #2aa198;">"RenderTransformOrigin"</span> <span style="color: #6c71c4;">Value</span> = <span style="color: #2aa198;">"0.5,0.5"</span> /&gt; 
-<span class="linenr">44: </span>            &lt;/<span style="color: #268bd2;">Trigger</span>&gt; 
-<span class="linenr">45: </span>                
-<span class="linenr">46: </span>         &lt;/<span style="color: #268bd2;">ControlTemplate.Triggers</span>&gt; 
-<span class="linenr">47: </span>            
-<span class="linenr">48: </span>      &lt;/<span style="color: #268bd2;">ControlTemplate</span>&gt; 
-<span class="linenr">49: </span>   &lt;/<span style="color: #268bd2;">Window.Resources</span>&gt; 
-<span class="linenr">50: </span>    
-<span class="linenr">51: </span>   &lt;<span style="color: #268bd2;">StackPanel</span>&gt; 
-<span class="linenr">52: </span>      &lt;<span style="color: #268bd2;">Button</span> <span style="color: #6c71c4;">Content</span> = <span style="color: #2aa198;">"Round Button!"</span>
-<span class="linenr">53: </span>         <span style="color: #6c71c4;">Template</span> = <span style="color: #2aa198;">"{StaticResource ButtonTemplate}"</span> 
-<span class="linenr">54: </span>         <span style="color: #6c71c4;">Width</span> = <span style="color: #2aa198;">"150"</span> <span style="color: #6c71c4;">Margin</span> = <span style="color: #2aa198;">"50"</span> /&gt; 
-<span class="linenr">55: </span>      &lt;<span style="color: #268bd2;">Button</span> <span style="color: #6c71c4;">Content</span> = <span style="color: #2aa198;">"Default Button!"</span> <span style="color: #6c71c4;">Height</span> = <span style="color: #2aa198;">"40"</span> 
-<span class="linenr">56: </span>         <span style="color: #6c71c4;">Width</span> = <span style="color: #2aa198;">"150"</span> <span style="color: #6c71c4;">Margin</span> = <span style="color: #2aa198;">"5"</span> /&gt;
-<span class="linenr">57: </span>   &lt;/<span style="color: #268bd2;">StackPanel</span>&gt; 
-<span class="linenr">58: </span>    
-<span class="linenr">59: </span>&lt;/<span style="color: #268bd2;">Window</span>&gt; 
+<pre class="src src-xml"><span class="linenr"> 1: </span>&lt;Window x:Class = "TemplateDemo.MainWindow" 
+<span class="linenr"> 2: </span>   xmlns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+<span class="linenr"> 3: </span>   xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml" 
+<span class="linenr"> 4: </span>   Title = "MainWindow" Height = "350" Width = "604"&gt; 
+<span class="linenr"> 5: </span>	
+<span class="linenr"> 6: </span>   &lt;Window.Resources&gt; 
+<span class="linenr"> 7: </span>      &lt;ControlTemplate x:Key= "ButtonTemplate" TargetType = "Button"&gt;
+<span class="linenr"> 8: </span>		
+<span class="linenr"> 9: </span>         &lt;Grid&gt; 
+<span class="linenr">10: </span>            &lt;Ellipse x:Name = "ButtonEllipse" Height = "100" Width = "150" &gt; 
+<span class="linenr">11: </span>               &lt;Ellipse.Fill&gt; 
+<span class="linenr">12: </span>                  &lt;LinearGradientBrush StartPoint = "0,0.2" EndPoint = "0.2,1.4"&gt; 
+<span class="linenr">13: </span>                     &lt;GradientStop Offset = "0" Color = "Red" /&gt; 
+<span class="linenr">14: </span>                     &lt;GradientStop Offset = "1" Color = "Orange" /&gt; 
+<span class="linenr">15: </span>                  &lt;/LinearGradientBrush&gt; 
+<span class="linenr">16: </span>               &lt;/Ellipse.Fill&gt; 
+<span class="linenr">17: </span>            &lt;/Ellipse&gt; 
+<span class="linenr">18: </span>				
+<span class="linenr">19: </span>            &lt;ContentPresenter Content = "{TemplateBinding Content}" 
+<span class="linenr">20: </span>               HorizontalAlignment = "Center" VerticalAlignment = "Center" /&gt; 
+<span class="linenr">21: </span>         &lt;/Grid&gt; 
+<span class="linenr">22: </span>			
+<span class="linenr">23: </span>         &lt;ControlTemplate.Triggers&gt; 
+<span class="linenr">24: </span>			
+<span class="linenr">25: </span>            &lt;Trigger Property = "IsMouseOver" Value = "True"&gt; 
+<span class="linenr">26: </span>               &lt;Setter TargetName = "ButtonEllipse" Property = "Fill" &gt; 
+<span class="linenr">27: </span>                  &lt;Setter.Value&gt; 
+<span class="linenr">28: </span>                     &lt;LinearGradientBrush StartPoint = "0,0.2" EndPoint = "0.2,1.4"&gt; 
+<span class="linenr">29: </span>                        &lt;GradientStop Offset = "0" Color = "YellowGreen" /&gt; 
+<span class="linenr">30: </span>                        &lt;GradientStop Offset = "1" Color = "Gold" /&gt; 
+<span class="linenr">31: </span>                     &lt;/LinearGradientBrush&gt; 
+<span class="linenr">32: </span>                  &lt;/Setter.Value&gt; 
+<span class="linenr">33: </span>               &lt;/Setter&gt; 
+<span class="linenr">34: </span>            &lt;/Trigger&gt; 
+<span class="linenr">35: </span>				
+<span class="linenr">36: </span>            &lt;Trigger Property = "IsPressed" Value = "True"&gt; 
+<span class="linenr">37: </span>               &lt;Setter Property = "RenderTransform"&gt; 
+<span class="linenr">38: </span>                  &lt;Setter.Value&gt; 
+<span class="linenr">39: </span>                     &lt;ScaleTransform ScaleX = "0.8" ScaleY = "0.8" 
+<span class="linenr">40: </span>                        CenterX = "0" CenterY = "0"  /&gt; 
+<span class="linenr">41: </span>                  &lt;/Setter.Value&gt; 
+<span class="linenr">42: </span>               &lt;/Setter&gt; 
+<span class="linenr">43: </span>               &lt;Setter Property = "RenderTransformOrigin" Value = "0.5,0.5" /&gt; 
+<span class="linenr">44: </span>            &lt;/Trigger&gt; 
+<span class="linenr">45: </span>				
+<span class="linenr">46: </span>         &lt;/ControlTemplate.Triggers&gt; 
+<span class="linenr">47: </span>			
+<span class="linenr">48: </span>      &lt;/ControlTemplate&gt; 
+<span class="linenr">49: </span>   &lt;/Window.Resources&gt; 
+<span class="linenr">50: </span>	
+<span class="linenr">51: </span>   &lt;StackPanel&gt; 
+<span class="linenr">52: </span>      &lt;Button Content = "Round Button!"
+<span class="linenr">53: </span>         Template = "{StaticResource ButtonTemplate}" 
+<span class="linenr">54: </span>         Width = "150" Margin = "50" /&gt; 
+<span class="linenr">55: </span>      &lt;Button Content = "Default Button!" Height = "40" 
+<span class="linenr">56: </span>         Width = "150" Margin = "5" /&gt;
+<span class="linenr">57: </span>   &lt;/StackPanel&gt; 
+<span class="linenr">58: </span>	
+<span class="linenr">59: </span>&lt;/Window&gt; 
 </pre>
 </div>
 
@@ -489,46 +487,46 @@ Window.Resources标签中，定义了一个适用于Button的ControlTemplate，�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-xml"><span class="linenr"> 1: </span>&lt;<span style="color: #268bd2;">LinearGradientBrush</span> <span style="color: #268bd2;">x</span>:<span style="color: #6c71c4;">Key</span>=<span style="color: #2aa198;">"TabItemHotBackground"</span> <span style="color: #6c71c4;">EndPoint</span>=<span style="color: #2aa198;">"0,1"</span> <span style="color: #6c71c4;">StartPoint</span>=<span style="color: #2aa198;">"0,0"</span>&gt;
-<span class="linenr"> 2: </span>    &lt;<span style="color: #268bd2;">GradientStop</span> <span style="color: #6c71c4;">Color</span>=<span style="color: #2aa198;">"#EAF6FD"</span> <span style="color: #6c71c4;">Offset</span>=<span style="color: #2aa198;">"0.15"</span>/&gt;
-<span class="linenr"> 3: </span>    &lt;<span style="color: #268bd2;">GradientStop</span> <span style="color: #6c71c4;">Color</span>=<span style="color: #2aa198;">"#D9F0FC"</span> <span style="color: #6c71c4;">Offset</span>=<span style="color: #2aa198;">".5"</span>/&gt;
-<span class="linenr"> 4: </span>    &lt;<span style="color: #268bd2;">GradientStop</span> <span style="color: #6c71c4;">Color</span>=<span style="color: #2aa198;">"#BEE6FD"</span> <span style="color: #6c71c4;">Offset</span>=<span style="color: #2aa198;">".5"</span>/&gt;
-<span class="linenr"> 5: </span>    &lt;<span style="color: #268bd2;">GradientStop</span> <span style="color: #6c71c4;">Color</span>=<span style="color: #2aa198;">"#A7D9F5"</span> <span style="color: #6c71c4;">Offset</span>=<span style="color: #2aa198;">"1"</span>/&gt;
-<span class="linenr"> 6: </span>&lt;/<span style="color: #268bd2;">LinearGradientBrush</span>&gt;
-<span class="linenr"> 7: </span>&lt;<span style="color: #268bd2;">SolidColorBrush</span> <span style="color: #268bd2;">x</span>:<span style="color: #6c71c4;">Key</span>=<span style="color: #2aa198;">"TabItemSelectedBackground"</span> <span style="color: #6c71c4;">Color</span>=<span style="color: #2aa198;">"#F9F9F9"</span>/&gt;
-<span class="linenr"> 8: </span>&lt;<span style="color: #268bd2;">SolidColorBrush</span> <span style="color: #268bd2;">x</span>:<span style="color: #6c71c4;">Key</span>=<span style="color: #2aa198;">"TabItemHotBorderBrush"</span> <span style="color: #6c71c4;">Color</span>=<span style="color: #2aa198;">"#3C7FB1"</span>/&gt;
+<pre class="src src-xml"><span class="linenr"> 1: </span>&lt;LinearGradientBrush x:Key="TabItemHotBackground" EndPoint="0,1" StartPoint="0,0"&gt;
+<span class="linenr"> 2: </span>    &lt;GradientStop Color="#EAF6FD" Offset="0.15"/&gt;
+<span class="linenr"> 3: </span>    &lt;GradientStop Color="#D9F0FC" Offset=".5"/&gt;
+<span class="linenr"> 4: </span>    &lt;GradientStop Color="#BEE6FD" Offset=".5"/&gt;
+<span class="linenr"> 5: </span>    &lt;GradientStop Color="#A7D9F5" Offset="1"/&gt;
+<span class="linenr"> 6: </span>&lt;/LinearGradientBrush&gt;
+<span class="linenr"> 7: </span>&lt;SolidColorBrush x:Key="TabItemSelectedBackground" Color="#F9F9F9"/&gt;
+<span class="linenr"> 8: </span>&lt;SolidColorBrush x:Key="TabItemHotBorderBrush" Color="#3C7FB1"/&gt;
 <span class="linenr"> 9: </span>
-<span class="linenr">10: </span>&lt;<span style="color: #268bd2;">Style</span> <span style="color: #268bd2;">x</span>:<span style="color: #6c71c4;">Key</span>=<span style="color: #2aa198;">"RadioButtonStyle1"</span> <span style="color: #6c71c4;">TargetType</span>=<span style="color: #2aa198;">"{x:Type RadioButton}"</span>&gt;
-<span class="linenr">11: </span>    &lt;<span style="color: #268bd2;">Setter</span> <span style="color: #6c71c4;">Property</span>=<span style="color: #2aa198;">"Template"</span>&gt;
-<span class="linenr">12: </span>        &lt;<span style="color: #268bd2;">Setter.Value</span>&gt;
-<span class="linenr">13: </span>            &lt;<span style="color: #268bd2;">ControlTemplate</span> <span style="color: #6c71c4;">TargetType</span>=<span style="color: #2aa198;">"RadioButton"</span>&gt;
-<span class="linenr">14: </span>                &lt;<span style="color: #268bd2;">Border</span> <span style="color: #6c71c4;">BorderBrush</span>=<span style="color: #2aa198;">"Transparent"</span> <span style="color: #6c71c4;">BorderThickness</span>=<span style="color: #2aa198;">"0"</span> <span style="color: #6c71c4;">Background</span>=<span style="color: #2aa198;">"Transparent"</span> <span style="color: #6c71c4;">CornerRadius</span>=<span style="color: #2aa198;">"0"</span>&gt;
-<span class="linenr">15: </span>                    &lt;<span style="color: #268bd2;">TabItem</span> <span style="color: #268bd2;">x</span>:<span style="color: #6c71c4;">Name</span>=<span style="color: #2aa198;">"tabItem"</span> <span style="color: #6c71c4;">IsSelected</span>=<span style="color: #2aa198;">"{TemplateBinding IsChecked}"</span> <span style="color: #6c71c4;">IsHitTestVisible</span>=<span style="color: #2aa198;">"False"</span>&gt;
-<span class="linenr">16: </span>                        &lt;<span style="color: #268bd2;">TabItem.Header</span>&gt;
-<span class="linenr">17: </span>                            &lt;<span style="color: #268bd2;">ContentPresenter</span> <span style="color: #6c71c4;">Margin</span>=<span style="color: #2aa198;">"5"</span>/&gt;
-<span class="linenr">18: </span>                        &lt;/<span style="color: #268bd2;">TabItem.Header</span>&gt;
-<span class="linenr">19: </span>                    &lt;/<span style="color: #268bd2;">TabItem</span>&gt;
-<span class="linenr">20: </span>                &lt;/<span style="color: #268bd2;">Border</span>&gt;
-<span class="linenr">21: </span>                &lt;<span style="color: #268bd2;">ControlTemplate.Triggers</span>&gt;
-<span class="linenr">22: </span>                    &lt;<span style="color: #268bd2;">Trigger</span> <span style="color: #6c71c4;">Property</span>=<span style="color: #2aa198;">"IsMouseOver"</span> <span style="color: #6c71c4;">Value</span>=<span style="color: #2aa198;">"true"</span>&gt;
-<span class="linenr">23: </span>                        &lt;<span style="color: #268bd2;">Setter</span> <span style="color: #6c71c4;">Property</span>=<span style="color: #2aa198;">"Background"</span> <span style="color: #6c71c4;">TargetName</span>=<span style="color: #2aa198;">"tabItem"</span> <span style="color: #6c71c4;">Value</span>=<span style="color: #2aa198;">"{StaticResource TabItemHotBackground}"</span>/&gt;
-<span class="linenr">24: </span>                    &lt;/<span style="color: #268bd2;">Trigger</span>&gt;
-<span class="linenr">25: </span>                    &lt;<span style="color: #268bd2;">Trigger</span> <span style="color: #6c71c4;">Property</span>=<span style="color: #2aa198;">"IsChecked"</span> <span style="color: #6c71c4;">Value</span>=<span style="color: #2aa198;">"true"</span>&gt;
-<span class="linenr">26: </span>                        &lt;<span style="color: #268bd2;">Setter</span> <span style="color: #6c71c4;">Property</span>=<span style="color: #2aa198;">"Panel.ZIndex"</span> <span style="color: #6c71c4;">Value</span>=<span style="color: #2aa198;">"1"</span>/&gt;
-<span class="linenr">27: </span>                        &lt;<span style="color: #268bd2;">Setter</span> <span style="color: #6c71c4;">Property</span>=<span style="color: #2aa198;">"Background"</span> <span style="color: #6c71c4;">TargetName</span>=<span style="color: #2aa198;">"tabItem"</span> <span style="color: #6c71c4;">Value</span>=<span style="color: #2aa198;">"{StaticResource TabItemSelectedBackground}"</span>/&gt;
-<span class="linenr">28: </span>                    &lt;/<span style="color: #268bd2;">Trigger</span>&gt;
-<span class="linenr">29: </span>                    &lt;<span style="color: #268bd2;">MultiTrigger</span>&gt;
-<span class="linenr">30: </span>                        &lt;<span style="color: #268bd2;">MultiTrigger.Conditions</span>&gt;
-<span class="linenr">31: </span>                            &lt;<span style="color: #268bd2;">Condition</span> <span style="color: #6c71c4;">Property</span>=<span style="color: #2aa198;">"IsChecked"</span> <span style="color: #6c71c4;">Value</span>=<span style="color: #2aa198;">"false"</span>/&gt;
-<span class="linenr">32: </span>                            &lt;<span style="color: #268bd2;">Condition</span> <span style="color: #6c71c4;">Property</span>=<span style="color: #2aa198;">"IsMouseOver"</span> <span style="color: #6c71c4;">Value</span>=<span style="color: #2aa198;">"true"</span>/&gt;
-<span class="linenr">33: </span>                        &lt;/<span style="color: #268bd2;">MultiTrigger.Conditions</span>&gt;
-<span class="linenr">34: </span>                        &lt;<span style="color: #268bd2;">Setter</span> <span style="color: #6c71c4;">Property</span>=<span style="color: #2aa198;">"BorderBrush"</span> <span style="color: #6c71c4;">TargetName</span>=<span style="color: #2aa198;">"tabItem"</span> <span style="color: #6c71c4;">Value</span>=<span style="color: #2aa198;">"{StaticResource TabItemHotBorderBrush}"</span>/&gt;
-<span class="linenr">35: </span>                    &lt;/<span style="color: #268bd2;">MultiTrigger</span>&gt;
-<span class="linenr">36: </span>                &lt;/<span style="color: #268bd2;">ControlTemplate.Triggers</span>&gt;
-<span class="linenr">37: </span>            &lt;/<span style="color: #268bd2;">ControlTemplate</span>&gt;
-<span class="linenr">38: </span>        &lt;/<span style="color: #268bd2;">Setter.Value</span>&gt;
-<span class="linenr">39: </span>    &lt;/<span style="color: #268bd2;">Setter</span>&gt;
-<span class="linenr">40: </span>&lt;/<span style="color: #268bd2;">Style</span>&gt;
+<span class="linenr">10: </span>&lt;Style x:Key="RadioButtonStyle1" TargetType="{x:Type RadioButton}"&gt;
+<span class="linenr">11: </span>    &lt;Setter Property="Template"&gt;
+<span class="linenr">12: </span>        &lt;Setter.Value&gt;
+<span class="linenr">13: </span>            &lt;ControlTemplate TargetType="RadioButton"&gt;
+<span class="linenr">14: </span>                &lt;Border BorderBrush="Transparent" BorderThickness="0" Background="Transparent" CornerRadius="0"&gt;
+<span class="linenr">15: </span>                    &lt;TabItem x:Name="tabItem" IsSelected="{TemplateBinding IsChecked}" IsHitTestVisible="False"&gt;
+<span class="linenr">16: </span>                        &lt;TabItem.Header&gt;
+<span class="linenr">17: </span>                            &lt;ContentPresenter Margin="5"/&gt;
+<span class="linenr">18: </span>                        &lt;/TabItem.Header&gt;
+<span class="linenr">19: </span>                    &lt;/TabItem&gt;
+<span class="linenr">20: </span>                &lt;/Border&gt;
+<span class="linenr">21: </span>                &lt;ControlTemplate.Triggers&gt;
+<span class="linenr">22: </span>                    &lt;Trigger Property="IsMouseOver" Value="true"&gt;
+<span class="linenr">23: </span>                        &lt;Setter Property="Background" TargetName="tabItem" Value="{StaticResource TabItemHotBackground}"/&gt;
+<span class="linenr">24: </span>                    &lt;/Trigger&gt;
+<span class="linenr">25: </span>                    &lt;Trigger Property="IsChecked" Value="true"&gt;
+<span class="linenr">26: </span>                        &lt;Setter Property="Panel.ZIndex" Value="1"/&gt;
+<span class="linenr">27: </span>                        &lt;Setter Property="Background" TargetName="tabItem" Value="{StaticResource TabItemSelectedBackground}"/&gt;
+<span class="linenr">28: </span>                    &lt;/Trigger&gt;
+<span class="linenr">29: </span>                    &lt;MultiTrigger&gt;
+<span class="linenr">30: </span>                        &lt;MultiTrigger.Conditions&gt;
+<span class="linenr">31: </span>                            &lt;Condition Property="IsChecked" Value="false"/&gt;
+<span class="linenr">32: </span>                            &lt;Condition Property="IsMouseOver" Value="true"/&gt;
+<span class="linenr">33: </span>                        &lt;/MultiTrigger.Conditions&gt;
+<span class="linenr">34: </span>                        &lt;Setter Property="BorderBrush" TargetName="tabItem" Value="{StaticResource TabItemHotBorderBrush}"/&gt;
+<span class="linenr">35: </span>                    &lt;/MultiTrigger&gt;
+<span class="linenr">36: </span>                &lt;/ControlTemplate.Triggers&gt;
+<span class="linenr">37: </span>            &lt;/ControlTemplate&gt;
+<span class="linenr">38: </span>        &lt;/Setter.Value&gt;
+<span class="linenr">39: </span>    &lt;/Setter&gt;
+<span class="linenr">40: </span>&lt;/Style&gt;
 </pre>
 </div>
 
@@ -571,9 +569,9 @@ Window.Resources标签中，定义了一个适用于Button的ControlTemplate，�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr">1: </span><span style="color: #859900; font-weight: bold;">trait</span> <span style="color: #b58900;">Component</span>[<span style="color: #d33682; font-weight: bold;">T</span>] { self<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">T</span> <span style="color: #859900; font-weight: bold;">=&gt;</span>
-<span class="linenr">2: </span>  <span style="color: #cb4b16; font-weight: bold;">@dom</span>
-<span class="linenr">3: </span>  <span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">render</span>(<span style="color: #268bd2;">implicit</span> template<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">T</span> <span style="color: #859900; font-weight: bold;">=&gt;</span> <span style="color: #d33682; font-weight: bold;">Binding</span>[<span style="color: #d33682; font-weight: bold;">Node</span>]) <span style="color: #859900; font-weight: bold;">=</span> {
+<pre class="src src-scala"><span class="linenr">1: </span>trait Component[T] { self: T =&gt;
+<span class="linenr">2: </span>  @dom
+<span class="linenr">3: </span>  def render(implicit template: T =&gt; Binding[Node]) = {
 <span class="linenr">4: </span>    template(self).bind
 <span class="linenr">5: </span>  }
 <span class="linenr">6: </span>}
@@ -585,54 +583,54 @@ Window.Resources标签中，定义了一个适用于Button的ControlTemplate，�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-scala"><span class="linenr"> 1: </span><span style="color: #859900; font-weight: bold;">import</span> org.scalajs.dom.raw.{ <span style="color: #d33682; font-weight: bold;">Node</span>, <span style="color: #d33682; font-weight: bold;">Event</span>, <span style="color: #d33682; font-weight: bold;">HTMLInputElement</span> }
-<span class="linenr"> 2: </span><span style="color: #859900; font-weight: bold;">import</span> com.thoughtworks.binding.dom
-<span class="linenr"> 3: </span><span style="color: #859900; font-weight: bold;">import</span> com.thoughtworks.binding.<span style="color: #d33682; font-weight: bold;">Binding</span>
-<span class="linenr"> 4: </span><span style="color: #859900; font-weight: bold;">import</span> com.thoughtworks.binding.<span style="color: #d33682; font-weight: bold;">Binding</span>.{ <span style="color: #d33682; font-weight: bold;">Var</span>, <span style="color: #d33682; font-weight: bold;">Vars</span> }
+<pre class="src src-scala"><span class="linenr"> 1: </span>import org.scalajs.dom.raw.{ Node, Event, HTMLInputElement }
+<span class="linenr"> 2: </span>import com.thoughtworks.binding.dom
+<span class="linenr"> 3: </span>import com.thoughtworks.binding.Binding
+<span class="linenr"> 4: </span>import com.thoughtworks.binding.Binding.{ Var, Vars }
 <span class="linenr"> 5: </span>
-<span class="linenr"> 6: </span><span style="color: #859900; font-weight: bold;">case</span> <span style="color: #859900; font-weight: bold;">class</span> <span style="color: #b58900;">TagPicker</span>(tags<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Vars</span>[<span style="color: #d33682; font-weight: bold;">String</span>]) <span style="color: #859900; font-weight: bold;">extends</span> <span style="color: #b58900;">Component</span>[<span style="color: #d33682; font-weight: bold;">TagPicker</span>] {
-<span class="linenr"> 7: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">text</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">Var</span>(<span style="color: #2aa198;">""</span>)
+<span class="linenr"> 6: </span>case class TagPicker(tags: Vars[String]) extends Component[TagPicker] {
+<span class="linenr"> 7: </span>  val text = Var("")
 <span class="linenr"> 8: </span>
-<span class="linenr"> 9: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">textChangeHandler</span> <span style="color: #859900; font-weight: bold;">=</span> { e<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Event</span> <span style="color: #859900; font-weight: bold;">=&gt;</span>
-<span class="linenr">10: </span>    e.target <span style="color: #859900; font-weight: bold;">match</span> {
-<span class="linenr">11: </span>      <span style="color: #859900; font-weight: bold;">case</span> <span style="color: #6c71c4;">i</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">HTMLInputElement</span> <span style="color: #859900; font-weight: bold;">=&gt;</span>
+<span class="linenr"> 9: </span>  val textChangeHandler = { e: Event =&gt;
+<span class="linenr">10: </span>    e.target match {
+<span class="linenr">11: </span>      case i: HTMLInputElement =&gt;
 <span class="linenr">12: </span>        text := i.value
-<span class="linenr">13: </span>      <span style="color: #859900; font-weight: bold;">case</span> <span style="color: #859900; font-weight: bold;">_</span> <span style="color: #859900; font-weight: bold;">=&gt;</span>
+<span class="linenr">13: </span>      case _ =&gt;
 <span class="linenr">14: </span>    }
 <span class="linenr">15: </span>  }
 <span class="linenr">16: </span>
-<span class="linenr">17: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">addHandler</span> <span style="color: #859900; font-weight: bold;">=</span> { e<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Event</span> <span style="color: #859900; font-weight: bold;">=&gt;</span>
-<span class="linenr">18: </span>    text.get <span style="color: #859900; font-weight: bold;">match</span> {
-<span class="linenr">19: </span>      <span style="color: #859900; font-weight: bold;">case</span> <span style="color: #2aa198;">""</span> | <span style="color: #d33682; font-weight: bold;">null</span> <span style="color: #859900; font-weight: bold;">=&gt;</span>
-<span class="linenr">20: </span>      <span style="color: #859900; font-weight: bold;">case</span> <span style="color: #6c71c4;">value</span> <span style="color: #859900; font-weight: bold;">if</span> !tags.get.contains(value) <span style="color: #859900; font-weight: bold;">=&gt;</span>
+<span class="linenr">17: </span>  val addHandler = { e: Event =&gt;
+<span class="linenr">18: </span>    text.get match {
+<span class="linenr">19: </span>      case "" | null =&gt;
+<span class="linenr">20: </span>      case value if !tags.get.contains(value) =&gt;
 <span class="linenr">21: </span>        tags.get += value
-<span class="linenr">22: </span>        text := <span style="color: #2aa198;">""</span>
+<span class="linenr">22: </span>        text := ""
 <span class="linenr">23: </span>    }
 <span class="linenr">24: </span>  }
 <span class="linenr">25: </span>
-<span class="linenr">26: </span>  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #6c71c4;">removeHandler</span> <span style="color: #859900; font-weight: bold;">=</span> { value<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">String</span> <span style="color: #859900; font-weight: bold;">=&gt;</span>
-<span class="linenr">27: </span>    { e<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Event</span> <span style="color: #859900; font-weight: bold;">=&gt;</span>
+<span class="linenr">26: </span>  val removeHandler = { value: String =&gt;
+<span class="linenr">27: </span>    { e: Event =&gt;
 <span class="linenr">28: </span>      tags.get -= value
 <span class="linenr">29: </span>    }
 <span class="linenr">30: </span>  }
 <span class="linenr">31: </span>}
 <span class="linenr">32: </span>
-<span class="linenr">33: </span><span style="color: #859900; font-weight: bold;">object</span> <span style="color: #d33682; font-weight: bold;">TagPicker</span> {
+<span class="linenr">33: </span>object TagPicker {
 <span class="linenr">34: </span>
-<span class="linenr">35: </span>  <span style="color: #cb4b16; font-weight: bold;">@dom</span>
-<span class="linenr">36: </span>  <span style="color: #268bd2;">implicit</span> <span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">defaultTemplate</span>(self<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">TagPicker</span>)<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Binding</span>[<span style="color: #d33682; font-weight: bold;">Node</span>] <span style="color: #859900; font-weight: bold;">=</span> {
+<span class="linenr">35: </span>  @dom
+<span class="linenr">36: </span>  implicit def defaultTemplate(self: TagPicker): Binding[Node] = {
 <span class="linenr">37: </span>    &lt;section&gt;
 <span class="linenr">38: </span>      &lt;div&gt;{
-<span class="linenr">39: </span>        <span style="color: #859900; font-weight: bold;">for</span> (tag <span style="color: #859900; font-weight: bold;">&lt;-</span> self.tags) <span style="color: #859900; font-weight: bold;">yield</span> {
+<span class="linenr">39: </span>        for (tag &lt;- self.tags) yield {
 <span class="linenr">40: </span>          &lt;span&gt;
 <span class="linenr">41: </span>            { tag }
-<span class="linenr">42: </span>            &lt;button onclick<span style="color: #859900; font-weight: bold;">=</span>{ self.removeHandler(tag) }&gt;x&lt;/button&gt;
+<span class="linenr">42: </span>            &lt;button onclick={ self.removeHandler(tag) }&gt;x&lt;/button&gt;
 <span class="linenr">43: </span>          &lt;/span&gt;
 <span class="linenr">44: </span>        }
 <span class="linenr">45: </span>      }&lt;/div&gt;
 <span class="linenr">46: </span>      &lt;div&gt;
-<span class="linenr">47: </span>        &lt;input value<span style="color: #859900; font-weight: bold;">=</span>{ self.text.bind } onchange<span style="color: #859900; font-weight: bold;">=</span>{ self.textChangeHandler }/&gt;
-<span class="linenr">48: </span>        &lt;button onclick<span style="color: #859900; font-weight: bold;">=</span>{ self.addHandler }&gt;<span style="color: #d33682; font-weight: bold;">Add</span>&lt;/button&gt;
+<span class="linenr">47: </span>        &lt;input value={ self.text.bind } onchange={ self.textChangeHandler }/&gt;
+<span class="linenr">48: </span>        &lt;button onclick={ self.addHandler }&gt;Add&lt;/button&gt;
 <span class="linenr">49: </span>      &lt;/div&gt;
 <span class="linenr">50: </span>    &lt;/section&gt;
 <span class="linenr">51: </span>  }
@@ -650,7 +648,8 @@ Window.Resources标签中，定义了一个适用于Button的ControlTemplate，�
 这里运用了几个scala代码的技巧。
 </p>
 
-
+</div>
+</div>
     <div>
       <div class="post-meta">
         <span title="post date" class="post-info">2016-12-31</span>
@@ -659,7 +658,7 @@ Window.Resources标签中，定义了一个适用于Button的ControlTemplate，�
         <span title="author" class="post-info">Shane Xu</span>
       </div>
       <section>
-        <h2 class="chapter">Comments</h2>
+        <h1>Comments</h1>
         <div id="disqus_thread"></div>
         <script type="text/javascript">
           //var disqus_developer = 1;
@@ -675,20 +674,26 @@ Window.Resources标签中，定义了一个适用于Button的ControlTemplate，�
         </script>
         <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
         <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
       </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="/media/js/main.js"></script>
-        <script type="text/javascript">
-         var _gaq = _gaq || [];
-         _gaq.push(['_setAccount', 'UA-74684473-1']);
-         _gaq.push(['_trackPageview']);
-         (function() {
-           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-         })();
-        </script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-74684473-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 28.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 29.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
           Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">Shane Xu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;

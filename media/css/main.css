@@ -171,12 +171,11 @@ table th.right, table td.right {
 /* body */
 .container {
     margin: 0 auto;
-    max-width: 960px;
+    max-width: 770px;
 }
 /* head */
 .masthead {
     color: #888;
-    position: relative;
 }
 .masthead:after {
     display: block;
@@ -201,8 +200,8 @@ table th.right, table td.right {
 /* searchform*/
 #searchform {
     position: absolute;
-    top: 1px;
-    right: 20px;
+    top: 54px;
+    right: 30.4%;
 }
 #searchform #s {
     background: url("/media/img/search.png") no-repeat 5px 6px;

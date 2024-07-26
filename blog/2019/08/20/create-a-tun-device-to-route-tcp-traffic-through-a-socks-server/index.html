@@ -1,38 +1,36 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>create a TUN device to route TCP traffic through a SOCKS server - Shane Xu&#39;s Home</title>
+    <title>create a TUN device to route TCP traffic through a SOCKS server - org-page</title>
     <meta charset="utf-8" />
     <meta name="author" content="shanexu" />
-      <meta name="description" content="create a TUN device to route TCP traffic through a SOCKS server" />
-      <meta name="keywords" content="vpn, socks, proxy" />
-    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/code-solarized-dark.css" type="text/css">
+    <meta name="description" content="create a TUN device to route TCP traffic through a SOCKS server" />
+    <meta name="keywords" content="vpn, socks, proxy" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
-
-  <body>
+  <body class="container">
     <div>
       <header class="masthead">
-        <h1 class="settitle"><a href="/">Shane Xu&#39;s Home</a></h1>
-        <blockquote>Life is too short for so much sorrow.</blockquote>
+        <h1 class="masthead-title"><a href="/">org-page</a></h1>
+        <p>static site generator</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/kelvinh/org-page">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
         <form method="get" id="searchform" action="//www.google.com/search">
           <input type="text" class="field" name="q" id="s" placeholder="Search">
           <input type="hidden" name="as_sitesearch" value="xusheng.org">
         </form>
       </header>
     </div>
-    <div class="node nav">
-      <ul>
-          <li><a href="/blog/" id="Blog_tab">Blog</a></li>
-        <li><a href="/tags/">Tags</a></li>
-        <li><a href="/about/">About</a></li>
-        <li><a href="https://github.com/shanexu">GitHub</a></li>
-        <li><a href="/rss.xml">RSS</a></li>
-      </ul>
-    </div>
 
-
-  <h3 class="section">create a TUN device to route TCP traffic through a SOCKS server</h3>
+<div>
+<div class="post">
+<h1>create a TUN device to route TCP traffic through a SOCKS server</h1>
 <p>
 标题看上去有些唬人，其实这是 <code>badvpn-tun2socks</code> 命令的手册的第一句话。简单明了的解释了这个工具的作用。
 </p>
@@ -81,11 +79,11 @@ default                                 fe80::%utun0                    UGcI    
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span class="linenr">1: </span><span style="color: #b58900;">cd</span> &lt;badvpn-source-dir&gt;
-<span class="linenr">2: </span><span style="color: #b58900;">mkdir</span> build
-<span class="linenr">3: </span><span style="color: #b58900;">cd</span> build
+<pre class="src src-shell"><span class="linenr">1: </span>cd &lt;badvpn-source-dir&gt;
+<span class="linenr">2: </span>mkdir build
+<span class="linenr">3: </span>cd build
 <span class="linenr">4: </span>cmake .. -DCMAKE_INSTALL_PREFIX=&lt;install-dir&gt;
-<span class="linenr">5: </span><span style="color: #b58900;">make</span> install
+<span class="linenr">5: </span>make install
 </pre>
 </div>
 
@@ -95,18 +93,18 @@ default                                 fe80::%utun0                    UGcI    
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span class="linenr"> 1: </span><span style="color: #405A61;">#</span><span style="color: #405A61;">!/bin/</span><span style="color: #859900; font-weight: bold;">bash</span>
+<pre class="src src-shell"><span class="linenr"> 1: </span>#!/bin/bash
 <span class="linenr"> 2: </span>
-<span class="linenr"> 3: </span><span style="color: #b58900;">sudo</span> openvpn --mktun --dev tun0
-<span class="linenr"> 4: </span><span style="color: #b58900;">sudo</span> ifconfig tun0 10.0.0.1 netmask 255.255.255.0
+<span class="linenr"> 3: </span>sudo openvpn --mktun --dev tun0
+<span class="linenr"> 4: </span>sudo ifconfig tun0 10.0.0.1 netmask 255.255.255.0
 <span class="linenr"> 5: </span>
-<span class="linenr"> 6: </span><span style="color: #6c71c4;">array</span>=<span style="color: #268bd2;">(</span> a.b.c.d <span style="color: #268bd2;">)</span>
-<span class="linenr"> 7: </span><span style="color: #859900; font-weight: bold;">for</span> i<span style="color: #859900; font-weight: bold;"> in</span> <span style="color: #2aa198;">"</span><span style="color: #d33682; font-weight: bold;">$</span><span style="color: #6c71c4;">{array[@]}</span><span style="color: #2aa198;">"</span>
-<span class="linenr"> 8: </span><span style="color: #859900; font-weight: bold;">do</span>
-<span class="linenr"> 9: </span>    <span style="color: #b58900;">sudo</span> route add $<span style="color: #6c71c4;">i</span> gw 192.168.1.1 metric <span style="color: #d33682; font-weight: bold;">5</span>
-<span class="linenr">10: </span><span style="color: #859900; font-weight: bold;">done</span>
+<span class="linenr"> 6: </span>array=( a.b.c.d )
+<span class="linenr"> 7: </span>for i in "${array[@]}"
+<span class="linenr"> 8: </span>do
+<span class="linenr"> 9: </span>    sudo route add $i gw 192.168.1.1 metric 5
+<span class="linenr">10: </span>done
 <span class="linenr">11: </span>
-<span class="linenr">12: </span><span style="color: #b58900;">sudo</span> route add default gw 10.0.0.2 metric <span style="color: #d33682; font-weight: bold;">6</span>
+<span class="linenr">12: </span>sudo route add default gw 10.0.0.2 metric 6
 <span class="linenr">13: </span>
 <span class="linenr">14: </span>badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:7591 --socks5-udp
 <span class="linenr">15: </span>
@@ -123,7 +121,8 @@ nameserver 192.168.1.1
 </pre>
 </div>
 
-
+</div>
+</div>
     <div>
       <div class="post-meta">
         <span title="post date" class="post-info">2019-08-20</span>
@@ -132,7 +131,7 @@ nameserver 192.168.1.1
         <span title="author" class="post-info">shanexu</span>
       </div>
       <section>
-        <h2 class="chapter">Comments</h2>
+        <h1>Comments</h1>
         <div id="disqus_thread"></div>
         <script type="text/javascript">
           //var disqus_developer = 1;
@@ -148,20 +147,26 @@ nameserver 192.168.1.1
         </script>
         <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
         <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
       </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="/media/js/main.js"></script>
-        <script type="text/javascript">
-         var _gaq = _gaq || [];
-         _gaq.push(['_setAccount', 'UA-74684473-1']);
-         _gaq.push(['_trackPageview']);
-         (function() {
-           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-         })();
-        </script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-74684473-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 28.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 29.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
           Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">shanexu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;

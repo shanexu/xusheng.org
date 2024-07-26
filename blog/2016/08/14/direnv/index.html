@@ -1,38 +1,36 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>direnv - Shane Xu&#39;s Home</title>
+    <title>direnv - org-page</title>
     <meta charset="utf-8" />
     <meta name="author" content="Shane Xu" />
-      <meta name="description" content="direnv" />
-      <meta name="keywords" content="direnv" />
-    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/code-solarized-dark.css" type="text/css">
+    <meta name="description" content="direnv" />
+    <meta name="keywords" content="direnv" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
-
-  <body>
+  <body class="container">
     <div>
       <header class="masthead">
-        <h1 class="settitle"><a href="/">Shane Xu&#39;s Home</a></h1>
-        <blockquote>Life is too short for so much sorrow.</blockquote>
+        <h1 class="masthead-title"><a href="/">org-page</a></h1>
+        <p>static site generator</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/kelvinh/org-page">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
         <form method="get" id="searchform" action="//www.google.com/search">
           <input type="text" class="field" name="q" id="s" placeholder="Search">
           <input type="hidden" name="as_sitesearch" value="xusheng.org">
         </form>
       </header>
     </div>
-    <div class="node nav">
-      <ul>
-          <li><a href="/blog/" id="Blog_tab">Blog</a></li>
-        <li><a href="/tags/">Tags</a></li>
-        <li><a href="/about/">About</a></li>
-        <li><a href="https://github.com/shanexu">GitHub</a></li>
-        <li><a href="/rss.xml">RSS</a></li>
-      </ul>
-    </div>
 
-
-  <h3 class="section">direnv</h3>
+<div>
+<div class="post">
+<h1>direnv</h1>
 <p>
 2014年的苹果WWDC上有个口号:
 </p>
@@ -61,13 +59,13 @@ Write the Code. Save the World.
 然而这几天，正好在测试同一个项目，用不同版本的语言编译的效果，结果在不同的环境切换下，竟然切晕了。虽然用 <b>tmux</b> 的分屏，多窗口等方法，勉强能凑活，但是还是偶尔几次忘记自己当前的环境。所以我想有没有能够，在不同目录下自动切换环境变量的工具。于是用google搜索 <b>directory environment</b> ，还真被我找到了。
 </p>
 
-<div id="outline-container-orgc9225f5" class="outline-2">
-<h2 id="orgc9225f5">安装</h2>
-<div class="outline-text-2" id="text-orgc9225f5">
+<div id="outline-container-org9df548b" class="outline-2">
+<h2 id="org9df548b">安装</h2>
+<div class="outline-text-2" id="text-org9df548b">
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #b58900;">git</span> clone https://github.com/direnv/direnv
-<span style="color: #b58900;">cd</span> direnv
-<span style="color: #b58900;">make</span> install
+<pre class="src src-bash">git clone https://github.com/direnv/direnv
+cd direnv
+make install
 </pre>
 </div>
 
@@ -76,63 +74,63 @@ Write the Code. Save the World.
 </p>
 <blockquote>
 <p>
-There&rsquo;s package definitions on Homebrew, Arch&rsquo;s AUR, Gentoo go-overlay overlay and NixOS&rsquo;s nixpkgs.
+There's package definitions on Homebrew, Arch's AUR, Gentoo go-overlay overlay and NixOS's nixpkgs.
 </p>
 </blockquote>
 </div>
 </div>
 
-<div id="outline-container-orgfee1c23" class="outline-2">
-<h2 id="orgfee1c23">设置</h2>
-<div class="outline-text-2" id="text-orgfee1c23">
+<div id="outline-container-org17c06f8" class="outline-2">
+<h2 id="org17c06f8">设置</h2>
+<div class="outline-text-2" id="text-org17c06f8">
 </div>
-<div id="outline-container-orgfbc9e2f" class="outline-3">
-<h3 id="orgfbc9e2f">ZSH</h3>
-<div class="outline-text-3" id="text-orgfbc9e2f">
+<div id="outline-container-org1d2ce55" class="outline-3">
+<h3 id="org1d2ce55">ZSH</h3>
+<div class="outline-text-3" id="text-org1d2ce55">
 <p>
 在 <code>~/.zshrc</code> 中添加:
 </p>
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #268bd2;">eval</span> <span style="color: #2aa198;">"</span><span style="color: #cb4b16; font-weight: bold;">$(direnv hook zsh)</span><span style="color: #2aa198;">"</span>
+<pre class="src src-bash">eval "$(direnv hook zsh)"
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org81d6d41" class="outline-3">
-<h3 id="org81d6d41">BASH</h3>
-<div class="outline-text-3" id="text-org81d6d41">
+<div id="outline-container-orgdc67439" class="outline-3">
+<h3 id="orgdc67439">BASH</h3>
+<div class="outline-text-3" id="text-orgdc67439">
 <p>
 在 <code>~/.bashrc</code> 中添加:
 </p>
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #268bd2;">eval</span> <span style="color: #2aa198;">"</span><span style="color: #cb4b16; font-weight: bold;">$(direnv hook bash)</span><span style="color: #2aa198;">"</span>
+<pre class="src src-bash">eval "$(direnv hook bash)"
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orge9eb7cc" class="outline-3">
-<h3 id="orge9eb7cc">FISH</h3>
-<div class="outline-text-3" id="text-orge9eb7cc">
+<div id="outline-container-org42bb17a" class="outline-3">
+<h3 id="org42bb17a">FISH</h3>
+<div class="outline-text-3" id="text-org42bb17a">
 <p>
 在 <code>~/.config/fish/config.fish</code> 中添加:
 </p>
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #268bd2;">eval</span> <span style="color: #268bd2;">(</span>direnv hook fish<span style="color: #268bd2;">)</span>
+<pre class="src src-bash">eval (direnv hook fish)
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgb6794fb" class="outline-3">
-<h3 id="orgb6794fb">TCSH</h3>
-<div class="outline-text-3" id="text-orgb6794fb">
+<div id="outline-container-orgc95bc3d" class="outline-3">
+<h3 id="orgc95bc3d">TCSH</h3>
+<div class="outline-text-3" id="text-orgc95bc3d">
 <p>
 在 <code>~/.cshrc</code> 中添加:
 </p>
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #268bd2;">eval</span> <span style="color: #cb4b16; font-weight: bold;">`direnv hook tcsh`</span>
+<pre class="src src-bash">eval `direnv hook tcsh`
 </pre>
 </div>
 </div>
@@ -140,28 +138,28 @@ There&rsquo;s package definitions on Homebrew, Arch&rsquo;s AUR, Gentoo go-overl
 </div>
 
 
-<div id="outline-container-orgbf8641a" class="outline-2">
-<h2 id="orgbf8641a">使用</h2>
-<div class="outline-text-2" id="text-orgbf8641a">
+<div id="outline-container-org98f64cf" class="outline-2">
+<h2 id="org98f64cf">使用</h2>
+<div class="outline-text-2" id="text-org98f64cf">
 <p>
 说到用法的话，差不多只要拿出首页的例子就可以了。
 </p>
 <div class="org-src-container">
-<pre class="src src-bash">$ <span style="color: #b58900;">cd</span> ~/my_project
-$ <span style="color: #b58900;">echo</span> $<span style="color: #268bd2;">{</span><span style="color: #6c71c4;">FOO</span>-nope<span style="color: #268bd2;">}</span>
+<pre class="src src-bash">$ cd ~/my_project
+$ echo ${FOO-nope}
 nope
-$ <span style="color: #b58900;">echo</span> export <span style="color: #6c71c4;">FOO</span>=foo &gt; .envrc
+$ echo export FOO=foo &gt; .envrc
 .envrc is not allowed
 $ direnv allow .
 direnv: reloading
 direnv: loading .envrc
 direnv export: +FOO
-$ <span style="color: #b58900;">echo</span> $<span style="color: #268bd2;">{</span><span style="color: #6c71c4;">FOO</span>-nope<span style="color: #268bd2;">}</span>
+$ echo ${FOO-nope}
 foo
-$ <span style="color: #b58900;">cd</span> ..
+$ cd ..
 direnv: unloading
 direnv export: ~PATH
-$ <span style="color: #b58900;">echo</span> $<span style="color: #268bd2;">{</span><span style="color: #6c71c4;">FOO</span>-nope<span style="color: #268bd2;">}</span>
+$ echo ${FOO-nope}
 nope
 </pre>
 </div>
@@ -172,9 +170,9 @@ nope
 </div>
 </div>
 
-<div id="outline-container-org1b3cc86" class="outline-2">
-<h2 id="org1b3cc86">实战</h2>
-<div class="outline-text-2" id="text-org1b3cc86">
+<div id="outline-container-org0418cb1" class="outline-2">
+<h2 id="org0418cb1">实战</h2>
+<div class="outline-text-2" id="text-org0418cb1">
 <p>
 比如我现在有个工程要用Python环境，于是只要在工程的根目录下面新建 <code>.envrc</code> 文件并
 写入如下内容:
@@ -190,7 +188,7 @@ nope
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #268bd2;">source</span> venv/bin/active
+<pre class="src src-bash">source venv/bin/active
 </pre>
 </div>
 
@@ -199,33 +197,34 @@ nope
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash"><span class="linenr"> 1: </span><span style="color: #268bd2;">layout_python</span><span style="color: #268bd2;">()</span> <span style="color: #268bd2;">{</span>
-<span class="linenr"> 2: </span>  <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">python</span>=$<span style="color: #d33682;">{</span><span style="color: #6c71c4;">1</span>:-python<span style="color: #d33682;">}</span>
-<span class="linenr"> 3: </span>  <span style="color: #268bd2;">local</span> <span style="color: #6c71c4;">old_env</span>=$<span style="color: #6c71c4;">PWD</span>/virtualenv
-<span class="linenr"> 4: </span>  <span style="color: #268bd2;">unset</span> PYTHONHOME
-<span class="linenr"> 5: </span>  <span style="color: #859900; font-weight: bold;">if</span> <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> -d $<span style="color: #6c71c4;">old_env</span> &amp;&amp; $<span style="color: #6c71c4;">python</span> = python <span style="color: #859900;">]</span><span style="color: #d33682;">]</span>; <span style="color: #859900; font-weight: bold;">then</span>
-<span class="linenr"> 6: </span>    <span style="color: #268bd2;">export</span> <span style="color: #6c71c4;">VIRTUAL_ENV</span>=$<span style="color: #6c71c4;">old_env</span>
-<span class="linenr"> 7: </span>  <span style="color: #859900; font-weight: bold;">else</span>
-<span class="linenr"> 8: </span>    <span style="color: #268bd2;">local</span> python_version
-<span class="linenr"> 9: </span>    <span style="color: #6c71c4;">python_version</span>=<span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">(</span><span style="color: #cb4b16; font-weight: bold;">"</span><span style="color: #cb4b16; font-weight: bold;">$</span><span style="color: #cb4b16; font-weight: bold;">python</span><span style="color: #cb4b16; font-weight: bold;">"</span><span style="color: #cb4b16; font-weight: bold;"> -c </span><span style="color: #cb4b16; font-weight: bold;">"import platform as p;print(p.python_version()</span><span style="color: #2aa198;">)"</span><span style="color: #d33682;">)</span>
-<span class="linenr">10: </span>    <span style="color: #859900; font-weight: bold;">if</span> <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> -z $<span style="color: #6c71c4;">python_version</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span>; <span style="color: #859900; font-weight: bold;">then</span>
-<span class="linenr">11: </span>      log_error <span style="color: #2aa198;">"Could not </span><span style="color: #2aa198;">find</span><span style="color: #2aa198;"> python's version"</span>
-<span class="linenr">12: </span>      <span style="color: #859900; font-weight: bold;">return</span> <span style="color: #d33682; font-weight: bold;">1</span>
-<span class="linenr">13: </span>    <span style="color: #859900; font-weight: bold;">fi</span>
+<pre class="src src-bash"><span class="linenr"> 1: </span>layout_python() {
+<span class="linenr"> 2: </span>  local python=${1:-python}
+<span class="linenr"> 3: </span>  local old_env=$PWD/virtualenv
+<span class="linenr"> 4: </span>  unset PYTHONHOME
+<span class="linenr"> 5: </span>  if [[ -d $old_env &amp;&amp; $python = python ]]; then
+<span class="linenr"> 6: </span>    export VIRTUAL_ENV=$old_env
+<span class="linenr"> 7: </span>  else
+<span class="linenr"> 8: </span>    local python_version
+<span class="linenr"> 9: </span>    python_version=$("$python" -c "import platform as p;print(p.python_version())")
+<span class="linenr">10: </span>    if [[ -z $python_version ]]; then
+<span class="linenr">11: </span>      log_error "Could not find python's version"
+<span class="linenr">12: </span>      return 1
+<span class="linenr">13: </span>    fi
 <span class="linenr">14: </span>
-<span class="linenr">15: </span>    <span style="color: #268bd2;">export</span> <span style="color: #6c71c4;">VIRTUAL_ENV</span>=$<span style="color: #6c71c4;">PWD</span>/venv
-<span class="linenr">16: </span>    <span style="color: #859900; font-weight: bold;">if</span> <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> <span style="color: #cb4b16; font-weight: bold;">!</span> -d $<span style="color: #6c71c4;">VIRTUAL_ENV</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span>; <span style="color: #859900; font-weight: bold;">then</span>
-<span class="linenr">17: </span>      virtualenv <span style="color: #2aa198;">"--python=</span><span style="color: #d33682; font-weight: bold;">$</span><span style="color: #6c71c4;">python</span><span style="color: #2aa198;">"</span> <span style="color: #2aa198;">"</span><span style="color: #d33682; font-weight: bold;">$</span><span style="color: #6c71c4;">VIRTUAL_ENV</span><span style="color: #2aa198;">"</span>
-<span class="linenr">18: </span>    <span style="color: #859900; font-weight: bold;">fi</span>
-<span class="linenr">19: </span>  <span style="color: #859900; font-weight: bold;">fi</span>
-<span class="linenr">20: </span>  PATH_add <span style="color: #2aa198;">"</span><span style="color: #d33682; font-weight: bold;">$</span><span style="color: #6c71c4;">VIRTUAL_ENV</span><span style="color: #2aa198;">/bin"</span>
-<span class="linenr">21: </span><span style="color: #268bd2;">}</span>
+<span class="linenr">15: </span>    export VIRTUAL_ENV=$PWD/venv
+<span class="linenr">16: </span>    if [[ ! -d $VIRTUAL_ENV ]]; then
+<span class="linenr">17: </span>      virtualenv "--python=$python" "$VIRTUAL_ENV"
+<span class="linenr">18: </span>    fi
+<span class="linenr">19: </span>  fi
+<span class="linenr">20: </span>  PATH_add "$VIRTUAL_ENV/bin"
+<span class="linenr">21: </span>}
 </pre>
 </div>
 </div>
 </div>
 
-
+</div>
+</div>
     <div>
       <div class="post-meta">
         <span title="post date" class="post-info">2016-08-14</span>
@@ -234,7 +233,7 @@ nope
         <span title="author" class="post-info">Shane Xu</span>
       </div>
       <section>
-        <h2 class="chapter">Comments</h2>
+        <h1>Comments</h1>
         <div id="disqus_thread"></div>
         <script type="text/javascript">
           //var disqus_developer = 1;
@@ -250,20 +249,26 @@ nope
         </script>
         <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
         <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
       </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="/media/js/main.js"></script>
-        <script type="text/javascript">
-         var _gaq = _gaq || [];
-         _gaq.push(['_setAccount', 'UA-74684473-1']);
-         _gaq.push(['_trackPageview']);
-         (function() {
-           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-         })();
-        </script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-74684473-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 28.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 29.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
           Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">Shane Xu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;

@@ -1,38 +1,36 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>如何用 N 张图片拼出 2016 字样 - Shane Xu&#39;s Home</title>
+    <title>如何用 N 张图片拼出 2016 字样 - org-page</title>
     <meta charset="utf-8" />
     <meta name="author" content="Shane Xu" />
-      <meta name="description" content="js 图片拼字 js 效果" />
-      <meta name="keywords" content="javascript, js, 效果, 前端" />
-    <link rel="stylesheet" href="/media/css/org-manual.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/code-solarized-dark.css" type="text/css">
+    <meta name="description" content="js 图片拼字 js 效果" />
+    <meta name="keywords" content="javascript, js, 效果, 前端" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
-
-  <body>
+  <body class="container">
     <div>
       <header class="masthead">
-        <h1 class="settitle"><a href="/">Shane Xu&#39;s Home</a></h1>
-        <blockquote>Life is too short for so much sorrow.</blockquote>
+        <h1 class="masthead-title"><a href="/">org-page</a></h1>
+        <p>static site generator</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/kelvinh/org-page">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
         <form method="get" id="searchform" action="//www.google.com/search">
           <input type="text" class="field" name="q" id="s" placeholder="Search">
           <input type="hidden" name="as_sitesearch" value="xusheng.org">
         </form>
       </header>
     </div>
-    <div class="node nav">
-      <ul>
-          <li><a href="/blog/" id="Blog_tab">Blog</a></li>
-        <li><a href="/tags/">Tags</a></li>
-        <li><a href="/about/">About</a></li>
-        <li><a href="https://github.com/shanexu">GitHub</a></li>
-        <li><a href="/rss.xml">RSS</a></li>
-      </ul>
-    </div>
 
-
-  <h3 class="section">如何用 N 张图片拼出 2016 字样</h3>
+<div>
+<div class="post">
+<h1>如何用 N 张图片拼出 2016 字样</h1>
 <p>
 如何用 N 张图片拼出 2016 字样。这是我几年前，在公司年会上的抽奖程序里面实现的一个效果。
 </p>
@@ -139,7 +137,7 @@ ReactDOM.render(
 </ol>
 
 <div class="org-src-container">
-<pre class="src src-javascript"><span style="color: #859900; font-weight: bold;">var</span> <span style="color: #6c71c4;">p</span> <span style="color: #859900; font-weight: bold;">=</span> ctx<span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">getImageData</span><span style="color: #839496; background-color: #00212B;">(</span>i<span style="color: #839496; background-color: #00212B;">,</span> j<span style="color: #839496; background-color: #00212B;">,</span> <span style="color: #d33682; font-weight: bold;">1</span><span style="color: #839496; background-color: #00212B;">,</span> <span style="color: #d33682; font-weight: bold;">1</span><span style="color: #839496; background-color: #00212B;">)</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #d33682; font-weight: bold; font-style: italic;">data</span><span style="color: #839496; background-color: #00212B;">;</span>
+<pre class="src src-javascript">var p = ctx.getImageData(i, j, 1, 1).data;
 </pre>
 </div>
 
@@ -154,72 +152,73 @@ ReactDOM.render(
 </p>
 
 <div class="org-src-container">
-<pre class="src src-javascript"><span class="linenr"> 1: </span><span style="color: #859900; font-weight: bold;">var</span> <span style="color: #b58900;">HiddenCanvas</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #b58900;">React</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">createClass</span><span style="color: #839496; background-color: #00212B;">({</span>
-<span class="linenr"> 2: </span>  <span style="color: #268bd2;">getInitialState</span>: <span style="color: #859900; font-weight: bold;">function</span><span style="color: #839496; background-color: #00212B;">()</span> <span style="color: #839496; background-color: #00212B;">{</span>
-<span class="linenr"> 3: </span>    <span style="color: #859900; font-weight: bold;">return</span> <span style="color: #839496; background-color: #00212B;">{</span>
-<span class="linenr"> 4: </span>      <span style="color: #6c71c4;">items</span>: <span style="color: #839496; background-color: #00212B;">[]</span>
-<span class="linenr"> 5: </span>    <span style="color: #839496; background-color: #00212B;">}</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr"> 6: </span>  <span style="color: #839496; background-color: #00212B;">}</span><span style="color: #839496; background-color: #00212B;">,</span>
-<span class="linenr"> 7: </span>  <span style="color: #268bd2;">componentDidMount</span>: <span style="color: #859900; font-weight: bold;">function</span><span style="color: #839496; background-color: #00212B;">()</span> <span style="color: #839496; background-color: #00212B;">{</span>
-<span class="linenr"> 8: </span>    <span style="color: #268bd2;">console</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">log</span><span style="color: #839496; background-color: #00212B;">(</span><span style="color: #d33682; font-weight: bold;">1</span><span style="color: #839496; background-color: #00212B;">)</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr"> 9: </span>    <span style="color: #859900; font-weight: bold;">var</span> <span style="color: #6c71c4;">str</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #268bd2;">this</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #d33682; font-weight: bold; font-style: italic;">props</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #d33682; font-weight: bold; font-style: italic;">value</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">10: </span>    <span style="color: #859900; font-weight: bold;">var</span> <span style="color: #6c71c4;">myCanvas</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #268bd2;">this</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #d33682; font-weight: bold; font-style: italic;">refs</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #d33682; font-weight: bold; font-style: italic;">myCanvas</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">11: </span>    <span style="color: #859900; font-weight: bold;">var</span> <span style="color: #6c71c4;">ctx</span> <span style="color: #859900; font-weight: bold;">=</span> myCanvas<span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">getContext</span><span style="color: #839496; background-color: #00212B;">(</span><span style="color: #2aa198;">"2d"</span><span style="color: #839496; background-color: #00212B;">)</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">12: </span>    ctx<span style="color: #839496; background-color: #00212B;">.</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">font</span><span style="color: #859900; font-weight: bold;">=</span><span style="color: #2aa198;">"250px Droid Sans Mono"</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">13: </span>    ctx<span style="color: #839496; background-color: #00212B;">.</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">fillStyle</span><span style="color: #859900; font-weight: bold;">=</span><span style="color: #2aa198;">"blue"</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">14: </span>    ctx<span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">fillText</span><span style="color: #839496; background-color: #00212B;">(</span><span style="color: #268bd2;">this</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #d33682; font-weight: bold; font-style: italic;">props</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #d33682; font-weight: bold; font-style: italic;">value</span><span style="color: #839496; background-color: #00212B;">,</span> <span style="color: #d33682; font-weight: bold;">20</span><span style="color: #839496; background-color: #00212B;">,</span> <span style="color: #d33682; font-weight: bold;">250</span><span style="color: #839496; background-color: #00212B;">)</span><span style="color: #839496; background-color: #00212B;">;</span>
+<pre class="src src-javascript"><span class="linenr"> 1: </span>var HiddenCanvas = React.createClass({
+<span class="linenr"> 2: </span>  getInitialState: function() {
+<span class="linenr"> 3: </span>    return {
+<span class="linenr"> 4: </span>      items: []
+<span class="linenr"> 5: </span>    };
+<span class="linenr"> 6: </span>  },
+<span class="linenr"> 7: </span>  componentDidMount: function() {
+<span class="linenr"> 8: </span>    console.log(1);
+<span class="linenr"> 9: </span>    var str = this.props.value;
+<span class="linenr">10: </span>    var myCanvas = this.refs.myCanvas;
+<span class="linenr">11: </span>    var ctx = myCanvas.getContext("2d");
+<span class="linenr">12: </span>    ctx.font="250px Droid Sans Mono";
+<span class="linenr">13: </span>    ctx.fillStyle="blue";
+<span class="linenr">14: </span>    ctx.fillText(this.props.value, 20, 250);
 <span class="linenr">15: </span>
-<span class="linenr">16: </span>    <span style="color: #859900; font-weight: bold;">function</span> <span style="color: #268bd2;">rgbToHex</span><span style="color: #839496; background-color: #00212B;">(</span><span style="color: #6c71c4;">r</span><span style="color: #839496; background-color: #00212B;">,</span> <span style="color: #6c71c4;">g</span><span style="color: #839496; background-color: #00212B;">,</span> <span style="color: #6c71c4;">b</span><span style="color: #839496; background-color: #00212B;">)</span> <span style="color: #839496; background-color: #00212B;">{</span>
-<span class="linenr">17: </span>      <span style="color: #859900; font-weight: bold;">if</span> <span style="color: #839496; background-color: #00212B;">(</span>r <span style="color: #859900; font-weight: bold;">&gt;</span> <span style="color: #d33682; font-weight: bold;">255</span> <span style="color: #859900; font-weight: bold;">||</span> g <span style="color: #859900; font-weight: bold;">&gt;</span> <span style="color: #d33682; font-weight: bold;">255</span> <span style="color: #859900; font-weight: bold;">||</span> b <span style="color: #859900; font-weight: bold;">&gt;</span> <span style="color: #d33682; font-weight: bold;">255</span><span style="color: #839496; background-color: #00212B;">)</span>
-<span class="linenr">18: </span>        <span style="color: #859900; font-weight: bold;">throw</span> <span style="color: #2aa198;">"Invalid color component"</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">19: </span>      <span style="color: #859900; font-weight: bold;">return</span> <span style="color: #839496; background-color: #00212B;">((</span>r <span style="color: #859900; font-weight: bold;">&lt;&lt;</span> <span style="color: #d33682; font-weight: bold;">16</span><span style="color: #839496; background-color: #00212B;">)</span> | <span style="color: #839496; background-color: #00212B;">(</span>g <span style="color: #859900; font-weight: bold;">&lt;&lt;</span> <span style="color: #d33682; font-weight: bold;">8</span><span style="color: #839496; background-color: #00212B;">)</span> | b<span style="color: #839496; background-color: #00212B;">)</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">toString</span><span style="color: #839496; background-color: #00212B;">(</span><span style="color: #d33682; font-weight: bold;">16</span><span style="color: #839496; background-color: #00212B;">)</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">20: </span>    <span style="color: #839496; background-color: #00212B;">}</span>
+<span class="linenr">16: </span>    function rgbToHex(r, g, b) {
+<span class="linenr">17: </span>      if (r &gt; 255 || g &gt; 255 || b &gt; 255)
+<span class="linenr">18: </span>        throw "Invalid color component";
+<span class="linenr">19: </span>      return ((r &lt;&lt; 16) | (g &lt;&lt; 8) | b).toString(16);
+<span class="linenr">20: </span>    }
 <span class="linenr">21: </span>
-<span class="linenr">22: </span>    <span style="color: #268bd2; font-weight: bold;">setTimeout</span><span style="color: #839496; background-color: #00212B;">(</span><span style="color: #859900; font-weight: bold;">function</span><span style="color: #839496; background-color: #00212B;">(){</span>
-<span class="linenr">23: </span>      <span style="color: #859900; font-weight: bold;">var</span> <span style="color: #6c71c4;">items</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #839496; background-color: #00212B;">[]</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">24: </span>      <span style="color: #859900; font-weight: bold;">var</span> <span style="color: #6c71c4;">count</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">0</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">25: </span>      <span style="color: #859900; font-weight: bold;">for</span><span style="color: #839496; background-color: #00212B;">(</span><span style="color: #859900; font-weight: bold;">var</span> <span style="color: #6c71c4;">i</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">0</span><span style="color: #839496; background-color: #00212B;">;</span> i <span style="color: #859900; font-weight: bold;">&lt;</span> <span style="color: #d33682; font-weight: bold;">800</span><span style="color: #839496; background-color: #00212B;">;</span> <span style="color: #6c71c4;">i</span> <span style="color: #859900; font-weight: bold;">=</span> i <span style="color: #859900; font-weight: bold;">+</span> <span style="color: #d33682; font-weight: bold;">24</span><span style="color: #839496; background-color: #00212B;">)</span> <span style="color: #839496; background-color: #00212B;">{</span>
-<span class="linenr">26: </span>        <span style="color: #859900; font-weight: bold;">for</span><span style="color: #839496; background-color: #00212B;">(</span><span style="color: #859900; font-weight: bold;">var</span> <span style="color: #6c71c4;">j</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-weight: bold;">0</span><span style="color: #839496; background-color: #00212B;">;</span> j <span style="color: #859900; font-weight: bold;">&lt;</span> <span style="color: #d33682; font-weight: bold;">300</span><span style="color: #839496; background-color: #00212B;">;</span> <span style="color: #6c71c4;">j</span> <span style="color: #859900; font-weight: bold;">=</span> j <span style="color: #859900; font-weight: bold;">+</span> <span style="color: #d33682; font-weight: bold;">24</span><span style="color: #839496; background-color: #00212B;">)</span> <span style="color: #839496; background-color: #00212B;">{</span>
-<span class="linenr">27: </span>          <span style="color: #859900; font-weight: bold;">var</span> <span style="color: #6c71c4;">p</span> <span style="color: #859900; font-weight: bold;">=</span> ctx<span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">getImageData</span><span style="color: #839496; background-color: #00212B;">(</span>i<span style="color: #839496; background-color: #00212B;">,</span> j<span style="color: #839496; background-color: #00212B;">,</span> <span style="color: #d33682; font-weight: bold;">1</span><span style="color: #839496; background-color: #00212B;">,</span> <span style="color: #d33682; font-weight: bold;">1</span><span style="color: #839496; background-color: #00212B;">)</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #d33682; font-weight: bold; font-style: italic;">data</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">28: </span>          <span style="color: #859900; font-weight: bold;">var</span> <span style="color: #6c71c4;">hex</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">"#"</span> <span style="color: #859900; font-weight: bold;">+</span> <span style="color: #839496; background-color: #00212B;">(</span><span style="color: #2aa198;">"000000"</span> <span style="color: #859900; font-weight: bold;">+</span> <span style="color: #268bd2; font-weight: bold;">rgbToHex</span><span style="color: #839496; background-color: #00212B;">(</span>p<span style="color: #839496; background-color: #00212B;">[</span><span style="color: #d33682; font-weight: bold;">0</span><span style="color: #839496; background-color: #00212B;">]</span><span style="color: #839496; background-color: #00212B;">,</span> p<span style="color: #839496; background-color: #00212B;">[</span><span style="color: #d33682; font-weight: bold;">1</span><span style="color: #839496; background-color: #00212B;">]</span><span style="color: #839496; background-color: #00212B;">,</span> p<span style="color: #839496; background-color: #00212B;">[</span><span style="color: #d33682; font-weight: bold;">2</span><span style="color: #839496; background-color: #00212B;">]))</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">slice</span><span style="color: #839496; background-color: #00212B;">(</span><span style="color: #859900; font-weight: bold;">-</span><span style="color: #d33682; font-weight: bold;">6</span><span style="color: #839496; background-color: #00212B;">)</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">29: </span>          <span style="color: #859900; font-weight: bold;">if</span><span style="color: #839496; background-color: #00212B;">(</span>hex <span style="color: #859900; font-weight: bold;">==</span> <span style="color: #2aa198;">"#0000ff"</span><span style="color: #839496; background-color: #00212B;">)</span> <span style="color: #839496; background-color: #00212B;">{</span>
-<span class="linenr">30: </span>            items<span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">push</span><span style="color: #839496; background-color: #00212B;">({</span>
-<span class="linenr">31: </span>              <span style="color: #6c71c4;">id</span>: count<span style="color: #859900; font-weight: bold;">++</span><span style="color: #839496; background-color: #00212B;">,</span>
-<span class="linenr">32: </span>              <span style="color: #6c71c4;">left</span>: i <span style="color: #859900; font-weight: bold;">-</span> <span style="color: #d33682; font-weight: bold;">12</span><span style="color: #839496; background-color: #00212B;">,</span>
-<span class="linenr">33: </span>              <span style="color: #6c71c4;">top</span>: j <span style="color: #859900; font-weight: bold;">-</span> <span style="color: #d33682; font-weight: bold;">12</span><span style="color: #839496; background-color: #00212B;">,</span>
-<span class="linenr">34: </span>              <span style="color: #6c71c4;">transform</span>: <span style="color: #2aa198;">'rotate('</span> <span style="color: #859900; font-weight: bold;">+</span> <span style="color: #839496; background-color: #00212B;">(</span><span style="color: #d33682; font-weight: bold;">360</span> * <span style="color: #b58900;">Math</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">random</span><span style="color: #839496; background-color: #00212B;">())</span> <span style="color: #859900; font-weight: bold;">+</span> <span style="color: #2aa198;">'deg)'</span>
-<span class="linenr">35: </span>            <span style="color: #839496; background-color: #00212B;">})</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">36: </span>          <span style="color: #839496; background-color: #00212B;">}</span>
-<span class="linenr">37: </span>        <span style="color: #839496; background-color: #00212B;">}</span>
-<span class="linenr">38: </span>      <span style="color: #839496; background-color: #00212B;">}</span>
-<span class="linenr">39: </span>      <span style="color: #268bd2;">this</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">setState</span><span style="color: #839496; background-color: #00212B;">({</span>
-<span class="linenr">40: </span>        <span style="color: #6c71c4;">items</span>: items
-<span class="linenr">41: </span>      <span style="color: #839496; background-color: #00212B;">})</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">42: </span>    <span style="color: #839496; background-color: #00212B;">}</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">bind</span><span style="color: #839496; background-color: #00212B;">(</span><span style="color: #268bd2;">this</span><span style="color: #839496; background-color: #00212B;">))</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">43: </span>  <span style="color: #839496; background-color: #00212B;">}</span><span style="color: #839496; background-color: #00212B;">,</span>
-<span class="linenr">44: </span>  <span style="color: #268bd2;">render</span>: <span style="color: #859900; font-weight: bold;">function</span><span style="color: #839496; background-color: #00212B;">()</span> <span style="color: #839496; background-color: #00212B;">{</span>
-<span class="linenr">45: </span>    <span style="color: #859900; font-weight: bold;">var</span> <span style="color: #6c71c4;">images</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #268bd2;">this</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #d33682; font-weight: bold; font-style: italic;">state</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #d33682; font-weight: bold; font-style: italic;">items</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">map</span><span style="color: #839496; background-color: #00212B;">(</span><span style="color: #859900; font-weight: bold;">function</span><span style="color: #839496; background-color: #00212B;">(</span><span style="color: #6c71c4;">m</span><span style="color: #839496; background-color: #00212B;">){</span>
-<span class="linenr">46: </span>      <span style="color: #859900; font-weight: bold;">return</span> <span style="color: #839496; background-color: #00212B;">(</span>
-<span class="linenr">47: </span>        <span style="color: #859900; font-weight: bold;">&lt;</span>img key<span style="color: #859900; font-weight: bold;">=</span><span style="color: #839496; background-color: #00212B;">{</span>m<span style="color: #839496; background-color: #00212B;">.</span><span style="color: #d33682; font-weight: bold; font-style: italic;">id</span><span style="color: #839496; background-color: #00212B;">}</span> src<span style="color: #859900; font-weight: bold;">=</span><span style="color: #2aa198;">"https://avatars1.githubusercontent.com/u/1257453?v=3&amp;s=460"</span> style<span style="color: #859900; font-weight: bold;">=</span><span style="color: #839496; background-color: #00212B;">{{</span><span style="color: #6c71c4;">width</span>: <span style="color: #2aa198;">'48px'</span><span style="color: #839496; background-color: #00212B;">,</span> <span style="color: #6c71c4;">position</span>: <span style="color: #2aa198;">'absolute'</span><span style="color: #839496; background-color: #00212B;">,</span> <span style="color: #6c71c4;">left</span>: m<span style="color: #839496; background-color: #00212B;">.</span><span style="color: #d33682; font-weight: bold; font-style: italic;">left</span><span style="color: #839496; background-color: #00212B;">,</span> <span style="color: #6c71c4;">top</span>: m<span style="color: #839496; background-color: #00212B;">.</span><span style="color: #d33682; font-weight: bold; font-style: italic;">top</span><span style="color: #839496; background-color: #00212B;">,</span> <span style="color: #6c71c4;">transform</span>: m<span style="color: #839496; background-color: #00212B;">.</span><span style="color: #d33682; font-weight: bold; font-style: italic;">transform</span><span style="color: #839496; background-color: #00212B;">}}</span> /<span style="color: #859900; font-weight: bold;">&gt;</span>
-<span class="linenr">48: </span>      <span style="color: #839496; background-color: #00212B;">)</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">49: </span>    <span style="color: #839496; background-color: #00212B;">})</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">50: </span>    <span style="color: #859900; font-weight: bold;">return</span> <span style="color: #839496; background-color: #00212B;">(</span>
-<span class="linenr">51: </span>      <span style="color: #859900; font-weight: bold;">&lt;</span>div style<span style="color: #859900; font-weight: bold;">=</span><span style="color: #839496; background-color: #00212B;">{{</span><span style="color: #6c71c4;">position</span>: <span style="color: #2aa198;">'relative'</span><span style="color: #839496; background-color: #00212B;">}}</span><span style="color: #859900; font-weight: bold;">&gt;</span>
-<span class="linenr">52: </span>        <span style="color: #839496; background-color: #00212B;">{</span>images<span style="color: #839496; background-color: #00212B;">}</span>
-<span class="linenr">53: </span>        <span style="color: #859900; font-weight: bold;">&lt;</span>canvas ref<span style="color: #859900; font-weight: bold;">=</span><span style="color: #2aa198;">"myCanvas"</span> width<span style="color: #859900; font-weight: bold;">=</span><span style="color: #2aa198;">"800"</span> height<span style="color: #859900; font-weight: bold;">=</span><span style="color: #2aa198;">"300"</span> style<span style="color: #859900; font-weight: bold;">=</span><span style="color: #839496; background-color: #00212B;">{{</span><span style="color: #6c71c4;">visibility</span>: <span style="color: #2aa198;">'hidden'</span><span style="color: #839496; background-color: #00212B;">}}</span>/<span style="color: #859900; font-weight: bold;">&gt;</span>
-<span class="linenr">54: </span>      <span style="color: #859900; font-weight: bold;">&lt;</span>/div<span style="color: #859900; font-weight: bold;">&gt;</span>
-<span class="linenr">55: </span>    <span style="color: #839496; background-color: #00212B;">)</span><span style="color: #839496; background-color: #00212B;">;</span>
-<span class="linenr">56: </span>  <span style="color: #839496; background-color: #00212B;">}</span>
-<span class="linenr">57: </span><span style="color: #839496; background-color: #00212B;">})</span><span style="color: #839496; background-color: #00212B;">;</span>
+<span class="linenr">22: </span>    setTimeout(function(){
+<span class="linenr">23: </span>      var items = [];
+<span class="linenr">24: </span>      var count = 0;
+<span class="linenr">25: </span>      for(var i = 0; i &lt; 800; i = i + 24) {
+<span class="linenr">26: </span>        for(var j = 0; j &lt; 300; j = j + 24) {
+<span class="linenr">27: </span>          var p = ctx.getImageData(i, j, 1, 1).data;
+<span class="linenr">28: </span>          var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
+<span class="linenr">29: </span>          if(hex == "#0000ff") {
+<span class="linenr">30: </span>            items.push({
+<span class="linenr">31: </span>              id: count++,
+<span class="linenr">32: </span>              left: i - 12,
+<span class="linenr">33: </span>              top: j - 12,
+<span class="linenr">34: </span>              transform: 'rotate(' + (360 * Math.random()) + 'deg)'
+<span class="linenr">35: </span>            });
+<span class="linenr">36: </span>          }
+<span class="linenr">37: </span>        }
+<span class="linenr">38: </span>      }
+<span class="linenr">39: </span>      this.setState({
+<span class="linenr">40: </span>        items: items
+<span class="linenr">41: </span>      });
+<span class="linenr">42: </span>    }.bind(this));
+<span class="linenr">43: </span>  },
+<span class="linenr">44: </span>  render: function() {
+<span class="linenr">45: </span>    var images = this.state.items.map(function(m){
+<span class="linenr">46: </span>      return (
+<span class="linenr">47: </span>        &lt;img key={m.id} src="https://avatars1.githubusercontent.com/u/1257453?v=3&amp;s=460" style={{width: '48px', position: 'absolute', left: m.left, top: m.top, transform: m.transform}} /&gt;
+<span class="linenr">48: </span>      );
+<span class="linenr">49: </span>    });
+<span class="linenr">50: </span>    return (
+<span class="linenr">51: </span>      &lt;div style={{position: 'relative'}}&gt;
+<span class="linenr">52: </span>        {images}
+<span class="linenr">53: </span>        &lt;canvas ref="myCanvas" width="800" height="300" style={{visibility: 'hidden'}}/&gt;
+<span class="linenr">54: </span>      &lt;/div&gt;
+<span class="linenr">55: </span>    );
+<span class="linenr">56: </span>  }
+<span class="linenr">57: </span>});
 <span class="linenr">58: </span>
-<span class="linenr">59: </span><span style="color: #b58900;">ReactDOM</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">render</span><span style="color: #839496; background-color: #00212B;">(</span>
-<span class="linenr">60: </span>  <span style="color: #859900; font-weight: bold;">&lt;</span><span style="color: #b58900;">HiddenCanvas</span> value<span style="color: #859900; font-weight: bold;">=</span><span style="color: #2aa198;">"2016"</span>/<span style="color: #859900; font-weight: bold;">&gt;</span><span style="color: #839496; background-color: #00212B;">,</span>
-<span class="linenr">61: </span>  <span style="color: #268bd2;">document</span><span style="color: #839496; background-color: #00212B;">.</span><span style="color: #268bd2; font-weight: bold; font-style: italic;">getElementById</span><span style="color: #839496; background-color: #00212B;">(</span><span style="color: #2aa198;">'example'</span><span style="color: #839496; background-color: #00212B;">)</span>
-<span class="linenr">62: </span><span style="color: #839496; background-color: #00212B;">)</span><span style="color: #839496; background-color: #00212B;">;</span>
+<span class="linenr">59: </span>ReactDOM.render(
+<span class="linenr">60: </span>  &lt;HiddenCanvas value="2016"/&gt;,
+<span class="linenr">61: </span>  document.getElementById('example')
+<span class="linenr">62: </span>);
 </pre>
 </div>
 
-
+</div>
+</div>
     <div>
       <div class="post-meta">
         <span title="post date" class="post-info">2016-07-13</span>
@@ -228,7 +227,7 @@ ReactDOM.render(
         <span title="author" class="post-info">Shane Xu</span>
       </div>
       <section>
-        <h2 class="chapter">Comments</h2>
+        <h1>Comments</h1>
         <div id="disqus_thread"></div>
         <script type="text/javascript">
           //var disqus_developer = 1;
@@ -244,20 +243,26 @@ ReactDOM.render(
         </script>
         <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
         <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
       </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="/media/js/main.js"></script>
-        <script type="text/javascript">
-         var _gaq = _gaq || [];
-         _gaq.push(['_setAccount', 'UA-74684473-1']);
-         _gaq.push(['_trackPageview']);
-         (function() {
-           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-         })();
-        </script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-74684473-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 28.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 29.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
           Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">Shane Xu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;
