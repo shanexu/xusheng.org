@@ -18,7 +18,7 @@
           <li><a href="/blog/">Blog</a></li>
           <li><a href="/tags/">Tags</a></li>
           <li><a href="/about/">About</a></li>
-          <li><a href="https://github.com/kelvinh/org-page">GitHub</a></li>
+          <li><a href="https://github.com/shanexu">GitHub</a></li>
           <li><a href="/rss.xml">RSS</a></li>
         </ul>
         <form method="get" id="searchform" action="//www.google.com/search">
@@ -32,9 +32,9 @@
 <div class="post">
 <h1>golang aop的一种实现方法</h1>
 
-<div id="outline-container-orga87853d" class="outline-2">
-<h2 id="orga87853d">序</h2>
-<div class="outline-text-2" id="text-orga87853d">
+<div id="outline-container-org59e2054" class="outline-2">
+<h2 id="org59e2054">序</h2>
+<div class="outline-text-2" id="text-org59e2054">
 <p>
 实际这个标题有点夸张了。我原本也不想实现golang的aop，也无意去实现。我的出发点仅仅是APM(Application Performance Management)。我们总说golang是一门怎么怎么神奇好用的语言，然而仅仅是一个aop都难以优雅地实现。再比如，opentracing，设计了一整套api，做分布式调用链追踪，其中包括java、golang等语言，实际上纯用java的人可能根本不需要用opentracing这套东西。java的字节码增强实在是太好用了。根本就不需要这样繁琐地在代码中显示地调用opentracing的api。所以golang有没有类似java这样的字节码增强的方法呢？肯定没有啊。
 </p>
@@ -66,17 +66,17 @@
 </div>
 </div>
 
-<div id="outline-container-org442f5b5" class="outline-2">
-<h2 id="org442f5b5">开发环境准备</h2>
-<div class="outline-text-2" id="text-org442f5b5">
+<div id="outline-container-org6c1ce15" class="outline-2">
+<h2 id="org6c1ce15">开发环境准备</h2>
+<div class="outline-text-2" id="text-org6c1ce15">
 <p>
 工欲善其事必先利其器，我敬佩那些用vim和emacs写golang代码的大神（虽然我也用emacs写golang代码），但是面对golang源码这个大工程，我还是选择使用GoLand。因为牵涉到很多环境变量的切换，推荐使用 <a href="https://direnv.net/">direnv</a> 方便切换配置。
 </p>
 </div>
 
-<div id="outline-container-org12794a7" class="outline-3">
-<h3 id="org12794a7">准备源代码</h3>
-<div class="outline-text-3" id="text-org12794a7">
+<div id="outline-container-org8f2f8c8" class="outline-3">
+<h3 id="org8f2f8c8">准备源代码</h3>
+<div class="outline-text-3" id="text-org8f2f8c8">
 <div class="org-src-container">
 <pre class="src src-shell">mkdir -p $HOME/src/github.com/golang
 cd $HOME/src/github.com/golang
@@ -91,9 +91,9 @@ direnv allow
 </div>
 </div>
 
-<div id="outline-container-org24f291f" class="outline-3">
-<h3 id="org24f291f">安装BOOTSTRAP环境（go编译器通过go语言编译，正如gcc通过gcc编译一般）</h3>
-<div class="outline-text-3" id="text-org24f291f">
+<div id="outline-container-org1112340" class="outline-3">
+<h3 id="org1112340">安装BOOTSTRAP环境（go编译器通过go语言编译，正如gcc通过gcc编译一般）</h3>
+<div class="outline-text-3" id="text-org1112340">
 <div class="org-src-container">
 <pre class="src src-shell">mkdir $HOME/gos
 cd $HOME/gos
@@ -107,9 +107,9 @@ direnv allow
 </div>
 </div>
 
-<div id="outline-container-orgb621871" class="outline-3">
-<h3 id="orgb621871">切换到最新的tag，并创建一个分支</h3>
-<div class="outline-text-3" id="text-orgb621871">
+<div id="outline-container-orgce41108" class="outline-3">
+<h3 id="orgce41108">切换到最新的tag，并创建一个分支</h3>
+<div class="outline-text-3" id="text-orgce41108">
 <div class="org-src-container">
 <pre class="src src-shell">cd $HOME/src/github.com/golang/go
 git checkout go1.13.1
@@ -119,9 +119,9 @@ git checkout -b go1.13.1-playground
 </div>
 </div>
 
-<div id="outline-container-org5610d9d" class="outline-3">
-<h3 id="org5610d9d">首次尝试编译go编译器</h3>
-<div class="outline-text-3" id="text-org5610d9d">
+<div id="outline-container-orgfef5440" class="outline-3">
+<h3 id="orgfef5440">首次尝试编译go编译器</h3>
+<div class="outline-text-3" id="text-orgfef5440">
 <div class="org-src-container">
 <pre class="src src-shell">cd $HOME/src/github.com/golang/go/src
 ./make.bash
@@ -155,34 +155,34 @@ go version
 </div>
 </div>
 
-<div id="outline-container-orgb2beec7" class="outline-3">
-<h3 id="orgb2beec7">GoLand设置</h3>
-<div class="outline-text-3" id="text-orgb2beec7">
+<div id="outline-container-orgddad001" class="outline-3">
+<h3 id="orgddad001">GoLand设置</h3>
+<div class="outline-text-3" id="text-orgddad001">
 </div>
-<div id="outline-container-orgd8e110a" class="outline-4">
-<h4 id="orgd8e110a">创建项目</h4>
-<div class="outline-text-4" id="text-orgd8e110a">
+<div id="outline-container-org467dbb3" class="outline-4">
+<h4 id="org467dbb3">创建项目</h4>
+<div class="outline-text-4" id="text-org467dbb3">
 <p>
 File -&gt; Open 选择工程根目录
 </p>
 
 
-<div id="orgdb70612" class="figure">
+<div id="org03c18ec" class="figure">
 <p><img src="/assets/blog/2019/10/09/golang-aop/66475611-3a39e980-ea83-11e9-802e-3b118d1ac906.png" alt="66475611-3a39e980-ea83-11e9-802e-3b118d1ac906.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org5c7b32c" class="outline-4">
-<h4 id="org5c7b32c">设置GOROOT</h4>
-<div class="outline-text-4" id="text-org5c7b32c">
+<div id="outline-container-org0942347" class="outline-4">
+<h4 id="org0942347">设置GOROOT</h4>
+<div class="outline-text-4" id="text-org0942347">
 <p>
 <code>$HOME/src/github.com/golang/go</code>
 </p>
 
 
-<div id="orgf987307" class="figure">
+<div id="orgccbd5eb" class="figure">
 <p><img src="/assets/blog/2019/10/09/golang-aop/66475821-a4528e80-ea83-11e9-970b-8982bafbab77.png" alt="66475821-a4528e80-ea83-11e9-970b-8982bafbab77.png" />
 </p>
 </div>
@@ -190,13 +190,13 @@ File -&gt; Open 选择工程根目录
 </div>
 </div>
 
-<div id="outline-container-orgfc80922" class="outline-3">
-<h3 id="orgfc80922">创建一个playground项目，用于测试编译</h3>
-<div class="outline-text-3" id="text-orgfc80922">
+<div id="outline-container-org69918ed" class="outline-3">
+<h3 id="org69918ed">创建一个playground项目，用于测试编译</h3>
+<div class="outline-text-3" id="text-org69918ed">
 </div>
-<div id="outline-container-org6edb287" class="outline-4">
-<h4 id="org6edb287">clone我的测试项目</h4>
-<div class="outline-text-4" id="text-org6edb287">
+<div id="outline-container-orgf83d604" class="outline-4">
+<h4 id="orgf83d604">clone我的测试项目</h4>
+<div class="outline-text-4" id="text-orgf83d604">
 <div class="org-src-container">
 <pre class="src src-shell">cd $HOME/src/github.com/shanexu
 git clone https://github.com/shanexu/go-playground.git
@@ -205,9 +205,9 @@ git clone https://github.com/shanexu/go-playground.git
 </div>
 </div>
 
-<div id="outline-container-orgb81d95c" class="outline-4">
-<h4 id="orgb81d95c">配置环境变量</h4>
-<div class="outline-text-4" id="text-orgb81d95c">
+<div id="outline-container-orgc30f1cd" class="outline-4">
+<h4 id="orgc30f1cd">配置环境变量</h4>
+<div class="outline-text-4" id="text-orgc30f1cd">
 <div class="org-src-container">
 <pre class="src src-shell">cd $HOME/src/github.com/shanexu/go-playground
 echo 'export GOROOT=$HOME/src/github.com/golang/go
@@ -219,14 +219,14 @@ export GOBIN=$(pwd)/bin' &gt; .envrc
 </div>
 </div>
 
-<div id="outline-container-org47fb7fa" class="outline-3">
-<h3 id="org47fb7fa">至此整个开发环境算是搭建成功了</h3>
+<div id="outline-container-org09be21b" class="outline-3">
+<h3 id="org09be21b">至此整个开发环境算是搭建成功了</h3>
 </div>
 </div>
 
-<div id="outline-container-orgff4ea7f" class="outline-2">
-<h2 id="orgff4ea7f">go build 过程分析</h2>
-<div class="outline-text-2" id="text-orgff4ea7f">
+<div id="outline-container-org4ea6967" class="outline-2">
+<h2 id="org4ea6967">go build 过程分析</h2>
+<div class="outline-text-2" id="text-org4ea6967">
 <div class="org-src-container">
 <pre class="src src-shell">cd $HOME/src/github.com/shanexu/go-playground
 go build -o bin/helloworld helloworld/main.go
@@ -529,7 +529,7 @@ packagefile runtime=/Users/shane/src/github.com/golang/go/pkg/darwin_amd64/runti
 </p>
 
 
-<div id="orgddd9ad1" class="figure">
+<div id="orgfba8fbe" class="figure">
 <p><img src="/assets/blog/2019/10/09/golang-aop/66623436-39b46680-ebdb-11e9-8591-bd88617988ea.png" alt="66623436-39b46680-ebdb-11e9-8591-bd88617988ea.png" />
 </p>
 </div>
@@ -549,9 +549,9 @@ packagefile runtime=/Users/shane/src/github.com/golang/go/pkg/darwin_amd64/runti
 </div>
 </div>
 
-<div id="outline-container-org9af640e" class="outline-2">
-<h2 id="org9af640e">compile 过程分析</h2>
-<div class="outline-text-2" id="text-org9af640e">
+<div id="outline-container-org3aca788" class="outline-2">
+<h2 id="org3aca788">compile 过程分析</h2>
+<div class="outline-text-2" id="text-org3aca788">
 <p>
 从入口文件 <code>cmd/compile/main.go</code> 看起。
 </p>
@@ -670,9 +670,9 @@ BenchmarkCompile:main:total                1    8709884 ns/op    100.00 %
 </div>
 </div>
 
-<div id="outline-container-org4ff7098" class="outline-2">
-<h2 id="org4ff7098">编译期插入代码</h2>
-<div class="outline-text-2" id="text-org4ff7098">
+<div id="outline-container-orgd79233e" class="outline-2">
+<h2 id="orgd79233e">编译期插入代码</h2>
+<div class="outline-text-2" id="text-orgd79233e">
 <p>
 在进入这一阶段之前可以先阅读下这篇 <a href="https://medium.com/justforfunc/understanding-go-programs-with-go-parser-c4e88a6edb87">Understanding Go programs with go/parser</a> ，对go的AST有一定的感性认识。
 </p>
@@ -1089,9 +1089,9 @@ stop hello...
 </div>
 </div>
 
-<div id="outline-container-orgddbf577" class="outline-2">
-<h2 id="orgddbf577">创业未半</h2>
-<div class="outline-text-2" id="text-orgddbf577">
+<div id="outline-container-org6ddd899" class="outline-2">
+<h2 id="org6ddd899">创业未半</h2>
+<div class="outline-text-2" id="text-org6ddd899">
 <p>
 至此对golang编译器的解析和hack的过程也结束了。可见通过修改编译器生成的AST的方式，我们可以给特定文件、特定包、特定方法加上自定义代码。这里给golang实现aop提供了一种另类的思路。诚然要完成像 <code>AspectJ</code> 这样完整的解决方案，还有很大一段路路要走。
 </p>
