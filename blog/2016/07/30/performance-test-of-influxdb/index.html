@@ -32,42 +32,42 @@
 <div class="post">
 <h1>influxdb 性能测试</h1>
 
-<div id="outline-container-org17eac5d" class="outline-2">
-<h2 id="org17eac5d">起因</h2>
-<div class="outline-text-2" id="text-org17eac5d">
+<div id="outline-container-orgcb939be" class="outline-2">
+<h2 id="orgcb939be">起因</h2>
+<div class="outline-text-2" id="text-orgcb939be">
 <p>
 公司线上 influxdb 出现小概率无法写入数据现象，持续时间大概几秒。运行一两星期出现一次。初步判断可能是 go1.4.3 的 gc 效率问题。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org531bee1" class="outline-2">
-<h2 id="org531bee1">是否真是 GC 的锅</h2>
-<div class="outline-text-2" id="text-org531bee1">
+<div id="outline-container-orga13ca79" class="outline-2">
+<h2 id="orga13ca79">是否真是 GC 的锅</h2>
+<div class="outline-text-2" id="text-orga13ca79">
 <p>
 influxdb 的最新稳定版 v0.13 是用 go1.6.2 版本编译的。而从 v0.10 到 v0.13 的变化主要是，一是 v0.13 只支持 TSM 存储引擎；二是 metastore 的存储格式的变化。三是完全将 cluster 移出 master；支持 influxdb-relay，四是使用 go1.6.2。v0.10 默认就是使用 TSM 存储引擎，metastore 存放的是 influxdb 的系统信息，包括 database、shard、retention policies 信息，cluster 目前我们没有用到。所以说 go 的版本变化，可能是最大的升级。所以尝试使用 go1.6.2 来编译 influxdb v0.10.2 的代码。
 而 go 从 1.5 开始对 gc 进行了优化。可以看下图。
 </p>
 
 
-<div id="orgc1d8a1a" class="figure">
+<div id="org76d48a2" class="figure">
 <p><img src="http://i.stack.imgur.com/4TOux.png" alt="4TOux.png" width="100%" />
 </p>
 </div>
 </div>
 
-<div id="outline-container-org060d25a" class="outline-3">
-<h3 id="org060d25a">分别用 1.4.3 和 1.6.2 编译 influxdb 的 v10.2 的代码</h3>
-<div class="outline-text-3" id="text-org060d25a">
+<div id="outline-container-org6cb1a95" class="outline-3">
+<h3 id="org6cb1a95">分别用 1.4.3 和 1.6.2 编译 influxdb 的 v10.2 的代码</h3>
+<div class="outline-text-3" id="text-org6cb1a95">
 <p>
 过程不再赘述。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org0ee13fb" class="outline-3">
-<h3 id="org0ee13fb">使用 <a href="https://github.com/tsenart/vegeta">vegeta</a> 进行简单测试</h3>
-<div class="outline-text-3" id="text-org0ee13fb">
+<div id="outline-container-orga1b02e8" class="outline-3">
+<h3 id="orga1b02e8">使用 <a href="https://github.com/tsenart/vegeta">vegeta</a> 进行简单测试</h3>
+<div class="outline-text-3" id="text-orga1b02e8">
 <p>
 我这里使用了下面的简单脚本
 </p>
@@ -117,13 +117,13 @@ post2.txt
 </div>
 </div>
 
-<div id="outline-container-org5e20731" class="outline-3">
-<h3 id="org5e20731">测试结果</h3>
-<div class="outline-text-3" id="text-org5e20731">
+<div id="outline-container-org3dec441" class="outline-3">
+<h3 id="org3dec441">测试结果</h3>
+<div class="outline-text-3" id="text-org3dec441">
 </div>
-<div id="outline-container-org306492a" class="outline-4">
-<h4 id="org306492a">influxdb v0.10.2 with go 1.6.2</h4>
-<div class="outline-text-4" id="text-org306492a">
+<div id="outline-container-orgac3bb84" class="outline-4">
+<h4 id="orgac3bb84">influxdb v0.10.2 with go 1.6.2</h4>
+<div class="outline-text-4" id="text-orgac3bb84">
 <div class="org-src-container">
 <pre class="src src-text">Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m0.001980491s, 4m59.999799956s, 2.180535ms
@@ -153,9 +153,9 @@ Status Codes  [code:count]             204:1224212  0:275788
 </div>
 </div>
 
-<div id="outline-container-orgdf090f9" class="outline-4">
-<h4 id="orgdf090f9">influxdb v0.10.2 with go 1.4.3</h4>
-<div class="outline-text-4" id="text-orgdf090f9">
+<div id="outline-container-orga7acf26" class="outline-4">
+<h4 id="orga7acf26">influxdb v0.10.2 with go 1.4.3</h4>
+<div class="outline-text-4" id="text-orga7acf26">
 <div class="org-src-container">
 <pre class="src src-text">Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m0.004029292s, 4m59.999799919s, 4.229373ms
@@ -185,9 +185,9 @@ Status Codes  [code:count]             204:1300756  0:199244
 </div>
 </div>
 
-<div id="outline-container-orgaff64c2" class="outline-4">
-<h4 id="orgaff64c2">粗糙的结论</h4>
-<div class="outline-text-4" id="text-orgaff64c2">
+<div id="outline-container-org5cf03f8" class="outline-4">
+<h4 id="org5cf03f8">粗糙的结论</h4>
+<div class="outline-text-4" id="text-org5cf03f8">
 <p>
 实际在 influxdb 应用上测试结果，用 1.4.3 还是 1.6.2 版本的 go，性能差距都不到。两边都有 5%以上的失败率，有时候甚至更大。最大响应时间达到 30 多秒，从 mean、p50、p95、p99 可以看出使用 go1.6.2 相对 go1.4.3 稍微稳定一些。而在请求失败率上两个版本的 go 相差不多。所以可能是 influxdb 自身设计的问题。其实在多次实验时，发现 influxdb 自身的 performance 非常不稳定，成功率可以从 80%到 97%的区间内浮动。这个可能跟我自身 host 机状态波动，有关系。
 </p>
@@ -196,9 +196,9 @@ Status Codes  [code:count]             204:1300756  0:199244
 </div>
 </div>
 
-<div id="outline-container-org2f9919d" class="outline-2">
-<h2 id="org2f9919d">从 influxdb 的设计实现上找原因</h2>
-<div class="outline-text-2" id="text-org2f9919d">
+<div id="outline-container-org63e57fd" class="outline-2">
+<h2 id="org63e57fd">从 influxdb 的设计实现上找原因</h2>
+<div class="outline-text-2" id="text-org63e57fd">
 <p>
 查看 influxdb 的源代码，influxdb/tsdb/engine/tsm1/DESIGN.md 文件里写了 influxdb 的核心存储引擎 tsm 的设计思想，其中关于 cache 有一段说明。
 </p>
@@ -215,22 +215,22 @@ Well behaved clients should interpret write failures as back pressure and should
 </p>
 </div>
 
-<div id="outline-container-org0e878a3" class="outline-3">
-<h3 id="org0e878a3">验证</h3>
-<div class="outline-text-3" id="text-org0e878a3">
+<div id="outline-container-org252fdd7" class="outline-3">
+<h3 id="org252fdd7">验证</h3>
+<div class="outline-text-3" id="text-org252fdd7">
 <p>
 修改 influxdb 的配置文件中 <code>cache-max-memory-size</code> 的大小，分别取 524288000, 1048576000, 2097152000 做对比实验。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org4d9dd80" class="outline-3">
-<h3 id="org4d9dd80">测试结果</h3>
-<div class="outline-text-3" id="text-org4d9dd80">
+<div id="outline-container-orgc0a812a" class="outline-3">
+<h3 id="orgc0a812a">测试结果</h3>
+<div class="outline-text-3" id="text-orgc0a812a">
 </div>
-<div id="outline-container-org14cb494" class="outline-4">
-<h4 id="org14cb494">cache-max-memory-size = 1048576000</h4>
-<div class="outline-text-4" id="text-org14cb494">
+<div id="outline-container-orgd2e0d24" class="outline-4">
+<h4 id="orgd2e0d24">cache-max-memory-size = 1048576000</h4>
+<div class="outline-text-4" id="text-orgd2e0d24">
 <div class="org-src-container">
 <pre class="src src-text">Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m0.002119678s, 4m59.99979986s, 2.319818ms
@@ -260,9 +260,9 @@ Status Codes  [code:count]             204:1230069  0:268819  500:1112
 </div>
 </div>
 
-<div id="outline-container-org723d3ba" class="outline-4">
-<h4 id="org723d3ba">cache-max-memory-size = 209715200</h4>
-<div class="outline-text-4" id="text-org723d3ba">
+<div id="outline-container-orgf2c9b61" class="outline-4">
+<h4 id="orgf2c9b61">cache-max-memory-size = 209715200</h4>
+<div class="outline-text-4" id="text-orgf2c9b61">
 <div class="org-src-container">
 <pre class="src src-text">Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m0.000206298s, 4m59.999799885s, 406.413µs
@@ -293,9 +293,9 @@ Status Codes  [code:count]             204:1399733  0:97573  500:2694
 </div>
 </div>
 
-<div id="outline-container-org5fa3266" class="outline-3">
-<h3 id="org5fa3266">粗糙的结论</h3>
-<div class="outline-text-3" id="text-org5fa3266">
+<div id="outline-container-org537bc4c" class="outline-3">
+<h3 id="org537bc4c">粗糙的结论</h3>
+<div class="outline-text-3" id="text-org537bc4c">
 <p>
 即便使用了较大的缓存大小，也没有什么改善，cache 的大小应该已经足够了，可以做一个反向实验进行验证，将所有 size 都设置为原来的 1024 分之一会如何。失败率，大幅提升，应该就是 design 中说的当缓存不足同时正好还在压缩快照的时候，有大量的写库请求到来，缓存拒绝写入，直接返回失败。
 </p>
@@ -303,26 +303,26 @@ Status Codes  [code:count]             204:1399733  0:97573  500:2694
 </div>
 </div>
 
-<div id="outline-container-org20db2ab" class="outline-2">
-<h2 id="org20db2ab">阶段性反思</h2>
-<div class="outline-text-2" id="text-org20db2ab">
+<div id="outline-container-orge8156b5" class="outline-2">
+<h2 id="orge8156b5">阶段性反思</h2>
+<div class="outline-text-2" id="text-orge8156b5">
 <p>
 在前面的几次试验中，均发现 influxdb 占用非常高的 cpu 和内存的情况。
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgd91008a" class="outline-2">
-<h2 id="orgd91008a">influxdb v0.13 测试</h2>
-<div class="outline-text-2" id="text-orgd91008a">
+<div id="outline-container-org4c4aa33" class="outline-2">
+<h2 id="org4c4aa33">influxdb v0.13 测试</h2>
+<div class="outline-text-2" id="text-org4c4aa33">
 <p>
 既然原因可能出现在 influxdb 自身实现的问题，那么换用高版本的 influxdb 可能解决问题。编译 v0.13，进行五分钟压力测试。
 </p>
 </div>
 
-<div id="outline-container-org506b48c" class="outline-3">
-<h3 id="org506b48c">测试结果</h3>
-<div class="outline-text-3" id="text-org506b48c">
+<div id="outline-container-org8730d4d" class="outline-3">
+<h3 id="org8730d4d">测试结果</h3>
+<div class="outline-text-3" id="text-org8730d4d">
 <div class="org-src-container">
 <pre class="src src-text">Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m0.000176914s, 4m59.999799839s, 377.075µs
@@ -352,9 +352,9 @@ Status Codes  [code:count]             204:1360446  0:139554
 </div>
 </div>
 
-<div id="outline-container-orgd9f8941" class="outline-3">
-<h3 id="orgd9f8941">粗糙的结论</h3>
-<div class="outline-text-3" id="text-orgd9f8941">
+<div id="outline-container-org74a4e4c" class="outline-3">
+<h3 id="org74a4e4c">粗糙的结论</h3>
+<div class="outline-text-3" id="text-org74a4e4c">
 <p>
 几乎没有什么变化。
 </p>
@@ -362,9 +362,9 @@ Status Codes  [code:count]             204:1360446  0:139554
 </div>
 </div>
 
-<div id="outline-container-org0fca312" class="outline-2">
-<h2 id="org0fca312">influxdb master (v1.0) 测试</h2>
-<div class="outline-text-2" id="text-org0fca312">
+<div id="outline-container-org21226fe" class="outline-2">
+<h2 id="org21226fe">influxdb master (v1.0) 测试</h2>
+<div class="outline-text-2" id="text-org21226fe">
 <p>
 直接编译安装最新 master 分支上的 influxdb，进行测试。这里测试脚本的第四行需要改成。
 </p>
@@ -379,9 +379,9 @@ influxdb 新版本中，对所有写入请求全部需要使用 POST。
 </p>
 </div>
 
-<div id="outline-container-org779009f" class="outline-3">
-<h3 id="org779009f">测试结果</h3>
-<div class="outline-text-3" id="text-org779009f">
+<div id="outline-container-orgef03ed5" class="outline-3">
+<h3 id="orgef03ed5">测试结果</h3>
+<div class="outline-text-3" id="text-orgef03ed5">
 <div class="org-src-container">
 <pre class="src src-text">Requests      [total, rate]            1500000, 5000.00
 Duration      [total, attack, wait]    5m0.0008003s, 4m59.9998s, 1.0003ms
@@ -411,17 +411,17 @@ Status Codes  [code:count]             204:1499858  0:142
 </div>
 </div>
 
-<div id="outline-container-org197ca23" class="outline-3">
-<h3 id="org197ca23">再使用 gcvis 查看 gc 状态的一分钟测试</h3>
-<div class="outline-text-3" id="text-org197ca23">
+<div id="outline-container-org2fcb2d8" class="outline-3">
+<h3 id="org2fcb2d8">再使用 gcvis 查看 gc 状态的一分钟测试</h3>
+<div class="outline-text-3" id="text-org2fcb2d8">
 <p>
 最后做一个 gc 和响应时间的关联测试。这里用 <a href="http://github.com/davecheney/gcvis">gcvis</a> 做 gc 可视化，便于比较。
 </p>
 </div>
 
-<div id="outline-container-org5ef8e95" class="outline-4">
-<h4 id="org5ef8e95">测试结果</h4>
-<div class="outline-text-4" id="text-org5ef8e95">
+<div id="outline-container-org9f34b87" class="outline-4">
+<h4 id="org9f34b87">测试结果</h4>
+<div class="outline-text-4" id="text-org9f34b87">
 <div class="org-src-container">
 <pre class="src src-text">Requests      [total, rate]            37297, 5000.13
 Duration      [total, attack, wait]    7.459466659s, 7.459199917s, 266.742µs
@@ -434,13 +434,13 @@ Status Codes  [code:count]             204:37297
 </div>
 
 
-<div id="org59261c0" class="figure">
+<div id="org55f0847" class="figure">
 <p><img src="/assets/blog/2016/07/30/performance-test-of-influxdb/gc.png" alt="/assets/blog/2016/07/30/performance-test-of-influxdb/gc.png" width="100%" />
 </p>
 </div>
 
 
-<div id="org2b958ca" class="figure">
+<div id="org11f4fd6" class="figure">
 <p><img src="/assets/blog/2016/07/30/performance-test-of-influxdb/vegeta-plot.png" alt="/assets/blog/2016/07/30/performance-test-of-influxdb/vegeta-plot.png" width="100%" />
 </p>
 </div>
@@ -449,9 +449,9 @@ Status Codes  [code:count]             204:37297
 </div>
 
 
-<div id="outline-container-org58602ab" class="outline-3">
-<h3 id="org58602ab">粗糙的结论</h3>
-<div class="outline-text-3" id="text-org58602ab">
+<div id="outline-container-org311ae56" class="outline-3">
+<h3 id="org311ae56">粗糙的结论</h3>
+<div class="outline-text-3" id="text-org311ae56">
 <p>
 influxdb v1.0 在 5 分钟压力测试时，成功率几乎达到 100%，最长响应时间在 1s 以下，稳定性和性能都得到了大幅提升。所以还是等待最新版的 influxdb 吧。
 </p>

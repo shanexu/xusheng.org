@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>从源代码安装golang - org-page</title>
+    <title>Linux系统搬家 - org-page</title>
     <meta charset="utf-8" />
-    <meta name="author" content="shanexu" />
-    <meta name="description" content="how to install golang from source" />
-    <meta name="keywords" content="golang" />
+    <meta name="author" content="Shane Xu" />
+    <meta name="description" content="&lt;TODO: insert your description here&gt;" />
+    <meta name="keywords" content="linux" />
     <link rel="stylesheet" href="/media/css/main.css" type="text/css">
     <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
@@ -30,53 +30,81 @@
 
 <div>
 <div class="post">
-<h1>从源代码安装golang</h1>
+<h1>Linux系统搬家</h1>
+
+<div id="outline-container-org7d7b229" class="outline-2">
+<h2 id="org7d7b229">起因</h2>
+<div class="outline-text-2" id="text-org7d7b229">
 <p>
-本文的的主要内容来自golang源代码中的 <a href="https://github.com/golang/go/blob/master/doc/install-source.html">install-source.html</a> 内容。
+终于有大片的时间让我得以解决长期困扰我的问题——系统空间不足。之前做了权宜之计，
+将 <code>/home/&lt;用户名&gt;/Downloads</code> 、 <code>/home/&lt;用户名&gt;/src</code>  、 <code>/home/&lt;用户名&gt;/OneDrive</code>
+三个目录搬到一块2014买的256G的三星固态硬盘上。2014年啊，可见当时是多无奈。
+遂决定购置一块1TB的新硬盘插到机器上，然后将 <code>/</code> 整体搬到新硬盘上，然后将老硬盘（500GB）
+分一个区，作为 <code>/home</code> 的挂载点。
 </p>
-
-<div id="outline-container-orge69cd47" class="outline-2">
-<h2 id="orge69cd47">克隆源代码</h2>
-<div class="outline-text-2" id="text-orge69cd47">
-<div class="org-src-container">
-<pre class="src src-shell">git clone https://github.com/golang/go.git
-</pre>
-</div>
 </div>
 </div>
 
-<div id="outline-container-org0894975" class="outline-2">
-<h2 id="org0894975">安装bootstrap binar</h2>
-<div class="outline-text-2" id="text-org0894975">
+<div id="outline-container-org98fd301" class="outline-2">
+<h2 id="org98fd301">实操</h2>
+<div class="outline-text-2" id="text-org98fd301">
+</div>
+<div id="outline-container-org77b3015" class="outline-3">
+<h3 id="org77b3015">现状</h3>
+<div class="outline-text-3" id="text-org77b3015">
 <p>
-go1.4以后golang工具链全都由golang编译，所以从源码安装golang需要一个bootstrap环境，也就是说需要一个golang编译器。这里可以通过系统的包管理器安装go1.4后的版本。
+使用fdkis命令查看现状
 </p>
 <div class="org-src-container">
-<pre class="src src-shell">brew install go
+<pre class="src src-shell">sudo fdisk -l
+</pre>
+</div>
+
+<p>
+这里简化下输出
+</p>
+<div class="org-src-container">
+<pre class="src src-text">
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org9ce2bcb" class="outline-2">
-<h2 id="org9ce2bcb">编译安装</h2>
-<div class="outline-text-2" id="text-org9ce2bcb">
+<div id="outline-container-orgd07a574" class="outline-3">
+<h3 id="orgd07a574">克隆系统</h3>
+<div class="outline-text-3" id="text-orgd07a574">
+<p>
+使用liveCD启动系统后克隆磁盘
+</p>
 <div class="org-src-container">
-<pre class="src src-shell">cd go/src
-GOROOT_BOOTSTRAP=/usr/local/opt/go/libexec ./all.bash
+<pre class="src src-shell">dd if=/dev/sda of=/dev/sdb bs=64K conv=noerror,sync status=progress
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org66d1f90" class="outline-2">
-<h2 id="org66d1f90">检查</h2>
-<div class="outline-text-2" id="text-org66d1f90">
-<div class="org-src-container">
-<pre class="src src-text">$ ../bin/go version
-go version devel +739bf6b929 Fri Sep 27 21:17:15 2019 +0000 darwin/amd64
-</pre>
+<div id="outline-container-orgf033906" class="outline-3">
+<h3 id="orgf033906">调整磁盘UUID</h3>
 </div>
+
+<div id="outline-container-orgf388c96" class="outline-3">
+<h3 id="orgf388c96">老磁盘格式化并创建分区，并复制数据</h3>
+</div>
+
+<div id="outline-container-org1e6ff16" class="outline-3">
+<h3 id="org1e6ff16">调整配置文件 <code>/etc/fstab</code></h3>
+</div>
+
+<div id="outline-container-org5bb86cc" class="outline-3">
+<h3 id="org5bb86cc">重新安装grub</h3>
+</div>
+
+<div id="outline-container-orgb2bedd9" class="outline-3">
+<h3 id="orgb2bedd9">调整新磁盘的分区大小</h3>
+</div>
+
+<div id="outline-container-orgafd9dc9" class="outline-3">
+<h3 id="orgafd9dc9">重启祈福</h3>
 </div>
 </div>
 
@@ -84,18 +112,18 @@ go version devel +739bf6b929 Fri Sep 27 21:17:15 2019 +0000 darwin/amd64
 </div>
     <div>
       <div class="post-meta">
-        <span title="post date" class="post-info">2019-09-28</span>
-        <span title="last modification date" class="post-info">2019-09-28</span>
-        <span title="tags" class="post-info"><a href="/tags/go/">go</a></span>
-        <span title="author" class="post-info">shanexu</span>
+        <span title="post date" class="post-info">2024-07-27</span>
+        <span title="last modification date" class="post-info">2024-07-27</span>
+        <span title="tags" class="post-info"><a href="/tags/linux/">linux</a></span>
+        <span title="author" class="post-info">Shane Xu</span>
       </div>
       <section>
         <h1>Comments</h1>
         <div id="disqus_thread"></div>
         <script type="text/javascript">
           //var disqus_developer = 1;
-          var disqus_identifier = "/blog/2019/09/28/install-golang-from-source";
-          var disqus_url = "https://xusheng.org/blog/2019/09/28/install-golang-from-source";
+          var disqus_identifier = "/blog/2024/07/27/linux-system-move";
+          var disqus_url = "https://xusheng.org/blog/2024/07/27/linux-system-move";
           var disqus_shortname = 'shanexu';
           /* * * DON'T EDIT BELOW THIS LINE * * */
           (function() {
@@ -127,7 +155,7 @@ go version devel +739bf6b929 Fri Sep 27 21:17:15 2019 +0000 darwin/amd64
       <div class="footer">
         <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 29.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
-          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">shanexu</a>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:shane &lt;at&gt; 192 &lt;dot&gt; 168 &lt;dot&gt; 3 &lt;dot&gt; 136">Shane Xu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;
           Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
           <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>

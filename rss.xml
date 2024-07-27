@@ -4,10 +4,17 @@
     <title>org-page</title>
     <link>https://xusheng.org</link>
     <description>static site generator</description>
-    <pubDate>Fri, 26 Jul 2024 10:47:32 CST</pubDate>
-    <lastBuildDate>Fri, 26 Jul 2024 10:47:32 CST</lastBuildDate>
+    <pubDate>Sat, 27 Jul 2024 11:22:50 CST</pubDate>
+    <lastBuildDate>Sat, 27 Jul 2024 11:22:50 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
+    <item>
+      <title>Linux系统搬家</title>
+      <link>https://xusheng.org/blog/2024/07/27/linux-system-move</link>
+      <description><![CDATA[<TODO: insert your description here>]]></description>
+      <pubDate>2024-07-27</pubDate>
+      <guid>https://xusheng.org/blog/2024/07/27/linux-system-move</guid>
+    </item>
     <item>
       <title>2019 1024</title>
       <link>https://xusheng.org/blog/2019/10/24/2019-1024</link>
@@ -70,13 +77,6 @@
       <description><![CDATA[js 图片拼字 js 效果]]></description>
       <pubDate>2020-07-24</pubDate>
       <guid>https://xusheng.org/blog/2016/07/13/image-text</guid>
-    </item>
-    <item>
-      <title>nix作为包管理工具并用于发布软件的可行性研究</title>
-      <link>https://xusheng.org/blog/2020/01/06/nix</link>
-      <description><![CDATA[nix]]></description>
-      <pubDate>2020-02-16</pubDate>
-      <guid>https://xusheng.org/blog/2020/01/06/nix</guid>
     </item>
   </channel>
 </rss>
