@@ -17,3 +17,32 @@
 分一个区，作为 ~/home~ 的挂载点。
 
 * 实操
+
+** 现状
+使用fdkis命令查看现状
+#+begin_src shell
+sudo fdisk -l
+#+end_src
+
+这里简化下输出
+#+begin_src text
+
+#+end_src
+
+** 克隆系统
+使用liveCD启动系统后克隆磁盘
+#+begin_src shell
+dd if=/dev/sda of=/dev/sdb bs=64K conv=noerror,sync status=progress
+#+end_src
+
+** 调整磁盘UUID
+
+** 老磁盘格式化并创建分区，并复制数据
+
+** 调整配置文件 ~/etc/fstab~
+
+** 重新安装grub
+
+** 调整新磁盘的分区大小
+
+** 重启祈福
