@@ -1,0 +1,19 @@
+#+TITLE:       Linux系统搬家
+#+AUTHOR:      Shane Xu
+#+EMAIL:       shane@192.168.3.136
+#+DATE:        2024-07-27 Sat
+#+URI:         /blog/%y/%m/%d/linux-system-move
+#+KEYWORDS:    linux
+#+TAGS:        linux
+#+LANGUAGE:    en
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: <TODO: insert your description here>
+
+* 起因
+终于有大片的时间让我得以解决长期困扰我的问题——系统空间不足。之前做了权宜之计，
+将 ~/home/<用户名>/Downloads~ 、 ~/home/<用户名>/src~  、 ~/home/<用户名>/OneDrive~
+三个目录搬到一块2014买的256G的三星固态硬盘上。2014年啊，可见当时是多无奈。
+遂决定购置一块1TB的新硬盘插到机器上，然后将 ~/~ 整体搬到新硬盘上，然后将老硬盘（500GB）
+分一个区，作为 ~/home~ 的挂载点。
+
+* 实操
