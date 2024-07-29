@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    return;
     /*******************************************************************
      * 1. replace css class "src" and "example" with "prettyprint", for
      *    prettify.js to render
