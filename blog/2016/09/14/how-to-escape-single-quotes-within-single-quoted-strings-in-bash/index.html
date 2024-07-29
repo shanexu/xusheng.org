@@ -7,8 +7,8 @@
     <meta name="description" content="How to escape single-quotes within single-quoted strings in bash" />
     <meta name="keywords" content="bash" />
     <link rel="stylesheet" href="/media/css/main.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
+
   <body class="container">
     <div>
       <header class="masthead">
@@ -43,15 +43,15 @@ Kapacitor的这个接口其实很简单，就是往 <code>/kapacitor/v1/tasks</c
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">curl -X POST -H "Content-Type: application/json" -d '
-{
-    "id" : "quote1",
-    "type" : "stream",
-    "dbrps": [{"db": "udp", "rp" : "autogen"}],
-    "script": "stream|from().measurement(\'quote\')|alert().crit(lambda: \"price\" &lt; 174).log(\'/tmp/price1.log\')",
-    "status": "enabled"
-}
-' "http://127.0.0.1:9092/kapacitor/v1/tasks"
+<pre class="src src-bash"><span style="color: #4078f2; font-weight: bold;">curl</span> <span style="color: #b751b6;">-X</span> POST <span style="color: #b751b6;">-H</span> <span style="color: #50a14f;">"Content-Type: application/json"</span> <span style="color: #b751b6;">-d</span> <span style="color: #50a14f;">'</span>
+<span style="color: #50a14f;">{</span>
+<span style="color: #50a14f;">    "id" : "quote1",</span>
+<span style="color: #50a14f;">    "type" : "stream",</span>
+<span style="color: #50a14f;">    "dbrps": [{"db": "udp", "rp" : "autogen"}],</span>
+<span style="color: #50a14f;">    "script": "stream|from().measurement(\'</span>quote\'<span style="color: #e45649; font-weight: bold;">)</span><span style="color: #e45649;">|</span><span style="color: #a626a4;">alert</span><span style="color: #e45649; font-weight: bold;">()</span>.crit<span style="color: #e45649; font-weight: bold;">(</span><span style="color: #4078f2; font-weight: bold;">lambda:</span> \"price\" <span style="color: #e45649;">&lt;</span> <span style="color: #da8548; font-weight: bold;">174</span><span style="color: #e45649; font-weight: bold;">)</span><span style="color: #4078f2; font-weight: bold;">.log</span><span style="color: #e45649; font-weight: bold;">(</span><span style="color: #4078f2; font-weight: bold;">\'/tmp/price1.log\'</span><span style="color: #e45649; font-weight: bold;">)</span><span style="color: #50a14f;">",</span>
+<span style="color: #50a14f;">    "</span>status<span style="color: #50a14f;">": "</span>enabled<span style="color: #50a14f;">"</span>
+<span style="color: #50a14f;">}</span>
+<span style="color: #50a14f;">' "</span>http://<span style="color: #da8548; font-weight: bold;">127.0.0.1:9092</span>/kapacitor/v1/tasks<span style="color: #50a14f;">"</span>
 </pre>
 </div>
 
@@ -70,15 +70,15 @@ Kapacitor的这个接口其实很简单，就是往 <code>/kapacitor/v1/tasks</c
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">curl -X POST -H "Content-Type: application/json" -d '
-{
-    "id" : "quote1",
-    "type" : "stream",
-    "dbrps": [{"db": "udp", "rp" : "autogen"}],
-    "script": "stream|from().measurement('"'"'quote'"'"')|alert().crit(lambda: \"price\" &lt; 174).log('"'"'/tmp/price1.log'"'"')",
-    "status": "enabled"
-}
-' "http://127.0.0.1:9092/kapacitor/v1/tasks"
+<pre class="src src-bash"><span style="color: #4078f2; font-weight: bold;">curl</span> <span style="color: #b751b6;">-X</span> POST <span style="color: #b751b6;">-H</span> <span style="color: #50a14f;">"Content-Type: application/json"</span> <span style="color: #b751b6;">-d</span> <span style="color: #50a14f;">'</span>
+<span style="color: #50a14f;">{</span>
+<span style="color: #50a14f;">    "id" : "quote1",</span>
+<span style="color: #50a14f;">    "type" : "stream",</span>
+<span style="color: #50a14f;">    "dbrps": [{"db": "udp", "rp" : "autogen"}],</span>
+<span style="color: #50a14f;">    "script": "stream|from().measurement('"'"'quote'"'"')|alert().crit(lambda: \"price\" &lt; 174).log('"'"'/tmp/price1.log'"'"')",</span>
+<span style="color: #50a14f;">    "status": "enabled"</span>
+<span style="color: #50a14f;">}</span>
+<span style="color: #50a14f;">'</span> <span style="color: #50a14f;">"http://127.0.0.1:9092/kapacitor/v1/tasks"</span>
 </pre>
 </div>
 
@@ -91,8 +91,8 @@ Kapacitor的这个接口其实很简单，就是往 <code>/kapacitor/v1/tasks</c
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">echo $'It\'s Shell Programming'  # ksh, bash, and zsh only, does not expand variables
-echo 'It'\''s Shell Programming' # all shells, single quote is outside the quotes
+<pre class="src src-bash"><span style="color: #a626a4; font-weight: bold;">echo</span> $'It\'s Shell Programming'  <span style="color: #9ca0a4;"># ksh, bash, and zsh only, does not expand variables</span>
+<span style="color: #a626a4; font-weight: bold;">echo</span> <span style="color: #50a14f;">'It'</span>\'<span style="color: #50a14f;">'s Shell Programming'</span> <span style="color: #9ca0a4;"># all shells, single quote is outside the quotes</span>
 </pre>
 </div>
 
@@ -232,15 +232,15 @@ The expanded result is single-quoted, as if the dollar sign had not been present
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">curl -X POST -H "Content-Type: application/json" -d $'
+<pre class="src src-bash"><span style="color: #4078f2; font-weight: bold;">curl</span> <span style="color: #b751b6;">-X</span> POST <span style="color: #b751b6;">-H</span> <span style="color: #50a14f;">"Content-Type: application/json"</span> <span style="color: #b751b6;">-d</span> $'
 {
     "id" : "quote1",
     "type" : "stream",
     "dbrps": [{"db": "udp", "rp" : "autogen"}],
-    "script": "stream|from().measurement(\'quote\')|alert().crit(lambda: \\"price\\" &lt; 174).log(\'/tmp/price1.log\')",
+    "script": "stream|from().measurement(\'quote\'<span style="color: #e45649; font-weight: bold;">)</span>|alert<span style="color: #e45649; font-weight: bold;">()</span>.crit<span style="color: #e45649; font-weight: bold;">(</span>lambda: \\"price\\" &lt; <span style="color: #da8548; font-weight: bold;">174</span><span style="color: #e45649; font-weight: bold;">)</span>.log<span style="color: #e45649; font-weight: bold;">(</span>\'/tmp/price1.log\'<span style="color: #e45649; font-weight: bold;">)</span>",
     "status": "enabled"
 }
-' "http://127.0.0.1:9092/kapacitor/v1/tasks"
+' <span style="color: #50a14f;">"http://127.0.0.1:9092/kapacitor/v1/tasks"</span>
 </pre>
 </div>
 
@@ -279,7 +279,6 @@ The expanded result is single-quoted, as if the dollar sign had not been present
        <noscript>You must have JavaScript enabled to use the comments.</noscript>
       </section>
       <script src="//code.jquery.com/jquery-latest.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
       <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="/media/js/main.js"></script>
       <script type="text/javascript">

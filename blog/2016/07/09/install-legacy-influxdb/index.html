@@ -7,8 +7,8 @@
     <meta name="description" content="install legacy version of influxdb" />
     <meta name="keywords" content="influxdb" />
     <link rel="stylesheet" href="/media/css/main.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
+
   <body class="container">
     <div>
       <header class="masthead">
@@ -37,15 +37,14 @@
 <p>
 因为工作需要，所以接触了 influxdb，而工作中用的 <a href="https://influxdata.com/">influxdb</a> 的版本则是 0.10.2 的版本，官方只提供了最新稳定版的下载。看了官网的角角落落，也没有找到明显的下载地方，那就只有自己编译了。以下内容基本都是 influxdb 源码中 CONTRIBUTING.md 中的内容。
 </p>
-
-<div id="outline-container-org095f6ed" class="outline-2">
-<h2 id="org095f6ed">安装 Go</h2>
-<div class="outline-text-2" id="text-org095f6ed">
+<div id="outline-container-orgb833bc6" class="outline-2">
+<h2 id="orgb833bc6">安装 Go</h2>
+<div class="outline-text-2" id="text-orgb833bc6">
 <p>
 InfluxDB 0.10.2 需要 Go 1.4.3。目前 Go 的稳定版已经跑到 1.6.2 了。和很多语言一样（例如 node 的 nvm, ruby 的 rvm），Go 也出现了版本管理工具 <a href="https://github.com/moovweb/gvm">gvm</a> 。可以用下面命令安装 gvm
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">bash &lt; &lt;(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
+<pre class="src src-sh"><span style="color: #4078f2; font-weight: bold;">bash</span> <span style="color: #e45649;">&lt;</span> <span style="color: #e45649;">&lt;</span><span style="color: #4078f2;">(</span><span style="color: #4078f2; background-color: #fafafa; font-weight: bold;">curl</span><span style="color: #383a42; background-color: #fafafa;"> </span><span style="color: #b751b6; background-color: #fafafa;">-s</span><span style="color: #383a42; background-color: #fafafa;"> </span><span style="color: #b751b6; background-color: #fafafa;">-S</span><span style="color: #383a42; background-color: #fafafa;"> </span><span style="color: #b751b6; background-color: #fafafa;">-L</span><span style="color: #383a42; background-color: #fafafa;"> https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer</span><span style="color: #4078f2;">)</span>
 </pre>
 </div>
 <p>
@@ -53,53 +52,52 @@ InfluxDB 0.10.2 需要 Go 1.4.3。目前 Go 的稳定版已经跑到 1.6.2 了�
 然后安装 Go。
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">gvm install go1.4.2 -B #mac 可能需要先安装 go1.4.2 的 binary 版本
-gvm install go1.4.3
-gvm use go1.4.3 --default #可以不设置为 default, 下次使用时需要执行这条命令
+<pre class="src src-sh"><span style="color: #4078f2; font-weight: bold;">gvm</span> install go1.4.2 <span style="color: #b751b6;">-B</span> <span style="color: #9ca0a4;">#mac &#21487;&#33021;&#38656;&#35201;&#20808;&#23433;&#35013; go1.4.2 &#30340; binary &#29256;&#26412;</span>
+<span style="color: #4078f2; font-weight: bold;">gvm</span> install go1.4.3
+<span style="color: #4078f2; font-weight: bold;">gvm</span> use go1.4.3 <span style="color: #b751b6;">--default</span> <span style="color: #9ca0a4;">#&#21487;&#20197;&#19981;&#35774;&#32622;&#20026; default, &#19979;&#27425;&#20351;&#29992;&#26102;&#38656;&#35201;&#25191;&#34892;&#36825;&#26465;&#21629;&#20196;</span>
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgfb57d96" class="outline-2">
-<h2 id="orgfb57d96">安装版本控制系统</h2>
-<div class="outline-text-2" id="text-orgfb57d96">
+<div id="outline-container-orgf5f903f" class="outline-2">
+<h2 id="orgf5f903f">安装版本控制系统</h2>
+<div class="outline-text-2" id="text-orgf5f903f">
 <p>
 Go 能够通过版本控制系统引入远端的包，目前 influxdb 只依赖于 <code>git</code> 和 <code>mercurial</code>
 </p>
 </div>
-<div id="outline-container-org8b27b25" class="outline-3">
-<h3 id="org8b27b25">安装 <a href="http://git-scm.com/book/en/Getting-Started-Installing-Git">Git</a></h3>
-<div class="outline-text-3" id="text-org8b27b25">
+<div id="outline-container-orge574a1f" class="outline-3">
+<h3 id="orge574a1f">安装 <a href="http://git-scm.com/book/en/Getting-Started-Installing-Git">Git</a></h3>
+<div class="outline-text-3" id="text-orge574a1f">
 <div class="org-src-container">
-<pre class="src src-sh">brew install git
+<pre class="src src-sh"><span style="color: #4078f2; font-weight: bold;">brew</span> install git
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgcee63df" class="outline-3">
-<h3 id="orgcee63df">安装 <a href="http://mercurial.selenic.com/wiki/Download">Mercurial</a></h3>
-<div class="outline-text-3" id="text-orgcee63df">
+<div id="outline-container-org974ae4a" class="outline-3">
+<h3 id="org974ae4a">安装 <a href="http://mercurial.selenic.com/wiki/Download">Mercurial</a></h3>
+<div class="outline-text-3" id="text-org974ae4a">
 <div class="org-src-container">
-<pre class="src src-sh">brew install mercurial
+<pre class="src src-sh"><span style="color: #4078f2; font-weight: bold;">brew</span> install mercurial
 </pre>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orgae2fa45" class="outline-2">
-<h2 id="orgae2fa45">下载源代码</h2>
-<div class="outline-text-2" id="text-orgae2fa45">
+<div id="outline-container-org6f83455" class="outline-2">
+<h2 id="org6f83455">下载源代码</h2>
+<div class="outline-text-2" id="text-org6f83455">
 <p>
 设置项目结构并从仓库中获取代码：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">mkdir $HOME/gocodez
-export GOPATH=$HOME/gocodez
-mkdir -p $GOPATH/src/github.com/influxdb
-cd $GOPATH/src/github.com/influxdb
-git clone https://github.com/influxdata/influxdb.git
-git checkout v0.10.2
+<pre class="src src-sh"><span style="color: #4078f2; font-weight: bold;">mkdir</span> <span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">HOME</span>/gocodez
+<span style="color: #e45649;">export</span> <span style="color: #6a1868; font-style: italic;">GOPATH</span>=<span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">HOME</span>/gocodez
+<span style="color: #4078f2; font-weight: bold;">mkdir</span> <span style="color: #b751b6;">-p</span> <span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">GOPATH</span>/src/github.com/influxdb
+<span style="color: #a626a4; font-weight: bold;">cd</span> <span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">GOPATH</span>/src/github.com/influxdb
+<span style="color: #4078f2; font-weight: bold;">git</span> clone https://github.com/influxdata/influxdb.git
+<span style="color: #4078f2; font-weight: bold;">git</span> checkout v0.10.2
 </pre>
 </div>
 <p>
@@ -107,16 +105,15 @@ git checkout v0.10.2
 </p>
 </div>
 </div>
-
-<div id="outline-container-orged22ec3" class="outline-2">
-<h2 id="orged22ec3">编译和测试</h2>
-<div class="outline-text-2" id="text-orged22ec3">
+<div id="outline-container-org813fb46" class="outline-2">
+<h2 id="org813fb46">编译和测试</h2>
+<div class="outline-text-2" id="text-org813fb46">
 <p>
 确保 Go 已经正确安装，然后执行以下命令。可能需要翻墙。
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">cd $GOPATH/src/github.com/influxdb/influxdb
-go get -t ./...
+<pre class="src src-sh"><span style="color: #a626a4; font-weight: bold;">cd</span> <span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">GOPATH</span>/src/github.com/influxdb/influxdb
+<span style="color: #4078f2; font-weight: bold;">go</span> get <span style="color: #b751b6;">-t</span> ./...
 </pre>
 </div>
 <p>
@@ -124,26 +121,26 @@ go get -t ./...
 在这个过程中可能会碰到编译出错的问题，比如：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh"># github.com/influxdb/influxdb/tsdb/engine/tsm1                                   
-tsdb/engine/tsm1/int.go:271: cannot use d.values (type []uint64) as type *[240]uint64 in argument to simple8b.Decode
+<pre class="src src-sh"><span style="color: #9ca0a4;"># github.com/influxdb/influxdb/tsdb/engine/tsm1                                   </span>
+<span style="color: #4078f2; font-weight: bold;">tsdb/engine/tsm1/int.go:271:</span> cannot use d.values <span style="color: #4078f2;">(</span><span style="color: #e45649; font-weight: bold;">type</span> <span style="color: #a626a4;">[]</span>uint64<span style="color: #4078f2;">)</span> <span style="color: #4078f2; font-weight: bold;">as</span> type *<span style="color: #4078f2;">[</span><span style="color: #da8548; font-weight: bold;">240</span><span style="color: #4078f2;">]</span>uint64 in argument to simple8b.Decode
 </pre>
 </div>
 <p>
 类型不一致问题，可能是现在用来编译 influxdb 的第三方库的版本和当时的不一样，因为 go get 命令只会从代码仓库中检出最新的 master，所以我们要检出历史版本。
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">cd $GOPATH/src/github.com/jwilder/encoding/simple8b
-git checkout 07d88d4f35eec497617bee0c7bfe651a796dae13
-cd $GOPATH/src/github.com/influxdb/influxdb
-go get -t ./...
+<pre class="src src-sh"><span style="color: #a626a4; font-weight: bold;">cd</span> <span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">GOPATH</span>/src/github.com/jwilder/encoding/simple8b
+<span style="color: #4078f2; font-weight: bold;">git</span> checkout <span style="color: #da8548; font-weight: bold;">07d88d4f35eec497617bee0c7bfe651a796dae13</span>
+<span style="color: #a626a4; font-weight: bold;">cd</span> <span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">GOPATH</span>/src/github.com/influxdb/influxdb
+<span style="color: #4078f2; font-weight: bold;">go</span> get <span style="color: #b751b6;">-t</span> ./...
 </pre>
 </div>
 <p>
 编译并安装到本地。
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">go clean ./...
-go install ./...
+<pre class="src src-sh"><span style="color: #4078f2; font-weight: bold;">go</span> clean ./...
+<span style="color: #4078f2; font-weight: bold;">go</span> install ./...
 </pre>
 </div>
 <p>
@@ -151,22 +148,21 @@ go install ./...
 可以通过添加编译 flag 来设置编译出来的二进制文件的版本号和 commit 号：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">-ldflags="-X main.version=$VERSION -X main.branch=$BRANCH -X main.commit=$COMMIT -X main.buildTime=$TIME"
+<pre class="src src-sh">-ldflags=<span style="color: #50a14f;">"-X main.version=</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">VERSION</span><span style="color: #50a14f;"> -X main.branch=</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">BRANCH</span><span style="color: #50a14f;"> -X main.commit=</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">COMMIT</span><span style="color: #50a14f;"> -X main.buildTime=</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">TIME</span><span style="color: #50a14f;">"</span>
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgd87a08b" class="outline-2">
-<h2 id="orgd87a08b">启动 InfluxDB</h2>
-<div class="outline-text-2" id="text-orgd87a08b">
+<div id="outline-container-org41ebac8" class="outline-2">
+<h2 id="org41ebac8">启动 InfluxDB</h2>
+<div class="outline-text-2" id="text-org41ebac8">
 <p>
 正常情况下，直接运行 influxd 就可以启动 influxdb 了。通过命令生成配置文件，修改后，在启动参数中加入 <code>-config filepath</code> 参数，就可以以指定配置文件启动 influxdb。
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">$GOPATH/bin/influxd config &gt; influxd.conf
-vim influxd.conf # 修改配置文件
-$GOPATH/bin/influxd -config influxd.conf
+<pre class="src src-sh"><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">GOPATH</span>/bin/influxd config <span style="color: #e45649;">&gt;</span> influxd.conf
+<span style="color: #4078f2; font-weight: bold;">vim</span> influxd.conf <span style="color: #9ca0a4;"># &#20462;&#25913;&#37197;&#32622;&#25991;&#20214;</span>
+<span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">GOPATH</span>/bin/influxd <span style="color: #b751b6;">-config</span> influxd.conf
 </pre>
 </div>
 </div>
@@ -203,7 +199,6 @@ $GOPATH/bin/influxd -config influxd.conf
        <noscript>You must have JavaScript enabled to use the comments.</noscript>
       </section>
       <script src="//code.jquery.com/jquery-latest.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
       <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="/media/js/main.js"></script>
       <script type="text/javascript">

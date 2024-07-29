@@ -7,8 +7,8 @@
     <meta name="description" content="install archlinux on MacbookPro 16inch" />
     <meta name="keywords" content="archlinux" />
     <link rel="stylesheet" href="/media/css/main.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
+
   <body class="container">
     <div>
       <header class="masthead">
@@ -34,10 +34,9 @@
 <div>
 <div class="post">
 <h1>Archlinux on MacbookPro 16inch</h1>
-
-<div id="outline-container-orgc22136c" class="outline-2">
-<h2 id="orgc22136c">起因</h2>
-<div class="outline-text-2" id="text-orgc22136c">
+<div id="outline-container-org92302ad" class="outline-2">
+<h2 id="org92302ad">起因</h2>
+<div class="outline-text-2" id="text-org92302ad">
 <p>
 <a href="https://www.reddit.com/r/emacs/comments/d2n2wh/emacs_is_slow_on_macos/">Emacs is slow on macOS</a>
 </p>
@@ -47,25 +46,23 @@
 </p>
 
 
-<div id="org497e9f8" class="figure">
+<div id="orgf004b65" class="figure">
 <p><img src="/assets/blog/2021/02/14/archlinux-on-macbookpro-16inch/Xnip2021-02-14_14-03-35.png" alt="Xnip2021-02-14_14-03-35.png" />
 </p>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org4893090" class="outline-2">
-<h2 id="org4893090">安装过程</h2>
-<div class="outline-text-2" id="text-org4893090">
+<div id="outline-container-org98e10ff" class="outline-2">
+<h2 id="org98e10ff">安装过程</h2>
+<div class="outline-text-2" id="text-org98e10ff">
 <p>
 基本全程参考这个文档。
 <a href="https://gist.github.com/TRPB/437f663b545d23cc8a2073253c774be3">https://gist.github.com/TRPB/437f663b545d23cc8a2073253c774be3</a>
 </p>
 </div>
-
-<div id="outline-container-orgbf783f3" class="outline-3">
-<h3 id="orgbf783f3">bootloader</h3>
-<div class="outline-text-3" id="text-orgbf783f3">
+<div id="outline-container-org886b58a" class="outline-3">
+<h3 id="org886b58a">bootloader</h3>
+<div class="outline-text-3" id="text-org886b58a">
 <p>
 安装过程颇为曲折，首先我将 <code>efi</code> 分区挂载到 <code>/efi</code> 。
 </p>
@@ -74,15 +71,15 @@
 <code>/etc/fstab</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-conf"># Static information about the filesystems.
-# See fstab(5) for details.
+<pre class="src src-conf"><span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">Static information about the filesystems.</span>
+<span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">See fstab(5) for details.</span>
 
-# &lt;file system&gt; &lt;dir&gt; &lt;type&gt; &lt;options&gt; &lt;dump&gt; &lt;pass&gt;
-# UUID=c598dc30-85fb-4d9b-bc2a-81fb2b7bbcc3
-/dev/nvme0n1p3      	/         	ext4      	rw,relatime	0 1
+<span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">&lt;file system&gt; &lt;dir&gt; &lt;type&gt; &lt;options&gt; &lt;dump&gt; &lt;pass&gt;</span>
+<span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">UUID=c598dc30-85fb-4d9b-bc2a-81fb2b7bbcc3</span>
+/dev/nvme0n1p3        /           ext4        rw,relatime 0 1
 
-# UUID=5F66-17ED LABEL=EFI
-/dev/nvme0n1p1      	/efi      	vfat      	rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro	0 2
+<span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">UUID=5F66-17ED LABEL=EFI</span>
+<span style="color: #6a1868;">/dev/nvme0n1p1        /efi        vfat        rw,relatime,fmask</span>=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro 0 2
 </pre>
 </div>
 
@@ -90,15 +87,14 @@
 使用了 <code>--removable</code> 选项安装grub，每次启动时，按住 <code>option</code> 键选择从 <code>efi</code> 分区启动。
 </p>
 <div class="org-src-container">
-<pre class="src src-shell-script">grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB --removable
+<pre class="src src-shell-script"><span style="color: #4078f2; font-weight: bold;">grub-install</span> <span style="color: #4078f2; font-weight: bold;">--target=x86_64-efi</span> <span style="color: #4078f2; font-weight: bold;">--efi-directory=/efi</span> <span style="color: #4078f2; font-weight: bold;">--bootloader-id=GRUB</span> <span style="color: #b751b6;">--removable</span>
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org6277144" class="outline-3">
-<h3 id="org6277144">内核</h3>
-<div class="outline-text-3" id="text-org6277144">
+<div id="outline-container-orgd069bec" class="outline-3">
+<h3 id="orgd069bec">内核</h3>
+<div class="outline-text-3" id="text-orgd069bec">
 <p>
 <a href="https://github.com/aunali1">Aun-Ali Zaidi</a> 打了补丁的内核 <a href="https://github.com/aunali1/linux-mbp-arch">linux-mbp-arch</a> 。
 </p>
@@ -107,41 +103,39 @@
 修改 <code>/etc/pacman.conf</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-conf">[mbp]
-SigLevel = Optional TrustAll
-Server = http://dl.t2linux.org/archlinux/$repo/$arch
+<pre class="src src-conf">[<span style="color: #986801;">mbp</span>]
+<span style="color: #6a1868;">SigLevel</span> = Optional TrustAll
+<span style="color: #6a1868;">Server</span> = http://dl.t2linux.org/archlinux/$repo/$arch
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-shell-script">sudo pacman -S linux-mbp linux-mbp-docs linux-mbp-headers
+<pre class="src src-shell-script"><span style="color: #4078f2; font-weight: bold;">sudo</span> pacman <span style="color: #b751b6;">-S</span> linux-mbp linux-mbp-docs linux-mbp-headers
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org540fc81" class="outline-3">
-<h3 id="org540fc81">键盘和触摸板</h3>
-<div class="outline-text-3" id="text-org540fc81">
+<div id="outline-container-org82fe9ef" class="outline-3">
+<h3 id="org82fe9ef">键盘和触摸板</h3>
+<div class="outline-text-3" id="text-org82fe9ef">
 <div class="org-src-container">
-<pre class="src src-shell-script">sudo pacman -S apple-bce-dkms-git
+<pre class="src src-shell-script"><span style="color: #4078f2; font-weight: bold;">sudo</span> pacman <span style="color: #b751b6;">-S</span> apple-bce-dkms-git
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-conf"># /etc/modules-load.d/apple-bce.conf
+<pre class="src src-conf"><span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">/etc/modules-load.d/apple-bce.conf</span>
 apple-bce
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org699dd80" class="outline-3">
-<h3 id="org699dd80">Touch Bar</h3>
-<div class="outline-text-3" id="text-org699dd80">
+<div id="outline-container-org1817cf6" class="outline-3">
+<h3 id="org1817cf6">Touch Bar</h3>
+<div class="outline-text-3" id="text-org1817cf6">
 <div class="org-src-container">
-<pre class="src src-shell-script">yay -G macbook12-spi-driver-dkms
-cd macbook12-spi-driver-dkms
+<pre class="src src-shell-script"><span style="color: #4078f2; font-weight: bold;">yay</span> <span style="color: #b751b6;">-G</span> macbook12-spi-driver-dkms
+<span style="color: #a626a4; font-weight: bold;">cd</span> macbook12-spi-driver-dkms
 </pre>
 </div>
 
@@ -149,44 +143,44 @@ cd macbook12-spi-driver-dkms
 修改 <code>PKGBUILD</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-shell-script"># Maintainer: Christoph Gysin &lt;christoph.gysin@gmail.com&gt;
-# Maintainer: Andrey Melentyev &lt;andrey.melentyev@protonmail.com&gt;
-_pkgbase=macbook12-spi-driver
-pkgname=(${_pkgbase}-dkms)
-pkgver=0+git.304
-pkgrel=1
-pkgdesc="Driver for the keyboard, touchpad and touchbar found in newer MacBook (Pro) models"
-arch=('i686' 'x86_64')
-url="https://github.com/roadrunner2/macbook12-spi-driver"
-license=('GPL2')
-groups=('')
-depends=('dkms')
-makedepends=('git')
-optdepends=()
-source=(git+https://github.com/shanexu/macbook12-spi-driver.git#branch=mbp15
-        dkms.conf)
-sha256sums=('SKIP'
-            'c79e6b20fb188b27ae92c63fabe6bfe1caff21bb7f3a2c14945323cee6bcc8fd')
+<pre class="src src-shell-script"><span style="color: #9ca0a4;"># Maintainer: Christoph Gysin <a href="mailto:christoph.gysin%40gmail.com">&lt;christoph.gysin@gmail.com&gt;</a></span>
+<span style="color: #9ca0a4;"># Maintainer: Andrey Melentyev <a href="mailto:andrey.melentyev%40protonmail.com">&lt;andrey.melentyev@protonmail.com&gt;</a></span>
+<span style="color: #6a1868; font-style: italic;">_pkgbase</span>=macbook12-spi-driver
+<span style="color: #6a1868; font-style: italic;">pkgname</span>=<span style="color: #4078f2;">(</span><span style="color: #e45649;">$</span><span style="color: #a626a4;">{</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">_pkgbase</span><span style="color: #a626a4;">}</span>-dkms<span style="color: #4078f2;">)</span>
+<span style="color: #6a1868; font-style: italic;">pkgver</span>=<span style="color: #da8548; font-weight: bold;">0+git.304</span>
+<span style="color: #6a1868; font-style: italic;">pkgrel</span>=<span style="color: #da8548; font-weight: bold;">1</span>
+<span style="color: #6a1868; font-style: italic;">pkgdesc</span>=<span style="color: #50a14f;">"Driver for the keyboard, touchpad and touchbar found in newer MacBook (Pro) models"</span>
+<span style="color: #6a1868; font-style: italic;">arch</span>=<span style="color: #4078f2;">(</span><span style="color: #50a14f;">'i686'</span> <span style="color: #50a14f;">'x86_64'</span><span style="color: #4078f2;">)</span>
+<span style="color: #6a1868; font-style: italic;">url</span>=<span style="color: #50a14f;">"https://github.com/roadrunner2/macbook12-spi-driver"</span>
+<span style="color: #6a1868; font-style: italic;">license</span>=<span style="color: #4078f2;">(</span><span style="color: #50a14f;">'GPL2'</span><span style="color: #4078f2;">)</span>
+<span style="color: #6a1868; font-style: italic;">groups</span>=<span style="color: #4078f2;">(</span><span style="color: #50a14f;">''</span><span style="color: #4078f2;">)</span>
+<span style="color: #6a1868; font-style: italic;">depends</span>=<span style="color: #4078f2;">(</span><span style="color: #50a14f;">'dkms'</span><span style="color: #4078f2;">)</span>
+<span style="color: #6a1868; font-style: italic;">makedepends</span>=<span style="color: #4078f2;">(</span><span style="color: #50a14f;">'git'</span><span style="color: #4078f2;">)</span>
+<span style="color: #6a1868; font-style: italic;">optdepends</span>=<span style="color: #4078f2;">()</span>
+<span style="color: #6a1868; font-style: italic;">source</span>=<span style="color: #4078f2;">(</span>git+https://github.com/shanexu/macbook12-spi-driver.git#branch=mbp15
+        dkms.conf<span style="color: #4078f2;">)</span>
+<span style="color: #6a1868; font-style: italic;">sha256sums</span>=<span style="color: #4078f2;">(</span><span style="color: #50a14f;">'SKIP'</span>
+            <span style="color: #50a14f;">'c79e6b20fb188b27ae92c63fabe6bfe1caff21bb7f3a2c14945323cee6bcc8fd'</span><span style="color: #4078f2;">)</span>
 
-pkgver() {
-    cd $_pkgbase
-    echo "0+git.$(git rev-list HEAD --count)"
-}
+<span style="color: #a626a4;">pkgver</span><span style="color: #4078f2;">()</span> <span style="color: #4078f2;">{</span>
+    <span style="color: #a626a4; font-weight: bold;">cd</span> <span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">_pkgbase</span>
+    <span style="color: #a626a4; font-weight: bold;">echo</span> <span style="color: #50a14f;">"0+git.</span><span style="color: #50a14f;">$(</span><span style="color: #4078f2; background-color: #fafafa; font-weight: bold;">git</span><span style="color: #50a14f; background-color: #fafafa;"> rev-list HEAD </span><span style="color: #b751b6; background-color: #fafafa;">--count</span><span style="color: #50a14f;">)</span><span style="color: #50a14f;">"</span>
+<span style="color: #4078f2;">}</span>
 
-package() {
-    install -dm755 "${pkgdir}"/usr/src/${_pkgbase}-${pkgver}
+<span style="color: #a626a4;">package</span><span style="color: #4078f2;">()</span> <span style="color: #4078f2;">{</span>
+    <span style="color: #4078f2; font-weight: bold;">install</span> <span style="color: #b751b6;">-dm755</span> <span style="color: #50a14f;">"</span><span style="color: #e45649;">${</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">pkgdir</span><span style="color: #e45649;">}</span><span style="color: #50a14f;">"</span>/usr/src/<span style="color: #e45649;">$</span><span style="color: #a626a4;">{</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">_pkgbase</span><span style="color: #a626a4;">}</span>-<span style="color: #e45649;">$</span><span style="color: #a626a4;">{</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">pkgver</span><span style="color: #a626a4;">}</span>
 
-    # Copy sources (including Makefile)
-    cp -r ${_pkgbase}/* "${pkgdir}"/usr/src/${_pkgbase}-${pkgver}/
+    <span style="color: #9ca0a4;"># Copy sources (including Makefile)</span>
+    <span style="color: #4078f2; font-weight: bold;">cp</span> <span style="color: #b751b6;">-r</span> <span style="color: #e45649;">$</span><span style="color: #a626a4;">{</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">_pkgbase</span><span style="color: #a626a4;">}</span>/* <span style="color: #50a14f;">"</span><span style="color: #e45649;">${</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">pkgdir</span><span style="color: #e45649;">}</span><span style="color: #50a14f;">"</span>/usr/src/<span style="color: #e45649;">$</span><span style="color: #a626a4;">{</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">_pkgbase</span><span style="color: #a626a4;">}</span>-<span style="color: #e45649;">$</span><span style="color: #a626a4;">{</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">pkgver</span><span style="color: #a626a4;">}</span>/
 
-    # Copy dkms.conf over the original one from the repo
-    install -Dm644 dkms.conf "${pkgdir}"/usr/src/${_pkgbase}-${pkgver}/dkms.conf
+    <span style="color: #9ca0a4;"># Copy dkms.conf over the original one from the repo</span>
+    <span style="color: #4078f2; font-weight: bold;">install</span> <span style="color: #b751b6;">-Dm644</span> dkms.conf <span style="color: #50a14f;">"</span><span style="color: #e45649;">${</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">pkgdir</span><span style="color: #e45649;">}</span><span style="color: #50a14f;">"</span>/usr/src/<span style="color: #e45649;">$</span><span style="color: #a626a4;">{</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">_pkgbase</span><span style="color: #a626a4;">}</span>-<span style="color: #e45649;">$</span><span style="color: #a626a4;">{</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">pkgver</span><span style="color: #a626a4;">}</span>/dkms.conf
 
-    # Set name and version
-    sed -e "s/@_PKGBASE@/${_pkgbase}/" \
-        -e "s/@PKGVER@/${pkgver}/" \
-        -i "${pkgdir}"/usr/src/${_pkgbase}-${pkgver}/dkms.conf
-}
+    <span style="color: #9ca0a4;"># Set name and version</span>
+    <span style="color: #4078f2; font-weight: bold;">sed</span> <span style="color: #b751b6;">-e</span> <span style="color: #50a14f;">"s/@_PKGBASE@/</span><span style="color: #e45649;">${</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">_pkgbase</span><span style="color: #e45649;">}</span><span style="color: #50a14f;">/"</span> \
+        <span style="color: #b751b6;">-e</span> <span style="color: #50a14f;">"s/@PKGVER@/</span><span style="color: #e45649;">${</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">pkgver</span><span style="color: #e45649;">}</span><span style="color: #50a14f;">/"</span> \
+        <span style="color: #b751b6;">-i</span> <span style="color: #50a14f;">"</span><span style="color: #e45649;">${</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">pkgdir</span><span style="color: #e45649;">}</span><span style="color: #50a14f;">"</span>/usr/src/<span style="color: #e45649;">$</span><span style="color: #a626a4;">{</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">_pkgbase</span><span style="color: #a626a4;">}</span>-<span style="color: #e45649;">$</span><span style="color: #a626a4;">{</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">pkgver</span><span style="color: #a626a4;">}</span>/dkms.conf
+<span style="color: #4078f2;">}</span>
 </pre>
 </div>
 
@@ -194,20 +188,20 @@ package() {
 修改 <code>dkms.conf</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-conf">PACKAGE_NAME="@_PKGBASE@"
-PACKAGE_VERSION="@PKGVER@"
-AUTOINSTALL="yes"
-CLEAN="make clean"
+<pre class="src src-conf"><span style="color: #6a1868;">PACKAGE_NAME</span>=<span style="color: #50a14f;">"@_PKGBASE@"</span>
+<span style="color: #6a1868;">PACKAGE_VERSION</span>=<span style="color: #50a14f;">"@PKGVER@"</span>
+<span style="color: #6a1868;">AUTOINSTALL</span>=<span style="color: #50a14f;">"yes"</span>
+<span style="color: #6a1868;">CLEAN</span>=<span style="color: #50a14f;">"make clean"</span>
 
-BUILT_MODULE_NAME[0]="apple-ibridge"
-BUILT_MODULE_NAME[1]="apple-ib-tb"
-BUILT_MODULE_NAME[2]="apple-ib-als"
-MAKE[0]="make KDIR=/usr/lib/modules/$kernelver/build"
-MAKE[1]="make KDIR=/usr/lib/modules/$kernelver/build"
-MAKE[2]="make KDIR=/usr/lib/modules/$kernelver/build"
-DEST_MODULE_LOCATION[0]="/kernel/drivers/misc"
-DEST_MODULE_LOCATION[1]="/kernel/drivers/misc"
-DEST_MODULE_LOCATION[2]="/kernel/drivers/misc"
+<span style="color: #6a1868;">BUILT_MODULE_NAME</span>[<span style="color: #b751b6;">0</span>]=<span style="color: #50a14f;">"apple-ibridge"</span>
+<span style="color: #6a1868;">BUILT_MODULE_NAME</span>[<span style="color: #b751b6;">1</span>]=<span style="color: #50a14f;">"apple-ib-tb"</span>
+<span style="color: #6a1868;">BUILT_MODULE_NAME</span>[<span style="color: #b751b6;">2</span>]=<span style="color: #50a14f;">"apple-ib-als"</span>
+<span style="color: #6a1868;">MAKE</span>[<span style="color: #b751b6;">0</span>]=<span style="color: #50a14f;">"make KDIR=/usr/lib/modules/$kernelver/build"</span>
+<span style="color: #6a1868;">MAKE</span>[<span style="color: #b751b6;">1</span>]=<span style="color: #50a14f;">"make KDIR=/usr/lib/modules/$kernelver/build"</span>
+<span style="color: #6a1868;">MAKE</span>[<span style="color: #b751b6;">2</span>]=<span style="color: #50a14f;">"make KDIR=/usr/lib/modules/$kernelver/build"</span>
+<span style="color: #6a1868;">DEST_MODULE_LOCATION</span>[<span style="color: #b751b6;">0</span>]=<span style="color: #50a14f;">"/kernel/drivers/misc"</span>
+<span style="color: #6a1868;">DEST_MODULE_LOCATION</span>[<span style="color: #b751b6;">1</span>]=<span style="color: #50a14f;">"/kernel/drivers/misc"</span>
+<span style="color: #6a1868;">DEST_MODULE_LOCATION</span>[<span style="color: #b751b6;">2</span>]=<span style="color: #50a14f;">"/kernel/drivers/misc"</span>
 </pre>
 </div>
 
@@ -215,7 +209,7 @@ DEST_MODULE_LOCATION[2]="/kernel/drivers/misc"
 添加文件 <code>/etc/modules-load.d/apple-tb.conf</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-conf"># /etc/modules-load.d/apple-tb.conf
+<pre class="src src-conf"><span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">/etc/modules-load.d/apple-tb.conf</span>
 apple-ib-tb
 apple-ib-als
 </pre>
@@ -225,67 +219,62 @@ apple-ib-als
 添加文件 <code>/etc/modprobe.d/apple-tb.conf</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-conf"># /etc/modprobe.d/apple-tb.conf
-options apple-ib-tb fnmode=2
+<pre class="src src-conf"><span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">/etc/modprobe.d/apple-tb.conf</span>
+<span style="color: #6a1868;">options apple-ib-tb fnmode</span>=2
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org2e7e5a5" class="outline-3">
-<h3 id="org2e7e5a5">fan control</h3>
-<div class="outline-text-3" id="text-org2e7e5a5">
+<div id="outline-container-orga25974f" class="outline-3">
+<h3 id="orga25974f">fan control</h3>
+<div class="outline-text-3" id="text-orga25974f">
 <div class="org-src-container">
-<pre class="src src-shell-script">git clone https://github.com/shanexu/mpb16fand.git
-cd mpb16fand
-go install ./...
-cp mbp16fand.service /usr/lib/systemd/system/
-sudo systemctl enable mbp16fand
-sudo systemctl start mbp16fand
+<pre class="src src-shell-script"><span style="color: #4078f2; font-weight: bold;">git</span> clone https://github.com/shanexu/mpb16fand.git
+<span style="color: #a626a4; font-weight: bold;">cd</span> mpb16fand
+<span style="color: #4078f2; font-weight: bold;">go</span> install ./...
+<span style="color: #4078f2; font-weight: bold;">cp</span> mbp16fand.service /usr/lib/systemd/system/
+<span style="color: #4078f2; font-weight: bold;">sudo</span> systemctl enable mbp16fand
+<span style="color: #4078f2; font-weight: bold;">sudo</span> systemctl start mbp16fand
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org9057168" class="outline-3">
-<h3 id="org9057168">xmonad配置</h3>
-<div class="outline-text-3" id="text-org9057168">
+<div id="outline-container-orge5d2c18" class="outline-3">
+<h3 id="orge5d2c18">xmonad配置</h3>
+<div class="outline-text-3" id="text-orge5d2c18">
 <p>
 <a href="https://github.com:shanexu/.xmonad.git">https://github.com:shanexu/.xmonad.git</a>
 </p>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org6407344" class="outline-2">
-<h2 id="org6407344">遗留问题</h2>
-<div class="outline-text-2" id="text-org6407344">
+<div id="outline-container-orgbc7554d" class="outline-2">
+<h2 id="orgbc7554d">遗留问题</h2>
+<div class="outline-text-2" id="text-orgbc7554d">
 <p>
 wifi目前没有搞定。
 </p>
 </div>
 </div>
+<div id="outline-container-org0ca37a4" class="outline-2">
+<h2 id="org0ca37a4">screenshots</h2>
+<div class="outline-text-2" id="text-org0ca37a4">
 
-<div id="outline-container-org0611e12" class="outline-2">
-<h2 id="org0611e12">screenshots</h2>
-<div class="outline-text-2" id="text-org0611e12">
-
-<div id="orged26795" class="figure">
+<div id="org66147f3" class="figure">
 <p><img src="/assets/blog/2021/02/14/archlinux-on-macbookpro-16inch/Screenshot_from_2021-02-14_16-23-12.png" alt="Screenshot_from_2021-02-14_16-23-12.png" />
 </p>
 </div>
 
 
-<div id="orgb38cb68" class="figure">
+<div id="org95f81cc" class="figure">
 <p><img src="/assets/blog/2021/02/14/archlinux-on-macbookpro-16inch/Screenshot_from_2021-02-14_16-35-54.png" alt="Screenshot_from_2021-02-14_16-35-54.png" />
 </p>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org8d740fd" class="outline-2">
-<h2 id="org8d740fd">参考文档</h2>
-<div class="outline-text-2" id="text-org8d740fd">
+<div id="outline-container-org74d3c6c" class="outline-2">
+<h2 id="org74d3c6c">参考文档</h2>
+<div class="outline-text-2" id="text-org74d3c6c">
 <p>
 <a href="https://www.ninjastik.com/support/2018-macbook-pro-boot-from-usb/">https://www.ninjastik.com/support/2018-macbook-pro-boot-from-usb/</a>
 </p>
@@ -331,7 +320,6 @@ wifi目前没有搞定。
        <noscript>You must have JavaScript enabled to use the comments.</noscript>
       </section>
       <script src="//code.jquery.com/jquery-latest.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
       <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="/media/js/main.js"></script>
       <script type="text/javascript">

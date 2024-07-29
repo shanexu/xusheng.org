@@ -7,8 +7,8 @@
     <meta name="description" content="how to install golang from source" />
     <meta name="keywords" content="golang" />
     <link rel="stylesheet" href="/media/css/main.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
+
   <body class="container">
     <div>
       <header class="masthead">
@@ -37,44 +37,40 @@
 <p>
 本文的的主要内容来自golang源代码中的 <a href="https://github.com/golang/go/blob/master/doc/install-source.html">install-source.html</a> 内容。
 </p>
-
-<div id="outline-container-org8398299" class="outline-2">
-<h2 id="org8398299">克隆源代码</h2>
-<div class="outline-text-2" id="text-org8398299">
+<div id="outline-container-org164448a" class="outline-2">
+<h2 id="org164448a">克隆源代码</h2>
+<div class="outline-text-2" id="text-org164448a">
 <div class="org-src-container">
-<pre class="src src-shell">git clone https://github.com/golang/go.git
+<pre class="src src-shell"><span style="color: #4078f2; font-weight: bold;">git</span> clone https://github.com/golang/go.git
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org6f922fb" class="outline-2">
-<h2 id="org6f922fb">安装bootstrap binar</h2>
-<div class="outline-text-2" id="text-org6f922fb">
+<div id="outline-container-orga6386df" class="outline-2">
+<h2 id="orga6386df">安装bootstrap binar</h2>
+<div class="outline-text-2" id="text-orga6386df">
 <p>
 go1.4以后golang工具链全都由golang编译，所以从源码安装golang需要一个bootstrap环境，也就是说需要一个golang编译器。这里可以通过系统的包管理器安装go1.4后的版本。
 </p>
 <div class="org-src-container">
-<pre class="src src-shell">brew install go
+<pre class="src src-shell"><span style="color: #4078f2; font-weight: bold;">brew</span> install go
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orga0c54d8" class="outline-2">
-<h2 id="orga0c54d8">编译安装</h2>
-<div class="outline-text-2" id="text-orga0c54d8">
+<div id="outline-container-orgb74f6b8" class="outline-2">
+<h2 id="orgb74f6b8">编译安装</h2>
+<div class="outline-text-2" id="text-orgb74f6b8">
 <div class="org-src-container">
-<pre class="src src-shell">cd go/src
-GOROOT_BOOTSTRAP=/usr/local/opt/go/libexec ./all.bash
+<pre class="src src-shell"><span style="color: #a626a4; font-weight: bold;">cd</span> go/src
+<span style="color: #6a1868; font-style: italic;">GOROOT_BOOTSTRAP</span>=/usr/local/opt/go/libexec <span style="color: #4078f2; font-weight: bold;">./all.bash</span>
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org6c1ec01" class="outline-2">
-<h2 id="org6c1ec01">检查</h2>
-<div class="outline-text-2" id="text-org6c1ec01">
+<div id="outline-container-org5dea056" class="outline-2">
+<h2 id="org5dea056">检查</h2>
+<div class="outline-text-2" id="text-org5dea056">
 <div class="org-src-container">
 <pre class="src src-text">$ ../bin/go version
 go version devel +739bf6b929 Fri Sep 27 21:17:15 2019 +0000 darwin/amd64
@@ -114,7 +110,6 @@ go version devel +739bf6b929 Fri Sep 27 21:17:15 2019 +0000 darwin/amd64
        <noscript>You must have JavaScript enabled to use the comments.</noscript>
       </section>
       <script src="//code.jquery.com/jquery-latest.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
       <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="/media/js/main.js"></script>
       <script type="text/javascript">

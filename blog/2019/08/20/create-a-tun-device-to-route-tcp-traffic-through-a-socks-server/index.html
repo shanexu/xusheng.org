@@ -7,8 +7,8 @@
     <meta name="description" content="create a TUN device to route TCP traffic through a SOCKS server" />
     <meta name="keywords" content="vpn, socks, proxy" />
     <link rel="stylesheet" href="/media/css/main.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
+
   <body class="container">
     <div>
       <header class="masthead">
@@ -82,10 +82,10 @@ default                                 fe80::%utun0                    UGcI    
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span class="linenr">1: </span>cd &lt;badvpn-source-dir&gt;
+<pre class="src src-shell"><span class="linenr">1: </span><span style="color: #a626a4; font-weight: bold;">cd</span> <span style="color: #e45649;">&lt;</span>badvpn-source-dir<span style="color: #e45649;">&gt;</span>
 <span class="linenr">2: </span>mkdir build
-<span class="linenr">3: </span>cd build
-<span class="linenr">4: </span>cmake .. -DCMAKE_INSTALL_PREFIX=&lt;install-dir&gt;
+<span class="linenr">3: </span><span style="color: #a626a4; font-weight: bold;">cd</span> build
+<span class="linenr">4: </span><span style="color: #4078f2; font-weight: bold;">cmake</span> .. <span style="color: #4078f2; font-weight: bold;">-DCMAKE_INSTALL_PREFIX=</span><span style="color: #e45649;">&lt;</span>install-dir<span style="color: #e45649;">&gt;</span>
 <span class="linenr">5: </span>make install
 </pre>
 </div>
@@ -96,20 +96,20 @@ default                                 fe80::%utun0                    UGcI    
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span class="linenr"> 1: </span>#!/bin/bash
+<pre class="src src-shell"><span class="linenr"> 1: </span><span style="color: #9ca0a4;">#!/bin/bash</span>
 <span class="linenr"> 2: </span>
-<span class="linenr"> 3: </span>sudo openvpn --mktun --dev tun0
-<span class="linenr"> 4: </span>sudo ifconfig tun0 10.0.0.1 netmask 255.255.255.0
+<span class="linenr"> 3: </span><span style="color: #4078f2; font-weight: bold;">sudo</span> openvpn <span style="color: #b751b6;">--mktun</span> <span style="color: #b751b6;">--dev</span> tun0
+<span class="linenr"> 4: </span><span style="color: #4078f2; font-weight: bold;">sudo</span> ifconfig tun0 <span style="color: #da8548; font-weight: bold;">10.0.0.1</span> netmask <span style="color: #da8548; font-weight: bold;">255.255.255.0</span>
 <span class="linenr"> 5: </span>
-<span class="linenr"> 6: </span>array=( a.b.c.d )
-<span class="linenr"> 7: </span>for i in "${array[@]}"
-<span class="linenr"> 8: </span>do
-<span class="linenr"> 9: </span>    sudo route add $i gw 192.168.1.1 metric 5
-<span class="linenr">10: </span>done
+<span class="linenr"> 6: </span><span style="color: #6a1868; font-style: italic;">array</span>=<span style="color: #4078f2;">(</span> a.b.c.d <span style="color: #4078f2;">)</span>
+<span class="linenr"> 7: </span><span style="color: #e45649;">for</span> <span style="color: #b751b6; font-style: italic;">i</span> <span style="color: #e45649;">in</span> <span style="color: #50a14f;">"</span><span style="color: #e45649;">${</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">array</span><span style="color: #383a42; background-color: #fafafa;">[@]</span><span style="color: #e45649;">}</span><span style="color: #50a14f;">"</span>
+<span class="linenr"> 8: </span><span style="color: #e45649;">do</span>
+<span class="linenr"> 9: </span>    <span style="color: #4078f2; font-weight: bold;">sudo</span> route add <span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">i</span> gw <span style="color: #da8548; font-weight: bold;">192.168.1.1</span> metric <span style="color: #da8548; font-weight: bold;">5</span>
+<span class="linenr">10: </span><span style="color: #e45649;">done</span>
 <span class="linenr">11: </span>
-<span class="linenr">12: </span>sudo route add default gw 10.0.0.2 metric 6
+<span class="linenr">12: </span><span style="color: #4078f2; font-weight: bold;">sudo</span> route add default gw <span style="color: #da8548; font-weight: bold;">10.0.0.2</span> metric <span style="color: #da8548; font-weight: bold;">6</span>
 <span class="linenr">13: </span>
-<span class="linenr">14: </span>badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:7591 --socks5-udp
+<span class="linenr">14: </span><span style="color: #4078f2; font-weight: bold;">badvpn-tun2socks</span> <span style="color: #b751b6;">--tundev</span> tun0 <span style="color: #b751b6;">--netif-ipaddr</span> <span style="color: #da8548; font-weight: bold;">10.0.0.2</span> <span style="color: #b751b6;">--netif-netmask</span> <span style="color: #da8548; font-weight: bold;">255.255.255.0</span> <span style="color: #b751b6;">--socks-server-addr</span> <span style="color: #da8548; font-weight: bold;">127.0.0.1:7591</span> <span style="color: #b751b6;">--socks5-udp</span>
 <span class="linenr">15: </span>
 </pre>
 </div>
@@ -155,7 +155,6 @@ nameserver 192.168.1.1
        <noscript>You must have JavaScript enabled to use the comments.</noscript>
       </section>
       <script src="//code.jquery.com/jquery-latest.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
       <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="/media/js/main.js"></script>
       <script type="text/javascript">

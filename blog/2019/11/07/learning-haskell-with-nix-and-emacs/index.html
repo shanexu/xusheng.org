@@ -7,8 +7,8 @@
     <meta name="description" content="Learning Haskell with nix and Emacs" />
     <meta name="keywords" content="haskell, nix, emacs" />
     <link rel="stylesheet" href="/media/css/main.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
+
   <body class="container">
     <div>
       <header class="masthead">
@@ -34,19 +34,17 @@
 <div>
 <div class="post">
 <h1>Learning Haskell with nix and Emacs</h1>
-
-<div id="outline-container-orgd154da1" class="outline-2">
-<h2 id="orgd154da1">前言</h2>
-<div class="outline-text-2" id="text-orgd154da1">
+<div id="outline-container-org2506262" class="outline-2">
+<h2 id="org2506262">前言</h2>
+<div class="outline-text-2" id="text-org2506262">
 <p>
 <a href="https://github.com/haskell-servant/servant">haskell-servant</a> 和 <a href="https://github.com/dmjio/miso">miso</a> 等haskell开源项目竟然都是用nix管理依赖的。时隔多年nix竟然被赋予了这样的魔法，不仅让我大跌眼镜。在 <a href="https://github.com/Gabriel439/haskell-nix">Nix and Haskell in production</a> 一文中指出，nix对标的其实是stack，他和stack一样有独立的haskell包缓存，用以达成reproducible的构建。nix胜过stack的唯一个地方，就是他不仅能解决haskell包依赖，还能解决其他任何依赖，甚至可以为你打造一个独立的开发环境。本文就是介绍如何在 <code>macos catalina</code> 上用nix打造一个haskell开发环境。
 </p>
 </div>
 </div>
-
-<div id="outline-container-orgcd265eb" class="outline-2">
-<h2 id="orgcd265eb">安装nix和其他工具</h2>
-<div class="outline-text-2" id="text-orgcd265eb">
+<div id="outline-container-org11612cd" class="outline-2">
+<h2 id="org11612cd">安装nix和其他工具</h2>
+<div class="outline-text-2" id="text-org11612cd">
 <p>
 本来这一个步骤应该是非常简单的。但是在最新版的macos catalina上并不那么容易了。nix需要在根目录上创建文件夹 <code>/nix</code> ，在系统默认开启 <code>SIP</code> 的情况下，根目录是以只读度方式挂载的，所以无法创建。首先需要关闭SIP，创建目录，重新启用SIP，由于启用后根目录仍然只读，还需要创建分区，将分区挂载到 <code>/nix</code> 。
 </p>
@@ -88,7 +86,7 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script">  curl https://nixos.org/nix/install | sh  
+<pre class="src src-shell-script">  <span style="color: #4078f2; font-weight: bold;">curl</span> https://nixos.org/nix/install <span style="color: #e45649;">|</span> <span style="color: #4078f2; font-weight: bold;">sh</span>  
 </pre>
 </div>
 
@@ -101,17 +99,16 @@ nix安装完之后就可以安装开发工具了。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script">  nix-env --install cabal2nix stack cabal-install
+<pre class="src src-shell-script">  <span style="color: #4078f2; font-weight: bold;">nix-env</span> <span style="color: #b751b6;">--install</span> cabal2nix stack cabal-install
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgea65e92" class="outline-2">
-<h2 id="orgea65e92">使用stack初始化工程</h2>
-<div class="outline-text-2" id="text-orgea65e92">
+<div id="outline-container-orgb875b52" class="outline-2">
+<h2 id="orgb875b52">使用stack初始化工程</h2>
+<div class="outline-text-2" id="text-orgb875b52">
 <div class="org-src-container">
-<pre class="src src-shell-script">  stack new helloworld new-template
+<pre class="src src-shell-script">  <span style="color: #4078f2; font-weight: bold;">stack</span> new helloworld new-template
 </pre>
 </div>
 
@@ -121,19 +118,19 @@ nix安装完之后就可以安装开发工具了。
 
 <div class="org-src-container">
 <pre class="src src-text">  .
-  ├── ChangeLog.md
-  ├── LICENSE
-  ├── README.md
-  ├── Setup.hs
-  ├── app
-  │   └── Main.hs
-  ├── helloworld.cabal
-  ├── package.yaml
-  ├── src
-  │   └── Lib.hs
-  ├── stack.yaml
-  └── test
-      └── Spec.hs
+  &#9500;&#9472;&#9472; ChangeLog.md
+  &#9500;&#9472;&#9472; LICENSE
+  &#9500;&#9472;&#9472; README.md
+  &#9500;&#9472;&#9472; Setup.hs
+  &#9500;&#9472;&#9472; app
+  &#9474;&#160;&#160; &#9492;&#9472;&#9472; Main.hs
+  &#9500;&#9472;&#9472; helloworld.cabal
+  &#9500;&#9472;&#9472; package.yaml
+  &#9500;&#9472;&#9472; src
+  &#9474;&#160;&#160; &#9492;&#9472;&#9472; Lib.hs
+  &#9500;&#9472;&#9472; stack.yaml
+  &#9492;&#9472;&#9472; test
+      &#9492;&#9472;&#9472; Spec.hs
 </pre>
 </div>
 
@@ -156,7 +153,7 @@ nix安装完之后就可以安装开发工具了。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script">  git init
+<pre class="src src-shell-script">  <span style="color: #4078f2; font-weight: bold;">git</span> init
 </pre>
 </div>
 
@@ -190,16 +187,15 @@ nix安装完之后就可以安装开发工具了。
 </div>
 </div>
 </div>
-
-<div id="outline-container-orge521d82" class="outline-2">
-<h2 id="orge521d82">编写第一个nix表达式</h2>
-<div class="outline-text-2" id="text-orge521d82">
+<div id="outline-container-orgf67427f" class="outline-2">
+<h2 id="orgf67427f">编写第一个nix表达式</h2>
+<div class="outline-text-2" id="text-orgf67427f">
 <p>
 说是编写，其实就是中 cabal2nix 生成。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script">  cabal2nix . &gt; helloworld.nix
+<pre class="src src-shell-script">  <span style="color: #4078f2; font-weight: bold;">cabal2nix</span> . <span style="color: #e45649;">&gt;</span> helloworld.nix
 </pre>
 </div>
 
@@ -242,7 +238,7 @@ helloworld.nix 的内容如下：
 使用nix build
 </p>
 <div class="org-src-container">
-<pre class="src src-shell-script">  nix-build
+<pre class="src src-shell-script">  <span style="color: #4078f2; font-weight: bold;">nix-build</span>
 </pre>
 </div>
 
@@ -274,26 +270,26 @@ build成功后会在当前目录下生成 <code>result</code> 目录，其结构
 
 <div class="org-src-container">
 <pre class="src src-text">  result
-  ├── bin
-  │   └── helloworld-exe
-  ├── lib
-  │   ├── ghc-8.6.5
-  │   │   ├── package.conf.d
-  │   │   │   └── helloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp.conf
-  │   │   └── x86_64-osx-ghc-8.6.5
-  │   │       ├── helloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp
-  │   │       │   ├── Lib.dyn_hi
-  │   │       │   ├── Lib.hi
-  │   │       │   ├── Lib.p_hi
-  │   │       │   ├── Paths_helloworld.dyn_hi
-  │   │       │   ├── Paths_helloworld.hi
-  │   │       │   ├── Paths_helloworld.p_hi
-  │   │       │   ├── libHShelloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp.a
-  │   │       │   └── libHShelloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp_p.a
-  │   │       └── libHShelloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp-ghc8.6.5.dylib
-  │   └── links
-  └── nix-support
-      └── propagated-build-inputs
+  &#9500;&#9472;&#9472; bin
+  &#9474;&#160;&#160; &#9492;&#9472;&#9472; helloworld-exe
+  &#9500;&#9472;&#9472; lib
+  &#9474;&#160;&#160; &#9500;&#9472;&#9472; ghc-8.6.5
+  &#9474;&#160;&#160; &#9474;&#160;&#160; &#9500;&#9472;&#9472; package.conf.d
+  &#9474;&#160;&#160; &#9474;&#160;&#160; &#9474;&#160;&#160; &#9492;&#9472;&#9472; helloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp.conf
+  &#9474;&#160;&#160; &#9474;&#160;&#160; &#9492;&#9472;&#9472; x86_64-osx-ghc-8.6.5
+  &#9474;&#160;&#160; &#9474;&#160;&#160;     &#9500;&#9472;&#9472; helloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp
+  &#9474;&#160;&#160; &#9474;&#160;&#160;     &#9474;&#160;&#160; &#9500;&#9472;&#9472; Lib.dyn_hi
+  &#9474;&#160;&#160; &#9474;&#160;&#160;     &#9474;&#160;&#160; &#9500;&#9472;&#9472; Lib.hi
+  &#9474;&#160;&#160; &#9474;&#160;&#160;     &#9474;&#160;&#160; &#9500;&#9472;&#9472; Lib.p_hi
+  &#9474;&#160;&#160; &#9474;&#160;&#160;     &#9474;&#160;&#160; &#9500;&#9472;&#9472; Paths_helloworld.dyn_hi
+  &#9474;&#160;&#160; &#9474;&#160;&#160;     &#9474;&#160;&#160; &#9500;&#9472;&#9472; Paths_helloworld.hi
+  &#9474;&#160;&#160; &#9474;&#160;&#160;     &#9474;&#160;&#160; &#9500;&#9472;&#9472; Paths_helloworld.p_hi
+  &#9474;&#160;&#160; &#9474;&#160;&#160;     &#9474;&#160;&#160; &#9500;&#9472;&#9472; libHShelloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp.a
+  &#9474;&#160;&#160; &#9474;&#160;&#160;     &#9474;&#160;&#160; &#9492;&#9472;&#9472; libHShelloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp_p.a
+  &#9474;&#160;&#160; &#9474;&#160;&#160;     &#9492;&#9472;&#9472; libHShelloworld-0.1.0.0-5AFk17aNCLW4CrcpWxCXgp-ghc8.6.5.dylib
+  &#9474;&#160;&#160; &#9492;&#9472;&#9472; links
+  &#9492;&#9472;&#9472; nix-support
+      &#9492;&#9472;&#9472; propagated-build-inputs
 
   8 directories, 12 files  
 </pre>
@@ -304,7 +300,7 @@ build成功后会在当前目录下生成 <code>result</code> 目录，其结构
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">  ❯ result/bin/helloworld-exe
+<pre class="src src-text">  &#10095; result/bin/helloworld-exe
   someFunc  
 </pre>
 </div>
@@ -314,7 +310,7 @@ build成功后会在当前目录下生成 <code>result</code> 目录，其结构
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">  ❯ readlink result
+<pre class="src src-text">  &#10095; readlink result
   /nix/store/zdp1n3yifw6ikpn8hjsza40iwdmk5fnz-helloworld-0.1.0.0  
 </pre>
 </div>
@@ -324,7 +320,7 @@ build成功后会在当前目录下生成 <code>result</code> 目录，其结构
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">  ❯ nix-build
+<pre class="src src-text">  &#10095; nix-build
   these derivations will be built:
     /nix/store/43qdjaq019p4w81hqqds7wysbxaz0w4x-helloworld-0.1.0.0.drv
   building '/nix/store/43qdjaq019p4w81hqqds7wysbxaz0w4x-helloworld-0.1.0.0.drv'...
@@ -388,10 +384,9 @@ build成功后会在当前目录下生成 <code>result</code> 目录，其结构
 </div>
 </div>
 </div>
-
-<div id="outline-container-org828cf88" class="outline-2">
-<h2 id="org828cf88">添加shell.nix文件</h2>
-<div class="outline-text-2" id="text-org828cf88">
+<div id="outline-container-orgba503c5" class="outline-2">
+<h2 id="orgba503c5">添加shell.nix文件</h2>
+<div class="outline-text-2" id="text-orgba503c5">
 <blockquote>
 <p>
 nix-shell - start an interactive shell based on a Nix expression
@@ -403,7 +398,7 @@ nix-shell - start an interactive shell based on a Nix expression
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">  ❯ nix-shell
+<pre class="src src-text">  &#10095; nix-shell
 
   [nix-shell:~/src/github.com/shanexu/helloworld]$ ghc --version
   The Glorious Glasgow Haskell Compilation System, version 8.6.5
@@ -447,7 +442,7 @@ nix-shell - start an interactive shell based on a Nix expression
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">  ❯ nix-shell
+<pre class="src src-text">  &#10095; nix-shell
 
   [nix-shell:~/src/github.com/shanexu/helloworld]$ which cabal
   /nix/store/h4wzzvjzpggyprf40n20y1adzbvhh9xj-cabal-install-3.0.0.0/bin/cabal
@@ -458,16 +453,15 @@ nix-shell - start an interactive shell based on a Nix expression
 </div>
 </div>
 </div>
-
-<div id="outline-container-org502356e" class="outline-2">
-<h2 id="org502356e">安装HIE</h2>
-<div class="outline-text-2" id="text-org502356e">
+<div id="outline-container-org5dc6179" class="outline-2">
+<h2 id="org5dc6179">安装HIE</h2>
+<div class="outline-text-2" id="text-org5dc6179">
 <p>
 安装cachix
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script">  nix-env -iA cachix -f https://cachix.org/api/v1/install
+<pre class="src src-shell-script">  <span style="color: #4078f2; font-weight: bold;">nix-env</span> <span style="color: #b751b6;">-iA</span> cachix <span style="color: #b751b6;">-f</span> https://cachix.org/api/v1/install
 </pre>
 </div>
 
@@ -476,7 +470,7 @@ nix-shell - start an interactive shell based on a Nix expression
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script">  cachix use all-hies
+<pre class="src src-shell-script">  <span style="color: #4078f2; font-weight: bold;">cachix</span> use all-hies
 </pre>
 </div>
 
@@ -485,7 +479,7 @@ nix-shell - start an interactive shell based on a Nix expression
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script">  nix-env -iA selection --arg selector 'p: { inherit (p) ghc865; }' -f https://github.com/infinisil/all-hies/tarball/master
+<pre class="src src-shell-script">  <span style="color: #4078f2; font-weight: bold;">nix-env</span> <span style="color: #b751b6;">-iA</span> selection <span style="color: #b751b6;">--arg</span> selector <span style="color: #50a14f;">'p: { inherit (p) ghc865; }'</span> <span style="color: #b751b6;">-f</span> https://github.com/infinisil/all-hies/tarball/master
 </pre>
 </div>
 
@@ -517,10 +511,9 @@ nix-shell - start an interactive shell based on a Nix expression
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgfa8b338" class="outline-2">
-<h2 id="orgfa8b338">nix-shell和direnv</h2>
-<div class="outline-text-2" id="text-orgfa8b338">
+<div id="outline-container-org06d91ba" class="outline-2">
+<h2 id="org06d91ba">nix-shell和direnv</h2>
+<div class="outline-text-2" id="text-org06d91ba">
 <p>
 nix-shell默认使用bash，但是我平时都用 <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a> 。direnv已经支持nix，可以通过stdlib的use_nix函数，启用nix的环境配置。只要在当前目录下增加.envrc文件便可启用。
 </p>
@@ -534,7 +527,7 @@ nix-shell默认使用bash，但是我平时都用 <a href="https://github.com/ro
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">  ❯ direnv allow
+<pre class="src src-text">  &#10095; direnv allow
   direnv: loading .envrc
   direnv: ([/usr/local/bin/direnv export zsh]) is taking a while to execute. Use CTRL-C to give up.  
 </pre>
@@ -545,20 +538,20 @@ nix-shell默认使用bash，但是我平时都用 <a href="https://github.com/ro
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script"><span class="linenr"> 1: </span>  # Usage: use_nix [...]
-<span class="linenr"> 2: </span>  #
-<span class="linenr"> 3: </span>  # Load environment variables from `nix-shell`.
-<span class="linenr"> 4: </span>  # If you have a `default.nix` or `shell.nix` these will be
-<span class="linenr"> 5: </span>  # used by default, but you can also specify packages directly
-<span class="linenr"> 6: </span>  # (e.g `use nix -p ocaml`).
-<span class="linenr"> 7: </span>  #
-<span class="linenr"> 8: </span>  use_nix() {
-<span class="linenr"> 9: </span>    direnv_load nix-shell --show-trace "$@" --run "$(join_args "$direnv" dump)"
-<span class="linenr">10: </span>    if [[ $# == 0 ]]; then
-<span class="linenr">11: </span>      watch_file default.nix
-<span class="linenr">12: </span>      watch_file shell.nix
-<span class="linenr">13: </span>    fi
-<span class="linenr">14: </span>  }  
+<pre class="src src-shell-script"><span class="linenr"> 1: </span>  <span style="color: #9ca0a4;"># Usage: use_nix [...]</span>
+<span class="linenr"> 2: </span>  <span style="color: #9ca0a4;">#</span>
+<span class="linenr"> 3: </span>  <span style="color: #9ca0a4;"># Load environment variables from `nix-shell`.</span>
+<span class="linenr"> 4: </span>  <span style="color: #9ca0a4;"># If you have a `default.nix` or `shell.nix` these will be</span>
+<span class="linenr"> 5: </span>  <span style="color: #9ca0a4;"># used by default, but you can also specify packages directly</span>
+<span class="linenr"> 6: </span>  <span style="color: #9ca0a4;"># (e.g `use nix -p ocaml`).</span>
+<span class="linenr"> 7: </span>  <span style="color: #9ca0a4;">#</span>
+<span class="linenr"> 8: </span>  <span style="color: #a626a4;">use_nix</span><span style="color: #4078f2;">()</span> <span style="color: #4078f2;">{</span>
+<span class="linenr"> 9: </span>    <span style="color: #4078f2; font-weight: bold;">direnv_load</span> nix-shell <span style="color: #b751b6;">--show-trace</span> <span style="color: #50a14f;">"</span><span style="color: #e45649;">$</span><span style="color: #986801;">@</span><span style="color: #50a14f;">"</span> <span style="color: #b751b6;">--run</span> <span style="color: #50a14f;">"</span><span style="color: #50a14f;">$(</span><span style="color: #4078f2; background-color: #fafafa; font-weight: bold;">join_args</span><span style="color: #50a14f; background-color: #fafafa;"> "</span><span style="color: #e45649; background-color: #fafafa;">$</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">direnv</span><span style="color: #50a14f; background-color: #fafafa;">" dump</span><span style="color: #50a14f;">)</span><span style="color: #50a14f;">"</span>
+<span class="linenr">10: </span>    <span style="color: #e45649;">if</span> <span style="color: #a626a4;">[</span><span style="color: #50a14f;">[</span> <span style="color: #e45649;">$</span><span style="color: #986801;">#</span> <span style="color: #e45649;">==</span> <span style="color: #da8548; font-weight: bold;">0</span> <span style="color: #50a14f;">]</span><span style="color: #a626a4;">]</span><span style="color: #e45649;">;</span> <span style="color: #e45649;">then</span>
+<span class="linenr">11: </span>      <span style="color: #4078f2; font-weight: bold;">watch_file</span> default.nix
+<span class="linenr">12: </span>      <span style="color: #4078f2; font-weight: bold;">watch_file</span> shell.nix
+<span class="linenr">13: </span>    <span style="color: #e45649;">fi</span>
+<span class="linenr">14: </span>  <span style="color: #4078f2;">}</span>  
 </pre>
 </div>
 
@@ -571,70 +564,69 @@ nix-shell默认使用bash，但是我平时都用 <a href="https://github.com/ro
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script"><span class="linenr"> 1: </span>  use_nix() {
-<span class="linenr"> 2: </span>      local path="$(nix-instantiate --find-file nixpkgs)"
+<pre class="src src-shell-script"><span class="linenr"> 1: </span>  <span style="color: #a626a4;">use_nix</span><span style="color: #4078f2;">()</span> <span style="color: #4078f2;">{</span>
+<span class="linenr"> 2: </span>      local <span style="color: #6a1868; font-style: italic;">path</span>=<span style="color: #50a14f;">"</span><span style="color: #50a14f;">$(</span><span style="color: #4078f2; background-color: #fafafa; font-weight: bold;">nix-instantiate</span><span style="color: #50a14f; background-color: #fafafa;"> </span><span style="color: #b751b6; background-color: #fafafa;">--find-file</span><span style="color: #50a14f; background-color: #fafafa;"> nixpkgs</span><span style="color: #50a14f;">)</span><span style="color: #50a14f;">"</span>
 <span class="linenr"> 3: </span>
-<span class="linenr"> 4: </span>      if [ -f "${path}/.version-suffix" ]; then
-<span class="linenr"> 5: </span>          local version="$(&lt; $path/.version-suffix)"
-<span class="linenr"> 6: </span>      elif [ -f "${path}/.git" ]; then
-<span class="linenr"> 7: </span>          local version="$(&lt; $(&lt; ${path}/.git/HEAD))"
-<span class="linenr"> 8: </span>      fi
+<span class="linenr"> 4: </span>      <span style="color: #e45649;">if</span> <span style="color: #a626a4;">[</span> -f <span style="color: #50a14f;">"</span><span style="color: #e45649;">${</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">path</span><span style="color: #e45649;">}</span><span style="color: #50a14f;">/.version-suffix"</span> <span style="color: #a626a4;">]</span><span style="color: #e45649;">;</span> <span style="color: #e45649;">then</span>
+<span class="linenr"> 5: </span>          local <span style="color: #6a1868; font-style: italic;">version</span>=<span style="color: #50a14f;">"</span><span style="color: #50a14f;">$(</span><span style="color: #e45649; background-color: #fafafa;">&lt;</span><span style="color: #50a14f; background-color: #fafafa;"> </span><span style="color: #e45649; background-color: #fafafa;">$</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">path</span><span style="color: #50a14f; background-color: #fafafa;">/.version-suffix</span><span style="color: #50a14f;">)</span><span style="color: #50a14f;">"</span>
+<span class="linenr"> 6: </span>      <span style="color: #e45649;">elif</span> <span style="color: #a626a4;">[</span> -f <span style="color: #50a14f;">"</span><span style="color: #e45649;">${</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">path</span><span style="color: #e45649;">}</span><span style="color: #50a14f;">/.git"</span> <span style="color: #a626a4;">]</span><span style="color: #e45649;">;</span> <span style="color: #e45649;">then</span>
+<span class="linenr"> 7: </span>          local <span style="color: #6a1868; font-style: italic;">version</span>=<span style="color: #50a14f;">"</span><span style="color: #50a14f;">$(</span><span style="color: #e45649; background-color: #fafafa;">&lt;</span><span style="color: #50a14f; background-color: #fafafa;"> </span><span style="color: #50a14f; background-color: #fafafa;">$(</span><span style="color: #e45649; background-color: #fafafa;">&lt;</span><span style="color: #50a14f; background-color: #fafafa;"> </span><span style="color: #e45649; background-color: #fafafa;">${</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">path</span><span style="color: #e45649; background-color: #fafafa;">}</span><span style="color: #50a14f; background-color: #fafafa;">/.git/HEAD</span><span style="color: #50a14f; background-color: #fafafa;">)</span><span style="color: #50a14f;">)</span><span style="color: #50a14f;">"</span>
+<span class="linenr"> 8: </span>      <span style="color: #e45649;">fi</span>
 <span class="linenr"> 9: </span>
-<span class="linenr">10: </span>      local cache=".direnv/cache-${version:-unknown}"
+<span class="linenr">10: </span>      local <span style="color: #6a1868; font-style: italic;">cache</span>=<span style="color: #50a14f;">".direnv/cache-</span><span style="color: #e45649;">${</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">version</span><span style="color: #50a14f;">:-</span><span style="color: #383a42; background-color: #fafafa;">unknown</span><span style="color: #e45649;">}</span><span style="color: #50a14f;">"</span>
 <span class="linenr">11: </span>
-<span class="linenr">12: </span>      local update_drv=0
-<span class="linenr">13: </span>      if [[ ! -e "$cache" ]] || \
-<span class="linenr">14: </span>             [[ "$HOME/.direnvrc" -nt "$cache" ]] || \
-<span class="linenr">15: </span>             [[ .envrc -nt "$cache" ]] || \
-<span class="linenr">16: </span>             [[ default.nix -nt "$cache" ]] || \
-<span class="linenr">17: </span>             [[ shell.nix -nt "$cache" ]];
-<span class="linenr">18: </span>      then
-<span class="linenr">19: </span>          [ -d .direnv ] || mkdir .direnv
-<span class="linenr">20: </span>          nix-shell --show-trace "$@" --run "\"$direnv\" dump bash" &gt; "$cache"
-<span class="linenr">21: </span>          update_drv=1
-<span class="linenr">22: </span>      else
-<span class="linenr">23: </span>          log_status using cached derivation
-<span class="linenr">24: </span>      fi
-<span class="linenr">25: </span>      local term_backup=$TERM path_backup=$PATH
-<span class="linenr">26: </span>      if [ -n ${TMPDIR+x} ]; then
-<span class="linenr">27: </span>          local tmp_backup=$TMPDIR
-<span class="linenr">28: </span>      fi
+<span class="linenr">12: </span>      local <span style="color: #6a1868; font-style: italic;">update_drv</span>=<span style="color: #da8548; font-weight: bold;">0</span>
+<span class="linenr">13: </span>      <span style="color: #e45649;">if</span> <span style="color: #a626a4;">[</span><span style="color: #50a14f;">[</span> ! -e <span style="color: #50a14f;">"</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">cache</span><span style="color: #50a14f;">"</span> <span style="color: #50a14f;">]</span><span style="color: #a626a4;">]</span> <span style="color: #e45649;">||</span> \
+<span class="linenr">14: </span>             <span style="color: #a626a4;">[</span><span style="color: #50a14f;">[</span> <span style="color: #50a14f;">"</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">HOME</span><span style="color: #50a14f;">/.direnvrc"</span> -nt <span style="color: #50a14f;">"</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">cache</span><span style="color: #50a14f;">"</span> <span style="color: #50a14f;">]</span><span style="color: #a626a4;">]</span> <span style="color: #e45649;">||</span> \
+<span class="linenr">15: </span>             <span style="color: #a626a4;">[</span><span style="color: #50a14f;">[</span> .envrc -nt <span style="color: #50a14f;">"</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">cache</span><span style="color: #50a14f;">"</span> <span style="color: #50a14f;">]</span><span style="color: #a626a4;">]</span> <span style="color: #e45649;">||</span> \
+<span class="linenr">16: </span>             <span style="color: #a626a4;">[</span><span style="color: #50a14f;">[</span> default.nix -nt <span style="color: #50a14f;">"</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">cache</span><span style="color: #50a14f;">"</span> <span style="color: #50a14f;">]</span><span style="color: #a626a4;">]</span> <span style="color: #e45649;">||</span> \
+<span class="linenr">17: </span>             <span style="color: #a626a4;">[</span><span style="color: #50a14f;">[</span> shell.nix -nt <span style="color: #50a14f;">"</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">cache</span><span style="color: #50a14f;">"</span> <span style="color: #50a14f;">]</span><span style="color: #a626a4;">]</span><span style="color: #e45649;">;</span>
+<span class="linenr">18: </span>      <span style="color: #e45649;">then</span>
+<span class="linenr">19: </span>          <span style="color: #a626a4;">[</span> -d .direnv <span style="color: #a626a4;">]</span> <span style="color: #e45649;">||</span> <span style="color: #4078f2; font-weight: bold;">mkdir</span> .direnv
+<span class="linenr">20: </span>          <span style="color: #4078f2; font-weight: bold;">nix-shell</span> <span style="color: #b751b6;">--show-trace</span> <span style="color: #50a14f;">"</span><span style="color: #e45649;">$</span><span style="color: #986801;">@</span><span style="color: #50a14f;">"</span> <span style="color: #b751b6;">--run</span> <span style="color: #50a14f;">"\"</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">direnv</span><span style="color: #50a14f;">\" dump bash"</span> <span style="color: #e45649;">&gt;</span> <span style="color: #50a14f;">"</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">cache</span><span style="color: #50a14f;">"</span>
+<span class="linenr">21: </span>          <span style="color: #6a1868; font-style: italic;">update_drv</span>=<span style="color: #da8548; font-weight: bold;">1</span>
+<span class="linenr">22: </span>      <span style="color: #e45649;">else</span>
+<span class="linenr">23: </span>          <span style="color: #4078f2; font-weight: bold;">log_status</span> using cached derivation
+<span class="linenr">24: </span>      <span style="color: #e45649;">fi</span>
+<span class="linenr">25: </span>      local <span style="color: #6a1868; font-style: italic;">term_backup</span>=<span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">TERM</span> <span style="color: #6a1868; font-style: italic;">path_backup</span>=<span style="color: #e45649;">$</span><span style="color: #986801; font-style: italic;">PATH</span>
+<span class="linenr">26: </span>      <span style="color: #e45649;">if</span> <span style="color: #a626a4;">[</span> -n <span style="color: #e45649;">$</span><span style="color: #50a14f;">{</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">TMPDIR</span>+<span style="color: #383a42; background-color: #fafafa;">x</span><span style="color: #50a14f;">}</span> <span style="color: #a626a4;">]</span><span style="color: #e45649;">;</span> <span style="color: #e45649;">then</span>
+<span class="linenr">27: </span>          local <span style="color: #6a1868; font-style: italic;">tmp_backup</span>=<span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">TMPDIR</span>
+<span class="linenr">28: </span>      <span style="color: #e45649;">fi</span>
 <span class="linenr">29: </span>
-<span class="linenr">30: </span>      eval "$(&lt; $cache)"
-<span class="linenr">31: </span>      export PATH=$PATH:$path_backup TERM=$term_backup TMPDIR=$tmp_backup
-<span class="linenr">32: </span>      if [ -n ${tmp_backup+x} ]; then
-<span class="linenr">33: </span>          export TMPDIR=${tmp_backup}
-<span class="linenr">34: </span>      else
-<span class="linenr">35: </span>          unset TMPDIR
-<span class="linenr">36: </span>      fi
+<span class="linenr">30: </span>      <span style="color: #a626a4; font-weight: bold;">eval</span> <span style="color: #50a14f;">"</span><span style="color: #50a14f;">$(</span><span style="color: #e45649; background-color: #fafafa;">&lt;</span><span style="color: #50a14f; background-color: #fafafa;"> </span><span style="color: #e45649; background-color: #fafafa;">$</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">cache</span><span style="color: #50a14f;">)</span><span style="color: #50a14f;">"</span>
+<span class="linenr">31: </span>      <span style="color: #e45649;">export</span> <span style="color: #986801; font-style: italic;">PATH</span>=<span style="color: #e45649;">$</span><span style="color: #986801; font-style: italic;">PATH</span>:<span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">path_backup</span> <span style="color: #6a1868; font-style: italic;">TERM</span>=<span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">term_backup</span> <span style="color: #6a1868; font-style: italic;">TMPDIR</span>=<span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">tmp_backup</span>
+<span class="linenr">32: </span>      <span style="color: #e45649;">if</span> <span style="color: #a626a4;">[</span> -n <span style="color: #e45649;">$</span><span style="color: #50a14f;">{</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">tmp_backup</span>+<span style="color: #383a42; background-color: #fafafa;">x</span><span style="color: #50a14f;">}</span> <span style="color: #a626a4;">]</span><span style="color: #e45649;">;</span> <span style="color: #e45649;">then</span>
+<span class="linenr">33: </span>          <span style="color: #e45649;">export</span> <span style="color: #6a1868; font-style: italic;">TMPDIR</span>=<span style="color: #e45649;">$</span><span style="color: #a626a4;">{</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">tmp_backup</span><span style="color: #a626a4;">}</span>
+<span class="linenr">34: </span>      <span style="color: #e45649;">else</span>
+<span class="linenr">35: </span>          <span style="color: #e45649;">unset</span> <span style="color: #b751b6; font-style: italic;">TMPDIR</span>
+<span class="linenr">36: </span>      <span style="color: #e45649;">fi</span>
 <span class="linenr">37: </span>
-<span class="linenr">38: </span>      if [ "$out" ] &amp;&amp; (( $update_drv )); then
-<span class="linenr">39: </span>          local drv_link=".direnv/shell.drv"
-<span class="linenr">40: </span>          local drv_dep_link=".direnv/shell.dep"
-<span class="linenr">41: </span>          local drv="$(nix show-derivation $out | grep -E -o -m1 '/nix/store/.*.drv')"
-<span class="linenr">42: </span>          local stripped_pwd=${PWD/\//}
-<span class="linenr">43: </span>          local escaped_pwd=${stripped_pwd//-/--}
-<span class="linenr">44: </span>          local escaped_pwd=${escaped_pwd//\//-}
-<span class="linenr">45: </span>          ln -fs "$drv" "$drv_link"
-<span class="linenr">46: </span>          ln -fs "$PWD/$drv_link" "/nix/var/nix/gcroots/per-user/$LOGNAME/$escaped_pwd"
-<span class="linenr">47: </span>          rm -f ${drv_dep_link}*
-<span class="linenr">48: </span>          nix-store --indirect --add-root $drv_dep_link --realise $(nix-store --query --references $drv_link)
-<span class="linenr">49: </span>          log_status renewed cache and derivation link
-<span class="linenr">50: </span>      fi
+<span class="linenr">38: </span>      <span style="color: #e45649;">if</span> <span style="color: #a626a4;">[</span> <span style="color: #50a14f;">"</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">out</span><span style="color: #50a14f;">"</span> <span style="color: #a626a4;">]</span> <span style="color: #e45649;">&amp;&amp;</span> <span style="color: #a626a4;">(</span><span style="color: #50a14f;">(</span> <span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">update_drv</span> <span style="color: #50a14f;">)</span><span style="color: #a626a4;">)</span><span style="color: #e45649;">;</span> <span style="color: #e45649;">then</span>
+<span class="linenr">39: </span>          local <span style="color: #6a1868; font-style: italic;">drv_link</span>=<span style="color: #50a14f;">".direnv/shell.drv"</span>
+<span class="linenr">40: </span>          local <span style="color: #6a1868; font-style: italic;">drv_dep_link</span>=<span style="color: #50a14f;">".direnv/shell.dep"</span>
+<span class="linenr">41: </span>          local <span style="color: #6a1868; font-style: italic;">drv</span>=<span style="color: #50a14f;">"</span><span style="color: #50a14f;">$(</span><span style="color: #4078f2; background-color: #fafafa; font-weight: bold;">nix</span><span style="color: #50a14f; background-color: #fafafa;"> show-derivation </span><span style="color: #e45649; background-color: #fafafa;">$</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">out</span><span style="color: #50a14f; background-color: #fafafa;"> </span><span style="color: #e45649; background-color: #fafafa;">|</span><span style="color: #50a14f; background-color: #fafafa;"> </span><span style="color: #4078f2; background-color: #fafafa; font-weight: bold;">grep</span><span style="color: #50a14f; background-color: #fafafa;"> </span><span style="color: #b751b6; background-color: #fafafa;">-E</span><span style="color: #50a14f; background-color: #fafafa;"> </span><span style="color: #b751b6; background-color: #fafafa;">-o</span><span style="color: #50a14f; background-color: #fafafa;"> </span><span style="color: #b751b6; background-color: #fafafa;">-m1</span><span style="color: #50a14f; background-color: #fafafa;"> '/nix/store/.*.drv'</span><span style="color: #50a14f;">)</span><span style="color: #50a14f;">"</span>
+<span class="linenr">42: </span>          local <span style="color: #6a1868; font-style: italic;">stripped_pwd</span>=<span style="color: #e45649;">$</span><span style="color: #a626a4;">{</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">PWD</span>/<span style="color: #383a42; background-color: #fafafa;">\</span>/<span style="color: #383a42; background-color: #fafafa;">/</span><span style="color: #a626a4;">}</span>
+<span class="linenr">43: </span>          local <span style="color: #6a1868; font-style: italic;">escaped_pwd</span>=<span style="color: #e45649;">$</span><span style="color: #a626a4;">{</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">stripped_pwd</span>//<span style="color: #383a42; background-color: #fafafa;">-</span>/<span style="color: #383a42; background-color: #fafafa;">--</span><span style="color: #a626a4;">}</span>
+<span class="linenr">44: </span>          local <span style="color: #6a1868; font-style: italic;">escaped_pwd</span>=<span style="color: #e45649;">$</span><span style="color: #a626a4;">{</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">escaped_pwd</span>//<span style="color: #383a42; background-color: #fafafa;">\</span>/<span style="color: #383a42; background-color: #fafafa;">/-</span><span style="color: #a626a4;">}</span>
+<span class="linenr">45: </span>          <span style="color: #4078f2; font-weight: bold;">ln</span> <span style="color: #b751b6;">-fs</span> <span style="color: #50a14f;">"</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">drv</span><span style="color: #50a14f;">"</span> <span style="color: #50a14f;">"</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">drv_link</span><span style="color: #50a14f;">"</span>
+<span class="linenr">46: </span>          <span style="color: #4078f2; font-weight: bold;">ln</span> <span style="color: #b751b6;">-fs</span> <span style="color: #50a14f;">"</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">PWD</span><span style="color: #50a14f;">/</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">drv_link</span><span style="color: #50a14f;">"</span> <span style="color: #50a14f;">"/nix/var/nix/gcroots/per-user/</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">LOGNAME</span><span style="color: #50a14f;">/</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">escaped_pwd</span><span style="color: #50a14f;">"</span>
+<span class="linenr">47: </span>          <span style="color: #4078f2; font-weight: bold;">rm</span> <span style="color: #b751b6;">-f</span> <span style="color: #e45649;">$</span><span style="color: #a626a4;">{</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">drv_dep_link</span><span style="color: #a626a4;">}</span>*
+<span class="linenr">48: </span>          <span style="color: #4078f2; font-weight: bold;">nix-store</span> <span style="color: #b751b6;">--indirect</span> <span style="color: #b751b6;">--add-root</span> <span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">drv_dep_link</span> <span style="color: #b751b6;">--realise</span> <span style="color: #e45649;">$</span><span style="color: #a626a4;">(</span><span style="color: #4078f2; background-color: #fafafa; font-weight: bold;">nix-store</span><span style="color: #383a42; background-color: #fafafa;"> </span><span style="color: #b751b6; background-color: #fafafa;">--query</span><span style="color: #383a42; background-color: #fafafa;"> </span><span style="color: #b751b6; background-color: #fafafa;">--references</span><span style="color: #383a42; background-color: #fafafa;"> </span><span style="color: #e45649; background-color: #fafafa;">$</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">drv_link</span><span style="color: #a626a4;">)</span>
+<span class="linenr">49: </span>          <span style="color: #4078f2; font-weight: bold;">log_status</span> renewed cache and derivation link
+<span class="linenr">50: </span>      <span style="color: #e45649;">fi</span>
 <span class="linenr">51: </span>
-<span class="linenr">52: </span>      if [[ $# = 0 ]]; then
-<span class="linenr">53: </span>          watch_file default.nix
-<span class="linenr">54: </span>          watch_file shell.nix
-<span class="linenr">55: </span>      fi
-<span class="linenr">56: </span>  }
+<span class="linenr">52: </span>      <span style="color: #e45649;">if</span> <span style="color: #a626a4;">[</span><span style="color: #50a14f;">[</span> <span style="color: #e45649;">$</span><span style="color: #986801;">#</span> = <span style="color: #da8548; font-weight: bold;">0</span> <span style="color: #50a14f;">]</span><span style="color: #a626a4;">]</span><span style="color: #e45649;">;</span> <span style="color: #e45649;">then</span>
+<span class="linenr">53: </span>          <span style="color: #4078f2; font-weight: bold;">watch_file</span> default.nix
+<span class="linenr">54: </span>          <span style="color: #4078f2; font-weight: bold;">watch_file</span> shell.nix
+<span class="linenr">55: </span>      <span style="color: #e45649;">fi</span>
+<span class="linenr">56: </span>  <span style="color: #4078f2;">}</span>
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org2a517e8" class="outline-2">
-<h2 id="org2a517e8">配置emacs(spacemacs)</h2>
-<div class="outline-text-2" id="text-org2a517e8">
+<div id="outline-container-orgfc2f832" class="outline-2">
+<h2 id="orgfc2f832">配置emacs(spacemacs)</h2>
+<div class="outline-text-2" id="text-orgfc2f832">
 <p>
 我使用的是 <a href="https://github.com/syl20bnr/spacemacs/">spacemacs</a> 的 develop 分支。
 </p>
@@ -644,33 +636,31 @@ nix-shell默认使用bash，但是我平时都用 <a href="https://github.com/ro
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span class="linenr">1: </span>  ;; direnv-mode
-<span class="linenr">2: </span>  (use-package direnv
-<span class="linenr">3: </span>    :config
-<span class="linenr">4: </span>    (direnv-mode))
+<pre class="src src-emacs-lisp"><span class="linenr">1: </span>  <span style="color: #9ca0a4;">;; </span><span style="color: #9ca0a4;">direnv-mode</span>
+<span class="linenr">2: </span>  <span style="color: #4078f2;">(</span><span style="color: #e45649;">use-package</span> <span style="color: #b751b6;">direnv</span>
+<span class="linenr">3: </span>    <span style="color: #a626a4;">:config</span>
+<span class="linenr">4: </span>    <span style="color: #a626a4;">(</span>direnv-mode<span style="color: #a626a4;">)</span><span style="color: #4078f2;">)</span>
 </pre>
 </div>
 
 
-<div id="org074542a" class="figure">
+<div id="org70c9886" class="figure">
 <p><img src="/assets/blog/2019/11/07/learning-haskell-with-nix-and-emacs/68374271-7886ff00-013c-11ea-92aa-fc27ff89f413.png" alt="68374271-7886ff00-013c-11ea-92aa-fc27ff89f413.png" />
 </p>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgc28bcdc" class="outline-2">
-<h2 id="orgc28bcdc">仓库地址</h2>
-<div class="outline-text-2" id="text-orgc28bcdc">
+<div id="outline-container-orgb4680fc" class="outline-2">
+<h2 id="orgb4680fc">仓库地址</h2>
+<div class="outline-text-2" id="text-orgb4680fc">
 <p>
 <a href="https://github.com/shanexu/helloworld">https://github.com/shanexu/helloworld</a>
 </p>
 </div>
 </div>
-
-<div id="outline-container-org32c01fb" class="outline-2">
-<h2 id="org32c01fb">参考文档</h2>
-<div class="outline-text-2" id="text-org32c01fb">
+<div id="outline-container-org69d3e2d" class="outline-2">
+<h2 id="org69d3e2d">参考文档</h2>
+<div class="outline-text-2" id="text-org69d3e2d">
 <p>
 <a href="https://nixos.org/nix/manual">https://nixos.org/nix/manual</a>
 </p>
@@ -752,7 +742,6 @@ nix-shell默认使用bash，但是我平时都用 <a href="https://github.com/ro
        <noscript>You must have JavaScript enabled to use the comments.</noscript>
       </section>
       <script src="//code.jquery.com/jquery-latest.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
       <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="/media/js/main.js"></script>
       <script type="text/javascript">

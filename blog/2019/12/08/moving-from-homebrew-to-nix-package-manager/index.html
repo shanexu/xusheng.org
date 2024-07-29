@@ -7,8 +7,8 @@
     <meta name="description" content="Moving from Homebrew to Nix Package Manager" />
     <meta name="keywords" content="nix, homebrew" />
     <link rel="stylesheet" href="/media/css/main.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
+
   <body class="container">
     <div>
       <header class="masthead">
@@ -34,33 +34,30 @@
 <div>
 <div class="post">
 <h1>Moving from Homebrew to Nix Package Manager</h1>
-
-<div id="outline-container-org3dba6cb" class="outline-2">
-<h2 id="org3dba6cb">前言</h2>
-<div class="outline-text-2" id="text-org3dba6cb">
+<div id="outline-container-orgd8184bf" class="outline-2">
+<h2 id="orgd8184bf">前言</h2>
+<div class="outline-text-2" id="text-orgd8184bf">
 <p>
 2012年我入手了人生第一台MacBook Pro，也正式开启了macOS(以前是 os x)之旅。在很长一段时间里我并不习惯macOS的应用安装方式。应用下载完后，打开dmg，然后拖放到 <code>/Applications</code> 目录下。以及macOS根本就不存在包管理器这种东西，我甚至在MacBook上直接安装了Archlinux。出于某些什么的原因，我又重新返回到了macOS，然后在用了一两个月的MacPorts之后转投了Homebrew。然后在最近重拾了haskell的学习进程之后，又开始折腾起了nix。
 </p>
 </div>
 </div>
-
-<div id="outline-container-orgd0579b9" class="outline-2">
-<h2 id="orgd0579b9">安装nix</h2>
-<div class="outline-text-2" id="text-orgd0579b9">
+<div id="outline-container-org7a040f0" class="outline-2">
+<h2 id="org7a040f0">安装nix</h2>
+<div class="outline-text-2" id="text-org7a040f0">
 <p>
 因为 <code>macOS catalin</code> 的关系，安装 nix 的过程有些许曲折，可以参考我之前的文章 <a href="https://xusheng.org/blog/2019/11/07/learning-haskell-with-nix-and-emacs/">Learning Haskell with nix and Emacs</a> 。
 </p>
 </div>
 </div>
-
-<div id="outline-container-orgb905fe5" class="outline-2">
-<h2 id="orgb905fe5">卸载Homebrew安装的包</h2>
-<div class="outline-text-2" id="text-orgb905fe5">
+<div id="outline-container-org3c9bebb" class="outline-2">
+<h2 id="org3c9bebb">卸载Homebrew安装的包</h2>
+<div class="outline-text-2" id="text-org3c9bebb">
 <p>
 列出已经安装的包
 </p>
 <div class="org-src-container">
-<pre class="src src-shell-script">  brew list
+<pre class="src src-shell-script">  <span style="color: #4078f2; font-weight: bold;">brew</span> list
 </pre>
 </div>
 
@@ -69,29 +66,27 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script">  brew uninstall `brew list`
+<pre class="src src-shell-script">  <span style="color: #4078f2; font-weight: bold;">brew</span> uninstall <span style="color: #e45649;">`</span><span style="color: #4078f2; background-color: #fafafa; font-weight: bold;">brew</span><span style="color: #383a42; background-color: #fafafa;"> list</span><span style="color: #e45649;">`</span>
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org97dd133" class="outline-2">
-<h2 id="org97dd133">安装nix包</h2>
-<div class="outline-text-2" id="text-org97dd133">
+<div id="outline-container-orga1c4674" class="outline-2">
+<h2 id="orga1c4674">安装nix包</h2>
+<div class="outline-text-2" id="text-orga1c4674">
 <div class="org-src-container">
-<pre class="src src-shell-script">  nix-env -i coreutils
+<pre class="src src-shell-script">  <span style="color: #4078f2; font-weight: bold;">nix-env</span> <span style="color: #b751b6;">-i</span> coreutils
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org2ef166f" class="outline-2">
-<h2 id="org2ef166f">问题</h2>
-<div class="outline-text-2" id="text-org2ef166f">
+<div id="outline-container-org7605baa" class="outline-2">
+<h2 id="org7605baa">问题</h2>
+<div class="outline-text-2" id="text-org7605baa">
 </div>
-<div id="outline-container-org723ffe3" class="outline-3">
-<h3 id="org723ffe3">coreutils包中的命令覆盖了macOS本身的命令</h3>
-<div class="outline-text-3" id="text-org723ffe3">
+<div id="outline-container-org9a495b2" class="outline-3">
+<h3 id="org9a495b2">coreutils包中的命令覆盖了macOS本身的命令</h3>
+<div class="outline-text-3" id="text-org9a495b2">
 <p>
 coreutils包中的命令有好几个与macOS命令冲突，并且其行为也不一样，例如 <code>df</code> 命令
 </p>
@@ -287,36 +282,32 @@ macOS 的 df
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgf753621" class="outline-3">
-<h3 id="orgf753621">emacs-libvterm 编译问题</h3>
-<div class="outline-text-3" id="text-orgf753621">
+<div id="outline-container-orgf58de9d" class="outline-3">
+<h3 id="orgf58de9d">emacs-libvterm 编译问题</h3>
+<div class="outline-text-3" id="text-orgf58de9d">
 <p>
 <a href="https://github.com/akermu/emacs-libvterm">emacs-libvterm</a> 前段时间开始使用这个包，可以说这个包是目前为止，我用过的在emacs下表现最好的终端模拟器了。然后在换成nix之后遇到了些问题。
 </p>
 </div>
-
-<div id="outline-container-org2ad8c2c" class="outline-4">
-<h4 id="org2ad8c2c">glibtool 命令找不到</h4>
-<div class="outline-text-4" id="text-org2ad8c2c">
+<div id="outline-container-org7114eba" class="outline-4">
+<h4 id="org7114eba">glibtool 命令找不到</h4>
+<div class="outline-text-4" id="text-org7114eba">
 <p>
 emacs-libvterm在macOS下，回去寻找glibtool这个命令，而glibtool这个命令实际上就是libtool命令加了前缀 <code>g</code> 。nix里面对应的包名是libtool。需要修改nix增加前缀。
 </p>
 </div>
 </div>
-
-<div id="outline-container-org8253ef5" class="outline-4">
-<h4 id="org8253ef5">libtool 静态编译问题</h4>
-<div class="outline-text-4" id="text-org8253ef5">
+<div id="outline-container-orgeaabf95" class="outline-4">
+<h4 id="orgeaabf95">libtool 静态编译问题</h4>
+<div class="outline-text-4" id="text-orgeaabf95">
 <p>
 nix下的包默认都是非静态编译，而emacs-libvterm又需要静态编译。这里又要改glibtool的nix表达式。
 </p>
 </div>
 </div>
-
-<div id="outline-container-org72cc724" class="outline-4">
-<h4 id="org72cc724">综上，最后修改完的 nix 文件</h4>
-<div class="outline-text-4" id="text-org72cc724">
+<div id="outline-container-org0b93f7f" class="outline-4">
+<h4 id="org0b93f7f">综上，最后修改完的 nix 文件</h4>
+<div class="outline-text-4" id="text-org0b93f7f">
 <div class="org-src-container">
 <pre class="src src-nix"><span class="linenr"> 1: </span>    { stdenv, fetchurl, m4, perl, help2man
 <span class="linenr"> 2: </span>    , withPrefix ? false
@@ -377,10 +368,9 @@ nix下的包默认都是非静态编译，而emacs-libvterm又需要静态编译
 </div>
 </div>
 </div>
-
-<div id="outline-container-org4c3a7d8" class="outline-3">
-<h3 id="org4c3a7d8">jenv 包不存在问题</h3>
-<div class="outline-text-3" id="text-org4c3a7d8">
+<div id="outline-container-org95e7b50" class="outline-3">
+<h3 id="org95e7b50">jenv 包不存在问题</h3>
+<div class="outline-text-3" id="text-org95e7b50">
 <p>
 jenv包是为了解决java环境问题的。而nix本身就是为了解决开发环境问题的“终极”方案。理论上根本就不需要jenv这样的工具。但是所有开发都使用 <code>nix-shell</code> 去定制开发环境，又稍显太重。所以有时候还是需要jenv这样的工具的。于是自己写个 nix表达式。
 </p>
@@ -432,10 +422,9 @@ jenv包是为了解决java环境问题的。而nix本身就是为了解决开发
 </div>
 </div>
 </div>
-
-<div id="outline-container-org4fef125" class="outline-3">
-<h3 id="org4fef125">mit-scheme 安装问题</h3>
-<div class="outline-text-3" id="text-org4fef125">
+<div id="outline-container-org2937458" class="outline-3">
+<h3 id="org2937458">mit-scheme 安装问题</h3>
+<div class="outline-text-3" id="text-org2937458">
 <p>
 nix的channel里有mit-scheme包，但是不支持darwin平台。使用mit-scheme-c的包来安装的话，又有编译问题。nix编译darwin包用的stdenv中clang的版本比较低。
 </p>
@@ -449,10 +438,9 @@ nix的channel里有mit-scheme包，但是不支持darwin平台。使用mit-schem
 </pre>
 </div>
 </div>
-
-<div id="outline-container-orgcf12214" class="outline-4">
-<h4 id="orgcf12214">解决clang版本低问题，可以直接使用xcode command line tools编译</h4>
-<div class="outline-text-4" id="text-orgcf12214">
+<div id="outline-container-org60532d0" class="outline-4">
+<h4 id="org60532d0">解决clang版本低问题，可以直接使用xcode command line tools编译</h4>
+<div class="outline-text-4" id="text-org60532d0">
 <div class="org-src-container">
 <pre class="src src-nix"><span class="linenr"> 1: </span>    { stdenv, requireFile, lib }:
 <span class="linenr"> 2: </span>
@@ -490,10 +478,9 @@ nix的channel里有mit-scheme包，但是不支持darwin平台。使用mit-schem
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgc7f50de" class="outline-4">
-<h4 id="orgc7f50de">修改 mit-scheme nix表达式，使用xcode command line tools编译</h4>
-<div class="outline-text-4" id="text-orgc7f50de">
+<div id="outline-container-orgd33db02" class="outline-4">
+<h4 id="orgd33db02">修改 mit-scheme nix表达式，使用xcode command line tools编译</h4>
+<div class="outline-text-4" id="text-orgd33db02">
 <div class="org-src-container">
 <pre class="src src-nix"><span class="linenr"> 1: </span>    { pkgs, stdenvNoCC, fetchurl, makeWrapper, gnum4, texinfo, texLive, automake, lib, macosVersion, xcodeVersion }:
 <span class="linenr"> 2: </span>
@@ -589,21 +576,18 @@ nix的channel里有mit-scheme包，但是不支持darwin平台。使用mit-schem
 </div>
 </div>
 </div>
-
-
-<div id="outline-container-org0330d20" class="outline-3">
-<h3 id="org0330d20">我的自定义nix-channels</h3>
-<div class="outline-text-3" id="text-org0330d20">
+<div id="outline-container-org3b9f809" class="outline-3">
+<h3 id="org3b9f809">我的自定义nix-channels</h3>
+<div class="outline-text-3" id="text-org3b9f809">
 <p>
 <a href="https://github.com/shanexu/nixpkgs-channels">https://github.com/shanexu/nixpkgs-channels</a>
 </p>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org6b4af13" class="outline-2">
-<h2 id="org6b4af13">后记</h2>
-<div class="outline-text-2" id="text-org6b4af13">
+<div id="outline-container-orgcd07f5b" class="outline-2">
+<h2 id="orgcd07f5b">后记</h2>
+<div class="outline-text-2" id="text-orgcd07f5b">
 <p>
 nix是个好工具，对于构建应用的开发环境来说是一个杀手级的工具，但是对于macOS这种系统的日常使用来说还是有些不方便。最后我给自己定下了一些使用策略。
 </p>
@@ -614,10 +598,9 @@ nix是个好工具，对于构建应用的开发环境来说是一个杀手级�
 </ol>
 </div>
 </div>
-
-<div id="outline-container-orgf37e2f5" class="outline-2">
-<h2 id="orgf37e2f5">参考文档</h2>
-<div class="outline-text-2" id="text-orgf37e2f5">
+<div id="outline-container-orgbcc63af" class="outline-2">
+<h2 id="orgbcc63af">参考文档</h2>
+<div class="outline-text-2" id="text-orgbcc63af">
 <p>
 <a href="https://www.softinio.com/post/moving-from-homebrew-to-nix-package-manager/">https://www.softinio.com/post/moving-from-homebrew-to-nix-package-manager/</a>
 </p>
@@ -655,7 +638,6 @@ nix是个好工具，对于构建应用的开发环境来说是一个杀手级�
        <noscript>You must have JavaScript enabled to use the comments.</noscript>
       </section>
       <script src="//code.jquery.com/jquery-latest.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
       <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="/media/js/main.js"></script>
       <script type="text/javascript">

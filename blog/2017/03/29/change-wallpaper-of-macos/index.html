@@ -7,8 +7,8 @@
     <meta name="description" content="&lt;TODO: insert your description here&gt;" />
     <meta name="keywords" content="macos" />
     <link rel="stylesheet" href="/media/css/main.css" type="text/css">
-    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
+
   <body class="container">
     <div>
       <header class="masthead">
@@ -52,7 +52,7 @@ macOS有很多令人不爽的地方，我都一一找到了破解方法。然而
 </p>
 
 
-<div id="orgb70e13d" class="figure">
+<div id="org6188ca6" class="figure">
 <p><img src="/assets/blog/2017/03/29/change-wallpaper-of-macos/wp-28.jpg" alt="/assets/blog/2017/03/29/change-wallpaper-of-macos/wp-28.jpg" width="100%" />
 </p>
 </div>
@@ -78,19 +78,19 @@ macOS有很多令人不爽的地方，我都一一找到了破解方法。然而
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell">#!/bin/bash
+<pre class="src src-shell"><span style="color: #9ca0a4;">#!/bin/bash</span>
 
-function realpath_fun() {
-    python -c "import os;print(os.path.abspath('"$1"'))"
-}
+<span style="color: #e45649;">function</span> <span style="color: #a626a4;">realpath_fun</span><span style="color: #4078f2;">()</span> <span style="color: #4078f2;">{</span>
+    <span style="color: #4078f2; font-weight: bold;">python</span> <span style="color: #b751b6;">-c</span> <span style="color: #50a14f;">"import os;print(os.path.abspath('"</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">1</span><span style="color: #50a14f;">"'))"</span>
+<span style="color: #4078f2;">}</span>
 
-rp=`which realpaths || echo realpath_fun`
+<span style="color: #6a1868; font-style: italic;">rp</span>=<span style="color: #e45649;">`</span><span style="color: #4078f2; background-color: #fafafa; font-weight: bold;">which</span><span style="color: #383a42; background-color: #fafafa;"> realpaths </span><span style="color: #e45649; background-color: #fafafa;">||</span><span style="color: #383a42; background-color: #fafafa;"> </span><span style="color: #a626a4; background-color: #fafafa; font-weight: bold;">echo</span><span style="color: #383a42; background-color: #fafafa;"> realpath_fun</span><span style="color: #e45649;">`</span>
 
-pic=`$rp $1`
+<span style="color: #6a1868; font-style: italic;">pic</span>=<span style="color: #e45649;">`</span><span style="color: #e45649; background-color: #fafafa;">$</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">rp</span><span style="color: #383a42; background-color: #fafafa;"> </span><span style="color: #e45649; background-color: #fafafa;">$</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">1</span><span style="color: #e45649;">`</span>
 
-echo "UPDATE data SET value = '"$pic"';" | sqlite3 ~/Library/Application\ Support/Dock/desktoppicture.db &amp;&amp; killall Dock
+<span style="color: #a626a4; font-weight: bold;">echo</span> <span style="color: #50a14f;">"UPDATE data SET value = '"</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">pic</span><span style="color: #50a14f;">"';"</span> <span style="color: #e45649;">|</span> <span style="color: #4078f2; font-weight: bold;">sqlite3</span> ~/Library/Application\ Support/Dock/desktoppicture.db <span style="color: #e45649;">&amp;&amp;</span> <span style="color: #4078f2; font-weight: bold;">killall</span> Dock
 
-sudo rm /Library/Caches/com.apple.desktop.admin.png
+<span style="color: #4078f2; font-weight: bold;">sudo</span> rm /Library/Caches/com.apple.desktop.admin.png
 </pre>
 </div>
 
@@ -129,7 +129,6 @@ sudo rm /Library/Caches/com.apple.desktop.admin.png
        <noscript>You must have JavaScript enabled to use the comments.</noscript>
       </section>
       <script src="//code.jquery.com/jquery-latest.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
       <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="/media/js/main.js"></script>
       <script type="text/javascript">
