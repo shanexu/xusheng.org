@@ -34,9 +34,9 @@
 <div>
 <div class="post">
 <h1>Linux系统搬家</h1>
-<div id="outline-container-org8191d36" class="outline-2">
-<h2 id="org8191d36">起因</h2>
-<div class="outline-text-2" id="text-org8191d36">
+<div id="outline-container-org158320b" class="outline-2">
+<h2 id="org158320b">起因</h2>
+<div class="outline-text-2" id="text-org158320b">
 <p>
 终于有大片的时间让我得以解决长期困扰我的问题——系统空间不足。之前做了权宜之计，
 将 <code>/home/&lt;用户名&gt;/Downloads</code> 、 <code>/home/&lt;用户名&gt;/src</code>  、 <code>/home/&lt;用户名&gt;/OneDrive</code>
@@ -46,13 +46,13 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org7610da2" class="outline-2">
-<h2 id="org7610da2">实操</h2>
-<div class="outline-text-2" id="text-org7610da2">
+<div id="outline-container-org4f69bea" class="outline-2">
+<h2 id="org4f69bea">实操</h2>
+<div class="outline-text-2" id="text-org4f69bea">
 </div>
-<div id="outline-container-org724c0d9" class="outline-3">
-<h3 id="org724c0d9">现状</h3>
-<div class="outline-text-3" id="text-org724c0d9">
+<div id="outline-container-orgf54650c" class="outline-3">
+<h3 id="orgf54650c">现状</h3>
+<div class="outline-text-3" id="text-orgf54650c">
 <p>
 使用fdkis命令查看现状
 </p>
@@ -70,9 +70,9 @@
 </div>
 </div>
 </div>
-<div id="outline-container-orgc5e46d6" class="outline-3">
-<h3 id="orgc5e46d6">克隆系统</h3>
-<div class="outline-text-3" id="text-orgc5e46d6">
+<div id="outline-container-org9e84f78" class="outline-3">
+<h3 id="org9e84f78">克隆系统</h3>
+<div class="outline-text-3" id="text-org9e84f78">
 <p>
 使用liveCD启动系统后克隆磁盘
 </p>
@@ -82,9 +82,9 @@
 </div>
 </div>
 </div>
-<div id="outline-container-org3314593" class="outline-3">
-<h3 id="org3314593">调整磁盘UUID</h3>
-<div class="outline-text-3" id="text-org3314593">
+<div id="outline-container-orgb2ab99f" class="outline-3">
+<h3 id="orgb2ab99f">调整磁盘UUID</h3>
+<div class="outline-text-3" id="text-orgb2ab99f">
 <div class="org-src-container">
 <pre class="src src-shell"><span style="color: #4078f2; font-weight: bold;">mlabel</span> <span style="color: #b751b6;">-N</span> aaaa1111 <span style="color: #b751b6;">-i</span> /dev/nvme1n1p1 ::
 <span style="color: #4078f2; font-weight: bold;">tune2fs</span> <span style="color: #b751b6;">-u</span> /dev/nvme1n1p2
@@ -93,17 +93,17 @@
 </div>
 </div>
 </div>
-<div id="outline-container-org41f521d" class="outline-3">
-<h3 id="org41f521d">老磁盘格式化并创建分区，并复制数据</h3>
+<div id="outline-container-org8d91254" class="outline-3">
+<h3 id="org8d91254">老磁盘格式化并创建分区，并复制数据</h3>
 </div>
 
-<div id="outline-container-orgbdbcac7" class="outline-3">
-<h3 id="orgbdbcac7">调整配置文件 <code>/etc/fstab</code></h3>
+<div id="outline-container-org67227bb" class="outline-3">
+<h3 id="org67227bb">调整配置文件 <code>/etc/fstab</code></h3>
 </div>
 
-<div id="outline-container-org9136c5c" class="outline-3">
-<h3 id="org9136c5c">重新安装grub</h3>
-<div class="outline-text-3" id="text-org9136c5c">
+<div id="outline-container-orgaf6d623" class="outline-3">
+<h3 id="orgaf6d623">重新安装grub</h3>
+<div class="outline-text-3" id="text-orgaf6d623">
 <div class="org-src-container">
 <pre class="src src-shell"><span style="color: #4078f2; font-weight: bold;">mount</span> /dev/nvme1n1p3 /mnt/ROOT
 <span style="color: #4078f2; font-weight: bold;">mount</span> /dev/nvme1n1p2 /mnt/ROOT/boot
@@ -115,9 +115,9 @@
 </div>
 </div>
 </div>
-<div id="outline-container-org43cb37f" class="outline-3">
-<h3 id="org43cb37f">调整新磁盘的分区大小</h3>
-<div class="outline-text-3" id="text-org43cb37f">
+<div id="outline-container-orgd721d8a" class="outline-3">
+<h3 id="orgd721d8a">调整新磁盘的分区大小</h3>
+<div class="outline-text-3" id="text-orgd721d8a">
 <div class="org-src-container">
 <pre class="src src-shell"><span style="color: #4078f2; font-weight: bold;">parted</span> /dev/nvme1n1
 </pre>
@@ -133,9 +133,9 @@
 </div>
 </div>
 </div>
-<div id="outline-container-orgad8d5bd" class="outline-3">
-<h3 id="orgad8d5bd">重启祈福</h3>
-<div class="outline-text-3" id="text-orgad8d5bd">
+<div id="outline-container-orgbb85a72" class="outline-3">
+<h3 id="orgbb85a72">重启祈福</h3>
+<div class="outline-text-3" id="text-orgbb85a72">
 <p>
 最终磁盘状态如下
 </p>

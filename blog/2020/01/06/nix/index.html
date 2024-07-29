@@ -34,13 +34,13 @@
 <div>
 <div class="post">
 <h1>nix作为包管理工具并用于发布软件的可行性研究</h1>
-<div id="outline-container-orgb34ce7a" class="outline-2">
-<h2 id="orgb34ce7a">前言</h2>
-<div class="outline-text-2" id="text-orgb34ce7a">
+<div id="outline-container-orgcaf2f1b" class="outline-2">
+<h2 id="orgcaf2f1b">前言</h2>
+<div class="outline-text-2" id="text-orgcaf2f1b">
 </div>
-<div id="outline-container-org69aea0f" class="outline-3">
-<h3 id="org69aea0f">什么是包管理器</h3>
-<div class="outline-text-3" id="text-org69aea0f">
+<div id="outline-container-org4458f53" class="outline-3">
+<h3 id="org4458f53">什么是包管理器</h3>
+<div class="outline-text-3" id="text-org4458f53">
 <p>
 软件包管理系统是在电脑中自动安装、配制、卸载和升级软件包的工具组合，在各种系统软件和应用软件的安装管理中均有广泛应用。 
 在Linux发行版中，几乎每一个发行版都有自己的软件包管理系统。常见的有：
@@ -56,9 +56,9 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org0ae51fb" class="outline-3">
-<h3 id="org0ae51fb">蛮荒时代</h3>
-<div class="outline-text-3" id="text-org0ae51fb">
+<div id="outline-container-orgd68fa57" class="outline-3">
+<h3 id="orgd68fa57">蛮荒时代</h3>
+<div class="outline-text-3" id="text-orgd68fa57">
 <p>
 在有软件包管理器之前，Linux上是如何安装软件的呢？那时候（包括现在部分软件），在类似github或者自建版本控制中心上发布源码。开发者需要自行下载源码，然后使用类似下面的流程编译安装：
 </p>
@@ -780,9 +780,9 @@
 </div>
 </div>
 </div>
-<div id="outline-container-orged6097d" class="outline-2">
-<h2 id="orged6097d">Nix包管理器</h2>
-<div class="outline-text-2" id="text-orged6097d">
+<div id="outline-container-org623622a" class="outline-2">
+<h2 id="org623622a">Nix包管理器</h2>
+<div class="outline-text-2" id="text-org623622a">
 <p>
 Nix是一个强大的包管理工具，它使得包管理更可靠并且可重现。Nix提供了原子级别的升级和回滚操作，多版本安装，多用户包管理，和方便的开发环境设置。
 </p>
@@ -796,9 +796,9 @@ Nix是一个强大的包管理工具，它使得包管理更可靠并且可重�
 <li>Portable</li>
 </ul>
 </div>
-<div id="outline-container-org136c879" class="outline-3">
-<h3 id="org136c879">About</h3>
-<div class="outline-text-3" id="text-org136c879">
+<div id="outline-container-org90a263e" class="outline-3">
+<h3 id="org90a263e">About</h3>
+<div class="outline-text-3" id="text-org90a263e">
 <p>
 Nix是一个引入了纯函数概念的包管理器。它把软件包当做值来处理。其打包过程也直接用函数来描述。正如函数式编程语言中纯函数的概念一般，相同的输入总会有相同的输出。在nix里面就是，一旦打包成功，包就不会再改变。Nix将软件包，保存在 <code>/nix/store</code> 下面，每个软件包都有自己独立的目录，例如：
 </p>
@@ -814,9 +814,9 @@ Nix是一个引入了纯函数概念的包管理器。它把软件包当做值�
 </div>
 </div>
 </div>
-<div id="outline-container-orgb238e56" class="outline-2">
-<h2 id="orgb238e56">参考文档</h2>
-<div class="outline-text-2" id="text-orgb238e56">
+<div id="outline-container-org378b287" class="outline-2">
+<h2 id="org378b287">参考文档</h2>
+<div class="outline-text-2" id="text-org378b287">
 <p>
 <a href="https://zh.wikipedia.org/wiki/%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F">https://zh.wikipedia.org/wiki/%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F</a>
 </p>

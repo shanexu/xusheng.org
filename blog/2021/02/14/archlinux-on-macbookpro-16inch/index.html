@@ -34,9 +34,9 @@
 <div>
 <div class="post">
 <h1>Archlinux on MacbookPro 16inch</h1>
-<div id="outline-container-org92302ad" class="outline-2">
-<h2 id="org92302ad">起因</h2>
-<div class="outline-text-2" id="text-org92302ad">
+<div id="outline-container-org51363ce" class="outline-2">
+<h2 id="org51363ce">起因</h2>
+<div class="outline-text-2" id="text-org51363ce">
 <p>
 <a href="https://www.reddit.com/r/emacs/comments/d2n2wh/emacs_is_slow_on_macos/">Emacs is slow on macOS</a>
 </p>
@@ -46,23 +46,23 @@
 </p>
 
 
-<div id="orgf004b65" class="figure">
+<div id="org37d20b5" class="figure">
 <p><img src="/assets/blog/2021/02/14/archlinux-on-macbookpro-16inch/Xnip2021-02-14_14-03-35.png" alt="Xnip2021-02-14_14-03-35.png" />
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org98e10ff" class="outline-2">
-<h2 id="org98e10ff">安装过程</h2>
-<div class="outline-text-2" id="text-org98e10ff">
+<div id="outline-container-org3e90b0f" class="outline-2">
+<h2 id="org3e90b0f">安装过程</h2>
+<div class="outline-text-2" id="text-org3e90b0f">
 <p>
 基本全程参考这个文档。
 <a href="https://gist.github.com/TRPB/437f663b545d23cc8a2073253c774be3">https://gist.github.com/TRPB/437f663b545d23cc8a2073253c774be3</a>
 </p>
 </div>
-<div id="outline-container-org886b58a" class="outline-3">
-<h3 id="org886b58a">bootloader</h3>
-<div class="outline-text-3" id="text-org886b58a">
+<div id="outline-container-orga0b44e2" class="outline-3">
+<h3 id="orga0b44e2">bootloader</h3>
+<div class="outline-text-3" id="text-orga0b44e2">
 <p>
 安装过程颇为曲折，首先我将 <code>efi</code> 分区挂载到 <code>/efi</code> 。
 </p>
@@ -92,9 +92,9 @@
 </div>
 </div>
 </div>
-<div id="outline-container-orgd069bec" class="outline-3">
-<h3 id="orgd069bec">内核</h3>
-<div class="outline-text-3" id="text-orgd069bec">
+<div id="outline-container-org7d2e4ac" class="outline-3">
+<h3 id="org7d2e4ac">内核</h3>
+<div class="outline-text-3" id="text-org7d2e4ac">
 <p>
 <a href="https://github.com/aunali1">Aun-Ali Zaidi</a> 打了补丁的内核 <a href="https://github.com/aunali1/linux-mbp-arch">linux-mbp-arch</a> 。
 </p>
@@ -115,9 +115,9 @@
 </div>
 </div>
 </div>
-<div id="outline-container-org82fe9ef" class="outline-3">
-<h3 id="org82fe9ef">键盘和触摸板</h3>
-<div class="outline-text-3" id="text-org82fe9ef">
+<div id="outline-container-orga46d019" class="outline-3">
+<h3 id="orga46d019">键盘和触摸板</h3>
+<div class="outline-text-3" id="text-orga46d019">
 <div class="org-src-container">
 <pre class="src src-shell-script"><span style="color: #4078f2; font-weight: bold;">sudo</span> pacman <span style="color: #b751b6;">-S</span> apple-bce-dkms-git
 </pre>
@@ -130,9 +130,9 @@ apple-bce
 </div>
 </div>
 </div>
-<div id="outline-container-org1817cf6" class="outline-3">
-<h3 id="org1817cf6">Touch Bar</h3>
-<div class="outline-text-3" id="text-org1817cf6">
+<div id="outline-container-org058d5c6" class="outline-3">
+<h3 id="org058d5c6">Touch Bar</h3>
+<div class="outline-text-3" id="text-org058d5c6">
 <div class="org-src-container">
 <pre class="src src-shell-script"><span style="color: #4078f2; font-weight: bold;">yay</span> <span style="color: #b751b6;">-G</span> macbook12-spi-driver-dkms
 <span style="color: #a626a4; font-weight: bold;">cd</span> macbook12-spi-driver-dkms
@@ -225,9 +225,9 @@ apple-ib-als
 </div>
 </div>
 </div>
-<div id="outline-container-orga25974f" class="outline-3">
-<h3 id="orga25974f">fan control</h3>
-<div class="outline-text-3" id="text-orga25974f">
+<div id="outline-container-org8056623" class="outline-3">
+<h3 id="org8056623">fan control</h3>
+<div class="outline-text-3" id="text-org8056623">
 <div class="org-src-container">
 <pre class="src src-shell-script"><span style="color: #4078f2; font-weight: bold;">git</span> clone https://github.com/shanexu/mpb16fand.git
 <span style="color: #a626a4; font-weight: bold;">cd</span> mpb16fand
@@ -239,42 +239,42 @@ apple-ib-als
 </div>
 </div>
 </div>
-<div id="outline-container-orge5d2c18" class="outline-3">
-<h3 id="orge5d2c18">xmonad配置</h3>
-<div class="outline-text-3" id="text-orge5d2c18">
+<div id="outline-container-orgf6082aa" class="outline-3">
+<h3 id="orgf6082aa">xmonad配置</h3>
+<div class="outline-text-3" id="text-orgf6082aa">
 <p>
 <a href="https://github.com:shanexu/.xmonad.git">https://github.com:shanexu/.xmonad.git</a>
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-orgbc7554d" class="outline-2">
-<h2 id="orgbc7554d">遗留问题</h2>
-<div class="outline-text-2" id="text-orgbc7554d">
+<div id="outline-container-orgbe251c4" class="outline-2">
+<h2 id="orgbe251c4">遗留问题</h2>
+<div class="outline-text-2" id="text-orgbe251c4">
 <p>
 wifi目前没有搞定。
 </p>
 </div>
 </div>
-<div id="outline-container-org0ca37a4" class="outline-2">
-<h2 id="org0ca37a4">screenshots</h2>
-<div class="outline-text-2" id="text-org0ca37a4">
+<div id="outline-container-org46ed9f8" class="outline-2">
+<h2 id="org46ed9f8">screenshots</h2>
+<div class="outline-text-2" id="text-org46ed9f8">
 
-<div id="org66147f3" class="figure">
+<div id="orgce189e2" class="figure">
 <p><img src="/assets/blog/2021/02/14/archlinux-on-macbookpro-16inch/Screenshot_from_2021-02-14_16-23-12.png" alt="Screenshot_from_2021-02-14_16-23-12.png" />
 </p>
 </div>
 
 
-<div id="org95f81cc" class="figure">
+<div id="org19eb706" class="figure">
 <p><img src="/assets/blog/2021/02/14/archlinux-on-macbookpro-16inch/Screenshot_from_2021-02-14_16-35-54.png" alt="Screenshot_from_2021-02-14_16-35-54.png" />
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org74d3c6c" class="outline-2">
-<h2 id="org74d3c6c">参考文档</h2>
-<div class="outline-text-2" id="text-org74d3c6c">
+<div id="outline-container-orgf9c0e45" class="outline-2">
+<h2 id="orgf9c0e45">参考文档</h2>
+<div class="outline-text-2" id="text-orgf9c0e45">
 <p>
 <a href="https://www.ninjastik.com/support/2018-macbook-pro-boot-from-usb/">https://www.ninjastik.com/support/2018-macbook-pro-boot-from-usb/</a>
 </p>
