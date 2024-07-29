@@ -32,17 +32,85 @@ sudo fdisk -l
 ** 克隆系统
 使用liveCD启动系统后克隆磁盘
 #+begin_src shell
-dd if=/dev/sda of=/dev/sdb bs=64K conv=noerror,sync status=progress
+dd if=/dev/nvme0n1 of=/dev/nvme1n1 bs=64K conv=noerror,sync status=progress
 #+end_src
 
 ** 调整磁盘UUID
+#+begin_src shell
+mlabel -N aaaa1111 -i /dev/nvme1n1p1 ::
+tune2fs -u /dev/nvme1n1p2
+tune2fs -u /dev/nvme1n1p3
+#+end_src
 
 ** 老磁盘格式化并创建分区，并复制数据
 
 ** 调整配置文件 ~/etc/fstab~
 
 ** 重新安装grub
+#+begin_src shell
+mount /dev/nvme1n1p3 /mnt/ROOT
+mount /dev/nvme1n1p2 /mnt/ROOT/boot
+mount /dev/nvme1n1p1 /mnt/ROOT/boot/efi
+arch-chroot /mnt/ROOT
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --no-nvram
+grub-mkconfig -o /boot/grub/grub.cfg
+#+end_src
 
 ** 调整新磁盘的分区大小
+#+begin_src shell
+parted /dev/nvme1n1
+#+end_src
+使用 =resizepart NUMBER END= 命令调整磁盘大小
+
+#+begin_src shell
+resize2fs /dev/nvme1n1p3
+e2fsck /dev/nvme1n1p3
+#+end_src
 
 ** 重启祈福
+最终磁盘状态如下
+
+#+begin_src shell
+fdisk -l
+#+end_src
+
+#+begin_src text
+Disk /dev/sdb: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
+Disk model: Samsung SSD 860 
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: 1EC91553-C65A-4EB0-B32B-6931C7B69EF6
+
+Device          Start        End    Sectors   Size Type
+/dev/sdb1        2048      34815      32768    16M Microsoft reserved
+/dev/sdb2       34816 1952325913 1952291098 930.9G Microsoft basic data
+/dev/sdb3  1952327680 1953521663    1193984   583M Windows recovery environment
+
+
+Disk /dev/nvme0n1: 476.94 GiB, 512110190592 bytes, 1000215216 sectors
+Disk model: INTEL SSDPEKKW512G8                     
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: 0E8686A0-7E3D-4E90-85E0-35510B6E793F
+
+Device         Start        End    Sectors   Size Type
+/dev/nvme0n1p1  2048 1000214527 1000212480 476.9G Linux filesystem
+
+
+Disk /dev/nvme1n1: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
+Disk model: ZHITAI Ti600 1TB                        
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: B67A06FC-4CC2-4C9B-90D7-0A9FD5B449FF
+
+Device           Start        End    Sectors  Size Type
+/dev/nvme1n1p1 1228800    1753087     524288  256M EFI System
+/dev/nvme1n1p2 1753088    2801663    1048576  512M Linux filesystem
+/dev/nvme1n1p3 2801664 1953125000 1950323337  930G Linux filesystem
+#+end_src
