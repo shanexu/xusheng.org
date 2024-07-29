@@ -32,9 +32,9 @@
 <div class="post">
 <h1>Install XMonad</h1>
 
-<div id="outline-container-orgbe8137d" class="outline-2">
-<h2 id="orgbe8137d">安装XMonad</h2>
-<div class="outline-text-2" id="text-orgbe8137d">
+<div id="outline-container-org405540f" class="outline-2">
+<h2 id="org405540f">安装XMonad</h2>
+<div class="outline-text-2" id="text-org405540f">
 <div class="org-src-container">
 <pre class="src src-shell">sudo pacman -S xmonad xmonad-contrib xmonad-utils xmobar dzen2 demnu
 sudo pacman -S termite
@@ -43,9 +43,9 @@ sudo pacman -S termite
 </div>
 
 
-<div id="outline-container-org1163b13" class="outline-3">
-<h3 id="org1163b13">最简单的配置</h3>
-<div class="outline-text-3" id="text-org1163b13">
+<div id="outline-container-org5f7e43b" class="outline-3">
+<h3 id="org5f7e43b">最简单的配置</h3>
+<div class="outline-text-3" id="text-org5f7e43b">
 <div class="org-src-container">
 <pre class="src src-haskell">-- Imports.
 import XMonad
@@ -99,9 +99,9 @@ myConfig = def {
 </div>
 </div>
 
-<div id="outline-container-org8ed1fe8" class="outline-3">
-<h3 id="org8ed1fe8">xmobar配置</h3>
-<div class="outline-text-3" id="text-org8ed1fe8">
+<div id="outline-container-orgd1739a3" class="outline-3">
+<h3 id="orgd1739a3">xmobar配置</h3>
+<div class="outline-text-3" id="text-orgd1739a3">
 <p>
 编辑 <code>~/.xmobarrc</code>
 </p>
@@ -128,9 +128,9 @@ myConfig = def {
 </div>
 </div>
 
-<div id="outline-container-org3c63e16" class="outline-3">
-<h3 id="org3c63e16">stalonetray配置</h3>
-<div class="outline-text-3" id="text-org3c63e16">
+<div id="outline-container-orgaaecac4" class="outline-3">
+<h3 id="orgaaecac4">stalonetray配置</h3>
+<div class="outline-text-3" id="text-orgaaecac4">
 <p>
 编辑 <code>~/.stalonetrayrc</code>
 </p>
@@ -165,9 +165,9 @@ xsync false
 </div>
 </div>
 
-<div id="outline-container-org374ddad" class="outline-2">
-<h2 id="org374ddad">修改 <code>.xinitrc</code></h2>
-<div class="outline-text-2" id="text-org374ddad">
+<div id="outline-container-orge135fb6" class="outline-2">
+<h2 id="orge135fb6">修改 <code>.xinitrc</code></h2>
+<div class="outline-text-2" id="text-orge135fb6">
 <div class="org-src-container">
 <pre class="src src-shell">#!/bin/sh
 
@@ -234,17 +234,17 @@ esac
 </div>
 </div>
 
-<div id="outline-container-org51677fb" class="outline-2">
-<h2 id="org51677fb">配置键盘和触摸板</h2>
-<div class="outline-text-2" id="text-org51677fb">
+<div id="outline-container-org5d7d3d4" class="outline-2">
+<h2 id="org5d7d3d4">配置键盘和触摸板</h2>
+<div class="outline-text-2" id="text-org5d7d3d4">
 <p>
 使用 gnome-session 的时候，会默认配置触摸板和键盘鼠标等，所以这里就需要在 <code>/etc/X11/xorg.conf.d</code> 下面添加配置文件的方式配置键盘和触摸板了。
 </p>
 </div>
 
-<div id="outline-container-org84fb601" class="outline-3">
-<h3 id="org84fb601">键盘配置</h3>
-<div class="outline-text-3" id="text-org84fb601">
+<div id="outline-container-orgae9b048" class="outline-3">
+<h3 id="orgae9b048">键盘配置</h3>
+<div class="outline-text-3" id="text-orgae9b048">
 <p>
 我是 Emacs 的死衷，所以需要将 <code>ctrl</code> 和 <code>caps lock</code> 交换。
 编写 <code>/etc/X11/xorg.conf.d/00-keyboard.conf</code> 文件
@@ -274,9 +274,9 @@ EndSection
 </div>
 
 
-<div id="outline-container-orgb6028cf" class="outline-3">
-<h3 id="orgb6028cf">触摸板设置</h3>
-<div class="outline-text-3" id="text-orgb6028cf">
+<div id="outline-container-org2fbf705" class="outline-3">
+<h3 id="org2fbf705">触摸板设置</h3>
+<div class="outline-text-3" id="text-org2fbf705">
 <p>
 这么多年被苹果强奸之后，我发现我已经和自然的习惯于苹果的“NatrualScrolling”了。
 编写 <code>/etc/X11/xorg.conf.d/30-touchpad.conf</code>
@@ -385,9 +385,9 @@ EndSection
 </div>
 </div>
 
-<div id="outline-container-org2dbde88" class="outline-2">
-<h2 id="org2dbde88">微调Emacs的输入法问题</h2>
-<div class="outline-text-2" id="text-org2dbde88">
+<div id="outline-container-org16fc4ea" class="outline-2">
+<h2 id="org16fc4ea">微调Emacs的输入法问题</h2>
+<div class="outline-text-2" id="text-org16fc4ea">
 <p>
 Emacs和输入法是个老问题了， <code>ctrl + space</code> 不能呼出输入法是常态。貌似在gnome环境似乎没有问题。反正我也很少在Emacs下打中文的。想着spacemacs里可能有解决方案，看了下文档果然如此。在spacemacs中增加chinese的layer就自然地解决了问题。
 </p>
@@ -399,9 +399,9 @@ Emacs和输入法是个老问题了， <code>ctrl + space</code> 不能呼出输
 </div>
 </div>
 
-<div id="outline-container-org16ca36b" class="outline-2">
-<h2 id="org16ca36b">配置termite</h2>
-<div class="outline-text-2" id="text-org16ca36b">
+<div id="outline-container-org9fbd4c6" class="outline-2">
+<h2 id="org9fbd4c6">配置termite</h2>
+<div class="outline-text-2" id="text-org9fbd4c6">
 <p>
 编辑 <code>~/.config/termite/config</code>
 </p>

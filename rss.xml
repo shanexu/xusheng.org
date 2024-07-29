@@ -4,15 +4,15 @@
     <title>org-page</title>
     <link>https://xusheng.org</link>
     <description>static site generator</description>
-    <pubDate>Sat, 27 Jul 2024 11:22:50 CST</pubDate>
-    <lastBuildDate>Sat, 27 Jul 2024 11:22:50 CST</lastBuildDate>
+    <pubDate>Mon, 29 Jul 2024 09:10:36 CST</pubDate>
+    <lastBuildDate>Mon, 29 Jul 2024 09:10:36 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
     <item>
       <title>Linux系统搬家</title>
       <link>https://xusheng.org/blog/2024/07/27/linux-system-move</link>
       <description><![CDATA[<TODO: insert your description here>]]></description>
-      <pubDate>2024-07-27</pubDate>
+      <pubDate>2024-07-29</pubDate>
       <guid>https://xusheng.org/blog/2024/07/27/linux-system-move</guid>
     </item>
     <item>
