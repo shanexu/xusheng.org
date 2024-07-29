@@ -12,7 +12,9 @@
   <body class="container">
     <div>
       <header class="masthead">
-        <h1 class="masthead-title"><a href="/">org-page</a></h1>
+        <h1 class="masthead-title">
+          <a href="/">org-page</a>
+        </h1>
         <p>static site generator</p>
         <ul>
           <li><a href="/blog/">Blog</a></li>
@@ -25,6 +27,7 @@
           <input type="text" class="field" name="q" id="s" placeholder="Search">
           <input type="hidden" name="as_sitesearch" value="xusheng.org">
         </form>
+        <img class="avatar" src="https://avatars.githubusercontent.com/u/1257453?s=400&amp;u=887a49b5ff99794452aa0bc3772fe113cc6e962a&amp;v=4" />
       </header>
     </div>
 
@@ -32,13 +35,13 @@
 <div class="post">
 <h1>nix作为包管理工具并用于发布软件的可行性研究</h1>
 
-<div id="outline-container-org91fc25f" class="outline-2">
-<h2 id="org91fc25f">前言</h2>
-<div class="outline-text-2" id="text-org91fc25f">
+<div id="outline-container-org778faac" class="outline-2">
+<h2 id="org778faac">前言</h2>
+<div class="outline-text-2" id="text-org778faac">
 </div>
-<div id="outline-container-org3320dc8" class="outline-3">
-<h3 id="org3320dc8">什么是包管理器</h3>
-<div class="outline-text-3" id="text-org3320dc8">
+<div id="outline-container-orgdf0c2e1" class="outline-3">
+<h3 id="orgdf0c2e1">什么是包管理器</h3>
+<div class="outline-text-3" id="text-orgdf0c2e1">
 <p>
 软件包管理系统是在电脑中自动安装、配制、卸载和升级软件包的工具组合，在各种系统软件和应用软件的安装管理中均有广泛应用。 
 在Linux发行版中，几乎每一个发行版都有自己的软件包管理系统。常见的有：
@@ -55,9 +58,9 @@
 </div>
 </div>
 
-<div id="outline-container-orgba99b7e" class="outline-3">
-<h3 id="orgba99b7e">蛮荒时代</h3>
-<div class="outline-text-3" id="text-orgba99b7e">
+<div id="outline-container-org7b8e824" class="outline-3">
+<h3 id="org7b8e824">蛮荒时代</h3>
+<div class="outline-text-3" id="text-org7b8e824">
 <p>
 在有软件包管理器之前，Linux上是如何安装软件的呢？那时候（包括现在部分软件），在类似github或者自建版本控制中心上发布源码。开发者需要自行下载源码，然后使用类似下面的流程编译安装：
 </p>
@@ -782,9 +785,9 @@
 
 
 
-<div id="outline-container-org849e1f5" class="outline-2">
-<h2 id="org849e1f5">Nix包管理器</h2>
-<div class="outline-text-2" id="text-org849e1f5">
+<div id="outline-container-orgf37b26c" class="outline-2">
+<h2 id="orgf37b26c">Nix包管理器</h2>
+<div class="outline-text-2" id="text-orgf37b26c">
 <p>
 Nix是一个强大的包管理工具，它使得包管理更可靠并且可重现。Nix提供了原子级别的升级和回滚操作，多版本安装，多用户包管理，和方便的开发环境设置。
 </p>
@@ -799,9 +802,9 @@ Nix是一个强大的包管理工具，它使得包管理更可靠并且可重�
 </ul>
 </div>
 
-<div id="outline-container-orgb36ba00" class="outline-3">
-<h3 id="orgb36ba00">About</h3>
-<div class="outline-text-3" id="text-orgb36ba00">
+<div id="outline-container-orgdad260b" class="outline-3">
+<h3 id="orgdad260b">About</h3>
+<div class="outline-text-3" id="text-orgdad260b">
 <p>
 Nix是一个引入了纯函数概念的包管理器。它把软件包当做值来处理。其打包过程也直接用函数来描述。正如函数式编程语言中纯函数的概念一般，相同的输入总会有相同的输出。在nix里面就是，一旦打包成功，包就不会再改变。Nix将软件包，保存在 <code>/nix/store</code> 下面，每个软件包都有自己独立的目录，例如：
 </p>
@@ -818,9 +821,9 @@ Nix是一个引入了纯函数概念的包管理器。它把软件包当做值�
 </div>
 </div>
 
-<div id="outline-container-orgc4eb39f" class="outline-2">
-<h2 id="orgc4eb39f">参考文档</h2>
-<div class="outline-text-2" id="text-orgc4eb39f">
+<div id="outline-container-org7bc572b" class="outline-2">
+<h2 id="org7bc572b">参考文档</h2>
+<div class="outline-text-2" id="text-org7bc572b">
 <p>
 <a href="https://zh.wikipedia.org/wiki/%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F">https://zh.wikipedia.org/wiki/%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F</a>
 </p>

@@ -12,7 +12,9 @@
   <body class="container">
     <div>
       <header class="masthead">
-        <h1 class="masthead-title"><a href="/">org-page</a></h1>
+        <h1 class="masthead-title">
+          <a href="/">org-page</a>
+        </h1>
         <p>static site generator</p>
         <ul>
           <li><a href="/blog/">Blog</a></li>
@@ -25,6 +27,7 @@
           <input type="text" class="field" name="q" id="s" placeholder="Search">
           <input type="hidden" name="as_sitesearch" value="xusheng.org">
         </form>
+        <img class="avatar" src="https://avatars.githubusercontent.com/u/1257453?s=400&amp;u=887a49b5ff99794452aa0bc3772fe113cc6e962a&amp;v=4" />
       </header>
     </div>
 
@@ -35,9 +38,9 @@
 本文的的主要内容来自golang源代码中的 <a href="https://github.com/golang/go/blob/master/doc/install-source.html">install-source.html</a> 内容。
 </p>
 
-<div id="outline-container-orga8259a4" class="outline-2">
-<h2 id="orga8259a4">克隆源代码</h2>
-<div class="outline-text-2" id="text-orga8259a4">
+<div id="outline-container-org8398299" class="outline-2">
+<h2 id="org8398299">克隆源代码</h2>
+<div class="outline-text-2" id="text-org8398299">
 <div class="org-src-container">
 <pre class="src src-shell">git clone https://github.com/golang/go.git
 </pre>
@@ -45,9 +48,9 @@
 </div>
 </div>
 
-<div id="outline-container-org051ac2e" class="outline-2">
-<h2 id="org051ac2e">安装bootstrap binar</h2>
-<div class="outline-text-2" id="text-org051ac2e">
+<div id="outline-container-org6f922fb" class="outline-2">
+<h2 id="org6f922fb">安装bootstrap binar</h2>
+<div class="outline-text-2" id="text-org6f922fb">
 <p>
 go1.4以后golang工具链全都由golang编译，所以从源码安装golang需要一个bootstrap环境，也就是说需要一个golang编译器。这里可以通过系统的包管理器安装go1.4后的版本。
 </p>
@@ -58,9 +61,9 @@ go1.4以后golang工具链全都由golang编译，所以从源码安装golang需
 </div>
 </div>
 
-<div id="outline-container-org930329d" class="outline-2">
-<h2 id="org930329d">编译安装</h2>
-<div class="outline-text-2" id="text-org930329d">
+<div id="outline-container-orga0c54d8" class="outline-2">
+<h2 id="orga0c54d8">编译安装</h2>
+<div class="outline-text-2" id="text-orga0c54d8">
 <div class="org-src-container">
 <pre class="src src-shell">cd go/src
 GOROOT_BOOTSTRAP=/usr/local/opt/go/libexec ./all.bash
@@ -69,9 +72,9 @@ GOROOT_BOOTSTRAP=/usr/local/opt/go/libexec ./all.bash
 </div>
 </div>
 
-<div id="outline-container-org404516a" class="outline-2">
-<h2 id="org404516a">检查</h2>
-<div class="outline-text-2" id="text-org404516a">
+<div id="outline-container-org6c1ec01" class="outline-2">
+<h2 id="org6c1ec01">检查</h2>
+<div class="outline-text-2" id="text-org6c1ec01">
 <div class="org-src-container">
 <pre class="src src-text">$ ../bin/go version
 go version devel +739bf6b929 Fri Sep 27 21:17:15 2019 +0000 darwin/amd64

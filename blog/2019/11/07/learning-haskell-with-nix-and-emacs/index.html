@@ -12,7 +12,9 @@
   <body class="container">
     <div>
       <header class="masthead">
-        <h1 class="masthead-title"><a href="/">org-page</a></h1>
+        <h1 class="masthead-title">
+          <a href="/">org-page</a>
+        </h1>
         <p>static site generator</p>
         <ul>
           <li><a href="/blog/">Blog</a></li>
@@ -25,6 +27,7 @@
           <input type="text" class="field" name="q" id="s" placeholder="Search">
           <input type="hidden" name="as_sitesearch" value="xusheng.org">
         </form>
+        <img class="avatar" src="https://avatars.githubusercontent.com/u/1257453?s=400&amp;u=887a49b5ff99794452aa0bc3772fe113cc6e962a&amp;v=4" />
       </header>
     </div>
 
@@ -32,18 +35,18 @@
 <div class="post">
 <h1>Learning Haskell with nix and Emacs</h1>
 
-<div id="outline-container-org06066d0" class="outline-2">
-<h2 id="org06066d0">前言</h2>
-<div class="outline-text-2" id="text-org06066d0">
+<div id="outline-container-orgd154da1" class="outline-2">
+<h2 id="orgd154da1">前言</h2>
+<div class="outline-text-2" id="text-orgd154da1">
 <p>
 <a href="https://github.com/haskell-servant/servant">haskell-servant</a> 和 <a href="https://github.com/dmjio/miso">miso</a> 等haskell开源项目竟然都是用nix管理依赖的。时隔多年nix竟然被赋予了这样的魔法，不仅让我大跌眼镜。在 <a href="https://github.com/Gabriel439/haskell-nix">Nix and Haskell in production</a> 一文中指出，nix对标的其实是stack，他和stack一样有独立的haskell包缓存，用以达成reproducible的构建。nix胜过stack的唯一个地方，就是他不仅能解决haskell包依赖，还能解决其他任何依赖，甚至可以为你打造一个独立的开发环境。本文就是介绍如何在 <code>macos catalina</code> 上用nix打造一个haskell开发环境。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org0522345" class="outline-2">
-<h2 id="org0522345">安装nix和其他工具</h2>
-<div class="outline-text-2" id="text-org0522345">
+<div id="outline-container-orgcd265eb" class="outline-2">
+<h2 id="orgcd265eb">安装nix和其他工具</h2>
+<div class="outline-text-2" id="text-orgcd265eb">
 <p>
 本来这一个步骤应该是非常简单的。但是在最新版的macos catalina上并不那么容易了。nix需要在根目录上创建文件夹 <code>/nix</code> ，在系统默认开启 <code>SIP</code> 的情况下，根目录是以只读度方式挂载的，所以无法创建。首先需要关闭SIP，创建目录，重新启用SIP，由于启用后根目录仍然只读，还需要创建分区，将分区挂载到 <code>/nix</code> 。
 </p>
@@ -104,9 +107,9 @@ nix安装完之后就可以安装开发工具了。
 </div>
 </div>
 
-<div id="outline-container-org2a34edb" class="outline-2">
-<h2 id="org2a34edb">使用stack初始化工程</h2>
-<div class="outline-text-2" id="text-org2a34edb">
+<div id="outline-container-orgea65e92" class="outline-2">
+<h2 id="orgea65e92">使用stack初始化工程</h2>
+<div class="outline-text-2" id="text-orgea65e92">
 <div class="org-src-container">
 <pre class="src src-shell-script">  stack new helloworld new-template
 </pre>
@@ -188,9 +191,9 @@ nix安装完之后就可以安装开发工具了。
 </div>
 </div>
 
-<div id="outline-container-org4f2dd69" class="outline-2">
-<h2 id="org4f2dd69">编写第一个nix表达式</h2>
-<div class="outline-text-2" id="text-org4f2dd69">
+<div id="outline-container-orge521d82" class="outline-2">
+<h2 id="orge521d82">编写第一个nix表达式</h2>
+<div class="outline-text-2" id="text-orge521d82">
 <p>
 说是编写，其实就是中 cabal2nix 生成。
 </p>
@@ -386,9 +389,9 @@ build成功后会在当前目录下生成 <code>result</code> 目录，其结构
 </div>
 </div>
 
-<div id="outline-container-org87e5c22" class="outline-2">
-<h2 id="org87e5c22">添加shell.nix文件</h2>
-<div class="outline-text-2" id="text-org87e5c22">
+<div id="outline-container-org828cf88" class="outline-2">
+<h2 id="org828cf88">添加shell.nix文件</h2>
+<div class="outline-text-2" id="text-org828cf88">
 <blockquote>
 <p>
 nix-shell - start an interactive shell based on a Nix expression
@@ -456,9 +459,9 @@ nix-shell - start an interactive shell based on a Nix expression
 </div>
 </div>
 
-<div id="outline-container-orgf30555a" class="outline-2">
-<h2 id="orgf30555a">安装HIE</h2>
-<div class="outline-text-2" id="text-orgf30555a">
+<div id="outline-container-org502356e" class="outline-2">
+<h2 id="org502356e">安装HIE</h2>
+<div class="outline-text-2" id="text-org502356e">
 <p>
 安装cachix
 </p>
@@ -515,9 +518,9 @@ nix-shell - start an interactive shell based on a Nix expression
 </div>
 </div>
 
-<div id="outline-container-orgd1c2f30" class="outline-2">
-<h2 id="orgd1c2f30">nix-shell和direnv</h2>
-<div class="outline-text-2" id="text-orgd1c2f30">
+<div id="outline-container-orgfa8b338" class="outline-2">
+<h2 id="orgfa8b338">nix-shell和direnv</h2>
+<div class="outline-text-2" id="text-orgfa8b338">
 <p>
 nix-shell默认使用bash，但是我平时都用 <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a> 。direnv已经支持nix，可以通过stdlib的use_nix函数，启用nix的环境配置。只要在当前目录下增加.envrc文件便可启用。
 </p>
@@ -629,9 +632,9 @@ nix-shell默认使用bash，但是我平时都用 <a href="https://github.com/ro
 </div>
 </div>
 
-<div id="outline-container-org018ef5c" class="outline-2">
-<h2 id="org018ef5c">配置emacs(spacemacs)</h2>
-<div class="outline-text-2" id="text-org018ef5c">
+<div id="outline-container-org2a517e8" class="outline-2">
+<h2 id="org2a517e8">配置emacs(spacemacs)</h2>
+<div class="outline-text-2" id="text-org2a517e8">
 <p>
 我使用的是 <a href="https://github.com/syl20bnr/spacemacs/">spacemacs</a> 的 develop 分支。
 </p>
@@ -649,25 +652,25 @@ nix-shell默认使用bash，但是我平时都用 <a href="https://github.com/ro
 </div>
 
 
-<div id="org49ba3cd" class="figure">
+<div id="org074542a" class="figure">
 <p><img src="/assets/blog/2019/11/07/learning-haskell-with-nix-and-emacs/68374271-7886ff00-013c-11ea-92aa-fc27ff89f413.png" alt="68374271-7886ff00-013c-11ea-92aa-fc27ff89f413.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org300b9c4" class="outline-2">
-<h2 id="org300b9c4">仓库地址</h2>
-<div class="outline-text-2" id="text-org300b9c4">
+<div id="outline-container-orgc28bcdc" class="outline-2">
+<h2 id="orgc28bcdc">仓库地址</h2>
+<div class="outline-text-2" id="text-orgc28bcdc">
 <p>
 <a href="https://github.com/shanexu/helloworld">https://github.com/shanexu/helloworld</a>
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgbb9b940" class="outline-2">
-<h2 id="orgbb9b940">参考文档</h2>
-<div class="outline-text-2" id="text-orgbb9b940">
+<div id="outline-container-org32c01fb" class="outline-2">
+<h2 id="org32c01fb">参考文档</h2>
+<div class="outline-text-2" id="text-org32c01fb">
 <p>
 <a href="https://nixos.org/nix/manual">https://nixos.org/nix/manual</a>
 </p>

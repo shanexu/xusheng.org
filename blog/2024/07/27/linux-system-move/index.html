@@ -12,7 +12,9 @@
   <body class="container">
     <div>
       <header class="masthead">
-        <h1 class="masthead-title"><a href="/">org-page</a></h1>
+        <h1 class="masthead-title">
+          <a href="/">org-page</a>
+        </h1>
         <p>static site generator</p>
         <ul>
           <li><a href="/blog/">Blog</a></li>
@@ -25,6 +27,7 @@
           <input type="text" class="field" name="q" id="s" placeholder="Search">
           <input type="hidden" name="as_sitesearch" value="xusheng.org">
         </form>
+        <img class="avatar" src="https://avatars.githubusercontent.com/u/1257453?s=400&amp;u=887a49b5ff99794452aa0bc3772fe113cc6e962a&amp;v=4" />
       </header>
     </div>
 
@@ -32,9 +35,9 @@
 <div class="post">
 <h1>Linux系统搬家</h1>
 
-<div id="outline-container-org16be2e8" class="outline-2">
-<h2 id="org16be2e8">起因</h2>
-<div class="outline-text-2" id="text-org16be2e8">
+<div id="outline-container-org1291e51" class="outline-2">
+<h2 id="org1291e51">起因</h2>
+<div class="outline-text-2" id="text-org1291e51">
 <p>
 终于有大片的时间让我得以解决长期困扰我的问题——系统空间不足。之前做了权宜之计，
 将 <code>/home/&lt;用户名&gt;/Downloads</code> 、 <code>/home/&lt;用户名&gt;/src</code>  、 <code>/home/&lt;用户名&gt;/OneDrive</code>
@@ -45,13 +48,13 @@
 </div>
 </div>
 
-<div id="outline-container-orgd90dd67" class="outline-2">
-<h2 id="orgd90dd67">实操</h2>
-<div class="outline-text-2" id="text-orgd90dd67">
+<div id="outline-container-orgc667f07" class="outline-2">
+<h2 id="orgc667f07">实操</h2>
+<div class="outline-text-2" id="text-orgc667f07">
 </div>
-<div id="outline-container-orgdcc02a9" class="outline-3">
-<h3 id="orgdcc02a9">现状</h3>
-<div class="outline-text-3" id="text-orgdcc02a9">
+<div id="outline-container-org26eb3fa" class="outline-3">
+<h3 id="org26eb3fa">现状</h3>
+<div class="outline-text-3" id="text-org26eb3fa">
 <p>
 使用fdkis命令查看现状
 </p>
@@ -70,9 +73,9 @@
 </div>
 </div>
 
-<div id="outline-container-orgee89dfc" class="outline-3">
-<h3 id="orgee89dfc">克隆系统</h3>
-<div class="outline-text-3" id="text-orgee89dfc">
+<div id="outline-container-orgb92462f" class="outline-3">
+<h3 id="orgb92462f">克隆系统</h3>
+<div class="outline-text-3" id="text-orgb92462f">
 <p>
 使用liveCD启动系统后克隆磁盘
 </p>
@@ -83,9 +86,9 @@
 </div>
 </div>
 
-<div id="outline-container-org68a8dc9" class="outline-3">
-<h3 id="org68a8dc9">调整磁盘UUID</h3>
-<div class="outline-text-3" id="text-org68a8dc9">
+<div id="outline-container-org7bc6056" class="outline-3">
+<h3 id="org7bc6056">调整磁盘UUID</h3>
+<div class="outline-text-3" id="text-org7bc6056">
 <div class="org-src-container">
 <pre class="src src-shell">mlabel -N aaaa1111 -i /dev/nvme1n1p1 ::
 tune2fs -u /dev/nvme1n1p2
@@ -95,17 +98,17 @@ tune2fs -u /dev/nvme1n1p3
 </div>
 </div>
 
-<div id="outline-container-org2897dd4" class="outline-3">
-<h3 id="org2897dd4">老磁盘格式化并创建分区，并复制数据</h3>
+<div id="outline-container-org450697f" class="outline-3">
+<h3 id="org450697f">老磁盘格式化并创建分区，并复制数据</h3>
 </div>
 
-<div id="outline-container-org476b494" class="outline-3">
-<h3 id="org476b494">调整配置文件 <code>/etc/fstab</code></h3>
+<div id="outline-container-orgc630aaa" class="outline-3">
+<h3 id="orgc630aaa">调整配置文件 <code>/etc/fstab</code></h3>
 </div>
 
-<div id="outline-container-org7c69ffe" class="outline-3">
-<h3 id="org7c69ffe">重新安装grub</h3>
-<div class="outline-text-3" id="text-org7c69ffe">
+<div id="outline-container-orgf0a0789" class="outline-3">
+<h3 id="orgf0a0789">重新安装grub</h3>
+<div class="outline-text-3" id="text-orgf0a0789">
 <div class="org-src-container">
 <pre class="src src-shell">mount /dev/nvme1n1p3 /mnt/ROOT
 mount /dev/nvme1n1p2 /mnt/ROOT/boot
@@ -118,9 +121,9 @@ grub-mkconfig -o /boot/grub/grub.cfg
 </div>
 </div>
 
-<div id="outline-container-org2ad3c52" class="outline-3">
-<h3 id="org2ad3c52">调整新磁盘的分区大小</h3>
-<div class="outline-text-3" id="text-org2ad3c52">
+<div id="outline-container-orge320a51" class="outline-3">
+<h3 id="orge320a51">调整新磁盘的分区大小</h3>
+<div class="outline-text-3" id="text-orge320a51">
 <div class="org-src-container">
 <pre class="src src-shell">parted /dev/nvme1n1
 </pre>
@@ -137,9 +140,9 @@ e2fsck /dev/nvme1n1p3
 </div>
 </div>
 
-<div id="outline-container-org1893a12" class="outline-3">
-<h3 id="org1893a12">重启祈福</h3>
-<div class="outline-text-3" id="text-org1893a12">
+<div id="outline-container-org6dfa9b6" class="outline-3">
+<h3 id="org6dfa9b6">重启祈福</h3>
+<div class="outline-text-3" id="text-org6dfa9b6">
 <p>
 最终磁盘状态如下
 </p>

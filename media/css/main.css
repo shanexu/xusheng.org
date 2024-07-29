@@ -101,7 +101,7 @@ ul, ol {
     margin: 0 0 20px;
 }
 code, pre {
-    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-family: "Cascadia Code" "Source Code Pro", Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 code {
     color: #d14;
@@ -115,13 +115,14 @@ pre {
     margin: 0 0 14px;
     padding: 15px;
     border-radius: 3px 3px 3px 3px;
-    font-size: 18px;
-    line-height: 28px;
+    font-size: 16px;
+    line-height: 20px;
     background-color: #f5f5f5;
-    white-space: pre;
-    white-space: pre-wrap;
-    word-break: break-all;
-    word-wrap: break-word;
+    overflow-x: auto;
+    /* white-space: pre; */
+    /* white-space: pre-wrap; */
+    /* word-break: break-all; */
+    /* word-wrap: break-word; */
 }
 blockquote {
     padding: 0 0 0 20px;
@@ -171,7 +172,7 @@ table th.right, table td.right {
 /* body */
 .container {
     margin: 0 auto;
-    max-width: 770px;
+    max-width: 1024px;
 }
 /* head */
 .masthead {
@@ -199,9 +200,13 @@ table th.right, table td.right {
 }
 /* searchform*/
 #searchform {
-    position: absolute;
-    top: 54px;
-    right: 30.4%;
+    /* position: absolute; */
+    /* top: 54px; */
+    /* right: 30.4%; */
+    position: relative;
+    float: right;
+    margin-top: -148px;
+    margin-right: 10%;
 }
 #searchform #s {
     background: url("/media/img/search.png") no-repeat 5px 6px;
@@ -234,7 +239,7 @@ table th.right, table td.right {
     margin-top: -100px;
     margin-bottom: -100%;
     margin-right: 10%;
-    width: 200px;
+    width: 128px;
     background-color: #fff;
 }
 /* post */
