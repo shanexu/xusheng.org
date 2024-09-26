@@ -47,7 +47,7 @@
 </p>
 
 
-<div id="orga772d43" class="figure">
+<div id="orgd3c5fcc" class="figure">
 <p><img src="/assets/blog/2017/05/08/keyboard-layout/sharpkeys.png" alt="sharpkeys.png" />
 </p>
 </div>
@@ -61,7 +61,7 @@
 </p>
 
 
-<div id="orga5c8394" class="figure">
+<div id="orgeaeee2a" class="figure">
 <p><img src="/assets/blog/2017/05/08/keyboard-layout/macos_keyboard.png" alt="macos_keyboard.png" />
 </p>
 </div>
@@ -71,7 +71,7 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #4078f2; font-weight: bold;">xmodmap</span> ~/.Xmodmap
+<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">xmodmap</span> ~/.Xmodmap
 </pre>
 </div>
 
@@ -98,8 +98,8 @@ add control = Control_L
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #4078f2; font-weight: bold;">setxkbmap</span> <span style="color: #b751b6;">-device</span> <span style="color: #da8548; font-weight: bold;">11</span> <span style="color: #b751b6;">-option</span> ctrl:swapcaps
-<span style="color: #4078f2; font-weight: bold;">setxkbmap</span> <span style="color: #b751b6;">-device</span> <span style="color: #da8548; font-weight: bold;">15</span> <span style="color: #b751b6;">-option</span> <span style="color: #50a14f;">""</span>
+<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">setxkbmap</span> <span style="color: #4e3163;">-device</span> <span style="color: #4e3163;">11</span> <span style="color: #4e3163;">-option</span> ctrl:swapcaps
+<span style="color: #2aa1ae; font-weight: bold;">setxkbmap</span> <span style="color: #4e3163;">-device</span> <span style="color: #4e3163;">15</span> <span style="color: #4e3163;">-option</span> <span style="color: #2d9574;">""</span>
 </pre>
 </div>
 
@@ -134,21 +134,21 @@ xorg.conf中有一个Section —— InputClass，专门用来设置输入设备�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-conf">Section <span style="color: #50a14f;">"InputClass"</span>
-  Identifier <span style="color: #50a14f;">"system-keyboard"</span>
-  MatchIsKeyboard <span style="color: #50a14f;">"on"</span>
-  Option <span style="color: #50a14f;">"XkbLayout"</span> <span style="color: #50a14f;">"us"</span>
-  Option <span style="color: #50a14f;">"XkbOptions"</span> <span style="color: #50a14f;">"ctrl:swapcaps"</span>
+<pre class="src src-conf">Section <span style="color: #2d9574;">"InputClass"</span>
+  Identifier <span style="color: #2d9574;">"system-keyboard"</span>
+  MatchIsKeyboard <span style="color: #2d9574;">"on"</span>
+  Option <span style="color: #2d9574;">"XkbLayout"</span> <span style="color: #2d9574;">"us"</span>
+  Option <span style="color: #2d9574;">"XkbOptions"</span> <span style="color: #2d9574;">"ctrl:swapcaps"</span>
 EndSection
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-conf">Section <span style="color: #50a14f;">"InputClass"</span>
-  Identifier <span style="color: #50a14f;">"hhkb"</span>
-  MatchProduct <span style="color: #50a14f;">"HHKB"</span>
-  Option <span style="color: #50a14f;">"XkbLayout"</span> <span style="color: #50a14f;">"us"</span>
-  Option <span style="color: #50a14f;">"XkbOptions"</span> <span style="color: #50a14f;">","</span>
+<pre class="src src-conf">Section <span style="color: #2d9574;">"InputClass"</span>
+  Identifier <span style="color: #2d9574;">"hhkb"</span>
+  MatchProduct <span style="color: #2d9574;">"HHKB"</span>
+  Option <span style="color: #2d9574;">"XkbLayout"</span> <span style="color: #2d9574;">"us"</span>
+  Option <span style="color: #2d9574;">"XkbOptions"</span> <span style="color: #2d9574;">","</span>
 EndSection
 </pre>
 </div>
@@ -218,7 +218,7 @@ shane    14268  8246  0 07:25 tty2     00:00:00 /usr/lib/gnome-settings-daemon/g
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #4078f2; font-weight: bold;">ps</span> <span style="color: #b751b6;">-ef</span> <span style="color: #e45649;">|</span> <span style="color: #4078f2; font-weight: bold;">grep</span> <span style="color: #50a14f;">'[g]sd-keyboard'</span> <span style="color: #e45649;">|</span> <span style="color: #4078f2; font-weight: bold;">grep</span> <span style="color: #e45649;">`</span><span style="color: #4078f2; background-color: #fafafa; font-weight: bold;">whoami</span><span style="color: #e45649;">`</span> <span style="color: #e45649;">|</span> <span style="color: #4078f2; font-weight: bold;">awk</span> <span style="color: #50a14f;">'{print $2}'</span> <span style="color: #e45649;">|</span> <span style="color: #4078f2; font-weight: bold;">xargs</span> kill <span style="color: #b751b6;">-9</span>
+<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">ps</span> <span style="color: #4e3163;">-ef</span> <span style="color: #3a81c3; font-weight: bold;">|</span> <span style="color: #2aa1ae; font-weight: bold;">grep</span> <span style="color: #2d9574;">'[g]sd-keyboard'</span> <span style="color: #3a81c3; font-weight: bold;">|</span> <span style="color: #2aa1ae; font-weight: bold;">grep</span> <span style="color: #3a81c3; font-weight: bold;">`</span><span style="color: #2aa1ae; background-color: #fbf8ef; font-weight: bold;">whoami</span><span style="color: #3a81c3; font-weight: bold;">`</span> <span style="color: #3a81c3; font-weight: bold;">|</span> <span style="color: #2aa1ae; font-weight: bold;">awk</span> <span style="color: #2d9574;">'{print $2}'</span> <span style="color: #3a81c3; font-weight: bold;">|</span> <span style="color: #2aa1ae; font-weight: bold;">xargs</span> kill <span style="color: #4e3163;">-9</span>
 </pre>
 </div>
 
@@ -240,7 +240,7 @@ gnome-settings-daemon /usr/lib/gnome-settings-daemon/gsd-keyboard
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #4078f2; font-weight: bold;">sudo</span> mv /etc/xdg/autostart/org.gnome.SettingsDaemon.A11yKeyboard.desktop ~/Desktop
+<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">sudo</span> mv /etc/xdg/autostart/org.gnome.SettingsDaemon.A11yKeyboard.desktop ~/Desktop
 </pre>
 </div>
 
@@ -268,18 +268,18 @@ RequiredComponents=org.gnome.Shell;org.gnome.SettingsDaemon.A11yKeyboard;org.gno
 </p>
 
 <div class="org-src-container">
-<pre class="src src-diff"><span style="color: #0184bc;">diff</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">--git</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">a/js/ui/status/keyboard.js</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">b/js/ui/status/keyboard.js</span>
-<span style="color: #0184bc;">index</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">d4b14d538..5796afd5e</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">100644</span>
-<span style="color: #0184bc;">---</span><span style="color: #9ca0a4;"> </span><span style="color: #4078f2;">a/js/ui/status/keyboard.js</span>
-<span style="color: #0184bc;">+++</span><span style="color: #9ca0a4;"> </span><span style="color: #4078f2;">b/js/ui/status/keyboard.js</span>
-<span style="color: #b751b6;">@@</span><span style="color: #9ca0a4;"> </span><span style="color: #b751b6;">-266,7</span><span style="color: #9ca0a4;"> </span><span style="color: #b751b6;">+266,7</span><span style="color: #9ca0a4;"> </span><span style="color: #b751b6;">@@</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">const</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">InputSourceSessionSettings</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">=</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">new</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">Lang.Class({</span>
-<span style="color: #9ca0a4;">    </span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">_init:</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">function()</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">{</span>
-<span style="color: #9ca0a4;">        </span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">this._settings</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">=</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">new</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">Gio.Settings({</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">schema_id:</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">this._DESKTOP_INPUT_SOURCES_SCHEMA</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">});</span>
-<span style="color: #9ca0a4;">        </span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">this._settings.connect('changed::'</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">+</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">this._KEY_INPUT_SOURCES,</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">Lang.bind(this,</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">this._emitInputSourcesChanged));</span>
-<span style="color: #aa2222; background-color: #c6c7c7;">-</span><span style="color: #9ca0a4;">        </span><span style="color: #e45649; background-color: #c6c7c7;">this._settings.connect('changed::'</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">+</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">this._KEY_KEYBOARD_OPTIONS,</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">Lang.bind(this,</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">this._emitKeyboardOptionsChanged));</span>
-<span style="color: #22aa22; background-color: #f0f0f0;">+</span><span style="color: #9ca0a4;">        </span><span style="color: #50a14f; background-color: #f0f0f0;">//</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">this._settings.connect('changed::'</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">+</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">this._KEY_KEYBOARD_OPTIONS,</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">Lang.bind(this,</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">this._emitKeyboardOptionsChanged));</span>
-<span style="color: #9ca0a4;">        </span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">this._settings.connect('changed::'</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">+</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">this._KEY_PER_WINDOW,</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">Lang.bind(this,</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">this._emitPerWindowChanged));</span>
-<span style="color: #9ca0a4;">    </span><span style="color: #9ca0a4;"> </span>},
+<pre class="src src-diff"><span style="color: #6c3163; background-color: #ddd8eb;">diff</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">--git</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">a/js/ui/status/keyboard.js</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">b/js/ui/status/keyboard.js</span>
+<span style="color: #6c3163; background-color: #ddd8eb;">index</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">d4b14d538..5796afd5e</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">100644</span>
+<span style="color: #6c3163; background-color: #ddd8eb;">---</span><span style="color: #d3d3e7;"> </span><span style="color: #655370; background-color: #ddd8eb;">a/js/ui/status/keyboard.js</span>
+<span style="color: #6c3163; background-color: #ddd8eb;">+++</span><span style="color: #d3d3e7;"> </span><span style="color: #655370; background-color: #ddd8eb;">b/js/ui/status/keyboard.js</span>
+<span style="color: #6c3163; background-color: #ddd8eb;">@@</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">-266,7</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">+266,7</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">@@</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">const</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">InputSourceSessionSettings</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">=</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">new</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">Lang.Class({</span>
+<span style="color: #dc752f;">    </span><span style="color: #d3d3e7;"> </span>_init:<span style="color: #d3d3e7;"> </span>function()<span style="color: #d3d3e7;"> </span>{
+<span style="color: #dc752f;">        </span><span style="color: #d3d3e7;"> </span>this._settings<span style="color: #d3d3e7;"> </span>=<span style="color: #d3d3e7;"> </span>new<span style="color: #d3d3e7;"> </span>Gio.Settings({<span style="color: #d3d3e7;"> </span>schema_id:<span style="color: #d3d3e7;"> </span>this._DESKTOP_INPUT_SOURCES_SCHEMA<span style="color: #d3d3e7;"> </span>});
+<span style="color: #dc752f;">        </span><span style="color: #d3d3e7;"> </span>this._settings.connect('changed::'<span style="color: #d3d3e7;"> </span>+<span style="color: #d3d3e7;"> </span>this._KEY_INPUT_SOURCES,<span style="color: #d3d3e7;"> </span>Lang.bind(this,<span style="color: #d3d3e7;"> </span>this._emitInputSourcesChanged));
+<span style="color: #f2241f;">-</span><span style="color: #d3d3e7;">        </span><span style="color: #f2241f;">this._settings.connect('changed::'</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">+</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">this._KEY_KEYBOARD_OPTIONS,</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">Lang.bind(this,</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">this._emitKeyboardOptionsChanged));</span>
+<span style="color: #67b11d;">+</span><span style="color: #d3d3e7;">        </span><span style="color: #67b11d;">//</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">this._settings.connect('changed::'</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">+</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">this._KEY_KEYBOARD_OPTIONS,</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">Lang.bind(this,</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">this._emitKeyboardOptionsChanged));</span>
+<span style="color: #dc752f;">        </span><span style="color: #d3d3e7;"> </span>this._settings.connect('changed::'<span style="color: #d3d3e7;"> </span>+<span style="color: #d3d3e7;"> </span>this._KEY_PER_WINDOW,<span style="color: #d3d3e7;"> </span>Lang.bind(this,<span style="color: #d3d3e7;"> </span>this._emitPerWindowChanged));
+<span style="color: #dc752f;">    </span><span style="color: #d3d3e7;"> </span>},
 </pre>
 </div>
 
@@ -288,55 +288,55 @@ RequiredComponents=org.gnome.Shell;org.gnome.SettingsDaemon.A11yKeyboard;org.gno
 </p>
 
 <div class="org-src-container">
-<pre class="src src-diff"><span style="color: #0184bc;">diff</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">--git</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">a/js/misc/keyboardManager.js</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">b/js/misc/keyboardManager.js</span>
-<span style="color: #0184bc;">index</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">95afb4a8c..129e5bbe9</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">100644</span>
-<span style="color: #0184bc;">---</span><span style="color: #9ca0a4;"> </span><span style="color: #4078f2;">a/js/misc/keyboardManager.js</span>
-<span style="color: #0184bc;">+++</span><span style="color: #9ca0a4;"> </span><span style="color: #4078f2;">b/js/misc/keyboardManager.js</span>
-<span style="color: #b751b6;">@@</span><span style="color: #9ca0a4;"> </span><span style="color: #b751b6;">-65,27</span><span style="color: #9ca0a4;"> </span><span style="color: #b751b6;">+65,27</span><span style="color: #9ca0a4;"> </span><span style="color: #b751b6;">@@</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">const</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">KeyboardManager</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">=</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">new</span><span style="color: #9ca0a4;"> </span><span style="color: #0184bc;">Lang.Class({</span>
-<span style="color: #9ca0a4;">    </span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">},</span>
-<span style="color: #9ca0a4;"> </span>
-<span style="color: #9ca0a4;">    </span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">apply:</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">function(id)</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">{</span>
-<span style="color: #aa2222; background-color: #c6c7c7;">-</span><span style="color: #9ca0a4;">        </span><span style="color: #e45649; background-color: #c6c7c7;">let</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">info</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">=</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">this._layoutInfos[id];</span>
-<span style="color: #aa2222; background-color: #c6c7c7;">-</span><span style="color: #9ca0a4;">        </span><span style="color: #e45649; background-color: #c6c7c7;">if</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">(!info)</span>
-<span style="color: #aa2222; background-color: #c6c7c7;">-</span><span style="color: #9ca0a4;">            </span><span style="color: #e45649; background-color: #c6c7c7;">return;</span>
-<span style="color: #aa2222; background-color: #c6c7c7;">-</span>
-<span style="color: #aa2222; background-color: #c6c7c7;">-</span><span style="color: #9ca0a4;">        </span><span style="color: #e45649; background-color: #c6c7c7;">if</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">(this._current</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">&amp;&amp;</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">this._current.group</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">==</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">info.group)</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">{</span>
-<span style="color: #aa2222; background-color: #c6c7c7;">-</span><span style="color: #9ca0a4;">            </span><span style="color: #e45649; background-color: #c6c7c7;">if</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">(this._current.groupIndex</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">!=</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">info.groupIndex)</span>
-<span style="color: #aa2222; background-color: #c6c7c7;">-</span><span style="color: #9ca0a4;">                </span><span style="color: #e45649; background-color: #c6c7c7;">this._applyLayoutGroupIndex(info.groupIndex);</span>
-<span style="color: #aa2222; background-color: #c6c7c7;">-</span><span style="color: #9ca0a4;">        </span><span style="color: #e45649; background-color: #c6c7c7;">}</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">else</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">{</span>
-<span style="color: #aa2222; background-color: #c6c7c7;">-</span><span style="color: #9ca0a4;">            </span><span style="color: #e45649; background-color: #c6c7c7;">this._applyLayoutGroup(info.group);</span>
-<span style="color: #aa2222; background-color: #c6c7c7;">-</span><span style="color: #9ca0a4;">            </span><span style="color: #e45649; background-color: #c6c7c7;">this._applyLayoutGroupIndex(info.groupIndex);</span>
-<span style="color: #aa2222; background-color: #c6c7c7;">-</span><span style="color: #9ca0a4;">        </span><span style="color: #e45649; background-color: #c6c7c7;">}</span>
-<span style="color: #aa2222; background-color: #c6c7c7;">-</span>
-<span style="color: #aa2222; background-color: #c6c7c7;">-</span><span style="color: #9ca0a4;">        </span><span style="color: #e45649; background-color: #c6c7c7;">this._current</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">=</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">info;</span>
-<span style="color: #22aa22; background-color: #f0f0f0;">+</span><span style="color: #9ca0a4;">        </span><span style="color: #50a14f; background-color: #f0f0f0;">//</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">let</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">info</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">=</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">this._layoutInfos[id];</span>
-<span style="color: #22aa22; background-color: #f0f0f0;">+</span><span style="color: #9ca0a4;">        </span><span style="color: #50a14f; background-color: #f0f0f0;">//</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">if</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">(!info)</span>
-<span style="color: #22aa22; background-color: #f0f0f0;">+</span><span style="color: #9ca0a4;">        </span><span style="color: #50a14f; background-color: #f0f0f0;">//</span><span style="color: #9ca0a4;">     </span><span style="color: #50a14f; background-color: #f0f0f0;">return;</span>
-<span style="color: #22aa22; background-color: #f0f0f0;">+</span>
-<span style="color: #22aa22; background-color: #f0f0f0;">+</span><span style="color: #9ca0a4;">        </span><span style="color: #50a14f; background-color: #f0f0f0;">//</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">if</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">(this._current</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">&amp;&amp;</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">this._current.group</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">==</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">info.group)</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">{</span>
-<span style="color: #22aa22; background-color: #f0f0f0;">+</span><span style="color: #9ca0a4;">        </span><span style="color: #50a14f; background-color: #f0f0f0;">//</span><span style="color: #9ca0a4;">     </span><span style="color: #50a14f; background-color: #f0f0f0;">if</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">(this._current.groupIndex</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">!=</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">info.groupIndex)</span>
-<span style="color: #22aa22; background-color: #f0f0f0;">+</span><span style="color: #9ca0a4;">        </span><span style="color: #50a14f; background-color: #f0f0f0;">//</span><span style="color: #9ca0a4;">         </span><span style="color: #50a14f; background-color: #f0f0f0;">this._applyLayoutGroupIndex(info.groupIndex);</span>
-<span style="color: #22aa22; background-color: #f0f0f0;">+</span><span style="color: #9ca0a4;">        </span><span style="color: #50a14f; background-color: #f0f0f0;">//</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">}</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">else</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">{</span>
-<span style="color: #22aa22; background-color: #f0f0f0;">+</span><span style="color: #9ca0a4;">        </span><span style="color: #50a14f; background-color: #f0f0f0;">//</span><span style="color: #9ca0a4;">     </span><span style="color: #50a14f; background-color: #f0f0f0;">this._applyLayoutGroup(info.group);</span>
-<span style="color: #22aa22; background-color: #f0f0f0;">+</span><span style="color: #9ca0a4;">        </span><span style="color: #50a14f; background-color: #f0f0f0;">//</span><span style="color: #9ca0a4;">     </span><span style="color: #50a14f; background-color: #f0f0f0;">this._applyLayoutGroupIndex(info.groupIndex);</span>
-<span style="color: #22aa22; background-color: #f0f0f0;">+</span><span style="color: #9ca0a4;">        </span><span style="color: #50a14f; background-color: #f0f0f0;">//</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">}</span>
-<span style="color: #22aa22; background-color: #f0f0f0;">+</span>
-<span style="color: #22aa22; background-color: #f0f0f0;">+</span><span style="color: #9ca0a4;">        </span><span style="color: #50a14f; background-color: #f0f0f0;">//</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">this._current</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">=</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">info;</span>
-<span style="color: #9ca0a4;">    </span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">},</span>
-<span style="color: #9ca0a4;"> </span>
-<span style="color: #9ca0a4;">    </span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">reapply:</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">function()</span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">{</span>
-<span style="color: #aa2222; background-color: #c6c7c7;">-</span><span style="color: #9ca0a4;">        </span><span style="color: #e45649; background-color: #c6c7c7;">if</span><span style="color: #9ca0a4;"> </span><span style="color: #e45649; background-color: #c6c7c7;">(!this._current)</span>
-<span style="color: #aa2222; background-color: #c6c7c7;">-</span><span style="color: #9ca0a4;">            </span><span style="color: #e45649; background-color: #c6c7c7;">return;</span>
-<span style="color: #22aa22; background-color: #f0f0f0;">+</span><span style="color: #9ca0a4;">        </span><span style="color: #50a14f; background-color: #f0f0f0;">//</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">if</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">(!this._current)</span>
-<span style="color: #22aa22; background-color: #f0f0f0;">+</span><span style="color: #9ca0a4;">        </span><span style="color: #50a14f; background-color: #f0f0f0;">//</span><span style="color: #9ca0a4;">     </span><span style="color: #50a14f; background-color: #f0f0f0;">return;</span>
-<span style="color: #9ca0a4;"> </span>
-<span style="color: #aa2222; background-color: #c6c7c7;">-</span><span style="color: #9ca0a4;">        </span><span style="color: #e45649; background-color: #c6c7c7;">this._applyLayoutGroup(this._current.group);</span>
-<span style="color: #aa2222; background-color: #c6c7c7;">-</span><span style="color: #9ca0a4;">        </span><span style="color: #e45649; background-color: #c6c7c7;">this._applyLayoutGroupIndex(this._current.groupIndex);</span>
-<span style="color: #22aa22; background-color: #f0f0f0;">+</span><span style="color: #9ca0a4;">        </span><span style="color: #50a14f; background-color: #f0f0f0;">//</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">this._applyLayoutGroup(this._current.group);</span>
-<span style="color: #22aa22; background-color: #f0f0f0;">+</span><span style="color: #9ca0a4;">        </span><span style="color: #50a14f; background-color: #f0f0f0;">//</span><span style="color: #9ca0a4;"> </span><span style="color: #50a14f; background-color: #f0f0f0;">this._applyLayoutGroupIndex(this._current.groupIndex);</span>
-<span style="color: #9ca0a4;">    </span><span style="color: #9ca0a4;"> </span><span style="color: #4f5158;">},</span>
-<span style="color: #9ca0a4;"> </span>
-<span style="color: #9ca0a4;">    </span><span style="color: #9ca0a4;"> </span>setUserLayouts:<span style="color: #9ca0a4;"> </span>function(ids)<span style="color: #9ca0a4;"> </span>{
+<pre class="src src-diff"><span style="color: #6c3163; background-color: #ddd8eb;">diff</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">--git</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">a/js/misc/keyboardManager.js</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">b/js/misc/keyboardManager.js</span>
+<span style="color: #6c3163; background-color: #ddd8eb;">index</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">95afb4a8c..129e5bbe9</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">100644</span>
+<span style="color: #6c3163; background-color: #ddd8eb;">---</span><span style="color: #d3d3e7;"> </span><span style="color: #655370; background-color: #ddd8eb;">a/js/misc/keyboardManager.js</span>
+<span style="color: #6c3163; background-color: #ddd8eb;">+++</span><span style="color: #d3d3e7;"> </span><span style="color: #655370; background-color: #ddd8eb;">b/js/misc/keyboardManager.js</span>
+<span style="color: #6c3163; background-color: #ddd8eb;">@@</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">-65,27</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">+65,27</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">@@</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">const</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">KeyboardManager</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">=</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">new</span><span style="color: #d3d3e7;"> </span><span style="color: #6c3163; background-color: #ddd8eb;">Lang.Class({</span>
+<span style="color: #dc752f;">    </span><span style="color: #d3d3e7;"> </span>},
+<span style="color: #d3d3e7;"> </span>
+<span style="color: #dc752f;">    </span><span style="color: #d3d3e7;"> </span>apply:<span style="color: #d3d3e7;"> </span>function(id)<span style="color: #d3d3e7;"> </span>{
+<span style="color: #f2241f;">-</span><span style="color: #d3d3e7;">        </span><span style="color: #f2241f;">let</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">info</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">=</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">this._layoutInfos[id];</span>
+<span style="color: #f2241f;">-</span><span style="color: #d3d3e7;">        </span><span style="color: #f2241f;">if</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">(!info)</span>
+<span style="color: #f2241f;">-</span><span style="color: #d3d3e7;">            </span><span style="color: #f2241f;">return;</span>
+<span style="color: #f2241f;">-</span>
+<span style="color: #f2241f;">-</span><span style="color: #d3d3e7;">        </span><span style="color: #f2241f;">if</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">(this._current</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">&amp;&amp;</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">this._current.group</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">==</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">info.group)</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">{</span>
+<span style="color: #f2241f;">-</span><span style="color: #d3d3e7;">            </span><span style="color: #f2241f;">if</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">(this._current.groupIndex</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">!=</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">info.groupIndex)</span>
+<span style="color: #f2241f;">-</span><span style="color: #d3d3e7;">                </span><span style="color: #f2241f;">this._applyLayoutGroupIndex(info.groupIndex);</span>
+<span style="color: #f2241f;">-</span><span style="color: #d3d3e7;">        </span><span style="color: #f2241f;">}</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">else</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">{</span>
+<span style="color: #f2241f;">-</span><span style="color: #d3d3e7;">            </span><span style="color: #f2241f;">this._applyLayoutGroup(info.group);</span>
+<span style="color: #f2241f;">-</span><span style="color: #d3d3e7;">            </span><span style="color: #f2241f;">this._applyLayoutGroupIndex(info.groupIndex);</span>
+<span style="color: #f2241f;">-</span><span style="color: #d3d3e7;">        </span><span style="color: #f2241f;">}</span>
+<span style="color: #f2241f;">-</span>
+<span style="color: #f2241f;">-</span><span style="color: #d3d3e7;">        </span><span style="color: #f2241f;">this._current</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">=</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">info;</span>
+<span style="color: #67b11d;">+</span><span style="color: #d3d3e7;">        </span><span style="color: #fbf8ef; background-color: #67b11d;">//</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">let</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">info</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">=</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">this._layoutInfos[id];</span>
+<span style="color: #67b11d;">+</span><span style="color: #d3d3e7;">        </span><span style="color: #fbf8ef; background-color: #67b11d;">//</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">if</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">(!info)</span>
+<span style="color: #67b11d;">+</span><span style="color: #d3d3e7;">        </span><span style="color: #fbf8ef; background-color: #67b11d;">//</span><span style="color: #d3d3e7;">     </span><span style="color: #67b11d;">return;</span>
+<span style="color: #67b11d;">+</span>
+<span style="color: #67b11d;">+</span><span style="color: #d3d3e7;">        </span><span style="color: #fbf8ef; background-color: #67b11d;">//</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">if</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">(this._current</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">&amp;&amp;</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">this._current.group</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">==</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">info.group)</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">{</span>
+<span style="color: #67b11d;">+</span><span style="color: #d3d3e7;">        </span><span style="color: #fbf8ef; background-color: #67b11d;">//</span><span style="color: #d3d3e7;">     </span><span style="color: #67b11d;">if</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">(this._current.groupIndex</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">!=</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">info.groupIndex)</span>
+<span style="color: #67b11d;">+</span><span style="color: #d3d3e7;">        </span><span style="color: #fbf8ef; background-color: #67b11d;">//</span><span style="color: #d3d3e7;">         </span><span style="color: #67b11d;">this._applyLayoutGroupIndex(info.groupIndex);</span>
+<span style="color: #67b11d;">+</span><span style="color: #d3d3e7;">        </span><span style="color: #fbf8ef; background-color: #67b11d;">//</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">}</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">else</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">{</span>
+<span style="color: #67b11d;">+</span><span style="color: #d3d3e7;">        </span><span style="color: #fbf8ef; background-color: #67b11d;">//</span><span style="color: #d3d3e7;">     </span><span style="color: #67b11d;">this._applyLayoutGroup(info.group);</span>
+<span style="color: #67b11d;">+</span><span style="color: #d3d3e7;">        </span><span style="color: #fbf8ef; background-color: #67b11d;">//</span><span style="color: #d3d3e7;">     </span><span style="color: #67b11d;">this._applyLayoutGroupIndex(info.groupIndex);</span>
+<span style="color: #67b11d;">+</span><span style="color: #d3d3e7;">        </span><span style="color: #fbf8ef; background-color: #67b11d;">//</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">}</span>
+<span style="color: #67b11d;">+</span>
+<span style="color: #67b11d;">+</span><span style="color: #d3d3e7;">        </span><span style="color: #fbf8ef; background-color: #67b11d;">//</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">this._current</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">=</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">info;</span>
+<span style="color: #dc752f;">    </span><span style="color: #d3d3e7;"> </span>},
+<span style="color: #d3d3e7;"> </span>
+<span style="color: #dc752f;">    </span><span style="color: #d3d3e7;"> </span>reapply:<span style="color: #d3d3e7;"> </span>function()<span style="color: #d3d3e7;"> </span>{
+<span style="color: #f2241f;">-</span><span style="color: #d3d3e7;">        </span><span style="color: #f2241f;">if</span><span style="color: #d3d3e7;"> </span><span style="color: #f2241f;">(!this._current)</span>
+<span style="color: #f2241f;">-</span><span style="color: #d3d3e7;">            </span><span style="color: #f2241f;">return;</span>
+<span style="color: #67b11d;">+</span><span style="color: #d3d3e7;">        </span><span style="color: #fbf8ef; background-color: #67b11d;">//</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">if</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">(!this._current)</span>
+<span style="color: #67b11d;">+</span><span style="color: #d3d3e7;">        </span><span style="color: #fbf8ef; background-color: #67b11d;">//</span><span style="color: #d3d3e7;">     </span><span style="color: #67b11d;">return;</span>
+<span style="color: #d3d3e7;"> </span>
+<span style="color: #f2241f;">-</span><span style="color: #d3d3e7;">        </span><span style="color: #f2241f;">this._applyLayoutGroup(this._current.group);</span>
+<span style="color: #f2241f;">-</span><span style="color: #d3d3e7;">        </span><span style="color: #f2241f;">this._applyLayoutGroupIndex(this._current.groupIndex);</span>
+<span style="color: #67b11d;">+</span><span style="color: #d3d3e7;">        </span><span style="color: #fbf8ef; background-color: #67b11d;">//</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">this._applyLayoutGroup(this._current.group);</span>
+<span style="color: #67b11d;">+</span><span style="color: #d3d3e7;">        </span><span style="color: #fbf8ef; background-color: #67b11d;">//</span><span style="color: #d3d3e7;"> </span><span style="color: #67b11d;">this._applyLayoutGroupIndex(this._current.groupIndex);</span>
+<span style="color: #dc752f;">    </span><span style="color: #d3d3e7;"> </span>},
+<span style="color: #d3d3e7;"> </span>
+<span style="color: #dc752f;">    </span><span style="color: #d3d3e7;"> </span>setUserLayouts:<span style="color: #d3d3e7;"> </span>function(ids)<span style="color: #d3d3e7;"> </span>{
 </pre>
 </div>
 

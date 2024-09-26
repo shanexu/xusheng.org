@@ -34,9 +34,9 @@
 <div>
 <div class="post">
 <h1>Linux系统搬家</h1>
-<div id="outline-container-org158320b" class="outline-2">
-<h2 id="org158320b">起因</h2>
-<div class="outline-text-2" id="text-org158320b">
+<div id="outline-container-org532663a" class="outline-2">
+<h2 id="org532663a">起因</h2>
+<div class="outline-text-2" id="text-org532663a">
 <p>
 终于有大片的时间让我得以解决长期困扰我的问题——系统空间不足。之前做了权宜之计，
 将 <code>/home/&lt;用户名&gt;/Downloads</code> 、 <code>/home/&lt;用户名&gt;/src</code>  、 <code>/home/&lt;用户名&gt;/OneDrive</code>
@@ -46,18 +46,18 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org4f69bea" class="outline-2">
-<h2 id="org4f69bea">实操</h2>
-<div class="outline-text-2" id="text-org4f69bea">
+<div id="outline-container-orgc84e0ea" class="outline-2">
+<h2 id="orgc84e0ea">实操</h2>
+<div class="outline-text-2" id="text-orgc84e0ea">
 </div>
-<div id="outline-container-orgf54650c" class="outline-3">
-<h3 id="orgf54650c">现状</h3>
-<div class="outline-text-3" id="text-orgf54650c">
+<div id="outline-container-org3ef17dd" class="outline-3">
+<h3 id="org3ef17dd">现状</h3>
+<div class="outline-text-3" id="text-org3ef17dd">
 <p>
 使用fdkis命令查看现状
 </p>
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #4078f2; font-weight: bold;">sudo</span> fdisk <span style="color: #b751b6;">-l</span>
+<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">sudo</span> fdisk <span style="color: #4e3163;">-l</span>
 </pre>
 </div>
 
@@ -70,56 +70,56 @@
 </div>
 </div>
 </div>
-<div id="outline-container-org9e84f78" class="outline-3">
-<h3 id="org9e84f78">克隆系统</h3>
-<div class="outline-text-3" id="text-org9e84f78">
+<div id="outline-container-orgebd351c" class="outline-3">
+<h3 id="orgebd351c">克隆系统</h3>
+<div class="outline-text-3" id="text-orgebd351c">
 <p>
 使用liveCD启动系统后克隆磁盘
 </p>
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #4078f2; font-weight: bold;">dd</span> if=/dev/nvme0n1 of=/dev/nvme1n1 bs=<span style="color: #da8548; font-weight: bold;">64K</span> conv=noerror,sync status=progress
+<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">dd</span> if=/dev/nvme0n1 of=/dev/nvme1n1 bs=<span style="color: #4e3163;">64K</span> conv=noerror,sync status=progress
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgb2ab99f" class="outline-3">
-<h3 id="orgb2ab99f">调整磁盘UUID</h3>
-<div class="outline-text-3" id="text-orgb2ab99f">
+<div id="outline-container-org15473b9" class="outline-3">
+<h3 id="org15473b9">调整磁盘UUID</h3>
+<div class="outline-text-3" id="text-org15473b9">
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #4078f2; font-weight: bold;">mlabel</span> <span style="color: #b751b6;">-N</span> aaaa1111 <span style="color: #b751b6;">-i</span> /dev/nvme1n1p1 ::
-<span style="color: #4078f2; font-weight: bold;">tune2fs</span> <span style="color: #b751b6;">-u</span> /dev/nvme1n1p2
-<span style="color: #4078f2; font-weight: bold;">tune2fs</span> <span style="color: #b751b6;">-u</span> /dev/nvme1n1p3
+<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">mlabel</span> <span style="color: #4e3163;">-N</span> aaaa1111 <span style="color: #4e3163;">-i</span> /dev/nvme1n1p1 ::
+<span style="color: #2aa1ae; font-weight: bold;">tune2fs</span> <span style="color: #4e3163;">-u</span> /dev/nvme1n1p2
+<span style="color: #2aa1ae; font-weight: bold;">tune2fs</span> <span style="color: #4e3163;">-u</span> /dev/nvme1n1p3
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org8d91254" class="outline-3">
-<h3 id="org8d91254">老磁盘格式化并创建分区，并复制数据</h3>
+<div id="outline-container-org4f31abe" class="outline-3">
+<h3 id="org4f31abe">老磁盘格式化并创建分区，并复制数据</h3>
 </div>
 
-<div id="outline-container-org67227bb" class="outline-3">
-<h3 id="org67227bb">调整配置文件 <code>/etc/fstab</code></h3>
+<div id="outline-container-orgd7856fd" class="outline-3">
+<h3 id="orgd7856fd">调整配置文件 <code>/etc/fstab</code></h3>
 </div>
 
-<div id="outline-container-orgaf6d623" class="outline-3">
-<h3 id="orgaf6d623">重新安装grub</h3>
-<div class="outline-text-3" id="text-orgaf6d623">
+<div id="outline-container-orgbeb2750" class="outline-3">
+<h3 id="orgbeb2750">重新安装grub</h3>
+<div class="outline-text-3" id="text-orgbeb2750">
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #4078f2; font-weight: bold;">mount</span> /dev/nvme1n1p3 /mnt/ROOT
-<span style="color: #4078f2; font-weight: bold;">mount</span> /dev/nvme1n1p2 /mnt/ROOT/boot
-<span style="color: #4078f2; font-weight: bold;">mount</span> /dev/nvme1n1p1 /mnt/ROOT/boot/efi
-<span style="color: #4078f2; font-weight: bold;">arch-chroot</span> /mnt/ROOT
-<span style="color: #4078f2; font-weight: bold;">grub-install</span> <span style="color: #4078f2; font-weight: bold;">--target=x86_64-efi</span> <span style="color: #4078f2; font-weight: bold;">--efi-directory=/boot/efi</span> <span style="color: #4078f2; font-weight: bold;">--bootloader-id=GRUB</span> <span style="color: #b751b6;">--no-nvram</span>
-<span style="color: #4078f2; font-weight: bold;">grub-mkconfig</span> <span style="color: #b751b6;">-o</span> /boot/grub/grub.cfg
+<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">mount</span> /dev/nvme1n1p3 /mnt/ROOT
+<span style="color: #2aa1ae; font-weight: bold;">mount</span> /dev/nvme1n1p2 /mnt/ROOT/boot
+<span style="color: #2aa1ae; font-weight: bold;">mount</span> /dev/nvme1n1p1 /mnt/ROOT/boot/efi
+<span style="color: #2aa1ae; font-weight: bold;">arch-chroot</span> /mnt/ROOT
+<span style="color: #2aa1ae; font-weight: bold;">grub-install</span> <span style="color: #6c3163;">--target=x86_64-efi</span> <span style="color: #6c3163;">--efi-directory=/boot/efi</span> <span style="color: #6c3163;">--bootloader-id=GRUB</span> <span style="color: #4e3163;">--no-nvram</span>
+<span style="color: #2aa1ae; font-weight: bold;">grub-mkconfig</span> <span style="color: #4e3163;">-o</span> /boot/grub/grub.cfg
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgd721d8a" class="outline-3">
-<h3 id="orgd721d8a">调整新磁盘的分区大小</h3>
-<div class="outline-text-3" id="text-orgd721d8a">
+<div id="outline-container-orgf1e0b8d" class="outline-3">
+<h3 id="orgf1e0b8d">调整新磁盘的分区大小</h3>
+<div class="outline-text-3" id="text-orgf1e0b8d">
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #4078f2; font-weight: bold;">parted</span> /dev/nvme1n1
+<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">parted</span> /dev/nvme1n1
 </pre>
 </div>
 <p>
@@ -127,21 +127,21 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #4078f2; font-weight: bold;">resize2fs</span> /dev/nvme1n1p3
-<span style="color: #4078f2; font-weight: bold;">e2fsck</span> /dev/nvme1n1p3
+<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">resize2fs</span> /dev/nvme1n1p3
+<span style="color: #2aa1ae; font-weight: bold;">e2fsck</span> /dev/nvme1n1p3
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgbb85a72" class="outline-3">
-<h3 id="orgbb85a72">重启祈福</h3>
-<div class="outline-text-3" id="text-orgbb85a72">
+<div id="outline-container-org028b635" class="outline-3">
+<h3 id="org028b635">重启祈福</h3>
+<div class="outline-text-3" id="text-org028b635">
 <p>
 最终磁盘状态如下
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #4078f2; font-weight: bold;">fdisk</span> <span style="color: #b751b6;">-l</span>
+<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">fdisk</span> <span style="color: #4e3163;">-l</span>
 </pre>
 </div>
 

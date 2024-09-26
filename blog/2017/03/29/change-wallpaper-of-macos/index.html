@@ -52,7 +52,7 @@ macOS有很多令人不爽的地方，我都一一找到了破解方法。然而
 </p>
 
 
-<div id="orga78f716" class="figure">
+<div id="orgad41d26" class="figure">
 <p><img src="/assets/blog/2017/03/29/change-wallpaper-of-macos/wp-28.jpg" alt="/assets/blog/2017/03/29/change-wallpaper-of-macos/wp-28.jpg" width="100%" />
 </p>
 </div>
@@ -78,19 +78,19 @@ macOS有很多令人不爽的地方，我都一一找到了破解方法。然而
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #9ca0a4;">#!/bin/bash</span>
+<pre class="src src-shell"><span style="color: #2aa1ae; background-color: #ecf3ec;">#!/bin/bash</span>
 
-<span style="color: #e45649;">function</span> <span style="color: #a626a4;">realpath_fun</span><span style="color: #4078f2;">()</span> <span style="color: #4078f2;">{</span>
-    <span style="color: #4078f2; font-weight: bold;">python</span> <span style="color: #b751b6;">-c</span> <span style="color: #50a14f;">"import os;print(os.path.abspath('"</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">1</span><span style="color: #50a14f;">"'))"</span>
-<span style="color: #4078f2;">}</span>
+<span style="color: #3a81c3; font-weight: bold;">function</span> <span style="color: #6c3163; font-weight: bold;">realpath_fun</span><span style="color: #3a81c3;">()</span> <span style="color: #3a81c3;">{</span>
+    <span style="color: #2aa1ae; font-weight: bold;">python</span> <span style="color: #4e3163;">-c</span> <span style="color: #2d9574;">"import os;print(os.path.abspath('"</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">1</span><span style="color: #2d9574;">"'))"</span>
+<span style="color: #3a81c3;">}</span>
 
-<span style="color: #6a1868; font-style: italic;">rp</span>=<span style="color: #e45649;">`</span><span style="color: #4078f2; background-color: #fafafa; font-weight: bold;">which</span><span style="color: #383a42; background-color: #fafafa;"> realpaths </span><span style="color: #e45649; background-color: #fafafa;">||</span><span style="color: #383a42; background-color: #fafafa;"> </span><span style="color: #a626a4; background-color: #fafafa; font-weight: bold;">echo</span><span style="color: #383a42; background-color: #fafafa;"> realpath_fun</span><span style="color: #e45649;">`</span>
+<span style="color: #715ab1; font-style: italic;">rp</span>=<span style="color: #3a81c3; font-weight: bold;">`</span><span style="color: #2aa1ae; background-color: #fbf8ef; font-weight: bold;">which</span><span style="color: #655370; background-color: #fbf8ef;"> realpaths </span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">||</span><span style="color: #655370; background-color: #fbf8ef;"> </span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">echo</span><span style="color: #655370; background-color: #fbf8ef;"> realpath_fun</span><span style="color: #3a81c3; font-weight: bold;">`</span>
 
-<span style="color: #6a1868; font-style: italic;">pic</span>=<span style="color: #e45649;">`</span><span style="color: #e45649; background-color: #fafafa;">$</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">rp</span><span style="color: #383a42; background-color: #fafafa;"> </span><span style="color: #e45649; background-color: #fafafa;">$</span><span style="color: #b751b6; background-color: #fafafa; font-style: italic;">1</span><span style="color: #e45649;">`</span>
+<span style="color: #715ab1; font-style: italic;">pic</span>=<span style="color: #3a81c3; font-weight: bold;">`</span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">$</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">rp</span><span style="color: #655370; background-color: #fbf8ef;"> </span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">$</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">1</span><span style="color: #3a81c3; font-weight: bold;">`</span>
 
-<span style="color: #a626a4; font-weight: bold;">echo</span> <span style="color: #50a14f;">"UPDATE data SET value = '"</span><span style="color: #e45649;">$</span><span style="color: #b751b6; font-style: italic;">pic</span><span style="color: #50a14f;">"';"</span> <span style="color: #e45649;">|</span> <span style="color: #4078f2; font-weight: bold;">sqlite3</span> ~/Library/Application\ Support/Dock/desktoppicture.db <span style="color: #e45649;">&amp;&amp;</span> <span style="color: #4078f2; font-weight: bold;">killall</span> Dock
+<span style="color: #3a81c3; font-weight: bold;">echo</span> <span style="color: #2d9574;">"UPDATE data SET value = '"</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">pic</span><span style="color: #2d9574;">"';"</span> <span style="color: #3a81c3; font-weight: bold;">|</span> <span style="color: #2aa1ae; font-weight: bold;">sqlite3</span> ~/Library/Application\ Support/Dock/desktoppicture.db <span style="color: #3a81c3; font-weight: bold;">&amp;&amp;</span> <span style="color: #2aa1ae; font-weight: bold;">killall</span> Dock
 
-<span style="color: #4078f2; font-weight: bold;">sudo</span> rm /Library/Caches/com.apple.desktop.admin.png
+<span style="color: #2aa1ae; font-weight: bold;">sudo</span> rm /Library/Caches/com.apple.desktop.admin.png
 </pre>
 </div>
 

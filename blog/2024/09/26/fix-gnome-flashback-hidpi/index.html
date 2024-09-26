@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>升级gnome 47之后修复gnome-flashback hidpi问题 - org-page</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Shane Xu" />
+    <meta name="description" content="&lt;TODO: insert your description here&gt;" />
+    <meta name="keywords" content="gnome" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+  </head>
+
+  <body class="container">
+    <div>
+      <header class="masthead">
+        <h1 class="masthead-title">
+          <a href="/">org-page</a>
+        </h1>
+        <p>static site generator</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/shanexu">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="xusheng.org">
+        </form>
+        <img class="avatar" src="https://avatars.githubusercontent.com/u/1257453?s=400&amp;u=887a49b5ff99794452aa0bc3772fe113cc6e962a&amp;v=4" />
+      </header>
+    </div>
+
+<div>
+<div class="post">
+<h1>升级gnome 47之后修复gnome-flashback hidpi问题</h1>
+<p>
+昨天arch升级gnome 47之后发现我目前正在使用的<a href="https://aur.archlinux.org/packages/gnome-flashback-xmonad-nopanel">gnome-flashback-xmonad-nopanel</a>会话的缩放出问题了。现象就是在我的4k显示器下，kitty、emacs、fcitx等应用显示的非常小。
+然而切换到gnome-shell会话则没有问题。
+</p>
+
+<p>
+于是就翻起了arch关于<a href="https://wiki.archlinux.org/title/HiDPI">HiDPI</a>的wiki。下面这段引起了我的兴趣。
+</p>
+
+<blockquote>
+<p>
+GNOME ignores X settings due to its xsettings Plugin in Gnome Settings Daemon, where DPI setting is hard coded. There is blog entry for <a href="http://blog.drtebi.com/2012/12/changing-dpi-setting-on-gnome-34.html">recompiling Gnome Settings Daemon</a>^{[<a href="https://en.wikipedia.org/wiki/Wikipedia:Link_rot">dead link</a> 2022-09-18 ⓘ]}. In the source documentation there is another way mentioned to set X settings DPI:
+</p>
+
+<p>
+You can use the gsettings, just make sure to read previous setting first and merge it. In just simply set it with this command:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">$ gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Xft/DPI': &lt;153600&gt;}"
+</pre>
+</div>
+</blockquote>
+
+<p>
+在 <code>gnome-falshback-xmonad-nopanel</code> 会话和 <code>gnome-shell</code> 会话分别执行命令：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">xrdb</span> <span style="color: #4e3163;">-query</span> <span style="color: #3a81c3; font-weight: bold;">|</span> <span style="color: #2aa1ae; font-weight: bold;">grep</span> dpi
+</pre>
+</div>
+
+<p>
+得到的结果分别为：
+</p>
+<div class="org-src-container">
+<pre class="src src-text">Xft.dpi:        96
+</pre>
+</div>
+<p>
+和
+</p>
+<div class="org-src-container">
+<pre class="src src-text">Xft.dpi:        192
+</pre>
+</div>
+
+<p>
+推测很可能是这个 <code>Xft.dpi</code> 参数相关了。
+</p>
+
+<p>
+于是尝试使用 <code>X Resources</code> 设置这个参数。以下是 <code>~/.Xresources</code> 文件的内容：
+</p>
+<div class="org-src-container">
+<pre class="src src-conf">Xft.dpi:  192
+Xft.antialias:  1
+Xft.hinting:  1
+Xft.hintstyle:  hintfull
+Xft.rgba: none
+Xcursor.size: 48
+Xcursor.theme:  Bibata-Modern-Amber
+</pre>
+</div>
+
+<p>
+执行以下命令使之生效：
+</p>
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">xrdb</span> <span style="color: #4e3163;">-merge</span> ~/.Xresources
+</pre>
+</div>
+
+<p>
+果然kitty等应用都恢复了。
+</p>
+
+<p>
+经过搜索发现， <code>gnome-shell</code> 会话通过 <code>org.gnome.SettingsDaemon.XSettings.service</code> 服务设置X配置。执行以下命令查看服务运行状态：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">systemctl</span> status <span style="color: #4e3163;">--user</span> org.gnome.SettingsDaemon.XSettings.service
+</pre>
+</div>
+
+<p>
+执行结果如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">&#9679; org.gnome.SettingsDaemon.XSettings.service - GNOME XSettings service
+     Loaded: loaded (/usr/lib/systemd/user/org.gnome.SettingsDaemon.XSettings.service; static)
+     Active: active (running) since Thu 2024-09-26 09:05:30 CST; 1h 45min ago
+ Invocation: 3f08d3cc97164b8fa22d2a0015444682
+   Main PID: 34347 (gsd-xsettings)
+      Tasks: 5 (limit: 77071)
+     Memory: 8.9M (peak: 10.9M)
+        CPU: 426ms
+     CGroup: /user.slice/user-1000.slice/user@1000.service/session.slice/org.gnome.SettingsDaemon.XSettings.service
+             &#9492;&#9472;34347 /usr/lib/gsd-xsettings
+
+Sep 26 09:05:30 archdesktop systemd[1801]: Starting GNOME XSettings service...
+Sep 26 09:05:30 archdesktop gsd-xsettings[34347]: Failed to get current UI scaling factor: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Destination does not exist
+Sep 26 09:05:30 archdesktop systemd[1801]: Started GNOME XSettings service.
+</pre>
+</div>
+
+<p>
+可见其中有一条异常日志， <code>Sep 26 09:05:30 archdesktop gsd-xsettings[34347]: Failed to get current UI scaling factor: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Destination does not exist</code> 。
+因为 <code>gnome-flashback</code> 会话已经长期没人维护了，这次升级应该破坏了 <code>gnome-flashback</code> 和 <code>gnome-settings-daemon</code> 的兼容性。
+</p>
+
+<p>
+唉！
+</p>
+
+<p>
+查看源码 <a href="https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/blob/47.0/plugins/xsettings/gsd-xsettings-manager.c?ref_type=tags#L621">47.0/plugins/xsettings/gsd-xsettings-manager.c?ref_type=tags#L621</a> 如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #3a81c3; font-weight: bold;">static</span> <span style="color: #3a81c3;">int</span>
+<span style="color: #6c3163; font-weight: bold;">get_window_scale</span> <span style="color: #3a81c3; background-color: #fbf8ef;">(</span><span style="color: #ba2f59; font-weight: bold;">GsdXSettingsManager</span> <span style="color: #3a81c3; font-weight: bold;">*</span><span style="color: #715ab1;">manager</span><span style="color: #3a81c3; background-color: #fbf8ef;">)</span>
+<span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
+        g_autoptr<span style="color: #6c3163; background-color: #fbf8ef;">(</span><span style="color: #ba2f59; font-weight: bold;">GError</span><span style="color: #6c3163; background-color: #fbf8ef;">)</span> <span style="color: #715ab1;">error</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #3a81c3;">NULL</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
+        g_autoptr<span style="color: #6c3163; background-color: #fbf8ef;">(</span><span style="color: #ba2f59; font-weight: bold;">GVariant</span><span style="color: #6c3163; background-color: #fbf8ef;">)</span> <span style="color: #715ab1;">res</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #3a81c3;">NULL</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
+        g_autoptr<span style="color: #6c3163; background-color: #fbf8ef;">(</span><span style="color: #ba2f59; font-weight: bold;">GVariant</span><span style="color: #6c3163; background-color: #fbf8ef;">)</span> <span style="color: #715ab1;">ui_scaling_factor_variant</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #3a81c3;">NULL</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
+        g_autoptr<span style="color: #6c3163; background-color: #fbf8ef;">(</span><span style="color: #ba2f59; font-weight: bold;">GVariantIter</span><span style="color: #6c3163; background-color: #fbf8ef;">)</span> <span style="color: #715ab1;">properties</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #3a81c3;">NULL</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
+        <span style="color: #3a81c3;">int</span> <span style="color: #715ab1;">ui_scaling_factor</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #4e3163;">1</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
+
+        <span style="color: #715ab1;">res</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #2aa1ae; font-weight: bold;">g_dbus_connection_call_sync</span> <span style="color: #6c3163; background-color: #fbf8ef;">(</span>manager<span style="color: #3a81c3; font-weight: bold;">-&gt;</span><span style="color: #4e3163; font-style: italic;">dbus_connection</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
+                                           <span style="color: #2d9574;">"org.gnome.Mutter.X11"</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
+                                           <span style="color: #2d9574;">"/org/gnome/Mutter/X11"</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
+                                           <span style="color: #2d9574;">"org.freedesktop.DBus.Properties"</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
+                                           <span style="color: #2d9574;">"Get"</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
+                                           <span style="color: #2aa1ae; font-weight: bold;">g_variant_new</span> <span style="color: #2d9574; background-color: #fbf8ef;">(</span><span style="color: #2d9574;">"(ss)"</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
+                                                          <span style="color: #2d9574;">"org.gnome.Mutter.X11"</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
+                                                          <span style="color: #2d9574;">"UiScalingFactor"</span><span style="color: #2d9574; background-color: #fbf8ef;">)</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
+                                           <span style="color: #3a81c3;">NULL</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
+                                           <span style="color: #4e3163;">G_DBUS_CALL_FLAGS_NO_AUTO_START</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
+                                           <span style="color: #4e3163;">-1</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
+                                           <span style="color: #3a81c3;">NULL</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
+                                           <span style="color: #3a81c3; font-weight: bold;">&amp;</span>error<span style="color: #6c3163; background-color: #fbf8ef;">)</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
+        <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #6c3163; background-color: #fbf8ef;">(</span><span style="color: #3a81c3; font-weight: bold;">!</span>res<span style="color: #6c3163; background-color: #fbf8ef;">)</span> <span style="color: #6c3163; background-color: #fbf8ef;">{</span>
+                <span style="color: #2aa1ae; font-weight: bold;">g_warning</span> <span style="color: #2d9574; background-color: #fbf8ef;">(</span><span style="color: #2d9574;">"Failed to get current UI scaling factor: %s"</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
+                           error<span style="color: #3a81c3; font-weight: bold;">-&gt;</span><span style="color: #4e3163; font-style: italic;">message</span><span style="color: #2d9574; background-color: #fbf8ef;">)</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
+                <span style="color: #3a81c3; font-weight: bold;">return</span> <span style="color: #4e3163;">1</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
+        <span style="color: #6c3163; background-color: #fbf8ef;">}</span>
+
+        <span style="color: #2aa1ae; font-weight: bold;">g_variant_get</span> <span style="color: #6c3163; background-color: #fbf8ef;">(</span>res<span style="color: #655370; background-color: #fbf8ef;">,</span> <span style="color: #2d9574;">"(v)"</span><span style="color: #655370; background-color: #fbf8ef;">,</span> <span style="color: #3a81c3; font-weight: bold;">&amp;</span>ui_scaling_factor_variant<span style="color: #6c3163; background-color: #fbf8ef;">)</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
+        <span style="color: #2aa1ae; font-weight: bold;">g_variant_get</span> <span style="color: #6c3163; background-color: #fbf8ef;">(</span>ui_scaling_factor_variant<span style="color: #655370; background-color: #fbf8ef;">,</span> <span style="color: #2d9574;">"i"</span><span style="color: #655370; background-color: #fbf8ef;">,</span> <span style="color: #3a81c3; font-weight: bold;">&amp;</span>ui_scaling_factor<span style="color: #6c3163; background-color: #fbf8ef;">)</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
+
+        <span style="color: #3a81c3; font-weight: bold;">return</span> ui_scaling_factor<span style="color: #655370; background-color: #fbf8ef;">;</span>
+<span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
+</pre>
+</div>
+
+<p>
+此段代码试图从DBus中获取当前ui的缩放因子，然而在 <code>gnome-falshback</code> 会失败，直接 <code>return 1</code> 了。
+将这段代码转化称 <code>dbus-send</code> 命令，
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">dbus-send</span> <span style="color: #4e3163;">--session</span> <span style="color: #6c3163;">--dest=org.gnome.Mutter.X11</span> \
+          <span style="color: #4e3163;">--print-reply</span> /org/gnome/Mutter/X11 \
+          org.freedesktop.DBus.Properties.Get \
+          string:<span style="color: #2d9574;">"org.gnome.Mutter.X11"</span> string:<span style="color: #2d9574;">"UiScalingFactor"</span>
+</pre>
+</div>
+
+<p>
+分别在 <code>gnome-falshback</code> 和 <code>gnome-shell</code> 会话执行得到以下结果：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">Error org.freedesktop.DBus.Error.ServiceUnknown: The name is not activatable
+</pre>
+</div>
+
+<p>
+和
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">method return time=1727322064.543245 sender=:1.19 -&gt; destination=:1.180 serial=1227 reply_serial=2
+   variant       int32 2
+</pre>
+</div>
+
+<p>
+这里还可以看看gnome 46的源码 <a href="https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/blob/46.0/plugins/xsettings/gsd-xsettings-manager.c?ref_type=tags#L658">46.0/plugins/xsettings/gsd-xsettings-manager.c?ref_type=tags#L658</a> 。
+</p>
+
+<p>
+反正，我基本上不会去换显示器了，这里直接把出错时候的 <code>return 1</code> 改成 <code>return 2</code> 简单修复下吧。
+</p>
+
+<p>
+重新打包安装，解决问题。
+</p>
+
+</div>
+</div>
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2024-09-26</span>
+        <span title="last modification date" class="post-info">2024-09-26</span>
+        <span title="tags" class="post-info"><a href="/tags/gnome/">gnome</a></span>
+        <span title="author" class="post-info">Shane Xu</span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2024/09/26/fix-gnome-flashback-hidpi";
+          var disqus_url = "https://xusheng.org/blog/2024/09/26/fix-gnome-flashback-hidpi";
+          var disqus_shortname = 'shanexu';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="/media/js/main.js"></script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-74684473-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 29.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">Shane Xu</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>

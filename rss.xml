@@ -4,10 +4,17 @@
     <title>org-page</title>
     <link>https://xusheng.org</link>
     <description>static site generator</description>
-    <pubDate>Mon, 29 Jul 2024 15:03:14 CST</pubDate>
-    <lastBuildDate>Mon, 29 Jul 2024 15:03:14 CST</lastBuildDate>
+    <pubDate>Thu, 26 Sep 2024 12:14:25 CST</pubDate>
+    <lastBuildDate>Thu, 26 Sep 2024 12:14:25 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
+    <item>
+      <title>升级gnome 47之后修复gnome-flashback hidpi问题</title>
+      <link>https://xusheng.org/blog/2024/09/26/fix-gnome-flashback-hidpi</link>
+      <description><![CDATA[<TODO: insert your description here>]]></description>
+      <pubDate>2024-09-26</pubDate>
+      <guid>https://xusheng.org/blog/2024/09/26/fix-gnome-flashback-hidpi</guid>
+    </item>
     <item>
       <title>Linux系统搬家</title>
       <link>https://xusheng.org/blog/2024/07/27/linux-system-move</link>
@@ -70,13 +77,6 @@
       <description><![CDATA[how to escape from touch bar]]></description>
       <pubDate>2021-02-14</pubDate>
       <guid>https://xusheng.org/blog/2019/12/23/zhen-escape-touch-bar</guid>
-    </item>
-    <item>
-      <title>如何用 N 张图片拼出 2016 字样</title>
-      <link>https://xusheng.org/blog/2016/07/13/image-text</link>
-      <description><![CDATA[js 图片拼字 js 效果]]></description>
-      <pubDate>2020-07-24</pubDate>
-      <guid>https://xusheng.org/blog/2016/07/13/image-text</guid>
     </item>
   </channel>
 </rss>
