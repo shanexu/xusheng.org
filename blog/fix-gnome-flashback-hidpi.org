@@ -9,18 +9,149 @@
 #+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
 #+DESCRIPTION: <TODO: insert your description here>
 
-昨天arch升级gnome 47之后发现我目前正在使用的[[https://aur.archlinux.org/packages/gnome-flashback-xmonad-nopanel][gnome-flashback-xmonad-nopanel]]会话的缩放出问题了。现象就是在我的4k显示器下，kitty、emacs等应用显示的非常小。
+昨天arch升级gnome 47之后发现我目前正在使用的[[https://aur.archlinux.org/packages/gnome-flashback-xmonad-nopanel][gnome-flashback-xmonad-nopanel]]会话的缩放出问题了。现象就是在我的4k显示器下，kitty、emacs、fcitx等应用显示的非常小。
 然而切换到gnome-shell会话则没有问题。
 
-于是就翻起了arch关于[[https://wiki.archlinux.org/title/HiDPI][HiDPI]]的wiki。
+于是就翻起了arch关于[[https://wiki.archlinux.org/title/HiDPI][HiDPI]]的wiki。下面这段引起了我的兴趣。
 
 #+begin_quote
 GNOME ignores X settings due to its xsettings Plugin in Gnome Settings Daemon, where DPI setting is hard coded. There is blog entry for [[http://blog.drtebi.com/2012/12/changing-dpi-setting-on-gnome-34.html][recompiling Gnome Settings Daemon]]^{[[[https://en.wikipedia.org/wiki/Wikipedia:Link_rot][dead link]] 2022-09-18 ⓘ]}. In the source documentation there is another way mentioned to set X settings DPI:
 
 You can use the gsettings, just make sure to read previous setting first and merge it. In just simply set it with this command:
 
-#+begin_src
+#+begin_src text
 $ gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Xft/DPI': <153600>}"
 #+end_src
 #+end_quote
 
+在 =gnome-falshback-xmonad-nopanel= 会话和 =gnome-shell= 会话分别执行命令：
+
+#+begin_src shell
+xrdb -query | grep dpi
+#+end_src
+
+得到的结果分别为：
+#+begin_src text
+Xft.dpi:        96
+#+end_src
+和
+#+begin_src text
+Xft.dpi:        192
+#+end_src
+
+推测很可能是这个 =Xft.dpi= 参数相关了。
+
+于是尝试使用 =X Resources= 设置这个参数。以下是 =~/.Xresources= 文件的内容：
+#+begin_src conf
+Xft.dpi:	192
+Xft.antialias:	1
+Xft.hinting:	1
+Xft.hintstyle:	hintfull
+Xft.rgba:	none
+Xcursor.size:	48
+Xcursor.theme:	Bibata-Modern-Amber
+#+end_src
+
+执行以下命令使之生效：
+#+begin_src shell
+xrdb -merge ~/.Xresources
+#+end_src
+
+果然kitty等应用都恢复了。
+
+经过搜索发现， =gnome-shell= 会话通过 =org.gnome.SettingsDaemon.XSettings.service= 服务设置X配置。执行以下命令查看服务运行状态：
+
+#+begin_src shell
+systemctl status --user org.gnome.SettingsDaemon.XSettings.service
+#+end_src
+
+执行结果如下：
+
+#+begin_src text
+● org.gnome.SettingsDaemon.XSettings.service - GNOME XSettings service
+     Loaded: loaded (/usr/lib/systemd/user/org.gnome.SettingsDaemon.XSettings.service; static)
+     Active: active (running) since Thu 2024-09-26 09:05:30 CST; 1h 45min ago
+ Invocation: 3f08d3cc97164b8fa22d2a0015444682
+   Main PID: 34347 (gsd-xsettings)
+      Tasks: 5 (limit: 77071)
+     Memory: 8.9M (peak: 10.9M)
+        CPU: 426ms
+     CGroup: /user.slice/user-1000.slice/user@1000.service/session.slice/org.gnome.SettingsDaemon.XSettings.service
+             └─34347 /usr/lib/gsd-xsettings
+
+Sep 26 09:05:30 archdesktop systemd[1801]: Starting GNOME XSettings service...
+Sep 26 09:05:30 archdesktop gsd-xsettings[34347]: Failed to get current UI scaling factor: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Destination does not exist
+Sep 26 09:05:30 archdesktop systemd[1801]: Started GNOME XSettings service.
+#+end_src
+
+可见其中有一条异常日志， =Sep 26 09:05:30 archdesktop gsd-xsettings[34347]: Failed to get current UI scaling factor: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Destination does not exist= 。
+因为 =gnome-flashback= 会话已经长期没人维护了，这次升级应该破坏了 =gnome-flashback= 和 =gnome-settings-daemon= 的兼容性。
+
+唉！
+
+查看源码 [[https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/blob/47.0/plugins/xsettings/gsd-xsettings-manager.c?ref_type=tags#L621][47.0/plugins/xsettings/gsd-xsettings-manager.c?ref_type=tags#L621]] 如下：
+
+#+begin_src c
+static int
+get_window_scale (GsdXSettingsManager *manager)
+{
+        g_autoptr(GError) error = NULL;
+        g_autoptr(GVariant) res = NULL;
+        g_autoptr(GVariant) ui_scaling_factor_variant = NULL;
+        g_autoptr(GVariantIter) properties = NULL;
+        int ui_scaling_factor = 1;
+
+        res = g_dbus_connection_call_sync (manager->dbus_connection,
+                                           "org.gnome.Mutter.X11",
+                                           "/org/gnome/Mutter/X11",
+                                           "org.freedesktop.DBus.Properties",
+                                           "Get",
+                                           g_variant_new ("(ss)",
+                                                          "org.gnome.Mutter.X11",
+                                                          "UiScalingFactor"),
+                                           NULL,
+                                           G_DBUS_CALL_FLAGS_NO_AUTO_START,
+                                           -1,
+                                           NULL,
+                                           &error);
+        if (!res) {
+                g_warning ("Failed to get current UI scaling factor: %s",
+                           error->message);
+                return 1;
+        }
+
+        g_variant_get (res, "(v)", &ui_scaling_factor_variant);
+        g_variant_get (ui_scaling_factor_variant, "i", &ui_scaling_factor);
+
+        return ui_scaling_factor;
+}
+#+end_src
+
+此段代码试图从DBus中获取当前ui的缩放因子，然而在 =gnome-falshback= 会失败，直接 =return 1= 了。
+将这段代码转化称 =dbus-send= 命令，
+
+#+begin_src shell
+dbus-send --session --dest=org.gnome.Mutter.X11 \
+          --print-reply /org/gnome/Mutter/X11 \
+          org.freedesktop.DBus.Properties.Get \
+          string:"org.gnome.Mutter.X11" string:"UiScalingFactor"
+#+end_src
+
+分别在 =gnome-falshback= 和 =gnome-shell= 会话执行得到以下结果：
+
+#+begin_src text
+Error org.freedesktop.DBus.Error.ServiceUnknown: The name is not activatable
+#+end_src
+
+和
+
+#+begin_src text
+method return time=1727322064.543245 sender=:1.19 -> destination=:1.180 serial=1227 reply_serial=2
+   variant       int32 2
+#+end_src
+
+这里还可以看看 gnome-46 的源码 [[https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/blob/46.0/plugins/xsettings/gsd-xsettings-manager.c?ref_type=tags#L658][46.0/plugins/xsettings/gsd-xsettings-manager.c?ref_type=tags#L658]] 。
+
+反正，我基本上不会去换显示器了，这里直接把出错时候的 =return 1= 改成 =return 2= 简单修复下吧。
+
+重新打包安装，解决问题。
