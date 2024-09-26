@@ -150,7 +150,7 @@ method return time=1727322064.543245 sender=:1.19 -> destination=:1.180 serial=1
    variant       int32 2
 #+end_src
 
-这里还可以看看 gnome-46 的源码 [[https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/blob/46.0/plugins/xsettings/gsd-xsettings-manager.c?ref_type=tags#L658][46.0/plugins/xsettings/gsd-xsettings-manager.c?ref_type=tags#L658]] 。
+这里还可以看看gnome 46的源码 [[https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/blob/46.0/plugins/xsettings/gsd-xsettings-manager.c?ref_type=tags#L658][46.0/plugins/xsettings/gsd-xsettings-manager.c?ref_type=tags#L658]] 。
 
 反正，我基本上不会去换显示器了，这里直接把出错时候的 =return 1= 改成 =return 2= 简单修复下吧。
 
