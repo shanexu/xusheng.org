@@ -52,7 +52,7 @@ macOS有很多令人不爽的地方，我都一一找到了破解方法。然而
 </p>
 
 
-<div id="orgad41d26" class="figure">
+<div id="org988ddfb" class="figure">
 <p><img src="/assets/blog/2017/03/29/change-wallpaper-of-macos/wp-28.jpg" alt="/assets/blog/2017/03/29/change-wallpaper-of-macos/wp-28.jpg" width="100%" />
 </p>
 </div>
@@ -78,19 +78,19 @@ macOS有很多令人不爽的地方，我都一一找到了破解方法。然而
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #2aa1ae; background-color: #ecf3ec;">#!/bin/bash</span>
+<pre class="src src-shell"><span style="color: #96A7A9; font-style: italic;">#!/bin/bash</span>
 
-<span style="color: #3a81c3; font-weight: bold;">function</span> <span style="color: #6c3163; font-weight: bold;">realpath_fun</span><span style="color: #3a81c3;">()</span> <span style="color: #3a81c3;">{</span>
-    <span style="color: #2aa1ae; font-weight: bold;">python</span> <span style="color: #4e3163;">-c</span> <span style="color: #2d9574;">"import os;print(os.path.abspath('"</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">1</span><span style="color: #2d9574;">"'))"</span>
-<span style="color: #3a81c3;">}</span>
+<span style="color: #859900; font-weight: bold;">function</span> <span style="color: #b58900;">realpath_fun</span><span style="color: #268bd2;">()</span> <span style="color: #268bd2;">{</span>
+    <span style="color: #268bd2; font-weight: bold;">python</span> <span style="color: #6c71c4; font-weight: bold;">-c</span> <span style="color: #2aa198;">"import os;print(os.path.abspath('"</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">1</span><span style="color: #2aa198;">"'))"</span>
+<span style="color: #268bd2;">}</span>
 
-<span style="color: #715ab1; font-style: italic;">rp</span>=<span style="color: #3a81c3; font-weight: bold;">`</span><span style="color: #2aa1ae; background-color: #fbf8ef; font-weight: bold;">which</span><span style="color: #655370; background-color: #fbf8ef;"> realpaths </span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">||</span><span style="color: #655370; background-color: #fbf8ef;"> </span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">echo</span><span style="color: #655370; background-color: #fbf8ef;"> realpath_fun</span><span style="color: #3a81c3; font-weight: bold;">`</span>
+<span style="color: #268bd2; font-weight: bold; font-style: italic;">rp</span>=<span style="color: #859900; font-weight: bold;">`</span><span style="color: #268bd2; background-color: #FDF6E3; font-weight: bold;">which</span><span style="color: #556b72; background-color: #FDF6E3;"> realpaths </span><span style="color: #859900; background-color: #FDF6E3; font-weight: bold;">||</span><span style="color: #556b72; background-color: #FDF6E3;"> </span><span style="color: #d33682; background-color: #FDF6E3; font-weight: bold; font-style: italic;">echo</span><span style="color: #556b72; background-color: #FDF6E3;"> realpath_fun</span><span style="color: #859900; font-weight: bold;">`</span>
 
-<span style="color: #715ab1; font-style: italic;">pic</span>=<span style="color: #3a81c3; font-weight: bold;">`</span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">$</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">rp</span><span style="color: #655370; background-color: #fbf8ef;"> </span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">$</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">1</span><span style="color: #3a81c3; font-weight: bold;">`</span>
+<span style="color: #268bd2; font-weight: bold; font-style: italic;">pic</span>=<span style="color: #859900; font-weight: bold;">`</span><span style="color: #859900; background-color: #FDF6E3; font-weight: bold;">$</span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold; font-style: italic;">rp</span><span style="color: #556b72; background-color: #FDF6E3;"> </span><span style="color: #859900; background-color: #FDF6E3; font-weight: bold;">$</span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold; font-style: italic;">1</span><span style="color: #859900; font-weight: bold;">`</span>
 
-<span style="color: #3a81c3; font-weight: bold;">echo</span> <span style="color: #2d9574;">"UPDATE data SET value = '"</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">pic</span><span style="color: #2d9574;">"';"</span> <span style="color: #3a81c3; font-weight: bold;">|</span> <span style="color: #2aa1ae; font-weight: bold;">sqlite3</span> ~/Library/Application\ Support/Dock/desktoppicture.db <span style="color: #3a81c3; font-weight: bold;">&amp;&amp;</span> <span style="color: #2aa1ae; font-weight: bold;">killall</span> Dock
+<span style="color: #d33682; font-weight: bold; font-style: italic;">echo</span> <span style="color: #2aa198;">"UPDATE data SET value = '"</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">pic</span><span style="color: #2aa198;">"';"</span> <span style="color: #859900; font-weight: bold;">|</span> <span style="color: #268bd2; font-weight: bold;">sqlite3</span> ~/Library/Application\ Support/Dock/desktoppicture.db <span style="color: #859900; font-weight: bold;">&amp;&amp;</span> <span style="color: #268bd2; font-weight: bold;">killall</span> Dock
 
-<span style="color: #2aa1ae; font-weight: bold;">sudo</span> rm /Library/Caches/com.apple.desktop.admin.png
+<span style="color: #268bd2; font-weight: bold;">sudo</span> rm /Library/Caches/com.apple.desktop.admin.png
 </pre>
 </div>
 
@@ -142,7 +142,7 @@ macOS有很多令人不爽的地方，我都一一找到了破解方法。然而
         })();
       </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 29.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 30.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
           Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">Shane Xu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;

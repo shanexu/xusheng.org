@@ -63,7 +63,7 @@ You can use the gsettings, just make sure to read previous setting first and mer
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">xrdb</span> <span style="color: #4e3163;">-query</span> <span style="color: #3a81c3; font-weight: bold;">|</span> <span style="color: #2aa1ae; font-weight: bold;">grep</span> dpi
+<pre class="src src-shell"><span style="color: #268bd2; font-weight: bold;">xrdb</span> <span style="color: #6c71c4; font-weight: bold;">-query</span> <span style="color: #859900; font-weight: bold;">|</span> <span style="color: #268bd2; font-weight: bold;">grep</span> dpi
 </pre>
 </div>
 
@@ -104,7 +104,7 @@ Xcursor.theme:  Bibata-Modern-Amber
 执行以下命令使之生效：
 </p>
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">xrdb</span> <span style="color: #4e3163;">-merge</span> ~/.Xresources
+<pre class="src src-shell"><span style="color: #268bd2; font-weight: bold;">xrdb</span> <span style="color: #6c71c4; font-weight: bold;">-merge</span> ~/.Xresources
 </pre>
 </div>
 
@@ -117,7 +117,7 @@ Xcursor.theme:  Bibata-Modern-Amber
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">systemctl</span> status <span style="color: #4e3163;">--user</span> org.gnome.SettingsDaemon.XSettings.service
+<pre class="src src-shell"><span style="color: #268bd2; font-weight: bold;">systemctl</span> status <span style="color: #6c71c4; font-weight: bold;">--user</span> org.gnome.SettingsDaemon.XSettings.service
 </pre>
 </div>
 
@@ -157,39 +157,39 @@ Sep 26 09:05:30 archdesktop systemd[1801]: Started GNOME XSettings service.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-c"><span style="color: #3a81c3; font-weight: bold;">static</span> <span style="color: #3a81c3;">int</span>
-<span style="color: #6c3163; font-weight: bold;">get_window_scale</span> <span style="color: #3a81c3; background-color: #fbf8ef;">(</span><span style="color: #ba2f59; font-weight: bold;">GsdXSettingsManager</span> <span style="color: #3a81c3; font-weight: bold;">*</span><span style="color: #715ab1;">manager</span><span style="color: #3a81c3; background-color: #fbf8ef;">)</span>
-<span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-        g_autoptr<span style="color: #6c3163; background-color: #fbf8ef;">(</span><span style="color: #ba2f59; font-weight: bold;">GError</span><span style="color: #6c3163; background-color: #fbf8ef;">)</span> <span style="color: #715ab1;">error</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #3a81c3;">NULL</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
-        g_autoptr<span style="color: #6c3163; background-color: #fbf8ef;">(</span><span style="color: #ba2f59; font-weight: bold;">GVariant</span><span style="color: #6c3163; background-color: #fbf8ef;">)</span> <span style="color: #715ab1;">res</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #3a81c3;">NULL</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
-        g_autoptr<span style="color: #6c3163; background-color: #fbf8ef;">(</span><span style="color: #ba2f59; font-weight: bold;">GVariant</span><span style="color: #6c3163; background-color: #fbf8ef;">)</span> <span style="color: #715ab1;">ui_scaling_factor_variant</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #3a81c3;">NULL</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
-        g_autoptr<span style="color: #6c3163; background-color: #fbf8ef;">(</span><span style="color: #ba2f59; font-weight: bold;">GVariantIter</span><span style="color: #6c3163; background-color: #fbf8ef;">)</span> <span style="color: #715ab1;">properties</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #3a81c3;">NULL</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
-        <span style="color: #3a81c3;">int</span> <span style="color: #715ab1;">ui_scaling_factor</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #4e3163;">1</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
+<pre class="src src-c"><span style="color: #859900; font-weight: bold;">static</span> <span style="color: #d33682; font-style: italic;">int</span>
+<span style="color: #b58900;">get_window_scale</span> <span style="color: #268bd2; background-color: #FDF6E3;">(</span><span style="color: #b58900; font-style: italic;">GsdXSettingsManager</span> <span style="color: #859900; font-weight: bold;">*</span><span style="color: #268bd2;">manager</span><span style="color: #268bd2; background-color: #FDF6E3;">)</span>
+<span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+        g_autoptr<span style="color: #d33682; background-color: #FDF6E3;">(</span><span style="color: #b58900; font-style: italic;">GError</span><span style="color: #d33682; background-color: #FDF6E3;">)</span> <span style="color: #268bd2;">error</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-style: italic;">NULL</span><span style="color: #556b72; background-color: #FDF6E3;">;</span>
+        g_autoptr<span style="color: #d33682; background-color: #FDF6E3;">(</span><span style="color: #b58900; font-style: italic;">GVariant</span><span style="color: #d33682; background-color: #FDF6E3;">)</span> <span style="color: #268bd2;">res</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-style: italic;">NULL</span><span style="color: #556b72; background-color: #FDF6E3;">;</span>
+        g_autoptr<span style="color: #d33682; background-color: #FDF6E3;">(</span><span style="color: #b58900; font-style: italic;">GVariant</span><span style="color: #d33682; background-color: #FDF6E3;">)</span> <span style="color: #268bd2;">ui_scaling_factor_variant</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-style: italic;">NULL</span><span style="color: #556b72; background-color: #FDF6E3;">;</span>
+        g_autoptr<span style="color: #d33682; background-color: #FDF6E3;">(</span><span style="color: #b58900; font-style: italic;">GVariantIter</span><span style="color: #d33682; background-color: #FDF6E3;">)</span> <span style="color: #268bd2;">properties</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #d33682; font-style: italic;">NULL</span><span style="color: #556b72; background-color: #FDF6E3;">;</span>
+        <span style="color: #d33682; font-style: italic;">int</span> <span style="color: #268bd2;">ui_scaling_factor</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #6c71c4; font-weight: bold;">1</span><span style="color: #556b72; background-color: #FDF6E3;">;</span>
 
-        <span style="color: #715ab1;">res</span> <span style="color: #3a81c3; font-weight: bold;">=</span> <span style="color: #2aa1ae; font-weight: bold;">g_dbus_connection_call_sync</span> <span style="color: #6c3163; background-color: #fbf8ef;">(</span>manager<span style="color: #3a81c3; font-weight: bold;">-&gt;</span><span style="color: #4e3163; font-style: italic;">dbus_connection</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
-                                           <span style="color: #2d9574;">"org.gnome.Mutter.X11"</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
-                                           <span style="color: #2d9574;">"/org/gnome/Mutter/X11"</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
-                                           <span style="color: #2d9574;">"org.freedesktop.DBus.Properties"</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
-                                           <span style="color: #2d9574;">"Get"</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
-                                           <span style="color: #2aa1ae; font-weight: bold;">g_variant_new</span> <span style="color: #2d9574; background-color: #fbf8ef;">(</span><span style="color: #2d9574;">"(ss)"</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
-                                                          <span style="color: #2d9574;">"org.gnome.Mutter.X11"</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
-                                                          <span style="color: #2d9574;">"UiScalingFactor"</span><span style="color: #2d9574; background-color: #fbf8ef;">)</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
-                                           <span style="color: #3a81c3;">NULL</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
-                                           <span style="color: #4e3163;">G_DBUS_CALL_FLAGS_NO_AUTO_START</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
-                                           <span style="color: #4e3163;">-1</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
-                                           <span style="color: #3a81c3;">NULL</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
-                                           <span style="color: #3a81c3; font-weight: bold;">&amp;</span>error<span style="color: #6c3163; background-color: #fbf8ef;">)</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
-        <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #6c3163; background-color: #fbf8ef;">(</span><span style="color: #3a81c3; font-weight: bold;">!</span>res<span style="color: #6c3163; background-color: #fbf8ef;">)</span> <span style="color: #6c3163; background-color: #fbf8ef;">{</span>
-                <span style="color: #2aa1ae; font-weight: bold;">g_warning</span> <span style="color: #2d9574; background-color: #fbf8ef;">(</span><span style="color: #2d9574;">"Failed to get current UI scaling factor: %s"</span><span style="color: #655370; background-color: #fbf8ef;">,</span>
-                           error<span style="color: #3a81c3; font-weight: bold;">-&gt;</span><span style="color: #4e3163; font-style: italic;">message</span><span style="color: #2d9574; background-color: #fbf8ef;">)</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
-                <span style="color: #3a81c3; font-weight: bold;">return</span> <span style="color: #4e3163;">1</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
-        <span style="color: #6c3163; background-color: #fbf8ef;">}</span>
+        <span style="color: #268bd2;">res</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #268bd2; font-weight: bold;">g_dbus_connection_call_sync</span> <span style="color: #d33682; background-color: #FDF6E3;">(</span>manager<span style="color: #859900; font-weight: bold;">-&gt;</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">dbus_connection</span><span style="color: #556b72; background-color: #FDF6E3;">,</span>
+                                           <span style="color: #2aa198;">"org.gnome.Mutter.X11"</span><span style="color: #556b72; background-color: #FDF6E3;">,</span>
+                                           <span style="color: #2aa198;">"/org/gnome/Mutter/X11"</span><span style="color: #556b72; background-color: #FDF6E3;">,</span>
+                                           <span style="color: #2aa198;">"org.freedesktop.DBus.Properties"</span><span style="color: #556b72; background-color: #FDF6E3;">,</span>
+                                           <span style="color: #2aa198;">"Get"</span><span style="color: #556b72; background-color: #FDF6E3;">,</span>
+                                           <span style="color: #268bd2; font-weight: bold;">g_variant_new</span> <span style="color: #859900; background-color: #FDF6E3;">(</span><span style="color: #2aa198;">"(ss)"</span><span style="color: #556b72; background-color: #FDF6E3;">,</span>
+                                                          <span style="color: #2aa198;">"org.gnome.Mutter.X11"</span><span style="color: #556b72; background-color: #FDF6E3;">,</span>
+                                                          <span style="color: #2aa198;">"UiScalingFactor"</span><span style="color: #859900; background-color: #FDF6E3;">)</span><span style="color: #556b72; background-color: #FDF6E3;">,</span>
+                                           <span style="color: #d33682; font-style: italic;">NULL</span><span style="color: #556b72; background-color: #FDF6E3;">,</span>
+                                           <span style="color: #6c71c4; font-weight: bold;">G_DBUS_CALL_FLAGS_NO_AUTO_START</span><span style="color: #556b72; background-color: #FDF6E3;">,</span>
+                                           <span style="color: #6c71c4; font-weight: bold;">-1</span><span style="color: #556b72; background-color: #FDF6E3;">,</span>
+                                           <span style="color: #d33682; font-style: italic;">NULL</span><span style="color: #556b72; background-color: #FDF6E3;">,</span>
+                                           <span style="color: #859900; font-weight: bold;">&amp;</span>error<span style="color: #d33682; background-color: #FDF6E3;">)</span><span style="color: #556b72; background-color: #FDF6E3;">;</span>
+        <span style="color: #859900; font-weight: bold;">if</span> <span style="color: #d33682; background-color: #FDF6E3;">(</span><span style="color: #859900; font-weight: bold;">!</span>res<span style="color: #d33682; background-color: #FDF6E3;">)</span> <span style="color: #d33682; background-color: #FDF6E3;">{</span>
+                <span style="color: #268bd2; font-weight: bold;">g_warning</span> <span style="color: #859900; background-color: #FDF6E3;">(</span><span style="color: #2aa198;">"Failed to get current UI scaling factor: %s"</span><span style="color: #556b72; background-color: #FDF6E3;">,</span>
+                           error<span style="color: #859900; font-weight: bold;">-&gt;</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">message</span><span style="color: #859900; background-color: #FDF6E3;">)</span><span style="color: #556b72; background-color: #FDF6E3;">;</span>
+                <span style="color: #859900; font-weight: bold;">return</span> <span style="color: #6c71c4; font-weight: bold;">1</span><span style="color: #556b72; background-color: #FDF6E3;">;</span>
+        <span style="color: #d33682; background-color: #FDF6E3;">}</span>
 
-        <span style="color: #2aa1ae; font-weight: bold;">g_variant_get</span> <span style="color: #6c3163; background-color: #fbf8ef;">(</span>res<span style="color: #655370; background-color: #fbf8ef;">,</span> <span style="color: #2d9574;">"(v)"</span><span style="color: #655370; background-color: #fbf8ef;">,</span> <span style="color: #3a81c3; font-weight: bold;">&amp;</span>ui_scaling_factor_variant<span style="color: #6c3163; background-color: #fbf8ef;">)</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
-        <span style="color: #2aa1ae; font-weight: bold;">g_variant_get</span> <span style="color: #6c3163; background-color: #fbf8ef;">(</span>ui_scaling_factor_variant<span style="color: #655370; background-color: #fbf8ef;">,</span> <span style="color: #2d9574;">"i"</span><span style="color: #655370; background-color: #fbf8ef;">,</span> <span style="color: #3a81c3; font-weight: bold;">&amp;</span>ui_scaling_factor<span style="color: #6c3163; background-color: #fbf8ef;">)</span><span style="color: #655370; background-color: #fbf8ef;">;</span>
+        <span style="color: #268bd2; font-weight: bold;">g_variant_get</span> <span style="color: #d33682; background-color: #FDF6E3;">(</span>res<span style="color: #556b72; background-color: #FDF6E3;">,</span> <span style="color: #2aa198;">"(v)"</span><span style="color: #556b72; background-color: #FDF6E3;">,</span> <span style="color: #859900; font-weight: bold;">&amp;</span>ui_scaling_factor_variant<span style="color: #d33682; background-color: #FDF6E3;">)</span><span style="color: #556b72; background-color: #FDF6E3;">;</span>
+        <span style="color: #268bd2; font-weight: bold;">g_variant_get</span> <span style="color: #d33682; background-color: #FDF6E3;">(</span>ui_scaling_factor_variant<span style="color: #556b72; background-color: #FDF6E3;">,</span> <span style="color: #2aa198;">"i"</span><span style="color: #556b72; background-color: #FDF6E3;">,</span> <span style="color: #859900; font-weight: bold;">&amp;</span>ui_scaling_factor<span style="color: #d33682; background-color: #FDF6E3;">)</span><span style="color: #556b72; background-color: #FDF6E3;">;</span>
 
-        <span style="color: #3a81c3; font-weight: bold;">return</span> ui_scaling_factor<span style="color: #655370; background-color: #fbf8ef;">;</span>
-<span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
+        <span style="color: #859900; font-weight: bold;">return</span> ui_scaling_factor<span style="color: #556b72; background-color: #FDF6E3;">;</span>
+<span style="color: #268bd2; background-color: #FDF6E3;">}</span>
 </pre>
 </div>
 
@@ -199,10 +199,10 @@ Sep 26 09:05:30 archdesktop systemd[1801]: Started GNOME XSettings service.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #2aa1ae; font-weight: bold;">dbus-send</span> <span style="color: #4e3163;">--session</span> <span style="color: #6c3163;">--dest=org.gnome.Mutter.X11</span> \
-          <span style="color: #4e3163;">--print-reply</span> /org/gnome/Mutter/X11 \
+<pre class="src src-shell"><span style="color: #268bd2; font-weight: bold;">dbus-send</span> <span style="color: #6c71c4; font-weight: bold;">--session</span> <span style="color: #268bd2; font-weight: bold;">--dest=org.gnome.Mutter.X11</span> \
+          <span style="color: #6c71c4; font-weight: bold;">--print-reply</span> /org/gnome/Mutter/X11 \
           org.freedesktop.DBus.Properties.Get \
-          string:<span style="color: #2d9574;">"org.gnome.Mutter.X11"</span> string:<span style="color: #2d9574;">"UiScalingFactor"</span>
+          string:<span style="color: #2aa198;">"org.gnome.Mutter.X11"</span> string:<span style="color: #2aa198;">"UiScalingFactor"</span>
 </pre>
 </div>
 
@@ -237,12 +237,32 @@ Sep 26 09:05:30 archdesktop systemd[1801]: Started GNOME XSettings service.
 重新打包安装，解决问题。
 </p>
 
+<p>
+PS:
+2024-10-09收到了archlinux的gnome-flashback 3.54.0的更新包，看了下官方的<a href="https://gitlab.gnome.org/GNOME/gnome-flashback/-/blob/master/NEWS?ref_type=heads#L5">NEWS</a>，问题已经解决了。
+</p>
+<blockquote>
+<div class="org-src-container">
+<pre class="src src-text">Version 3.54.0
+==============
+- Fix use after free in timeout_bubble. (#96)
+- Fix polkit crash. (#92)
+- Add new D-Bus API for UI scaling.
+- Update DisplayConfig D-Bus API.
+- Improve screensaver style. (!54)
+- Add support for color-scheme setting. (!51, !53)
+- Save and restore numlock state. (#62, #93)
+- Updated translations.
+</pre>
+</div>
+</blockquote>
+
 </div>
 </div>
     <div>
       <div class="post-meta">
         <span title="post date" class="post-info">2024-09-26</span>
-        <span title="last modification date" class="post-info">2024-09-26</span>
+        <span title="last modification date" class="post-info">2024-10-09</span>
         <span title="tags" class="post-info"><a href="/tags/gnome/">gnome</a></span>
         <span title="author" class="post-info">Shane Xu</span>
       </div>
@@ -281,7 +301,7 @@ Sep 26 09:05:30 archdesktop systemd[1801]: Started GNOME XSettings service.
         })();
       </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 29.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 30.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
           Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">Shane Xu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;

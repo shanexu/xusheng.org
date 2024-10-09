@@ -34,17 +34,17 @@
 <div>
 <div class="post">
 <h1>Learning Haskell with nix and Emacs</h1>
-<div id="outline-container-org6947d76" class="outline-2">
-<h2 id="org6947d76">前言</h2>
-<div class="outline-text-2" id="text-org6947d76">
+<div id="outline-container-orga8584e5" class="outline-2">
+<h2 id="orga8584e5">前言</h2>
+<div class="outline-text-2" id="text-orga8584e5">
 <p>
 <a href="https://github.com/haskell-servant/servant">haskell-servant</a> 和 <a href="https://github.com/dmjio/miso">miso</a> 等haskell开源项目竟然都是用nix管理依赖的。时隔多年nix竟然被赋予了这样的魔法，不仅让我大跌眼镜。在 <a href="https://github.com/Gabriel439/haskell-nix">Nix and Haskell in production</a> 一文中指出，nix对标的其实是stack，他和stack一样有独立的haskell包缓存，用以达成reproducible的构建。nix胜过stack的唯一个地方，就是他不仅能解决haskell包依赖，还能解决其他任何依赖，甚至可以为你打造一个独立的开发环境。本文就是介绍如何在 <code>macos catalina</code> 上用nix打造一个haskell开发环境。
 </p>
 </div>
 </div>
-<div id="outline-container-orga0b8d9e" class="outline-2">
-<h2 id="orga0b8d9e">安装nix和其他工具</h2>
-<div class="outline-text-2" id="text-orga0b8d9e">
+<div id="outline-container-org2d01411" class="outline-2">
+<h2 id="org2d01411">安装nix和其他工具</h2>
+<div class="outline-text-2" id="text-org2d01411">
 <p>
 本来这一个步骤应该是非常简单的。但是在最新版的macos catalina上并不那么容易了。nix需要在根目录上创建文件夹 <code>/nix</code> ，在系统默认开启 <code>SIP</code> 的情况下，根目录是以只读度方式挂载的，所以无法创建。首先需要关闭SIP，创建目录，重新启用SIP，由于启用后根目录仍然只读，还需要创建分区，将分区挂载到 <code>/nix</code> 。
 </p>
@@ -86,7 +86,7 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script">  <span style="color: #2aa1ae; font-weight: bold;">curl</span> https://nixos.org/nix/install <span style="color: #3a81c3; font-weight: bold;">|</span> <span style="color: #2aa1ae; font-weight: bold;">sh</span>  
+<pre class="src src-shell-script">  <span style="color: #268bd2; font-weight: bold;">curl</span> https://nixos.org/nix/install <span style="color: #859900; font-weight: bold;">|</span> <span style="color: #268bd2; font-weight: bold;">sh</span>  
 </pre>
 </div>
 
@@ -99,16 +99,16 @@ nix安装完之后就可以安装开发工具了。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script">  <span style="color: #2aa1ae; font-weight: bold;">nix-env</span> <span style="color: #4e3163;">--install</span> cabal2nix stack cabal-install
+<pre class="src src-shell-script">  <span style="color: #268bd2; font-weight: bold;">nix-env</span> <span style="color: #6c71c4; font-weight: bold;">--install</span> cabal2nix stack cabal-install
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org10fc66a" class="outline-2">
-<h2 id="org10fc66a">使用stack初始化工程</h2>
-<div class="outline-text-2" id="text-org10fc66a">
+<div id="outline-container-org53e52f3" class="outline-2">
+<h2 id="org53e52f3">使用stack初始化工程</h2>
+<div class="outline-text-2" id="text-org53e52f3">
 <div class="org-src-container">
-<pre class="src src-shell-script">  <span style="color: #2aa1ae; font-weight: bold;">stack</span> new helloworld new-template
+<pre class="src src-shell-script">  <span style="color: #268bd2; font-weight: bold;">stack</span> new helloworld new-template
 </pre>
 </div>
 
@@ -153,7 +153,7 @@ nix安装完之后就可以安装开发工具了。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script">  <span style="color: #2aa1ae; font-weight: bold;">git</span> init
+<pre class="src src-shell-script">  <span style="color: #268bd2; font-weight: bold;">git</span> init
 </pre>
 </div>
 
@@ -187,15 +187,15 @@ nix安装完之后就可以安装开发工具了。
 </div>
 </div>
 </div>
-<div id="outline-container-orgee8517b" class="outline-2">
-<h2 id="orgee8517b">编写第一个nix表达式</h2>
-<div class="outline-text-2" id="text-orgee8517b">
+<div id="outline-container-org7b7229f" class="outline-2">
+<h2 id="org7b7229f">编写第一个nix表达式</h2>
+<div class="outline-text-2" id="text-org7b7229f">
 <p>
 说是编写，其实就是中 cabal2nix 生成。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script">  <span style="color: #2aa1ae; font-weight: bold;">cabal2nix</span> . <span style="color: #3a81c3; font-weight: bold;">&gt;</span> helloworld.nix
+<pre class="src src-shell-script">  <span style="color: #268bd2; font-weight: bold;">cabal2nix</span> . <span style="color: #859900; font-weight: bold;">&gt;</span> helloworld.nix
 </pre>
 </div>
 
@@ -238,7 +238,7 @@ helloworld.nix 的内容如下：
 使用nix build
 </p>
 <div class="org-src-container">
-<pre class="src src-shell-script">  <span style="color: #2aa1ae; font-weight: bold;">nix-build</span>
+<pre class="src src-shell-script">  <span style="color: #268bd2; font-weight: bold;">nix-build</span>
 </pre>
 </div>
 
@@ -384,9 +384,9 @@ build成功后会在当前目录下生成 <code>result</code> 目录，其结构
 </div>
 </div>
 </div>
-<div id="outline-container-orgad4a4f0" class="outline-2">
-<h2 id="orgad4a4f0">添加shell.nix文件</h2>
-<div class="outline-text-2" id="text-orgad4a4f0">
+<div id="outline-container-orga34de49" class="outline-2">
+<h2 id="orga34de49">添加shell.nix文件</h2>
+<div class="outline-text-2" id="text-orga34de49">
 <blockquote>
 <p>
 nix-shell - start an interactive shell based on a Nix expression
@@ -453,15 +453,15 @@ nix-shell - start an interactive shell based on a Nix expression
 </div>
 </div>
 </div>
-<div id="outline-container-org6907292" class="outline-2">
-<h2 id="org6907292">安装HIE</h2>
-<div class="outline-text-2" id="text-org6907292">
+<div id="outline-container-org6f6bd9e" class="outline-2">
+<h2 id="org6f6bd9e">安装HIE</h2>
+<div class="outline-text-2" id="text-org6f6bd9e">
 <p>
 安装cachix
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script">  <span style="color: #2aa1ae; font-weight: bold;">nix-env</span> <span style="color: #4e3163;">-iA</span> cachix <span style="color: #4e3163;">-f</span> https://cachix.org/api/v1/install
+<pre class="src src-shell-script">  <span style="color: #268bd2; font-weight: bold;">nix-env</span> <span style="color: #6c71c4; font-weight: bold;">-iA</span> cachix <span style="color: #6c71c4; font-weight: bold;">-f</span> https://cachix.org/api/v1/install
 </pre>
 </div>
 
@@ -470,7 +470,7 @@ nix-shell - start an interactive shell based on a Nix expression
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script">  <span style="color: #2aa1ae; font-weight: bold;">cachix</span> use all-hies
+<pre class="src src-shell-script">  <span style="color: #268bd2; font-weight: bold;">cachix</span> use all-hies
 </pre>
 </div>
 
@@ -479,7 +479,7 @@ nix-shell - start an interactive shell based on a Nix expression
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script">  <span style="color: #2aa1ae; font-weight: bold;">nix-env</span> <span style="color: #4e3163;">-iA</span> selection <span style="color: #4e3163;">--arg</span> selector <span style="color: #2d9574;">'p: { inherit (p) ghc865; }'</span> <span style="color: #4e3163;">-f</span> https://github.com/infinisil/all-hies/tarball/master
+<pre class="src src-shell-script">  <span style="color: #268bd2; font-weight: bold;">nix-env</span> <span style="color: #6c71c4; font-weight: bold;">-iA</span> selection <span style="color: #6c71c4; font-weight: bold;">--arg</span> selector <span style="color: #2aa198;">'p: { inherit (p) ghc865; }'</span> <span style="color: #6c71c4; font-weight: bold;">-f</span> https://github.com/infinisil/all-hies/tarball/master
 </pre>
 </div>
 
@@ -511,9 +511,9 @@ nix-shell - start an interactive shell based on a Nix expression
 </div>
 </div>
 </div>
-<div id="outline-container-org13bf571" class="outline-2">
-<h2 id="org13bf571">nix-shell和direnv</h2>
-<div class="outline-text-2" id="text-org13bf571">
+<div id="outline-container-org251f325" class="outline-2">
+<h2 id="org251f325">nix-shell和direnv</h2>
+<div class="outline-text-2" id="text-org251f325">
 <p>
 nix-shell默认使用bash，但是我平时都用 <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a> 。direnv已经支持nix，可以通过stdlib的use_nix函数，启用nix的环境配置。只要在当前目录下增加.envrc文件便可启用。
 </p>
@@ -538,20 +538,20 @@ nix-shell默认使用bash，但是我平时都用 <a href="https://github.com/ro
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script"><span class="linenr"> 1: </span>  <span style="color: #2aa1ae; background-color: #ecf3ec;"># Usage: use_nix [...]</span>
-<span class="linenr"> 2: </span>  <span style="color: #2aa1ae; background-color: #ecf3ec;">#</span>
-<span class="linenr"> 3: </span>  <span style="color: #2aa1ae; background-color: #ecf3ec;"># Load environment variables from `nix-shell`.</span>
-<span class="linenr"> 4: </span>  <span style="color: #2aa1ae; background-color: #ecf3ec;"># If you have a `default.nix` or `shell.nix` these will be</span>
-<span class="linenr"> 5: </span>  <span style="color: #2aa1ae; background-color: #ecf3ec;"># used by default, but you can also specify packages directly</span>
-<span class="linenr"> 6: </span>  <span style="color: #2aa1ae; background-color: #ecf3ec;"># (e.g `use nix -p ocaml`).</span>
-<span class="linenr"> 7: </span>  <span style="color: #2aa1ae; background-color: #ecf3ec;">#</span>
-<span class="linenr"> 8: </span>  <span style="color: #6c3163; font-weight: bold;">use_nix</span><span style="color: #3a81c3;">()</span> <span style="color: #3a81c3;">{</span>
-<span class="linenr"> 9: </span>    <span style="color: #2aa1ae; font-weight: bold;">direnv_load</span> nix-shell <span style="color: #4e3163;">--show-trace</span> <span style="color: #2d9574;">"</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #dc752f; background-color: #fbf8ef;">@</span><span style="color: #2d9574;">"</span> <span style="color: #4e3163;">--run</span> <span style="color: #2d9574;">"</span><span style="color: #2d9574; font-weight: bold;">$(</span><span style="color: #2aa1ae; background-color: #fbf8ef; font-weight: bold;">join_args</span><span style="color: #2d9574; background-color: #fbf8ef;"> "</span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">$</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">direnv</span><span style="color: #2d9574; background-color: #fbf8ef;">" dump</span><span style="color: #2d9574; font-weight: bold;">)</span><span style="color: #2d9574;">"</span>
-<span class="linenr">10: </span>    <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #6c3163;">[</span><span style="color: #2d9574;">[</span> <span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #dc752f; background-color: #fbf8ef;">#</span> <span style="color: #3a81c3; font-weight: bold;">==</span> <span style="color: #4e3163;">0</span> <span style="color: #2d9574;">]</span><span style="color: #6c3163;">]</span><span style="color: #3a81c3; font-weight: bold;">;</span> <span style="color: #3a81c3; font-weight: bold;">then</span>
-<span class="linenr">11: </span>      <span style="color: #2aa1ae; font-weight: bold;">watch_file</span> default.nix
-<span class="linenr">12: </span>      <span style="color: #2aa1ae; font-weight: bold;">watch_file</span> shell.nix
-<span class="linenr">13: </span>    <span style="color: #3a81c3; font-weight: bold;">fi</span>
-<span class="linenr">14: </span>  <span style="color: #3a81c3;">}</span>  
+<pre class="src src-shell-script"><span class="linenr"> 1: </span>  <span style="color: #96A7A9; font-style: italic;"># Usage: use_nix [...]</span>
+<span class="linenr"> 2: </span>  <span style="color: #96A7A9; font-style: italic;">#</span>
+<span class="linenr"> 3: </span>  <span style="color: #96A7A9; font-style: italic;"># Load environment variables from `nix-shell`.</span>
+<span class="linenr"> 4: </span>  <span style="color: #96A7A9; font-style: italic;"># If you have a `default.nix` or `shell.nix` these will be</span>
+<span class="linenr"> 5: </span>  <span style="color: #96A7A9; font-style: italic;"># used by default, but you can also specify packages directly</span>
+<span class="linenr"> 6: </span>  <span style="color: #96A7A9; font-style: italic;"># (e.g `use nix -p ocaml`).</span>
+<span class="linenr"> 7: </span>  <span style="color: #96A7A9; font-style: italic;">#</span>
+<span class="linenr"> 8: </span>  <span style="color: #b58900;">use_nix</span><span style="color: #268bd2;">()</span> <span style="color: #268bd2;">{</span>
+<span class="linenr"> 9: </span>    <span style="color: #268bd2; font-weight: bold;">direnv_load</span> nix-shell <span style="color: #6c71c4; font-weight: bold;">--show-trace</span> <span style="color: #2aa198;">"</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #b58900;">@</span><span style="color: #2aa198;">"</span> <span style="color: #6c71c4; font-weight: bold;">--run</span> <span style="color: #2aa198;">"</span><span style="color: #2aa198; font-weight: bold;">$(</span><span style="color: #268bd2; background-color: #FDF6E3; font-weight: bold;">join_args</span><span style="color: #2aa198; background-color: #FDF6E3;"> "</span><span style="color: #859900; background-color: #FDF6E3; font-weight: bold;">$</span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold; font-style: italic;">direnv</span><span style="color: #2aa198; background-color: #FDF6E3;">" dump</span><span style="color: #2aa198; font-weight: bold;">)</span><span style="color: #2aa198;">"</span>
+<span class="linenr">10: </span>    <span style="color: #859900; font-weight: bold;">if</span> <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> <span style="color: #859900; font-weight: bold;">$</span><span style="color: #b58900;">#</span> <span style="color: #859900; font-weight: bold;">==</span> <span style="color: #6c71c4; font-weight: bold;">0</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span><span style="color: #859900; font-weight: bold;">;</span> <span style="color: #859900; font-weight: bold;">then</span>
+<span class="linenr">11: </span>      <span style="color: #268bd2; font-weight: bold;">watch_file</span> default.nix
+<span class="linenr">12: </span>      <span style="color: #268bd2; font-weight: bold;">watch_file</span> shell.nix
+<span class="linenr">13: </span>    <span style="color: #859900; font-weight: bold;">fi</span>
+<span class="linenr">14: </span>  <span style="color: #268bd2;">}</span>  
 </pre>
 </div>
 
@@ -564,69 +564,69 @@ nix-shell默认使用bash，但是我平时都用 <a href="https://github.com/ro
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell-script"><span class="linenr"> 1: </span>  <span style="color: #6c3163; font-weight: bold;">use_nix</span><span style="color: #3a81c3;">()</span> <span style="color: #3a81c3;">{</span>
-<span class="linenr"> 2: </span>      local <span style="color: #715ab1; font-style: italic;">path</span>=<span style="color: #2d9574;">"</span><span style="color: #2d9574; font-weight: bold;">$(</span><span style="color: #2aa1ae; background-color: #fbf8ef; font-weight: bold;">nix-instantiate</span><span style="color: #2d9574; background-color: #fbf8ef;"> </span><span style="color: #4e3163; background-color: #fbf8ef;">--find-file</span><span style="color: #2d9574; background-color: #fbf8ef;"> nixpkgs</span><span style="color: #2d9574; font-weight: bold;">)</span><span style="color: #2d9574;">"</span>
+<pre class="src src-shell-script"><span class="linenr"> 1: </span>  <span style="color: #b58900;">use_nix</span><span style="color: #268bd2;">()</span> <span style="color: #268bd2;">{</span>
+<span class="linenr"> 2: </span>      local <span style="color: #268bd2; font-weight: bold; font-style: italic;">path</span>=<span style="color: #2aa198;">"</span><span style="color: #2aa198; font-weight: bold;">$(</span><span style="color: #268bd2; background-color: #FDF6E3; font-weight: bold;">nix-instantiate</span><span style="color: #2aa198; background-color: #FDF6E3;"> </span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold;">--find-file</span><span style="color: #2aa198; background-color: #FDF6E3;"> nixpkgs</span><span style="color: #2aa198; font-weight: bold;">)</span><span style="color: #2aa198;">"</span>
 <span class="linenr"> 3: </span>
-<span class="linenr"> 4: </span>      <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #6c3163;">[</span> -f <span style="color: #2d9574;">"</span><span style="color: #3a81c3; font-weight: bold;">${</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">path</span><span style="color: #3a81c3; font-weight: bold;">}</span><span style="color: #2d9574;">/.version-suffix"</span> <span style="color: #6c3163;">]</span><span style="color: #3a81c3; font-weight: bold;">;</span> <span style="color: #3a81c3; font-weight: bold;">then</span>
-<span class="linenr"> 5: </span>          local <span style="color: #715ab1; font-style: italic;">version</span>=<span style="color: #2d9574;">"</span><span style="color: #2d9574; font-weight: bold;">$(</span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">&lt;</span><span style="color: #2d9574; background-color: #fbf8ef;"> </span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">$</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">path</span><span style="color: #2d9574; background-color: #fbf8ef;">/.version-suffix</span><span style="color: #2d9574; font-weight: bold;">)</span><span style="color: #2d9574;">"</span>
-<span class="linenr"> 6: </span>      <span style="color: #3a81c3; font-weight: bold;">elif</span> <span style="color: #6c3163;">[</span> -f <span style="color: #2d9574;">"</span><span style="color: #3a81c3; font-weight: bold;">${</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">path</span><span style="color: #3a81c3; font-weight: bold;">}</span><span style="color: #2d9574;">/.git"</span> <span style="color: #6c3163;">]</span><span style="color: #3a81c3; font-weight: bold;">;</span> <span style="color: #3a81c3; font-weight: bold;">then</span>
-<span class="linenr"> 7: </span>          local <span style="color: #715ab1; font-style: italic;">version</span>=<span style="color: #2d9574;">"</span><span style="color: #2d9574; font-weight: bold;">$(</span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">&lt;</span><span style="color: #2d9574; background-color: #fbf8ef;"> </span><span style="color: #2d9574; background-color: #fbf8ef; font-weight: bold;">$(</span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">&lt;</span><span style="color: #2d9574; background-color: #fbf8ef;"> </span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">${</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">path</span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">}</span><span style="color: #2d9574; background-color: #fbf8ef;">/.git/HEAD</span><span style="color: #2d9574; background-color: #fbf8ef; font-weight: bold;">)</span><span style="color: #2d9574; font-weight: bold;">)</span><span style="color: #2d9574;">"</span>
-<span class="linenr"> 8: </span>      <span style="color: #3a81c3; font-weight: bold;">fi</span>
+<span class="linenr"> 4: </span>      <span style="color: #859900; font-weight: bold;">if</span> <span style="color: #d33682;">[</span> -f <span style="color: #2aa198;">"</span><span style="color: #859900; font-weight: bold;">${</span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold; font-style: italic;">path</span><span style="color: #859900; font-weight: bold;">}</span><span style="color: #2aa198;">/.version-suffix"</span> <span style="color: #d33682;">]</span><span style="color: #859900; font-weight: bold;">;</span> <span style="color: #859900; font-weight: bold;">then</span>
+<span class="linenr"> 5: </span>          local <span style="color: #268bd2; font-weight: bold; font-style: italic;">version</span>=<span style="color: #2aa198;">"</span><span style="color: #2aa198; font-weight: bold;">$(</span><span style="color: #859900; background-color: #FDF6E3; font-weight: bold;">&lt;</span><span style="color: #2aa198; background-color: #FDF6E3;"> </span><span style="color: #859900; background-color: #FDF6E3; font-weight: bold;">$</span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold; font-style: italic;">path</span><span style="color: #2aa198; background-color: #FDF6E3;">/.version-suffix</span><span style="color: #2aa198; font-weight: bold;">)</span><span style="color: #2aa198;">"</span>
+<span class="linenr"> 6: </span>      <span style="color: #859900; font-weight: bold;">elif</span> <span style="color: #d33682;">[</span> -f <span style="color: #2aa198;">"</span><span style="color: #859900; font-weight: bold;">${</span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold; font-style: italic;">path</span><span style="color: #859900; font-weight: bold;">}</span><span style="color: #2aa198;">/.git"</span> <span style="color: #d33682;">]</span><span style="color: #859900; font-weight: bold;">;</span> <span style="color: #859900; font-weight: bold;">then</span>
+<span class="linenr"> 7: </span>          local <span style="color: #268bd2; font-weight: bold; font-style: italic;">version</span>=<span style="color: #2aa198;">"</span><span style="color: #2aa198; font-weight: bold;">$(</span><span style="color: #859900; background-color: #FDF6E3; font-weight: bold;">&lt;</span><span style="color: #2aa198; background-color: #FDF6E3;"> </span><span style="color: #2aa198; background-color: #FDF6E3; font-weight: bold;">$(</span><span style="color: #859900; background-color: #FDF6E3; font-weight: bold;">&lt;</span><span style="color: #2aa198; background-color: #FDF6E3;"> </span><span style="color: #859900; background-color: #FDF6E3; font-weight: bold;">${</span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold; font-style: italic;">path</span><span style="color: #859900; background-color: #FDF6E3; font-weight: bold;">}</span><span style="color: #2aa198; background-color: #FDF6E3;">/.git/HEAD</span><span style="color: #2aa198; background-color: #FDF6E3; font-weight: bold;">)</span><span style="color: #2aa198; font-weight: bold;">)</span><span style="color: #2aa198;">"</span>
+<span class="linenr"> 8: </span>      <span style="color: #859900; font-weight: bold;">fi</span>
 <span class="linenr"> 9: </span>
-<span class="linenr">10: </span>      local <span style="color: #715ab1; font-style: italic;">cache</span>=<span style="color: #2d9574;">".direnv/cache-</span><span style="color: #3a81c3; font-weight: bold;">${</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">version</span><span style="color: #2d9574;">:-</span><span style="color: #655370; background-color: #fbf8ef;">unknown</span><span style="color: #3a81c3; font-weight: bold;">}</span><span style="color: #2d9574;">"</span>
+<span class="linenr">10: </span>      local <span style="color: #268bd2; font-weight: bold; font-style: italic;">cache</span>=<span style="color: #2aa198;">".direnv/cache-</span><span style="color: #859900; font-weight: bold;">${</span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold; font-style: italic;">version</span><span style="color: #2aa198;">:-</span><span style="color: #556b72; background-color: #FDF6E3;">unknown</span><span style="color: #859900; font-weight: bold;">}</span><span style="color: #2aa198;">"</span>
 <span class="linenr">11: </span>
-<span class="linenr">12: </span>      local <span style="color: #715ab1; font-style: italic;">update_drv</span>=<span style="color: #4e3163;">0</span>
-<span class="linenr">13: </span>      <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #6c3163;">[</span><span style="color: #2d9574;">[</span> ! -e <span style="color: #2d9574;">"</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">cache</span><span style="color: #2d9574;">"</span> <span style="color: #2d9574;">]</span><span style="color: #6c3163;">]</span> <span style="color: #3a81c3; font-weight: bold;">||</span> \
-<span class="linenr">14: </span>             <span style="color: #6c3163;">[</span><span style="color: #2d9574;">[</span> <span style="color: #2d9574;">"</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">HOME</span><span style="color: #2d9574;">/.direnvrc"</span> -nt <span style="color: #2d9574;">"</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">cache</span><span style="color: #2d9574;">"</span> <span style="color: #2d9574;">]</span><span style="color: #6c3163;">]</span> <span style="color: #3a81c3; font-weight: bold;">||</span> \
-<span class="linenr">15: </span>             <span style="color: #6c3163;">[</span><span style="color: #2d9574;">[</span> .envrc -nt <span style="color: #2d9574;">"</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">cache</span><span style="color: #2d9574;">"</span> <span style="color: #2d9574;">]</span><span style="color: #6c3163;">]</span> <span style="color: #3a81c3; font-weight: bold;">||</span> \
-<span class="linenr">16: </span>             <span style="color: #6c3163;">[</span><span style="color: #2d9574;">[</span> default.nix -nt <span style="color: #2d9574;">"</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">cache</span><span style="color: #2d9574;">"</span> <span style="color: #2d9574;">]</span><span style="color: #6c3163;">]</span> <span style="color: #3a81c3; font-weight: bold;">||</span> \
-<span class="linenr">17: </span>             <span style="color: #6c3163;">[</span><span style="color: #2d9574;">[</span> shell.nix -nt <span style="color: #2d9574;">"</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">cache</span><span style="color: #2d9574;">"</span> <span style="color: #2d9574;">]</span><span style="color: #6c3163;">]</span><span style="color: #3a81c3; font-weight: bold;">;</span>
-<span class="linenr">18: </span>      <span style="color: #3a81c3; font-weight: bold;">then</span>
-<span class="linenr">19: </span>          <span style="color: #6c3163;">[</span> -d .direnv <span style="color: #6c3163;">]</span> <span style="color: #3a81c3; font-weight: bold;">||</span> <span style="color: #2aa1ae; font-weight: bold;">mkdir</span> .direnv
-<span class="linenr">20: </span>          <span style="color: #2aa1ae; font-weight: bold;">nix-shell</span> <span style="color: #4e3163;">--show-trace</span> <span style="color: #2d9574;">"</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #dc752f; background-color: #fbf8ef;">@</span><span style="color: #2d9574;">"</span> <span style="color: #4e3163;">--run</span> <span style="color: #2d9574;">"\"</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">direnv</span><span style="color: #2d9574;">\" dump bash"</span> <span style="color: #3a81c3; font-weight: bold;">&gt;</span> <span style="color: #2d9574;">"</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">cache</span><span style="color: #2d9574;">"</span>
-<span class="linenr">21: </span>          <span style="color: #715ab1; font-style: italic;">update_drv</span>=<span style="color: #4e3163;">1</span>
-<span class="linenr">22: </span>      <span style="color: #3a81c3; font-weight: bold;">else</span>
-<span class="linenr">23: </span>          <span style="color: #2aa1ae; font-weight: bold;">log_status</span> using cached derivation
-<span class="linenr">24: </span>      <span style="color: #3a81c3; font-weight: bold;">fi</span>
-<span class="linenr">25: </span>      local <span style="color: #715ab1; font-style: italic;">term_backup</span>=<span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">TERM</span> <span style="color: #715ab1; font-style: italic;">path_backup</span>=<span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #dc752f; background-color: #fbf8ef; font-style: italic;">PATH</span>
-<span class="linenr">26: </span>      <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #6c3163;">[</span> -n <span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #2d9574; font-weight: bold;">{</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">TMPDIR</span>+<span style="color: #655370; background-color: #fbf8ef;">x</span><span style="color: #2d9574; font-weight: bold;">}</span> <span style="color: #6c3163;">]</span><span style="color: #3a81c3; font-weight: bold;">;</span> <span style="color: #3a81c3; font-weight: bold;">then</span>
-<span class="linenr">27: </span>          local <span style="color: #715ab1; font-style: italic;">tmp_backup</span>=<span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">TMPDIR</span>
-<span class="linenr">28: </span>      <span style="color: #3a81c3; font-weight: bold;">fi</span>
+<span class="linenr">12: </span>      local <span style="color: #268bd2; font-weight: bold; font-style: italic;">update_drv</span>=<span style="color: #6c71c4; font-weight: bold;">0</span>
+<span class="linenr">13: </span>      <span style="color: #859900; font-weight: bold;">if</span> <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> ! -e <span style="color: #2aa198;">"</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">cache</span><span style="color: #2aa198;">"</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span> <span style="color: #859900; font-weight: bold;">||</span> \
+<span class="linenr">14: </span>             <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> <span style="color: #2aa198;">"</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">HOME</span><span style="color: #2aa198;">/.direnvrc"</span> -nt <span style="color: #2aa198;">"</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">cache</span><span style="color: #2aa198;">"</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span> <span style="color: #859900; font-weight: bold;">||</span> \
+<span class="linenr">15: </span>             <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> .envrc -nt <span style="color: #2aa198;">"</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">cache</span><span style="color: #2aa198;">"</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span> <span style="color: #859900; font-weight: bold;">||</span> \
+<span class="linenr">16: </span>             <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> default.nix -nt <span style="color: #2aa198;">"</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">cache</span><span style="color: #2aa198;">"</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span> <span style="color: #859900; font-weight: bold;">||</span> \
+<span class="linenr">17: </span>             <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> shell.nix -nt <span style="color: #2aa198;">"</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">cache</span><span style="color: #2aa198;">"</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span><span style="color: #859900; font-weight: bold;">;</span>
+<span class="linenr">18: </span>      <span style="color: #859900; font-weight: bold;">then</span>
+<span class="linenr">19: </span>          <span style="color: #d33682;">[</span> -d .direnv <span style="color: #d33682;">]</span> <span style="color: #859900; font-weight: bold;">||</span> <span style="color: #268bd2; font-weight: bold;">mkdir</span> .direnv
+<span class="linenr">20: </span>          <span style="color: #268bd2; font-weight: bold;">nix-shell</span> <span style="color: #6c71c4; font-weight: bold;">--show-trace</span> <span style="color: #2aa198;">"</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #b58900;">@</span><span style="color: #2aa198;">"</span> <span style="color: #6c71c4; font-weight: bold;">--run</span> <span style="color: #2aa198;">"\"</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">direnv</span><span style="color: #2aa198;">\" dump bash"</span> <span style="color: #859900; font-weight: bold;">&gt;</span> <span style="color: #2aa198;">"</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">cache</span><span style="color: #2aa198;">"</span>
+<span class="linenr">21: </span>          <span style="color: #268bd2; font-weight: bold; font-style: italic;">update_drv</span>=<span style="color: #6c71c4; font-weight: bold;">1</span>
+<span class="linenr">22: </span>      <span style="color: #859900; font-weight: bold;">else</span>
+<span class="linenr">23: </span>          <span style="color: #268bd2; font-weight: bold;">log_status</span> using cached derivation
+<span class="linenr">24: </span>      <span style="color: #859900; font-weight: bold;">fi</span>
+<span class="linenr">25: </span>      local <span style="color: #268bd2; font-weight: bold; font-style: italic;">term_backup</span>=<span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">TERM</span> <span style="color: #268bd2; font-weight: bold; font-style: italic;">path_backup</span>=<span style="color: #859900; font-weight: bold;">$</span><span style="color: #b58900; font-weight: bold; font-style: italic;">PATH</span>
+<span class="linenr">26: </span>      <span style="color: #859900; font-weight: bold;">if</span> <span style="color: #d33682;">[</span> -n <span style="color: #859900; font-weight: bold;">$</span><span style="color: #859900; font-weight: bold;">{</span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold; font-style: italic;">TMPDIR</span>+<span style="color: #556b72; background-color: #FDF6E3;">x</span><span style="color: #859900; font-weight: bold;">}</span> <span style="color: #d33682;">]</span><span style="color: #859900; font-weight: bold;">;</span> <span style="color: #859900; font-weight: bold;">then</span>
+<span class="linenr">27: </span>          local <span style="color: #268bd2; font-weight: bold; font-style: italic;">tmp_backup</span>=<span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">TMPDIR</span>
+<span class="linenr">28: </span>      <span style="color: #859900; font-weight: bold;">fi</span>
 <span class="linenr">29: </span>
-<span class="linenr">30: </span>      <span style="color: #3a81c3; font-weight: bold;">eval</span> <span style="color: #2d9574;">"</span><span style="color: #2d9574; font-weight: bold;">$(</span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">&lt;</span><span style="color: #2d9574; background-color: #fbf8ef;"> </span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">$</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">cache</span><span style="color: #2d9574; font-weight: bold;">)</span><span style="color: #2d9574;">"</span>
-<span class="linenr">31: </span>      <span style="color: #3a81c3; font-weight: bold;">export</span> <span style="color: #dc752f; background-color: #fbf8ef; font-style: italic;">PATH</span>=<span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #dc752f; background-color: #fbf8ef; font-style: italic;">PATH</span>:<span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">path_backup</span> <span style="color: #715ab1; font-style: italic;">TERM</span>=<span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">term_backup</span> <span style="color: #715ab1; font-style: italic;">TMPDIR</span>=<span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">tmp_backup</span>
-<span class="linenr">32: </span>      <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #6c3163;">[</span> -n <span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #2d9574; font-weight: bold;">{</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">tmp_backup</span>+<span style="color: #655370; background-color: #fbf8ef;">x</span><span style="color: #2d9574; font-weight: bold;">}</span> <span style="color: #6c3163;">]</span><span style="color: #3a81c3; font-weight: bold;">;</span> <span style="color: #3a81c3; font-weight: bold;">then</span>
-<span class="linenr">33: </span>          <span style="color: #3a81c3; font-weight: bold;">export</span> <span style="color: #715ab1; font-style: italic;">TMPDIR</span>=<span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #6c3163; font-weight: bold;">{</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">tmp_backup</span><span style="color: #6c3163; font-weight: bold;">}</span>
-<span class="linenr">34: </span>      <span style="color: #3a81c3; font-weight: bold;">else</span>
-<span class="linenr">35: </span>          <span style="color: #3a81c3; font-weight: bold;">unset</span> <span style="color: #4e3163; font-style: italic;">TMPDIR</span>
-<span class="linenr">36: </span>      <span style="color: #3a81c3; font-weight: bold;">fi</span>
+<span class="linenr">30: </span>      <span style="color: #d33682; font-weight: bold; font-style: italic;">eval</span> <span style="color: #2aa198;">"</span><span style="color: #2aa198; font-weight: bold;">$(</span><span style="color: #859900; background-color: #FDF6E3; font-weight: bold;">&lt;</span><span style="color: #2aa198; background-color: #FDF6E3;"> </span><span style="color: #859900; background-color: #FDF6E3; font-weight: bold;">$</span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold; font-style: italic;">cache</span><span style="color: #2aa198; font-weight: bold;">)</span><span style="color: #2aa198;">"</span>
+<span class="linenr">31: </span>      <span style="color: #859900; font-weight: bold;">export</span> <span style="color: #b58900; font-weight: bold; font-style: italic;">PATH</span>=<span style="color: #859900; font-weight: bold;">$</span><span style="color: #b58900; font-weight: bold; font-style: italic;">PATH</span>:<span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">path_backup</span> <span style="color: #268bd2; font-weight: bold; font-style: italic;">TERM</span>=<span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">term_backup</span> <span style="color: #268bd2; font-weight: bold; font-style: italic;">TMPDIR</span>=<span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">tmp_backup</span>
+<span class="linenr">32: </span>      <span style="color: #859900; font-weight: bold;">if</span> <span style="color: #d33682;">[</span> -n <span style="color: #859900; font-weight: bold;">$</span><span style="color: #859900; font-weight: bold;">{</span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold; font-style: italic;">tmp_backup</span>+<span style="color: #556b72; background-color: #FDF6E3;">x</span><span style="color: #859900; font-weight: bold;">}</span> <span style="color: #d33682;">]</span><span style="color: #859900; font-weight: bold;">;</span> <span style="color: #859900; font-weight: bold;">then</span>
+<span class="linenr">33: </span>          <span style="color: #859900; font-weight: bold;">export</span> <span style="color: #268bd2; font-weight: bold; font-style: italic;">TMPDIR</span>=<span style="color: #859900; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold; font-style: italic;">tmp_backup</span><span style="color: #d33682; font-weight: bold;">}</span>
+<span class="linenr">34: </span>      <span style="color: #859900; font-weight: bold;">else</span>
+<span class="linenr">35: </span>          <span style="color: #859900; font-weight: bold;">unset</span> <span style="color: #6c71c4; font-weight: bold; font-style: italic;">TMPDIR</span>
+<span class="linenr">36: </span>      <span style="color: #859900; font-weight: bold;">fi</span>
 <span class="linenr">37: </span>
-<span class="linenr">38: </span>      <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #6c3163;">[</span> <span style="color: #2d9574;">"</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">out</span><span style="color: #2d9574;">"</span> <span style="color: #6c3163;">]</span> <span style="color: #3a81c3; font-weight: bold;">&amp;&amp;</span> <span style="color: #6c3163;">(</span><span style="color: #2d9574;">(</span> <span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">update_drv</span> <span style="color: #2d9574;">)</span><span style="color: #6c3163;">)</span><span style="color: #3a81c3; font-weight: bold;">;</span> <span style="color: #3a81c3; font-weight: bold;">then</span>
-<span class="linenr">39: </span>          local <span style="color: #715ab1; font-style: italic;">drv_link</span>=<span style="color: #2d9574;">".direnv/shell.drv"</span>
-<span class="linenr">40: </span>          local <span style="color: #715ab1; font-style: italic;">drv_dep_link</span>=<span style="color: #2d9574;">".direnv/shell.dep"</span>
-<span class="linenr">41: </span>          local <span style="color: #715ab1; font-style: italic;">drv</span>=<span style="color: #2d9574;">"</span><span style="color: #2d9574; font-weight: bold;">$(</span><span style="color: #2aa1ae; background-color: #fbf8ef; font-weight: bold;">nix</span><span style="color: #2d9574; background-color: #fbf8ef;"> show-derivation </span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">$</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">out</span><span style="color: #2d9574; background-color: #fbf8ef;"> </span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">|</span><span style="color: #2d9574; background-color: #fbf8ef;"> </span><span style="color: #2aa1ae; background-color: #fbf8ef; font-weight: bold;">grep</span><span style="color: #2d9574; background-color: #fbf8ef;"> </span><span style="color: #4e3163; background-color: #fbf8ef;">-E</span><span style="color: #2d9574; background-color: #fbf8ef;"> </span><span style="color: #4e3163; background-color: #fbf8ef;">-o</span><span style="color: #2d9574; background-color: #fbf8ef;"> </span><span style="color: #4e3163; background-color: #fbf8ef;">-m1</span><span style="color: #2d9574; background-color: #fbf8ef;"> '/nix/store/.*.drv'</span><span style="color: #2d9574; font-weight: bold;">)</span><span style="color: #2d9574;">"</span>
-<span class="linenr">42: </span>          local <span style="color: #715ab1; font-style: italic;">stripped_pwd</span>=<span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #6c3163; font-weight: bold;">{</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">PWD</span>/<span style="color: #655370; background-color: #fbf8ef;">\</span>/<span style="color: #655370; background-color: #fbf8ef;">/</span><span style="color: #6c3163; font-weight: bold;">}</span>
-<span class="linenr">43: </span>          local <span style="color: #715ab1; font-style: italic;">escaped_pwd</span>=<span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #6c3163; font-weight: bold;">{</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">stripped_pwd</span>//<span style="color: #655370; background-color: #fbf8ef;">-</span>/<span style="color: #655370; background-color: #fbf8ef;">--</span><span style="color: #6c3163; font-weight: bold;">}</span>
-<span class="linenr">44: </span>          local <span style="color: #715ab1; font-style: italic;">escaped_pwd</span>=<span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #6c3163; font-weight: bold;">{</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">escaped_pwd</span>//<span style="color: #655370; background-color: #fbf8ef;">\</span>/<span style="color: #655370; background-color: #fbf8ef;">/-</span><span style="color: #6c3163; font-weight: bold;">}</span>
-<span class="linenr">45: </span>          <span style="color: #2aa1ae; font-weight: bold;">ln</span> <span style="color: #4e3163;">-fs</span> <span style="color: #2d9574;">"</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">drv</span><span style="color: #2d9574;">"</span> <span style="color: #2d9574;">"</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">drv_link</span><span style="color: #2d9574;">"</span>
-<span class="linenr">46: </span>          <span style="color: #2aa1ae; font-weight: bold;">ln</span> <span style="color: #4e3163;">-fs</span> <span style="color: #2d9574;">"</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">PWD</span><span style="color: #2d9574;">/</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">drv_link</span><span style="color: #2d9574;">"</span> <span style="color: #2d9574;">"/nix/var/nix/gcroots/per-user/</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">LOGNAME</span><span style="color: #2d9574;">/</span><span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">escaped_pwd</span><span style="color: #2d9574;">"</span>
-<span class="linenr">47: </span>          <span style="color: #2aa1ae; font-weight: bold;">rm</span> <span style="color: #4e3163;">-f</span> <span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #6c3163; font-weight: bold;">{</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">drv_dep_link</span><span style="color: #6c3163; font-weight: bold;">}</span>*
-<span class="linenr">48: </span>          <span style="color: #2aa1ae; font-weight: bold;">nix-store</span> <span style="color: #4e3163;">--indirect</span> <span style="color: #4e3163;">--add-root</span> <span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #4e3163; font-style: italic;">drv_dep_link</span> <span style="color: #4e3163;">--realise</span> <span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #6c3163; font-weight: bold;">(</span><span style="color: #2aa1ae; background-color: #fbf8ef; font-weight: bold;">nix-store</span><span style="color: #655370; background-color: #fbf8ef;"> </span><span style="color: #4e3163; background-color: #fbf8ef;">--query</span><span style="color: #655370; background-color: #fbf8ef;"> </span><span style="color: #4e3163; background-color: #fbf8ef;">--references</span><span style="color: #655370; background-color: #fbf8ef;"> </span><span style="color: #3a81c3; background-color: #fbf8ef; font-weight: bold;">$</span><span style="color: #4e3163; background-color: #fbf8ef; font-style: italic;">drv_link</span><span style="color: #6c3163; font-weight: bold;">)</span>
-<span class="linenr">49: </span>          <span style="color: #2aa1ae; font-weight: bold;">log_status</span> renewed cache and derivation link
-<span class="linenr">50: </span>      <span style="color: #3a81c3; font-weight: bold;">fi</span>
+<span class="linenr">38: </span>      <span style="color: #859900; font-weight: bold;">if</span> <span style="color: #d33682;">[</span> <span style="color: #2aa198;">"</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">out</span><span style="color: #2aa198;">"</span> <span style="color: #d33682;">]</span> <span style="color: #859900; font-weight: bold;">&amp;&amp;</span> <span style="color: #d33682;">(</span><span style="color: #859900;">(</span> <span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">update_drv</span> <span style="color: #859900;">)</span><span style="color: #d33682;">)</span><span style="color: #859900; font-weight: bold;">;</span> <span style="color: #859900; font-weight: bold;">then</span>
+<span class="linenr">39: </span>          local <span style="color: #268bd2; font-weight: bold; font-style: italic;">drv_link</span>=<span style="color: #2aa198;">".direnv/shell.drv"</span>
+<span class="linenr">40: </span>          local <span style="color: #268bd2; font-weight: bold; font-style: italic;">drv_dep_link</span>=<span style="color: #2aa198;">".direnv/shell.dep"</span>
+<span class="linenr">41: </span>          local <span style="color: #268bd2; font-weight: bold; font-style: italic;">drv</span>=<span style="color: #2aa198;">"</span><span style="color: #2aa198; font-weight: bold;">$(</span><span style="color: #268bd2; background-color: #FDF6E3; font-weight: bold;">nix</span><span style="color: #2aa198; background-color: #FDF6E3;"> show-derivation </span><span style="color: #859900; background-color: #FDF6E3; font-weight: bold;">$</span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold; font-style: italic;">out</span><span style="color: #2aa198; background-color: #FDF6E3;"> </span><span style="color: #859900; background-color: #FDF6E3; font-weight: bold;">|</span><span style="color: #2aa198; background-color: #FDF6E3;"> </span><span style="color: #268bd2; background-color: #FDF6E3; font-weight: bold;">grep</span><span style="color: #2aa198; background-color: #FDF6E3;"> </span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold;">-E</span><span style="color: #2aa198; background-color: #FDF6E3;"> </span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold;">-o</span><span style="color: #2aa198; background-color: #FDF6E3;"> </span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold;">-m1</span><span style="color: #2aa198; background-color: #FDF6E3;"> '/nix/store/.*.drv'</span><span style="color: #2aa198; font-weight: bold;">)</span><span style="color: #2aa198;">"</span>
+<span class="linenr">42: </span>          local <span style="color: #268bd2; font-weight: bold; font-style: italic;">stripped_pwd</span>=<span style="color: #859900; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold; font-style: italic;">PWD</span>/<span style="color: #556b72; background-color: #FDF6E3;">\</span>/<span style="color: #556b72; background-color: #FDF6E3;">/</span><span style="color: #d33682; font-weight: bold;">}</span>
+<span class="linenr">43: </span>          local <span style="color: #268bd2; font-weight: bold; font-style: italic;">escaped_pwd</span>=<span style="color: #859900; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold; font-style: italic;">stripped_pwd</span>//<span style="color: #556b72; background-color: #FDF6E3;">-</span>/<span style="color: #556b72; background-color: #FDF6E3;">--</span><span style="color: #d33682; font-weight: bold;">}</span>
+<span class="linenr">44: </span>          local <span style="color: #268bd2; font-weight: bold; font-style: italic;">escaped_pwd</span>=<span style="color: #859900; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold; font-style: italic;">escaped_pwd</span>//<span style="color: #556b72; background-color: #FDF6E3;">\</span>/<span style="color: #556b72; background-color: #FDF6E3;">/-</span><span style="color: #d33682; font-weight: bold;">}</span>
+<span class="linenr">45: </span>          <span style="color: #268bd2; font-weight: bold;">ln</span> <span style="color: #6c71c4; font-weight: bold;">-fs</span> <span style="color: #2aa198;">"</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">drv</span><span style="color: #2aa198;">"</span> <span style="color: #2aa198;">"</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">drv_link</span><span style="color: #2aa198;">"</span>
+<span class="linenr">46: </span>          <span style="color: #268bd2; font-weight: bold;">ln</span> <span style="color: #6c71c4; font-weight: bold;">-fs</span> <span style="color: #2aa198;">"</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">PWD</span><span style="color: #2aa198;">/</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">drv_link</span><span style="color: #2aa198;">"</span> <span style="color: #2aa198;">"/nix/var/nix/gcroots/per-user/</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">LOGNAME</span><span style="color: #2aa198;">/</span><span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">escaped_pwd</span><span style="color: #2aa198;">"</span>
+<span class="linenr">47: </span>          <span style="color: #268bd2; font-weight: bold;">rm</span> <span style="color: #6c71c4; font-weight: bold;">-f</span> <span style="color: #859900; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">{</span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold; font-style: italic;">drv_dep_link</span><span style="color: #d33682; font-weight: bold;">}</span>*
+<span class="linenr">48: </span>          <span style="color: #268bd2; font-weight: bold;">nix-store</span> <span style="color: #6c71c4; font-weight: bold;">--indirect</span> <span style="color: #6c71c4; font-weight: bold;">--add-root</span> <span style="color: #859900; font-weight: bold;">$</span><span style="color: #6c71c4; font-weight: bold; font-style: italic;">drv_dep_link</span> <span style="color: #6c71c4; font-weight: bold;">--realise</span> <span style="color: #859900; font-weight: bold;">$</span><span style="color: #d33682; font-weight: bold;">(</span><span style="color: #268bd2; background-color: #FDF6E3; font-weight: bold;">nix-store</span><span style="color: #556b72; background-color: #FDF6E3;"> </span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold;">--query</span><span style="color: #556b72; background-color: #FDF6E3;"> </span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold;">--references</span><span style="color: #556b72; background-color: #FDF6E3;"> </span><span style="color: #859900; background-color: #FDF6E3; font-weight: bold;">$</span><span style="color: #6c71c4; background-color: #FDF6E3; font-weight: bold; font-style: italic;">drv_link</span><span style="color: #d33682; font-weight: bold;">)</span>
+<span class="linenr">49: </span>          <span style="color: #268bd2; font-weight: bold;">log_status</span> renewed cache and derivation link
+<span class="linenr">50: </span>      <span style="color: #859900; font-weight: bold;">fi</span>
 <span class="linenr">51: </span>
-<span class="linenr">52: </span>      <span style="color: #3a81c3; font-weight: bold;">if</span> <span style="color: #6c3163;">[</span><span style="color: #2d9574;">[</span> <span style="color: #3a81c3; font-weight: bold;">$</span><span style="color: #dc752f; background-color: #fbf8ef;">#</span> = <span style="color: #4e3163;">0</span> <span style="color: #2d9574;">]</span><span style="color: #6c3163;">]</span><span style="color: #3a81c3; font-weight: bold;">;</span> <span style="color: #3a81c3; font-weight: bold;">then</span>
-<span class="linenr">53: </span>          <span style="color: #2aa1ae; font-weight: bold;">watch_file</span> default.nix
-<span class="linenr">54: </span>          <span style="color: #2aa1ae; font-weight: bold;">watch_file</span> shell.nix
-<span class="linenr">55: </span>      <span style="color: #3a81c3; font-weight: bold;">fi</span>
-<span class="linenr">56: </span>  <span style="color: #3a81c3;">}</span>
+<span class="linenr">52: </span>      <span style="color: #859900; font-weight: bold;">if</span> <span style="color: #d33682;">[</span><span style="color: #859900;">[</span> <span style="color: #859900; font-weight: bold;">$</span><span style="color: #b58900;">#</span> = <span style="color: #6c71c4; font-weight: bold;">0</span> <span style="color: #859900;">]</span><span style="color: #d33682;">]</span><span style="color: #859900; font-weight: bold;">;</span> <span style="color: #859900; font-weight: bold;">then</span>
+<span class="linenr">53: </span>          <span style="color: #268bd2; font-weight: bold;">watch_file</span> default.nix
+<span class="linenr">54: </span>          <span style="color: #268bd2; font-weight: bold;">watch_file</span> shell.nix
+<span class="linenr">55: </span>      <span style="color: #859900; font-weight: bold;">fi</span>
+<span class="linenr">56: </span>  <span style="color: #268bd2;">}</span>
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgc14cd7a" class="outline-2">
-<h2 id="orgc14cd7a">配置emacs(spacemacs)</h2>
-<div class="outline-text-2" id="text-orgc14cd7a">
+<div id="outline-container-org1838209" class="outline-2">
+<h2 id="org1838209">配置emacs(spacemacs)</h2>
+<div class="outline-text-2" id="text-org1838209">
 <p>
 我使用的是 <a href="https://github.com/syl20bnr/spacemacs/">spacemacs</a> 的 develop 分支。
 </p>
@@ -636,31 +636,31 @@ nix-shell默认使用bash，但是我平时都用 <a href="https://github.com/ro
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span class="linenr">1: </span>  <span style="color: #2aa1ae; background-color: #ecf3ec;">;; </span><span style="color: #2aa1ae; background-color: #ecf3ec;">direnv-mode</span>
-<span class="linenr">2: </span>  <span style="color: #3a81c3;">(</span><span style="color: #3a81c3; font-weight: bold;">use-package</span> <span style="color: #4e3163;">direnv</span>
-<span class="linenr">3: </span>    <span style="color: #3a81c3;">:config</span>
-<span class="linenr">4: </span>    <span style="color: #6c3163;">(</span>direnv-mode<span style="color: #6c3163;">)</span><span style="color: #3a81c3;">)</span>
+<pre class="src src-emacs-lisp"><span class="linenr">1: </span>  <span style="color: #96A7A9; font-style: italic;">;; </span><span style="color: #96A7A9; font-style: italic;">direnv-mode</span>
+<span class="linenr">2: </span>  <span style="color: #268bd2;">(</span><span style="color: #859900; font-weight: bold;">use-package</span> direnv
+<span class="linenr">3: </span>    <span style="color: #d33682; font-style: italic;">:config</span>
+<span class="linenr">4: </span>    <span style="color: #d33682;">(</span>direnv-mode<span style="color: #d33682;">)</span><span style="color: #268bd2;">)</span>
 </pre>
 </div>
 
 
-<div id="orgec1f8ca" class="figure">
+<div id="org9b05756" class="figure">
 <p><img src="/assets/blog/2019/11/07/learning-haskell-with-nix-and-emacs/68374271-7886ff00-013c-11ea-92aa-fc27ff89f413.png" alt="68374271-7886ff00-013c-11ea-92aa-fc27ff89f413.png" />
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org1606600" class="outline-2">
-<h2 id="org1606600">仓库地址</h2>
-<div class="outline-text-2" id="text-org1606600">
+<div id="outline-container-orgafc2ff6" class="outline-2">
+<h2 id="orgafc2ff6">仓库地址</h2>
+<div class="outline-text-2" id="text-orgafc2ff6">
 <p>
 <a href="https://github.com/shanexu/helloworld">https://github.com/shanexu/helloworld</a>
 </p>
 </div>
 </div>
-<div id="outline-container-org7137d31" class="outline-2">
-<h2 id="org7137d31">参考文档</h2>
-<div class="outline-text-2" id="text-org7137d31">
+<div id="outline-container-orgabd5f58" class="outline-2">
+<h2 id="orgabd5f58">参考文档</h2>
+<div class="outline-text-2" id="text-orgabd5f58">
 <p>
 <a href="https://nixos.org/nix/manual">https://nixos.org/nix/manual</a>
 </p>
@@ -755,7 +755,7 @@ nix-shell默认使用bash，但是我平时都用 <a href="https://github.com/ro
         })();
       </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 29.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 30.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
           Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">shanexu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;

@@ -43,7 +43,7 @@
 </p>
 
 
-<div id="org48553c6" class="figure">
+<div id="org6501c81" class="figure">
 <p><img src="/assets/blog/2019/08/18/escape-touch-bar/63224623-7a34cc80-c1b6-11e9-8a19-a3e0365e90ba.jpg" alt="63224623-7a34cc80-c1b6-11e9-8a19-a3e0365e90ba.jpg" />
 </p>
 </div>
@@ -82,225 +82,225 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-json"><span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-  <span style="color: #3a81c3; font-weight: bold;">"global"</span>: <span style="color: #6c3163; background-color: #fbf8ef;">{</span>
-    <span style="color: #3a81c3; font-weight: bold;">"check_for_updates_on_startup"</span>: <span style="color: #4e3163;">true</span>,
-    <span style="color: #3a81c3; font-weight: bold;">"show_in_menu_bar"</span>: <span style="color: #4e3163;">true</span>,
-    <span style="color: #3a81c3; font-weight: bold;">"show_profile_name_in_menu_bar"</span>: <span style="color: #4e3163;">false</span>
-  <span style="color: #6c3163; background-color: #fbf8ef;">}</span>,
-  <span style="color: #3a81c3; font-weight: bold;">"profiles"</span>: <span style="color: #6c3163; background-color: #fbf8ef;">[</span>
-    <span style="color: #2d9574; background-color: #fbf8ef;">{</span>
-      <span style="color: #3a81c3; font-weight: bold;">"complex_modifications"</span>: <span style="color: #67b11d; background-color: #fbf8ef;">{</span>
-        <span style="color: #3a81c3; font-weight: bold;">"parameters"</span>: <span style="color: #b1951d; background-color: #fbf8ef;">{</span>
-          <span style="color: #3a81c3; font-weight: bold;">"basic.simultaneous_threshold_milliseconds"</span>: <span style="color: #4e3163;">50</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"basic.to_delayed_action_delay_milliseconds"</span>: <span style="color: #4e3163;">500</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"basic.to_if_alone_timeout_milliseconds"</span>: <span style="color: #4e3163;">1000</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"basic.to_if_held_down_threshold_milliseconds"</span>: <span style="color: #4e3163;">500</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"mouse_motion_to_scroll.speed"</span>: <span style="color: #4e3163;">100</span>
-        <span style="color: #b1951d; background-color: #fbf8ef;">}</span>,
-        <span style="color: #3a81c3; font-weight: bold;">"rules"</span>: <span style="color: #b1951d; background-color: #fbf8ef;">[</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"description"</span>: <span style="color: #2d9574;">"post escape if caps_lock pressed alone, otherwise left_control"</span>,
-            <span style="color: #3a81c3; font-weight: bold;">"manipulators"</span>: <span style="color: #6c3163; background-color: #fbf8ef;">[</span>
-              <span style="color: #2d9574; background-color: #fbf8ef;">{</span>
-                <span style="color: #3a81c3; font-weight: bold;">"conditions"</span>: <span style="color: #887070; background-color: #fbf8ef;">[</span>
-                  <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-                    <span style="color: #3a81c3; font-weight: bold;">"identifiers"</span>: <span style="color: #6c3163; background-color: #fbf8ef;">[</span>
-                      <span style="color: #2d9574; background-color: #fbf8ef;">{</span>
-                        <span style="color: #3a81c3; font-weight: bold;">"description"</span>: <span style="color: #2d9574;">"Apple Internal Keyboard"</span>,
-                        <span style="color: #3a81c3; font-weight: bold;">"is_keyboard"</span>: <span style="color: #4e3163;">true</span>,
-                        <span style="color: #3a81c3; font-weight: bold;">"product_id"</span>: <span style="color: #4e3163;">636</span>,
-                        <span style="color: #3a81c3; font-weight: bold;">"vendor_id"</span>: <span style="color: #4e3163;">1452</span>
-                      <span style="color: #2d9574; background-color: #fbf8ef;">}</span>
-                    <span style="color: #6c3163; background-color: #fbf8ef;">]</span>,
-                    <span style="color: #3a81c3; font-weight: bold;">"type"</span>: <span style="color: #2d9574;">"device_if"</span>
-                  <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-                <span style="color: #887070; background-color: #fbf8ef;">]</span>,
-                <span style="color: #3a81c3; font-weight: bold;">"from"</span>: <span style="color: #887070; background-color: #fbf8ef;">{</span>
-                  <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"caps_lock"</span>,
-                  <span style="color: #3a81c3; font-weight: bold;">"modifiers"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-                    <span style="color: #3a81c3; font-weight: bold;">"optional"</span>: <span style="color: #6c3163; background-color: #fbf8ef;">[</span>
-                      <span style="color: #2d9574;">"any"</span>
-                    <span style="color: #6c3163; background-color: #fbf8ef;">]</span>
-                  <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-                <span style="color: #887070; background-color: #fbf8ef;">}</span>,
-                <span style="color: #3a81c3; font-weight: bold;">"to"</span>: <span style="color: #887070; background-color: #fbf8ef;">[</span>
-                  <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-                    <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"left_control"</span>,
-                    <span style="color: #3a81c3; font-weight: bold;">"lazy"</span>: <span style="color: #4e3163;">true</span>
-                  <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-                <span style="color: #887070; background-color: #fbf8ef;">]</span>,
-                <span style="color: #3a81c3; font-weight: bold;">"to_if_alone"</span>: <span style="color: #887070; background-color: #fbf8ef;">[</span>
-                  <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-                    <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"escape"</span>
-                  <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-                <span style="color: #887070; background-color: #fbf8ef;">]</span>,
-                <span style="color: #3a81c3; font-weight: bold;">"type"</span>: <span style="color: #2d9574;">"basic"</span>
-              <span style="color: #2d9574; background-color: #fbf8ef;">}</span>
-            <span style="color: #6c3163; background-color: #fbf8ef;">]</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>,
-          <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"description"</span>: <span style="color: #2d9574;">"left_control = caps_lock"</span>,
-            <span style="color: #3a81c3; font-weight: bold;">"manipulators"</span>: <span style="color: #6c3163; background-color: #fbf8ef;">[</span>
-              <span style="color: #2d9574; background-color: #fbf8ef;">{</span>
-                <span style="color: #3a81c3; font-weight: bold;">"conditions"</span>: <span style="color: #887070; background-color: #fbf8ef;">[</span>
-                  <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-                    <span style="color: #3a81c3; font-weight: bold;">"identifiers"</span>: <span style="color: #6c3163; background-color: #fbf8ef;">[</span>
-                      <span style="color: #2d9574; background-color: #fbf8ef;">{</span>
-                        <span style="color: #3a81c3; font-weight: bold;">"description"</span>: <span style="color: #2d9574;">"Apple Internal Keyboard"</span>,
-                        <span style="color: #3a81c3; font-weight: bold;">"is_keyboard"</span>: <span style="color: #4e3163;">true</span>,
-                        <span style="color: #3a81c3; font-weight: bold;">"product_id"</span>: <span style="color: #4e3163;">636</span>,
-                        <span style="color: #3a81c3; font-weight: bold;">"vendor_id"</span>: <span style="color: #4e3163;">1452</span>
-                      <span style="color: #2d9574; background-color: #fbf8ef;">}</span>
-                    <span style="color: #6c3163; background-color: #fbf8ef;">]</span>,
-                    <span style="color: #3a81c3; font-weight: bold;">"type"</span>: <span style="color: #2d9574;">"device_if"</span>
-                  <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-                <span style="color: #887070; background-color: #fbf8ef;">]</span>,
-                <span style="color: #3a81c3; font-weight: bold;">"from"</span>: <span style="color: #887070; background-color: #fbf8ef;">{</span>
-                  <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"left_control"</span>,
-                  <span style="color: #3a81c3; font-weight: bold;">"modifiers"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-                    <span style="color: #3a81c3; font-weight: bold;">"optional"</span>: <span style="color: #6c3163; background-color: #fbf8ef;">[</span>
-                      <span style="color: #2d9574;">"any"</span>
-                    <span style="color: #6c3163; background-color: #fbf8ef;">]</span>
-                  <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-                <span style="color: #887070; background-color: #fbf8ef;">}</span>,
-                <span style="color: #3a81c3; font-weight: bold;">"to"</span>: <span style="color: #887070; background-color: #fbf8ef;">[</span>
-                  <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-                    <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"caps_lock"</span>
-                  <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-                <span style="color: #887070; background-color: #fbf8ef;">]</span>,
-                <span style="color: #3a81c3; font-weight: bold;">"type"</span>: <span style="color: #2d9574;">"basic"</span>
-              <span style="color: #2d9574; background-color: #fbf8ef;">}</span>
-            <span style="color: #6c3163; background-color: #fbf8ef;">]</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-        <span style="color: #b1951d; background-color: #fbf8ef;">]</span>
-      <span style="color: #67b11d; background-color: #fbf8ef;">}</span>,
-      <span style="color: #3a81c3; font-weight: bold;">"devices"</span>: <span style="color: #67b11d; background-color: #fbf8ef;">[</span>
-        <span style="color: #b1951d; background-color: #fbf8ef;">{</span>
-          <span style="color: #3a81c3; font-weight: bold;">"disable_built_in_keyboard_if_exists"</span>: <span style="color: #4e3163;">false</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"fn_function_keys"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">[]</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"identifiers"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"is_keyboard"</span>: <span style="color: #4e3163;">true</span>,
-            <span style="color: #3a81c3; font-weight: bold;">"is_pointing_device"</span>: <span style="color: #4e3163;">false</span>,
-            <span style="color: #3a81c3; font-weight: bold;">"product_id"</span>: <span style="color: #4e3163;">636</span>,
-            <span style="color: #3a81c3; font-weight: bold;">"vendor_id"</span>: <span style="color: #4e3163;">1452</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"ignore"</span>: <span style="color: #4e3163;">false</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"manipulate_caps_lock_led"</span>: <span style="color: #4e3163;">true</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"simple_modifications"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">[]</span>
-        <span style="color: #b1951d; background-color: #fbf8ef;">}</span>
-      <span style="color: #67b11d; background-color: #fbf8ef;">]</span>,
-      <span style="color: #3a81c3; font-weight: bold;">"fn_function_keys"</span>: <span style="color: #67b11d; background-color: #fbf8ef;">[</span>
-        <span style="color: #b1951d; background-color: #fbf8ef;">{</span>
-          <span style="color: #3a81c3; font-weight: bold;">"from"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"f1"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"to"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"consumer_key_code"</span>: <span style="color: #2d9574;">"display_brightness_decrement"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-        <span style="color: #b1951d; background-color: #fbf8ef;">}</span>,
-        <span style="color: #b1951d; background-color: #fbf8ef;">{</span>
-          <span style="color: #3a81c3; font-weight: bold;">"from"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"f2"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"to"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"consumer_key_code"</span>: <span style="color: #2d9574;">"display_brightness_increment"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-        <span style="color: #b1951d; background-color: #fbf8ef;">}</span>,
-        <span style="color: #b1951d; background-color: #fbf8ef;">{</span>
-          <span style="color: #3a81c3; font-weight: bold;">"from"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"f3"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"to"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"mission_control"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-        <span style="color: #b1951d; background-color: #fbf8ef;">}</span>,
-        <span style="color: #b1951d; background-color: #fbf8ef;">{</span>
-          <span style="color: #3a81c3; font-weight: bold;">"from"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"f4"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"to"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"launchpad"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-        <span style="color: #b1951d; background-color: #fbf8ef;">}</span>,
-        <span style="color: #b1951d; background-color: #fbf8ef;">{</span>
-          <span style="color: #3a81c3; font-weight: bold;">"from"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"f5"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"to"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"illumination_decrement"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-        <span style="color: #b1951d; background-color: #fbf8ef;">}</span>,
-        <span style="color: #b1951d; background-color: #fbf8ef;">{</span>
-          <span style="color: #3a81c3; font-weight: bold;">"from"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"f6"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"to"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"illumination_increment"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-        <span style="color: #b1951d; background-color: #fbf8ef;">}</span>,
-        <span style="color: #b1951d; background-color: #fbf8ef;">{</span>
-          <span style="color: #3a81c3; font-weight: bold;">"from"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"f7"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"to"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"consumer_key_code"</span>: <span style="color: #2d9574;">"rewind"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-        <span style="color: #b1951d; background-color: #fbf8ef;">}</span>,
-        <span style="color: #b1951d; background-color: #fbf8ef;">{</span>
-          <span style="color: #3a81c3; font-weight: bold;">"from"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"f8"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"to"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"consumer_key_code"</span>: <span style="color: #2d9574;">"play_or_pause"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-        <span style="color: #b1951d; background-color: #fbf8ef;">}</span>,
-        <span style="color: #b1951d; background-color: #fbf8ef;">{</span>
-          <span style="color: #3a81c3; font-weight: bold;">"from"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"f9"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"to"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"consumer_key_code"</span>: <span style="color: #2d9574;">"fastforward"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-        <span style="color: #b1951d; background-color: #fbf8ef;">}</span>,
-        <span style="color: #b1951d; background-color: #fbf8ef;">{</span>
-          <span style="color: #3a81c3; font-weight: bold;">"from"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"f10"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"to"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"consumer_key_code"</span>: <span style="color: #2d9574;">"mute"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-        <span style="color: #b1951d; background-color: #fbf8ef;">}</span>,
-        <span style="color: #b1951d; background-color: #fbf8ef;">{</span>
-          <span style="color: #3a81c3; font-weight: bold;">"from"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"f11"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"to"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"consumer_key_code"</span>: <span style="color: #2d9574;">"volume_decrement"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-        <span style="color: #b1951d; background-color: #fbf8ef;">}</span>,
-        <span style="color: #b1951d; background-color: #fbf8ef;">{</span>
-          <span style="color: #3a81c3; font-weight: bold;">"from"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"key_code"</span>: <span style="color: #2d9574;">"f12"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>,
-          <span style="color: #3a81c3; font-weight: bold;">"to"</span>: <span style="color: #3a81c3; background-color: #fbf8ef;">{</span>
-            <span style="color: #3a81c3; font-weight: bold;">"consumer_key_code"</span>: <span style="color: #2d9574;">"volume_increment"</span>
-          <span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
-        <span style="color: #b1951d; background-color: #fbf8ef;">}</span>
-      <span style="color: #67b11d; background-color: #fbf8ef;">]</span>,
-      <span style="color: #3a81c3; font-weight: bold;">"name"</span>: <span style="color: #2d9574;">"Default profile"</span>,
-      <span style="color: #3a81c3; font-weight: bold;">"parameters"</span>: <span style="color: #67b11d; background-color: #fbf8ef;">{</span>
-        <span style="color: #3a81c3; font-weight: bold;">"delay_milliseconds_before_open_device"</span>: <span style="color: #4e3163;">1000</span>
-      <span style="color: #67b11d; background-color: #fbf8ef;">}</span>,
-      <span style="color: #3a81c3; font-weight: bold;">"selected"</span>: <span style="color: #4e3163;">true</span>,
-      <span style="color: #3a81c3; font-weight: bold;">"simple_modifications"</span>: <span style="color: #67b11d; background-color: #fbf8ef;">[]</span>,
-      <span style="color: #3a81c3; font-weight: bold;">"virtual_hid_keyboard"</span>: <span style="color: #67b11d; background-color: #fbf8ef;">{</span>
-        <span style="color: #3a81c3; font-weight: bold;">"country_code"</span>: <span style="color: #4e3163;">0</span>,
-        <span style="color: #3a81c3; font-weight: bold;">"mouse_key_xy_scale"</span>: <span style="color: #4e3163;">100</span>
-      <span style="color: #67b11d; background-color: #fbf8ef;">}</span>
-    <span style="color: #2d9574; background-color: #fbf8ef;">}</span>
-  <span style="color: #6c3163; background-color: #fbf8ef;">]</span>
-<span style="color: #3a81c3; background-color: #fbf8ef;">}</span>
+<pre class="src src-json"><span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+  <span style="color: #859900; font-weight: bold;">"global"</span>: <span style="color: #d33682; background-color: #FDF6E3;">{</span>
+    <span style="color: #859900; font-weight: bold;">"check_for_updates_on_startup"</span>: <span style="color: #6c71c4; font-weight: bold;">true</span>,
+    <span style="color: #859900; font-weight: bold;">"show_in_menu_bar"</span>: <span style="color: #6c71c4; font-weight: bold;">true</span>,
+    <span style="color: #859900; font-weight: bold;">"show_profile_name_in_menu_bar"</span>: <span style="color: #6c71c4; font-weight: bold;">false</span>
+  <span style="color: #d33682; background-color: #FDF6E3;">}</span>,
+  <span style="color: #859900; font-weight: bold;">"profiles"</span>: <span style="color: #d33682; background-color: #FDF6E3;">[</span>
+    <span style="color: #859900; background-color: #FDF6E3;">{</span>
+      <span style="color: #859900; font-weight: bold;">"complex_modifications"</span>: <span style="color: #6c71c4; background-color: #FDF6E3;">{</span>
+        <span style="color: #859900; font-weight: bold;">"parameters"</span>: <span style="color: #35a69c; background-color: #FDF6E3;">{</span>
+          <span style="color: #859900; font-weight: bold;">"basic.simultaneous_threshold_milliseconds"</span>: <span style="color: #6c71c4; font-weight: bold;">50</span>,
+          <span style="color: #859900; font-weight: bold;">"basic.to_delayed_action_delay_milliseconds"</span>: <span style="color: #6c71c4; font-weight: bold;">500</span>,
+          <span style="color: #859900; font-weight: bold;">"basic.to_if_alone_timeout_milliseconds"</span>: <span style="color: #6c71c4; font-weight: bold;">1000</span>,
+          <span style="color: #859900; font-weight: bold;">"basic.to_if_held_down_threshold_milliseconds"</span>: <span style="color: #6c71c4; font-weight: bold;">500</span>,
+          <span style="color: #859900; font-weight: bold;">"mouse_motion_to_scroll.speed"</span>: <span style="color: #6c71c4; font-weight: bold;">100</span>
+        <span style="color: #35a69c; background-color: #FDF6E3;">}</span>,
+        <span style="color: #859900; font-weight: bold;">"rules"</span>: <span style="color: #35a69c; background-color: #FDF6E3;">[</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"description"</span>: <span style="color: #2aa198;">"post escape if caps_lock pressed alone, otherwise left_control"</span>,
+            <span style="color: #859900; font-weight: bold;">"manipulators"</span>: <span style="color: #d33682; background-color: #FDF6E3;">[</span>
+              <span style="color: #859900; background-color: #FDF6E3;">{</span>
+                <span style="color: #859900; font-weight: bold;">"conditions"</span>: <span style="color: #6c71c4; background-color: #FDF6E3;">[</span>
+                  <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+                    <span style="color: #859900; font-weight: bold;">"identifiers"</span>: <span style="color: #d33682; background-color: #FDF6E3;">[</span>
+                      <span style="color: #859900; background-color: #FDF6E3;">{</span>
+                        <span style="color: #859900; font-weight: bold;">"description"</span>: <span style="color: #2aa198;">"Apple Internal Keyboard"</span>,
+                        <span style="color: #859900; font-weight: bold;">"is_keyboard"</span>: <span style="color: #6c71c4; font-weight: bold;">true</span>,
+                        <span style="color: #859900; font-weight: bold;">"product_id"</span>: <span style="color: #6c71c4; font-weight: bold;">636</span>,
+                        <span style="color: #859900; font-weight: bold;">"vendor_id"</span>: <span style="color: #6c71c4; font-weight: bold;">1452</span>
+                      <span style="color: #859900; background-color: #FDF6E3;">}</span>
+                    <span style="color: #d33682; background-color: #FDF6E3;">]</span>,
+                    <span style="color: #859900; font-weight: bold;">"type"</span>: <span style="color: #2aa198;">"device_if"</span>
+                  <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+                <span style="color: #6c71c4; background-color: #FDF6E3;">]</span>,
+                <span style="color: #859900; font-weight: bold;">"from"</span>: <span style="color: #6c71c4; background-color: #FDF6E3;">{</span>
+                  <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"caps_lock"</span>,
+                  <span style="color: #859900; font-weight: bold;">"modifiers"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+                    <span style="color: #859900; font-weight: bold;">"optional"</span>: <span style="color: #d33682; background-color: #FDF6E3;">[</span>
+                      <span style="color: #2aa198;">"any"</span>
+                    <span style="color: #d33682; background-color: #FDF6E3;">]</span>
+                  <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+                <span style="color: #6c71c4; background-color: #FDF6E3;">}</span>,
+                <span style="color: #859900; font-weight: bold;">"to"</span>: <span style="color: #6c71c4; background-color: #FDF6E3;">[</span>
+                  <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+                    <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"left_control"</span>,
+                    <span style="color: #859900; font-weight: bold;">"lazy"</span>: <span style="color: #6c71c4; font-weight: bold;">true</span>
+                  <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+                <span style="color: #6c71c4; background-color: #FDF6E3;">]</span>,
+                <span style="color: #859900; font-weight: bold;">"to_if_alone"</span>: <span style="color: #6c71c4; background-color: #FDF6E3;">[</span>
+                  <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+                    <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"escape"</span>
+                  <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+                <span style="color: #6c71c4; background-color: #FDF6E3;">]</span>,
+                <span style="color: #859900; font-weight: bold;">"type"</span>: <span style="color: #2aa198;">"basic"</span>
+              <span style="color: #859900; background-color: #FDF6E3;">}</span>
+            <span style="color: #d33682; background-color: #FDF6E3;">]</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>,
+          <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"description"</span>: <span style="color: #2aa198;">"left_control = caps_lock"</span>,
+            <span style="color: #859900; font-weight: bold;">"manipulators"</span>: <span style="color: #d33682; background-color: #FDF6E3;">[</span>
+              <span style="color: #859900; background-color: #FDF6E3;">{</span>
+                <span style="color: #859900; font-weight: bold;">"conditions"</span>: <span style="color: #6c71c4; background-color: #FDF6E3;">[</span>
+                  <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+                    <span style="color: #859900; font-weight: bold;">"identifiers"</span>: <span style="color: #d33682; background-color: #FDF6E3;">[</span>
+                      <span style="color: #859900; background-color: #FDF6E3;">{</span>
+                        <span style="color: #859900; font-weight: bold;">"description"</span>: <span style="color: #2aa198;">"Apple Internal Keyboard"</span>,
+                        <span style="color: #859900; font-weight: bold;">"is_keyboard"</span>: <span style="color: #6c71c4; font-weight: bold;">true</span>,
+                        <span style="color: #859900; font-weight: bold;">"product_id"</span>: <span style="color: #6c71c4; font-weight: bold;">636</span>,
+                        <span style="color: #859900; font-weight: bold;">"vendor_id"</span>: <span style="color: #6c71c4; font-weight: bold;">1452</span>
+                      <span style="color: #859900; background-color: #FDF6E3;">}</span>
+                    <span style="color: #d33682; background-color: #FDF6E3;">]</span>,
+                    <span style="color: #859900; font-weight: bold;">"type"</span>: <span style="color: #2aa198;">"device_if"</span>
+                  <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+                <span style="color: #6c71c4; background-color: #FDF6E3;">]</span>,
+                <span style="color: #859900; font-weight: bold;">"from"</span>: <span style="color: #6c71c4; background-color: #FDF6E3;">{</span>
+                  <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"left_control"</span>,
+                  <span style="color: #859900; font-weight: bold;">"modifiers"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+                    <span style="color: #859900; font-weight: bold;">"optional"</span>: <span style="color: #d33682; background-color: #FDF6E3;">[</span>
+                      <span style="color: #2aa198;">"any"</span>
+                    <span style="color: #d33682; background-color: #FDF6E3;">]</span>
+                  <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+                <span style="color: #6c71c4; background-color: #FDF6E3;">}</span>,
+                <span style="color: #859900; font-weight: bold;">"to"</span>: <span style="color: #6c71c4; background-color: #FDF6E3;">[</span>
+                  <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+                    <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"caps_lock"</span>
+                  <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+                <span style="color: #6c71c4; background-color: #FDF6E3;">]</span>,
+                <span style="color: #859900; font-weight: bold;">"type"</span>: <span style="color: #2aa198;">"basic"</span>
+              <span style="color: #859900; background-color: #FDF6E3;">}</span>
+            <span style="color: #d33682; background-color: #FDF6E3;">]</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+        <span style="color: #35a69c; background-color: #FDF6E3;">]</span>
+      <span style="color: #6c71c4; background-color: #FDF6E3;">}</span>,
+      <span style="color: #859900; font-weight: bold;">"devices"</span>: <span style="color: #6c71c4; background-color: #FDF6E3;">[</span>
+        <span style="color: #35a69c; background-color: #FDF6E3;">{</span>
+          <span style="color: #859900; font-weight: bold;">"disable_built_in_keyboard_if_exists"</span>: <span style="color: #6c71c4; font-weight: bold;">false</span>,
+          <span style="color: #859900; font-weight: bold;">"fn_function_keys"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">[]</span>,
+          <span style="color: #859900; font-weight: bold;">"identifiers"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"is_keyboard"</span>: <span style="color: #6c71c4; font-weight: bold;">true</span>,
+            <span style="color: #859900; font-weight: bold;">"is_pointing_device"</span>: <span style="color: #6c71c4; font-weight: bold;">false</span>,
+            <span style="color: #859900; font-weight: bold;">"product_id"</span>: <span style="color: #6c71c4; font-weight: bold;">636</span>,
+            <span style="color: #859900; font-weight: bold;">"vendor_id"</span>: <span style="color: #6c71c4; font-weight: bold;">1452</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>,
+          <span style="color: #859900; font-weight: bold;">"ignore"</span>: <span style="color: #6c71c4; font-weight: bold;">false</span>,
+          <span style="color: #859900; font-weight: bold;">"manipulate_caps_lock_led"</span>: <span style="color: #6c71c4; font-weight: bold;">true</span>,
+          <span style="color: #859900; font-weight: bold;">"simple_modifications"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">[]</span>
+        <span style="color: #35a69c; background-color: #FDF6E3;">}</span>
+      <span style="color: #6c71c4; background-color: #FDF6E3;">]</span>,
+      <span style="color: #859900; font-weight: bold;">"fn_function_keys"</span>: <span style="color: #6c71c4; background-color: #FDF6E3;">[</span>
+        <span style="color: #35a69c; background-color: #FDF6E3;">{</span>
+          <span style="color: #859900; font-weight: bold;">"from"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"f1"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>,
+          <span style="color: #859900; font-weight: bold;">"to"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"consumer_key_code"</span>: <span style="color: #2aa198;">"display_brightness_decrement"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+        <span style="color: #35a69c; background-color: #FDF6E3;">}</span>,
+        <span style="color: #35a69c; background-color: #FDF6E3;">{</span>
+          <span style="color: #859900; font-weight: bold;">"from"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"f2"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>,
+          <span style="color: #859900; font-weight: bold;">"to"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"consumer_key_code"</span>: <span style="color: #2aa198;">"display_brightness_increment"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+        <span style="color: #35a69c; background-color: #FDF6E3;">}</span>,
+        <span style="color: #35a69c; background-color: #FDF6E3;">{</span>
+          <span style="color: #859900; font-weight: bold;">"from"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"f3"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>,
+          <span style="color: #859900; font-weight: bold;">"to"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"mission_control"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+        <span style="color: #35a69c; background-color: #FDF6E3;">}</span>,
+        <span style="color: #35a69c; background-color: #FDF6E3;">{</span>
+          <span style="color: #859900; font-weight: bold;">"from"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"f4"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>,
+          <span style="color: #859900; font-weight: bold;">"to"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"launchpad"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+        <span style="color: #35a69c; background-color: #FDF6E3;">}</span>,
+        <span style="color: #35a69c; background-color: #FDF6E3;">{</span>
+          <span style="color: #859900; font-weight: bold;">"from"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"f5"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>,
+          <span style="color: #859900; font-weight: bold;">"to"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"illumination_decrement"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+        <span style="color: #35a69c; background-color: #FDF6E3;">}</span>,
+        <span style="color: #35a69c; background-color: #FDF6E3;">{</span>
+          <span style="color: #859900; font-weight: bold;">"from"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"f6"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>,
+          <span style="color: #859900; font-weight: bold;">"to"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"illumination_increment"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+        <span style="color: #35a69c; background-color: #FDF6E3;">}</span>,
+        <span style="color: #35a69c; background-color: #FDF6E3;">{</span>
+          <span style="color: #859900; font-weight: bold;">"from"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"f7"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>,
+          <span style="color: #859900; font-weight: bold;">"to"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"consumer_key_code"</span>: <span style="color: #2aa198;">"rewind"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+        <span style="color: #35a69c; background-color: #FDF6E3;">}</span>,
+        <span style="color: #35a69c; background-color: #FDF6E3;">{</span>
+          <span style="color: #859900; font-weight: bold;">"from"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"f8"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>,
+          <span style="color: #859900; font-weight: bold;">"to"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"consumer_key_code"</span>: <span style="color: #2aa198;">"play_or_pause"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+        <span style="color: #35a69c; background-color: #FDF6E3;">}</span>,
+        <span style="color: #35a69c; background-color: #FDF6E3;">{</span>
+          <span style="color: #859900; font-weight: bold;">"from"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"f9"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>,
+          <span style="color: #859900; font-weight: bold;">"to"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"consumer_key_code"</span>: <span style="color: #2aa198;">"fastforward"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+        <span style="color: #35a69c; background-color: #FDF6E3;">}</span>,
+        <span style="color: #35a69c; background-color: #FDF6E3;">{</span>
+          <span style="color: #859900; font-weight: bold;">"from"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"f10"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>,
+          <span style="color: #859900; font-weight: bold;">"to"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"consumer_key_code"</span>: <span style="color: #2aa198;">"mute"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+        <span style="color: #35a69c; background-color: #FDF6E3;">}</span>,
+        <span style="color: #35a69c; background-color: #FDF6E3;">{</span>
+          <span style="color: #859900; font-weight: bold;">"from"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"f11"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>,
+          <span style="color: #859900; font-weight: bold;">"to"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"consumer_key_code"</span>: <span style="color: #2aa198;">"volume_decrement"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+        <span style="color: #35a69c; background-color: #FDF6E3;">}</span>,
+        <span style="color: #35a69c; background-color: #FDF6E3;">{</span>
+          <span style="color: #859900; font-weight: bold;">"from"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"key_code"</span>: <span style="color: #2aa198;">"f12"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>,
+          <span style="color: #859900; font-weight: bold;">"to"</span>: <span style="color: #268bd2; background-color: #FDF6E3;">{</span>
+            <span style="color: #859900; font-weight: bold;">"consumer_key_code"</span>: <span style="color: #2aa198;">"volume_increment"</span>
+          <span style="color: #268bd2; background-color: #FDF6E3;">}</span>
+        <span style="color: #35a69c; background-color: #FDF6E3;">}</span>
+      <span style="color: #6c71c4; background-color: #FDF6E3;">]</span>,
+      <span style="color: #859900; font-weight: bold;">"name"</span>: <span style="color: #2aa198;">"Default profile"</span>,
+      <span style="color: #859900; font-weight: bold;">"parameters"</span>: <span style="color: #6c71c4; background-color: #FDF6E3;">{</span>
+        <span style="color: #859900; font-weight: bold;">"delay_milliseconds_before_open_device"</span>: <span style="color: #6c71c4; font-weight: bold;">1000</span>
+      <span style="color: #6c71c4; background-color: #FDF6E3;">}</span>,
+      <span style="color: #859900; font-weight: bold;">"selected"</span>: <span style="color: #6c71c4; font-weight: bold;">true</span>,
+      <span style="color: #859900; font-weight: bold;">"simple_modifications"</span>: <span style="color: #6c71c4; background-color: #FDF6E3;">[]</span>,
+      <span style="color: #859900; font-weight: bold;">"virtual_hid_keyboard"</span>: <span style="color: #6c71c4; background-color: #FDF6E3;">{</span>
+        <span style="color: #859900; font-weight: bold;">"country_code"</span>: <span style="color: #6c71c4; font-weight: bold;">0</span>,
+        <span style="color: #859900; font-weight: bold;">"mouse_key_xy_scale"</span>: <span style="color: #6c71c4; font-weight: bold;">100</span>
+      <span style="color: #6c71c4; background-color: #FDF6E3;">}</span>
+    <span style="color: #859900; background-color: #FDF6E3;">}</span>
+  <span style="color: #d33682; background-color: #FDF6E3;">]</span>
+<span style="color: #268bd2; background-color: #FDF6E3;">}</span>
 </pre>
 </div>
 
@@ -356,7 +356,7 @@
         })();
       </script>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 29.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 30.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
           Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:xusheng0711 &lt;at&gt; gmail &lt;dot&gt; com">shanexu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;
