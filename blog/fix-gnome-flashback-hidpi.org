@@ -155,3 +155,20 @@ method return time=1727322064.543245 sender=:1.19 -> destination=:1.180 serial=1
 反正，我基本上不会去换显示器了，这里直接把出错时候的 =return 1= 改成 =return 2= 简单修复下吧。
 
 重新打包安装，解决问题。
+
+PS:
+2024-10-09收到了archlinux的gnome-flashback 3.54.0的更新包，看了下官方的[[https://gitlab.gnome.org/GNOME/gnome-flashback/-/blob/master/NEWS?ref_type=heads#L5][NEWS]]，问题已经解决了。
+#+begin_quote
+#+begin_src text
+Version 3.54.0
+==============
+- Fix use after free in timeout_bubble. (#96)
+- Fix polkit crash. (#92)
+- Add new D-Bus API for UI scaling.
+- Update DisplayConfig D-Bus API.
+- Improve screensaver style. (!54)
+- Add support for color-scheme setting. (!51, !53)
+- Save and restore numlock state. (#62, #93)
+- Updated translations.
+#+end_src
+#+end_quote
